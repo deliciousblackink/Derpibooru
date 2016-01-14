@@ -53,15 +53,13 @@
                 android:src="@drawable/star_empty"
                 android:background="@drawable/toolbar_button_selector"
                 android:scaleType="fitCenter"
-                android:paddingLeft="0dp"
                 android:paddingTop="11dp"
-                android:paddingRight="0dp"
                 android:paddingBottom="12dp" />
 
             <TextView
                 android:id="@+id/textFaves"
                 android:layout_gravity="center_vertical"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="1400"
                 android:background="@drawable/toolbar_button_selector"
@@ -70,7 +68,7 @@
                 android:textColor="@color/colorImageToolbarText"
                 android:textSize="16sp"
                 android:paddingTop="1dp"
-                android:layout_marginLeft="3dp" />
+                android:paddingLeft="5dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -92,15 +90,13 @@
                 android:src="@drawable/comments"
                 android:background="@drawable/toolbar_button_selector"
                 android:scaleType="fitCenter"
-                android:paddingLeft="0dp"
                 android:paddingTop="11dp"
-                android:paddingRight="0dp"
                 android:paddingBottom="12dp" />
 
             <TextView
                 android:id="@+id/textComments"
                 android:layout_gravity="center_vertical"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="1400"
                 android:background="@drawable/toolbar_button_selector"
@@ -109,7 +105,7 @@
                 android:textColor="@color/colorImageToolbarText"
                 android:textSize="16sp"
                 android:paddingTop="1dp"
-                android:layout_marginLeft="3dp" />
+                android:paddingLeft="5dp" />
         </LinearLayout>
 
     </LinearLayout>

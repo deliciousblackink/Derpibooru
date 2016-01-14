@@ -28,16 +28,14 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/arrow_empty_up"
                 android:scaleType="fitCenter"
-                android:paddingLeft="0dp"
                 android:paddingTop="10dp"
-                android:paddingRight="0dp"
                 android:paddingBottom="12dp"
                 android:background="@drawable/toolbar_button_selector"/>
 
             <TextView
                 android:id="@+id/textUpvotes"
                 android:layout_gravity="center_vertical"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="2800"
                 android:scaleType="fitCenter"
@@ -45,7 +43,8 @@
                 android:textColor="@color/colorImageToolbarText"
                 android:textSize="16sp"
                 android:paddingTop="1dp"
-                android:background="@drawable/toolbar_button_selector"/>
+                android:background="@drawable/toolbar_button_selector"
+                android:paddingLeft="5dp" />
         </LinearLayout>
 
         <TextView
@@ -80,16 +79,14 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/arrow_empty_down"
                 android:scaleType="fitCenter"
-                android:paddingLeft="5dp"
                 android:paddingTop="12dp"
-                android:paddingRight="5dp"
                 android:paddingBottom="10dp"
                 android:background="@drawable/toolbar_button_selector"/>
 
             <TextView
                 android:id="@+id/textDownvotes"
                 android:layout_gravity="center_vertical"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="1034"
                 android:scaleType="fitCenter"
@@ -97,7 +94,8 @@
                 android:textColor="@color/colorImageToolbarText"
                 android:textSize="16sp"
                 android:paddingTop="1dp"
-                android:background="@drawable/toolbar_button_selector"/>
+                android:background="@drawable/toolbar_button_selector"
+                android:paddingLeft="5dp" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

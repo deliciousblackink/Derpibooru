@@ -34,28 +34,4 @@ public class MainActivityTabAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return mTabs.get(position).getTitle();
     }
-
-    public class Tab {
-        private int mPosition;
-        private String mTitle;
-        private Fragment mContent;
-
-        public Tab(int position, String title, Fragment content) {
-            this.mPosition = position;
-            this.mTitle = title;
-            this.mContent = content;
-        }
-
-        public int getPosition() {
-            return mPosition;
-        }
-
-        public String getTitle() {
-            return mTitle;
-        }
-
-        public Fragment getContent() {
-            return mContent;
-        }
-    }
 }

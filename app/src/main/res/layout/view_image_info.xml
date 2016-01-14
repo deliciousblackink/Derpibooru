@@ -1,0 +1,156 @@
+<!-- TODO: Optimize (simplify) the layout -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#ccc">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:paddingLeft="2dp">
+
+        <LinearLayout
+            android:id="@+id/buttonFave"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:padding="0dp">
+
+            <ImageView
+                android:id="@+id/imgFave"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/star_empty"
+                android:background="#ccc"
+                android:scaleType="fitCenter"
+                android:paddingLeft="0dp"
+                android:paddingTop="11dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/textFaves"
+                android:layout_gravity="center_vertical"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:text="1400"
+                android:background="#ccc"
+                android:scaleType="fitCenter"
+                android:gravity="center_vertical"
+                android:textColor="#FBFBFB"
+                android:textSize="16sp"
+                android:paddingTop="1dp"
+                android:layout_marginLeft="3dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/buttonUpvote"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:padding="0dp">
+
+            <ImageView
+                android:id="@+id/imgUpvote"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/arrow_empty_up"
+                android:background="#ccc"
+                android:scaleType="fitCenter"
+                android:paddingLeft="0dp"
+                android:paddingTop="10dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/textUpvotes"
+                android:layout_gravity="center_vertical"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:text="2800"
+                android:background="#ccc"
+                android:scaleType="fitCenter"
+                android:gravity="center_vertical"
+                android:textColor="#FBFBFB"
+                android:textSize="16sp"
+                android:paddingTop="1dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/buttonDownvote"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:padding="0dp">
+
+            <ImageView
+                android:id="@+id/imgDownvote"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/arrow_empty_down"
+                android:background="#ccc"
+                android:scaleType="fitCenter"
+                android:paddingLeft="5dp"
+                android:paddingTop="12dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="10dp" />
+
+            <TextView
+                android:id="@+id/textDownvotes"
+                android:layout_gravity="center_vertical"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:text="1034"
+                android:background="#ccc"
+                android:scaleType="fitCenter"
+                android:gravity="center_vertical"
+                android:textColor="#FBFBFB"
+                android:textSize="16sp"
+                android:paddingTop="1dp" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:padding="0dp">
+
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:text="S"
+            android:background="#ccc"
+            android:scaleType="fitCenter"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="#FBFBFB"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textScore"
+            android:layout_gravity="center_vertical"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:text="1766"
+            android:background="#ccc"
+            android:scaleType="fitCenter"
+            android:gravity="center_vertical"
+            android:textColor="#FBFBFB"
+            android:textSize="16sp"
+            android:paddingTop="1dp" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

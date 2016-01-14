@@ -57,7 +57,7 @@ public abstract class Query {
         InputStream is = null;
 
         try {
-            HttpURLConnection c = (HttpURLConnection)url.openConnection();
+            HttpURLConnection c = (HttpURLConnection) url.openConnection();
             c.setReadTimeout(10000);
             c.setConnectTimeout(15000);
             c.setRequestMethod("GET");

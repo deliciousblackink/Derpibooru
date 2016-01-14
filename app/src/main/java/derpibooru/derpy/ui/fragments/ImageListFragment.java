@@ -15,7 +15,7 @@ import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.GalleryAdapter;
 
 public abstract class ImageListFragment extends Fragment
-                                        implements QueryHandler {
+        implements QueryHandler {
     public ImageListFragment() {
     }
 

@@ -2,11 +2,9 @@ package derpibooru.derpy.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -18,13 +16,12 @@ import com.bumptech.glide.request.target.Target;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.types.Image;
 import derpibooru.derpy.server.ImageFetcher;
-import derpibooru.derpy.server.util.Json;
 import derpibooru.derpy.server.util.QueryHandler;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
-import derpibooru.derpy.ui.views.ImageInfoView;
+import derpibooru.derpy.ui.views.ImageTopBarView;
 
 public class ImageActivity extends AppCompatActivity
-                           implements QueryHandler {
+        implements QueryHandler {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +45,7 @@ public class ImageActivity extends AppCompatActivity
     @Override
     public void queryPerformed(Object image) {
         Image i = (Image) image;
-        ImageInfoView iiv = (ImageInfoView) findViewById(R.id.imageInfo);
+        ImageTopBarView iiv = (ImageTopBarView) findViewById(R.id.imageInfo);
         iiv.setInfo(i.getUpvotes(), i.getDownvotes(), i.getScore());
         ImageBottomBarView ibbv = (ImageBottomBarView) findViewById(R.id.imageBottomBar);
         ibbv.setInfo(i.getFaves(), i.getCommentCount());
@@ -76,7 +73,7 @@ public class ImageActivity extends AppCompatActivity
 
     /* Respond to ActionBar's Up (Back) button */
     @Override
-    public boolean onOptionsItemSelected (MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -86,7 +83,7 @@ public class ImageActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed () {
+    public void onBackPressed() {
         finish();
     }
 }

@@ -8,16 +8,16 @@ import android.widget.TextView;
 
 import derpibooru.derpy.R;
 
-public class ImageInfoView extends FrameLayout {
-    public ImageInfoView(Context context) {
+public class ImageTopBarView extends FrameLayout {
+    public ImageTopBarView(Context context) {
         super(context);
     }
 
-    public ImageInfoView(Context context, AttributeSet attrs) {
+    public ImageTopBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ImageInfoView(Context context, AttributeSet attrs, int defStyle) {
+    public ImageTopBarView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -32,7 +32,7 @@ public class ImageInfoView extends FrameLayout {
     }
 
     private void init() {
-        View view = inflate(getContext(), R.layout.view_image_info, null);
+        View view = inflate(getContext(), R.layout.view_image_top_bar, null);
         addView(view);
     }
 }

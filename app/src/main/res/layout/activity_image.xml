@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="derpibooru.derpy.ui.ImageActivity">
 
-    <derpibooru.derpy.ui.views.ImageInfoView
+    <derpibooru.derpy.ui.views.ImageTopBarView
         android:id="@+id/imageInfo"
         android:layout_width="match_parent"
         android:layout_height="50dp" />
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="visible"/>
+            android:visibility="visible" />
     </RelativeLayout>
 
     <derpibooru.derpy.ui.views.ImageBottomBarView

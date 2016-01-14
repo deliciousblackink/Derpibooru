@@ -6,7 +6,10 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import derpibooru.derpy.data.types.ImageThumb;
-import derpibooru.derpy.server.util.*;
+import derpibooru.derpy.server.util.Json;
+import derpibooru.derpy.server.util.Query;
+import derpibooru.derpy.server.util.QueryHandler;
+import derpibooru.derpy.server.util.UrlBuilder;
 
 /**
  * Asynchronous image list (an array of {id, score, etc.}) fetcher. The receiving object has to
@@ -40,8 +43,7 @@ public class ImageList extends Query {
      *
      * @param hours the time limit in hours
      */
-    public ImageList inHours(int hours)
-    {
+    public ImageList inHours(int hours) {
         mTime = Integer.toString(hours) + "h";
         return this;
     }
@@ -52,8 +54,7 @@ public class ImageList extends Query {
      *
      * @param days the time limit in days
      */
-    public ImageList inDays(int days)
-    {
+    public ImageList inDays(int days) {
         mTime = Integer.toString(days) + "d";
         return this;
     }
@@ -64,8 +65,7 @@ public class ImageList extends Query {
      *
      * @param weeks the time limit in weeks
      */
-    public ImageList inWeeks(int weeks)
-    {
+    public ImageList inWeeks(int weeks) {
         mTime = Integer.toString(weeks) + "w";
         return this;
     }
@@ -74,8 +74,7 @@ public class ImageList extends Query {
      * Requests Derpibooru server to fetch an image list with the parameters
      * specified via public methods of the class.
      */
-    public void load()
-    {
+    public void load() {
         URL url = UrlBuilder.generateListUrl(mListType, mTime);
         if (url != null) {
             executeQuery(url);

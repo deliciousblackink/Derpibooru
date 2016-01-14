@@ -20,6 +20,7 @@ import derpibooru.derpy.data.types.Image;
 import derpibooru.derpy.server.ImageFetcher;
 import derpibooru.derpy.server.util.Json;
 import derpibooru.derpy.server.util.QueryHandler;
+import derpibooru.derpy.ui.views.ImageBottomBarView;
 import derpibooru.derpy.ui.views.ImageInfoView;
 
 public class ImageActivity extends AppCompatActivity
@@ -48,7 +49,9 @@ public class ImageActivity extends AppCompatActivity
     public void queryPerformed(Object image) {
         Image i = (Image) image;
         ImageInfoView iiv = (ImageInfoView) findViewById(R.id.imageInfo);
-        iiv.setInfo(i.getFaves(), i.getUpvotes(), i.getDownvotes(), i.getScore());
+        iiv.setInfo(i.getUpvotes(), i.getDownvotes(), i.getScore());
+        ImageBottomBarView ibbv = (ImageBottomBarView) findViewById(R.id.imageBottomBar);
+        ibbv.setInfo(i.getFaves(), i.getCommentCount());
 
         ImageView iv = (ImageView) findViewById(R.id.imageView);
         Glide.with(this)
@@ -72,18 +75,18 @@ public class ImageActivity extends AppCompatActivity
     }
 
     /* Respond to ActionBar's Up (Back) button */
-                        @Override
-                        public boolean onOptionsItemSelected (MenuItem item){
-                            switch (item.getItemId()) {
-                                case android.R.id.home:
-                                    finish();
-                                    return true;
-                            }
-                            return super.onOptionsItemSelected(item);
-                        }
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item){
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-                        @Override
-                        public void onBackPressed () {
-                            finish();
-                        }
-                    }
+    @Override
+    public void onBackPressed () {
+        finish();
+    }
+}

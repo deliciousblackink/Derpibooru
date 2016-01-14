@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#519ed7</color>
     <color name="colorAccent">#ff4081</color>
     <color name="colorTabBackground">#eeeeee</color>
+
+    <color name="colorImageToolbar">#cccccc</color>
+    <color name="colorImageToolbarText">#fbfbfb</color>
 </resources>

@@ -21,10 +21,8 @@ public class ImageInfoView extends FrameLayout {
         super(context, attrs, defStyle);
     }
 
-    public void setInfo(int faves, int upvotes, int downvotes, int score) {
+    public void setInfo(int upvotes, int downvotes, int score) {
         init();
-        TextView f = (TextView) this.findViewById(R.id.textFaves);
-        f.setText(Integer.toString(faves));
         TextView u = (TextView) this.findViewById(R.id.textUpvotes);
         u.setText(Integer.toString(upvotes));
         TextView d = (TextView) this.findViewById(R.id.textDownvotes);

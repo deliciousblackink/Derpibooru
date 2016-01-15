@@ -54,19 +54,19 @@ public class ImageActivity extends AppCompatActivity
     @Override
     public void showBottomToolbarOnly() {
         RelativeLayout imageView = (RelativeLayout) findViewById(R.id.imageViewLayout);
-        toggleToolbarAnimation(imageView, 4.0f, 2.0f);
+        toggleToolbarAnimation(imageView, 2.0f, 4.0f);
     }
 
     @Override
     public void showBottomToolbarWithTabs() {
         RelativeLayout imageView = (RelativeLayout) findViewById(R.id.imageViewLayout);
-        toggleToolbarAnimation(imageView, 2.0f, 4.0f);
+        toggleToolbarAnimation(imageView, 4.0f, 2.0f);
     }
 
     private void toggleToolbarAnimation(View content, float currentWeight,
                                         float targetWeight) {
         Animation a;
-        a = new ExpandViewAnimation(content, targetWeight, currentWeight);
+        a = new ExpandViewAnimation(content, currentWeight, targetWeight);
         a.setDuration(TOOLBAR_ANIMATION_DURATION);
         content.startAnimation(a);
     }

@@ -70,7 +70,7 @@ public class ImageBottomBarView extends FrameLayout {
         if (mPager == null) {
             /* set up ViewPager */
             mPager = (ViewPager) findViewById(R.id.bottomTabsPager);
-            mPager.setAdapter(new MainActivityTabAdapter(mFragmentManager));
+            mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager));
         }
 
         if (!v.isSelected()) {

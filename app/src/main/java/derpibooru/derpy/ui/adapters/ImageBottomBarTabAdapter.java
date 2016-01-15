@@ -10,7 +10,6 @@ import derpibooru.derpy.ui.fragments.ImageInfoTabFragment;
 public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
     private ArrayList<Tab> mTabs;
 
-
     public ImageBottomBarTabAdapter(FragmentManager fm) {
         super(fm);
 

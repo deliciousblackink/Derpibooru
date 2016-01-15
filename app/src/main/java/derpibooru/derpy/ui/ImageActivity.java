@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -46,7 +45,7 @@ public class ImageActivity extends AppCompatActivity
         int id = intent.getIntExtra("id", 0);
 
         setTitle("#" + Integer.toString(id));
-        /* TODO: Speed up the loading by passing ImageThumb object & fetching data from it */
+        /* TODO: speed up the loading by passing ImageThumb object & fetching data from it */
         ImageFetcher i = new ImageFetcher(this, this);
         i.id(id).fetch();
     }
@@ -54,12 +53,20 @@ public class ImageActivity extends AppCompatActivity
     @Override
     public void showBottomToolbarOnly() {
         RelativeLayout imageView = (RelativeLayout) findViewById(R.id.imageViewLayout);
+        /* TODO: move the magic numbers away
+         * ! don't forget to change the layout file;
+         * ImageBottomBarView's weight is also hardcoded
+         */
         toggleToolbarAnimation(imageView, 2.0f, 4.0f);
     }
 
     @Override
     public void showBottomToolbarWithTabs() {
         RelativeLayout imageView = (RelativeLayout) findViewById(R.id.imageViewLayout);
+         /* TODO: move the magic numbers away
+         * ! don't forget to change the layout file;
+         * ImageBottomBarView's weight is also hardcoded
+         */
         toggleToolbarAnimation(imageView, 4.0f, 2.0f);
     }
 

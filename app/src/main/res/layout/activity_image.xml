@@ -36,7 +36,7 @@
         android:id="@+id/imageBottomBar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_alignParentEnd="false"
         android:layout_alignParentRight="false"
         android:layout_alignParentLeft="false"

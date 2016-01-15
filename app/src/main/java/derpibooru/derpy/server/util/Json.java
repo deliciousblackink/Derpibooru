@@ -33,7 +33,7 @@ public class Json {
             for (int x = 0; x < imgCount; x++) {
                 JSONObject img = images.getJSONObject(x);
 
-                /* TODO: move the magical strings into a dedicated data structure */
+                /* TODO: move the magic strings into a dedicated data structure */
                 ImageThumb it = new ImageThumb(img.getInt("id_number"),
                         img.getInt("score"), img.getInt("upvotes"),
                         img.getInt("downvotes"), img.getInt("faves"),
@@ -65,7 +65,7 @@ public class Json {
 
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S", Locale.ENGLISH);
 
-            /* TODO: move the magical strings into a dedicated data structure */
+            /* TODO: move the magic strings into a dedicated data structure */
             Image i = new Image(img.getInt("id_number"),
                     img.getInt("score"), img.getInt("upvotes"),
                     img.getInt("downvotes"), img.getInt("faves"),

@@ -12,13 +12,12 @@ import android.widget.TextView;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
-import derpibooru.derpy.ui.adapters.MainActivityTabAdapter;
 
 public class ImageBottomBarView extends FrameLayout {
     private static final int[] LAYOUT_BUTTONS = {
             R.id.buttonInfo,
-            R.id.buttonComments,
-            R.id.buttonFave };
+            R.id.buttonFaves,
+            R.id.buttonComments };
 
     private ViewPager mPager;
     private FragmentManager mFragmentManager;
@@ -50,10 +49,10 @@ public class ImageBottomBarView extends FrameLayout {
     /* To be removed */
     public void setInfo(int faves, int comments) {
         init();
-        TextView u = (TextView) this.findViewById(R.id.textComments);
-        u.setText(Integer.toString(comments));
         TextView d = (TextView) this.findViewById(R.id.textFaves);
         d.setText(Integer.toString(faves));
+        TextView u = (TextView) this.findViewById(R.id.textComments);
+        u.setText(Integer.toString(comments));
     }
 
     public void onButtonTouched(View v) {
@@ -68,9 +67,7 @@ public class ImageBottomBarView extends FrameLayout {
 
     public void onButtonClicked(View v) {
         if (mPager == null) {
-            /* set up ViewPager */
-            mPager = (ViewPager) findViewById(R.id.bottomTabsPager);
-            mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager));
+            initViewPager();
         }
 
         if (!v.isSelected()) {
@@ -90,12 +87,12 @@ public class ImageBottomBarView extends FrameLayout {
                     mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.ImageInfo.getID(),
                             true);
                     break;
-                case R.id.buttonComments:
-                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Comments.getID(),
+                case R.id.buttonFaves:
+                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Faves.getID(),
                             true);
                     break;
-                case R.id.buttonFave:
-                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Faves.getID(),
+                case R.id.buttonComments:
+                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Comments.getID(),
                             true);
                     break;
             }
@@ -129,5 +126,28 @@ public class ImageBottomBarView extends FrameLayout {
                 }
             });
         }
+    }
+
+    private void initViewPager() {
+        /* set up ViewPager */
+        mPager = (ViewPager) findViewById(R.id.bottomTabsPager);
+        mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager));
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                /* TODO: insert transition for the button color */
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                LinearLayout ll = (LinearLayout) findViewById(LAYOUT_BUTTONS[position]);
+                ll.setSelected(true);
+                onButtonTouched(ll); /* deselect other buttons */
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 }

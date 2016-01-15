@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 
+import derpibooru.derpy.ui.fragments.ImageCommentsTabFragment;
+import derpibooru.derpy.ui.fragments.ImageFavoritesTabFragment;
 import derpibooru.derpy.ui.fragments.ImageInfoTabFragment;
 
 public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
@@ -15,6 +17,8 @@ public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
 
         mTabs = new ArrayList<>();
         mTabs.add(new Tab(ImageBottomBarTabs.ImageInfo.getID(), new ImageInfoTabFragment()));
+        mTabs.add(new Tab(ImageBottomBarTabs.Faves.getID(), new ImageFavoritesTabFragment()));
+        mTabs.add(new Tab(ImageBottomBarTabs.Comments.getID(), new ImageCommentsTabFragment()));
     }
 
     @Override
@@ -34,8 +38,8 @@ public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
 
     public enum ImageBottomBarTabs {
         ImageInfo(0),
-        Comments(1),
-        Faves(2);
+        Faves(1),
+        Comments(2);
 
         private int mID;
 

@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 
 import derpibooru.derpy.R;
 
-public class ImageInfoTabFragment extends Fragment {
-    public ImageInfoTabFragment() {
+public class ImageCommentsTabFragment extends Fragment {
+    public ImageCommentsTabFragment() {
         super();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_image_info_tab, container, false);
+        return inflater.inflate(R.layout.fragment_image_comments_tab, container, false);
     }
 }

@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -18,10 +20,11 @@ import derpibooru.derpy.data.types.Image;
 import derpibooru.derpy.server.ImageFetcher;
 import derpibooru.derpy.server.util.QueryHandler;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
+import derpibooru.derpy.ui.views.ImageBottomBarViewHandler;
 import derpibooru.derpy.ui.views.ImageTopBarView;
 
 public class ImageActivity extends AppCompatActivity
-        implements QueryHandler {
+        implements QueryHandler, ImageBottomBarViewHandler {
 
     private ImageBottomBarView mBottomBar;
 
@@ -33,15 +36,36 @@ public class ImageActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mBottomBar = (ImageBottomBarView) findViewById(R.id.imageBottomBar);
-        mBottomBar.setFragmentManager(getSupportFragmentManager());
+        mBottomBar.setFragmentManager(getSupportFragmentManager())
+                .setBottomToolbarViewHandler(this);
 
-        /* TODO: Speed up the loading by passing ImageThumb object & fetching data from it */
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 0);
 
         setTitle("#" + Integer.toString(id));
+        /* TODO: Speed up the loading by passing ImageThumb object & fetching data from it */
         ImageFetcher i = new ImageFetcher(this, this);
         i.id(id).fetch();
+    }
+
+    @Override
+    public void showBottomToolbarOnly() {
+        /* TODO: animation */
+        RelativeLayout imageView = (RelativeLayout) findViewById(R.id.imageViewLayout);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0);
+        params.weight = 4.0f;
+        imageView.setLayoutParams(params);
+    }
+
+    @Override
+    public void showBottomToolbarWithTabs() {
+        /* TODO: animation */
+        RelativeLayout imageView = (RelativeLayout) findViewById(R.id.imageViewLayout);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0);
+        params.weight = 2.0f;
+        imageView.setLayoutParams(params);
     }
 
     @Override

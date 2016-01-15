@@ -1,7 +1,6 @@
 package derpibooru.derpy.ui.views;
 
 import android.content.Context;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -18,6 +17,7 @@ import derpibooru.derpy.ui.adapters.MainActivityTabAdapter;
 public class ImageBottomBarView extends FrameLayout {
     private ViewPager mPager;
     private FragmentManager mFragmentManager;
+    private ImageBottomBarViewHandler mViewHandler;
 
     private static final int[] LAYOUT_BUTTONS = {
             R.id.buttonInfo,
@@ -38,6 +38,11 @@ public class ImageBottomBarView extends FrameLayout {
 
     public ImageBottomBarView setFragmentManager(FragmentManager fm) {
         mFragmentManager = fm;
+        return this;
+    }
+
+    public ImageBottomBarView setBottomToolbarViewHandler(ImageBottomBarViewHandler handler) {
+        mViewHandler = handler;
         return this;
     }
 
@@ -73,6 +78,7 @@ public class ImageBottomBarView extends FrameLayout {
             if (mPager.getVisibility() == View.GONE) {
                 mPager.setVisibility(View.VISIBLE);
             }
+            mViewHandler.showBottomToolbarWithTabs();
 
             /* navigate ViewPager to the corresponding tab */
             switch (v.getId()) {
@@ -93,6 +99,7 @@ public class ImageBottomBarView extends FrameLayout {
             v.setSelected(false);
             /* clicking on the active button hides the ViewPager */
             mPager.setVisibility(View.GONE);
+            mViewHandler.showBottomToolbarOnly();
         }
     }
 

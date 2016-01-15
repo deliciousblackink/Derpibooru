@@ -15,14 +15,15 @@ import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
 import derpibooru.derpy.ui.adapters.MainActivityTabAdapter;
 
 public class ImageBottomBarView extends FrameLayout {
-    private ViewPager mPager;
-    private FragmentManager mFragmentManager;
-    private ImageBottomBarViewHandler mViewHandler;
-
     private static final int[] LAYOUT_BUTTONS = {
             R.id.buttonInfo,
             R.id.buttonComments,
             R.id.buttonFave };
+
+    private ViewPager mPager;
+    private FragmentManager mFragmentManager;
+    private ImageBottomBarViewHandler mViewHandler;
+    private boolean mIsExteded = false;
 
     public ImageBottomBarView(Context context) {
         super(context);
@@ -78,7 +79,10 @@ public class ImageBottomBarView extends FrameLayout {
             if (mPager.getVisibility() == View.GONE) {
                 mPager.setVisibility(View.VISIBLE);
             }
-            mViewHandler.showBottomToolbarWithTabs();
+            if (!mIsExteded) {
+                mIsExteded = true;
+                mViewHandler.showBottomToolbarWithTabs();
+            }
 
             /* navigate ViewPager to the corresponding tab */
             switch (v.getId()) {
@@ -100,6 +104,7 @@ public class ImageBottomBarView extends FrameLayout {
             /* clicking on the active button hides the ViewPager */
             mPager.setVisibility(View.GONE);
             mViewHandler.showBottomToolbarOnly();
+            mIsExteded = false;
         }
     }
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -19,12 +20,14 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.types.Image;
 import derpibooru.derpy.server.ImageFetcher;
 import derpibooru.derpy.server.util.QueryHandler;
+import derpibooru.derpy.ui.animations.ExpandViewAnimation;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
 import derpibooru.derpy.ui.views.ImageBottomBarViewHandler;
 import derpibooru.derpy.ui.views.ImageTopBarView;
 
 public class ImageActivity extends AppCompatActivity
         implements QueryHandler, ImageBottomBarViewHandler {
+    private static final int TOOLBAR_ANIMATION_DURATION = 200;
 
     private ImageBottomBarView mBottomBar;
 
@@ -50,22 +53,22 @@ public class ImageActivity extends AppCompatActivity
 
     @Override
     public void showBottomToolbarOnly() {
-        /* TODO: animation */
         RelativeLayout imageView = (RelativeLayout) findViewById(R.id.imageViewLayout);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 0);
-        params.weight = 4.0f;
-        imageView.setLayoutParams(params);
+        toggleToolbarAnimation(imageView, 4.0f, 2.0f);
     }
 
     @Override
     public void showBottomToolbarWithTabs() {
-        /* TODO: animation */
         RelativeLayout imageView = (RelativeLayout) findViewById(R.id.imageViewLayout);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 0);
-        params.weight = 2.0f;
-        imageView.setLayoutParams(params);
+        toggleToolbarAnimation(imageView, 2.0f, 4.0f);
+    }
+
+    private void toggleToolbarAnimation(View content, float currentWeight,
+                                        float targetWeight) {
+        Animation a;
+        a = new ExpandViewAnimation(content, targetWeight, currentWeight);
+        a.setDuration(TOOLBAR_ANIMATION_DURATION);
+        content.startAnimation(a);
     }
 
     @Override

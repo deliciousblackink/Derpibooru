@@ -23,7 +23,7 @@ public class ImageBottomBarView extends FrameLayout {
     private ViewPager mPager;
     private FragmentManager mFragmentManager;
     private ImageBottomBarViewHandler mViewHandler;
-    private boolean mIsExteded = false;
+    private boolean mIsExtended = false;
 
     public ImageBottomBarView(Context context) {
         super(context);
@@ -79,8 +79,8 @@ public class ImageBottomBarView extends FrameLayout {
             if (mPager.getVisibility() == View.GONE) {
                 mPager.setVisibility(View.VISIBLE);
             }
-            if (!mIsExteded) {
-                mIsExteded = true;
+            if (!mIsExtended) {
+                mIsExtended = true;
                 mViewHandler.showBottomToolbarWithTabs();
             }
 
@@ -104,7 +104,7 @@ public class ImageBottomBarView extends FrameLayout {
             /* clicking on the active button hides the ViewPager */
             mPager.setVisibility(View.GONE);
             mViewHandler.showBottomToolbarOnly();
-            mIsExteded = false;
+            mIsExtended = false;
         }
     }
 

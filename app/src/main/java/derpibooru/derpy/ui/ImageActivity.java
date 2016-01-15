@@ -22,6 +22,9 @@ import derpibooru.derpy.ui.views.ImageTopBarView;
 
 public class ImageActivity extends AppCompatActivity
         implements QueryHandler {
+
+    private ImageBottomBarView mBottomBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,10 @@ public class ImageActivity extends AppCompatActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mBottomBar = (ImageBottomBarView) findViewById(R.id.imageBottomBar);
+        mBottomBar.setFragmentManager(getSupportFragmentManager());
+
+        /* TODO: Speed up the loading by passing ImageThumb object & fetching data from it */
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 0);
 
@@ -47,8 +54,8 @@ public class ImageActivity extends AppCompatActivity
         Image i = (Image) image;
         ImageTopBarView iiv = (ImageTopBarView) findViewById(R.id.imageInfo);
         iiv.setInfo(i.getUpvotes(), i.getDownvotes(), i.getScore());
-        ImageBottomBarView ibbv = (ImageBottomBarView) findViewById(R.id.imageBottomBar);
-        ibbv.setInfo(i.getFaves(), i.getCommentCount());
+
+        mBottomBar.setInfo(i.getFaves(), i.getCommentCount());
 
         ImageView iv = (ImageView) findViewById(R.id.imageView);
         Glide.with(this)

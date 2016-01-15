@@ -23,6 +23,6 @@ public class TopScoringFragment extends ImageListFragment {
         il.type(ImageList.Type.TopScoring).inDays(3).load();
         /* ImageList handling is implemented in the ImageListFragment abstract class */
 
-        return inflater.inflate(R.layout.layout_gallery_top_scoring, container, false);
+        return inflater.inflate(R.layout.fragment_top_scoring, container, false);
     }
 }

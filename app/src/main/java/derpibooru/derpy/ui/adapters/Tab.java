@@ -13,6 +13,13 @@ public class Tab {
         this.mContent = content;
     }
 
+    public Tab(int position, Fragment content) {
+        this.mPosition = position;
+        this.mContent = content;
+
+        this.mTitle = "";
+    }
+
     public int getPosition() {
         return mPosition;
     }

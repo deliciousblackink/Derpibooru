@@ -12,7 +12,7 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.types.ImageThumb;
 import derpibooru.derpy.server.util.QueryHandler;
 import derpibooru.derpy.ui.ImageActivity;
-import derpibooru.derpy.ui.adapters.GalleryAdapter;
+import derpibooru.derpy.ui.adapters.ImageListAdapter;
 
 public abstract class ImageListFragment extends Fragment
         implements QueryHandler {
@@ -27,8 +27,8 @@ public abstract class ImageListFragment extends Fragment
         ArrayList<ImageThumb> images = (ArrayList<ImageThumb>) imageList;
 
         GridView gv = (GridView) getView().findViewById(R.id.gallery);
-        GalleryAdapter ga = new GalleryAdapter(getContext(), R.layout.view_gallery_item, images);
-        gv.setAdapter(ga);
+        ImageListAdapter ila = new ImageListAdapter(getContext(), R.layout.view_gallery_item, images);
+        gv.setAdapter(ila);
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -36,7 +36,7 @@ public abstract class ImageListFragment extends Fragment
                                     int position, long id) {
                 Intent intent = new Intent(getContext(), ImageActivity.class);
                 int imgId = (int)
-                        ((GalleryAdapter.ViewHolder) v.getTag()).info.getTag();
+                        ((ImageListAdapter.ViewHolder) v.getTag()).info.getTag();
                 intent.putExtra("id", imgId);
                 startActivity(intent);
             }

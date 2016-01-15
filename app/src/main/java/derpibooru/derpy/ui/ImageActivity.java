@@ -17,6 +17,7 @@ import com.bumptech.glide.request.target.Target;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.types.Image;
+import derpibooru.derpy.data.types.ImageThumb;
 import derpibooru.derpy.server.ImageFetcher;
 import derpibooru.derpy.server.util.QueryHandler;
 import derpibooru.derpy.ui.animations.ExpandViewAnimation;
@@ -28,8 +29,6 @@ public class ImageActivity extends AppCompatActivity
         implements QueryHandler, ImageBottomBarViewHandler {
     private static final int TOOLBAR_ANIMATION_DURATION = 200;
 
-    private ImageBottomBarView mBottomBar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,17 +36,53 @@ public class ImageActivity extends AppCompatActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mBottomBar = (ImageBottomBarView) findViewById(R.id.imageBottomBar);
-        mBottomBar.setFragmentManager(getSupportFragmentManager())
-                .setBottomToolbarViewHandler(this);
-
         Intent intent = getIntent();
-        int id = intent.getIntExtra("id", 0);
+        loadImage((ImageThumb) intent.getParcelableExtra("image_data"));
+    }
 
-        setTitle("#" + Integer.toString(id));
-        /* TODO: speed up the loading by passing ImageThumb object & fetching data from it */
+    private void loadImage(ImageThumb it) {
+        setTitle("#" + Integer.toString(it.getId()));
+
+        ImageTopBarView iiv = (ImageTopBarView) findViewById(R.id.imageInfo);
+        iiv.setInfo(it.getUpvotes(), it.getDownvotes(), it.getScore());
+
+        ImageBottomBarView ibbv = (ImageBottomBarView) findViewById(R.id.imageBottomBar);
+        ibbv.setFragmentManager(getSupportFragmentManager())
+                .setBottomToolbarViewHandler(this);
+        ibbv.setInfo(it.getFaves(), it.getCommentCount());
+
         ImageFetcher i = new ImageFetcher(this, this);
-        i.id(id).fetch();
+        i.id(it.getId()).fetch();
+    }
+
+    @Override
+    public void queryFailed() {
+
+    }
+
+    @Override
+    public void queryPerformed(Object image) {
+        Image i = (Image) image;
+
+        ImageView iv = (ImageView) findViewById(R.id.imageView);
+        Glide.with(this)
+                .load(i.getImgUrl())
+                .fitCenter()
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        ProgressBar pb = (ProgressBar) findViewById(R.id.imageProgress);
+                        pb.setVisibility(View.INVISIBLE);
+                        return false;
+                    }
+                })
+                .crossFade()
+                .into(iv);
     }
 
     @Override
@@ -76,40 +111,6 @@ public class ImageActivity extends AppCompatActivity
         a = new ExpandViewAnimation(content, currentWeight, targetWeight);
         a.setDuration(TOOLBAR_ANIMATION_DURATION);
         content.startAnimation(a);
-    }
-
-    @Override
-    public void queryFailed() {
-
-    }
-
-    @Override
-    public void queryPerformed(Object image) {
-        Image i = (Image) image;
-        ImageTopBarView iiv = (ImageTopBarView) findViewById(R.id.imageInfo);
-        iiv.setInfo(i.getUpvotes(), i.getDownvotes(), i.getScore());
-
-        mBottomBar.setInfo(i.getFaves(), i.getCommentCount());
-
-        ImageView iv = (ImageView) findViewById(R.id.imageView);
-        Glide.with(this)
-                .load(i.getImgUrl())
-                .fitCenter()
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        ProgressBar pb = (ProgressBar) findViewById(R.id.imageProgress);
-                        pb.setVisibility(View.INVISIBLE);
-                        return false;
-                    }
-                })
-                .crossFade()
-                .into(iv);
     }
 
     /* Respond to ActionBar's Up (Back) button */

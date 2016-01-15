@@ -35,9 +35,7 @@ public abstract class ImageListFragment extends Fragment
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 Intent intent = new Intent(getContext(), ImageActivity.class);
-                int imgId = (int)
-                        ((ImageListAdapter.ViewHolder) v.getTag()).info.getTag();
-                intent.putExtra("id", imgId);
+                intent.putExtra("image_data", ((ImageListAdapter.ViewHolder) v.getTag()).data);
                 startActivity(intent);
             }
         });

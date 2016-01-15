@@ -1,6 +1,11 @@
 package derpibooru.derpy.data.types;
 
-public class ImageThumb {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+/* http://www.parcelabler.com/ is a lifesaver */
+
+public class ImageThumb implements Parcelable {
     private int mId;
     private int mScore;
     private int mUpvotes;
@@ -47,4 +52,43 @@ public class ImageThumb {
     public String getThumbUrl() {
         return mThumbUrl;
     }
+
+    protected ImageThumb(Parcel in) {
+        mId = in.readInt();
+        mScore = in.readInt();
+        mUpvotes = in.readInt();
+        mDownvotes = in.readInt();
+        mFaves = in.readInt();
+        mCommentCount = in.readInt();
+        mThumbUrl = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeInt(mScore);
+        dest.writeInt(mUpvotes);
+        dest.writeInt(mDownvotes);
+        dest.writeInt(mFaves);
+        dest.writeInt(mCommentCount);
+        dest.writeString(mThumbUrl);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<ImageThumb> CREATOR = new Parcelable.Creator<ImageThumb>() {
+        @Override
+        public ImageThumb createFromParcel(Parcel in) {
+            return new ImageThumb(in);
+        }
+
+        @Override
+        public ImageThumb[] newArray(int size) {
+            return new ImageThumb[size];
+        }
+    };
 }

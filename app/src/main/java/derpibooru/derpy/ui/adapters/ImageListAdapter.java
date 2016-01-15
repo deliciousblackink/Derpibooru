@@ -45,6 +45,7 @@ public class ImageListAdapter extends ArrayAdapter {
             holder = new ViewHolder();
             holder.info = (TextView) row.findViewById(R.id.text);
             holder.image = (ImageView) row.findViewById(R.id.image);
+            holder.data = mImages.get(position);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
@@ -58,12 +59,12 @@ public class ImageListAdapter extends ArrayAdapter {
                 .into(holder.image);
 
         holder.info.setText(Integer.toString(mImages.get(position).getScore()));
-        holder.info.setTag(mImages.get(position).getId());
         return row;
     }
 
     public static class ViewHolder {
         public TextView info;
         public ImageView image;
+        public ImageThumb data; /* to be passed to ImageActivity upon opening the image */
     }
 }

@@ -12,10 +12,19 @@ public class ImageThumb implements Parcelable {
     private int mDownvotes;
     private int mFaves;
     private int mCommentCount;
+
+    /* These values are not used in image lists, but they are
+     * more easily acquired via JSON request than via HTML parsing,
+     * hence they are stored there and passed to the ImageActivity. */
     private String mThumbUrl;
+    private String mImageUrl;
+    private String mSourceUrl;
+    private String mUploader;
+    private String mDescription;
 
     public ImageThumb(int id, int score, int upvotes, int downvotes, int faves,
-                      int comments, String thumbUrl) {
+                      int comments, String thumbUrl, String imageUrl, String sourceUrl,
+                      String uploader, String description) {
         mId = id;
         mScore = score;
         mUpvotes = upvotes;
@@ -23,6 +32,10 @@ public class ImageThumb implements Parcelable {
         mFaves = faves;
         mCommentCount = comments;
         mThumbUrl = "https:" + thumbUrl;
+        mImageUrl = "https:" + imageUrl;
+        mSourceUrl = sourceUrl;
+        mUploader = uploader;
+        mDescription = description;
     }
 
     public int getId() {
@@ -53,6 +66,22 @@ public class ImageThumb implements Parcelable {
         return mThumbUrl;
     }
 
+    public String getImageUrl() {
+        return mImageUrl;
+    }
+
+    public String getSourceUrl() {
+        return mSourceUrl;
+    }
+
+    public String getUploader() {
+        return mUploader;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
     protected ImageThumb(Parcel in) {
         mId = in.readInt();
         mScore = in.readInt();
@@ -61,6 +90,10 @@ public class ImageThumb implements Parcelable {
         mFaves = in.readInt();
         mCommentCount = in.readInt();
         mThumbUrl = in.readString();
+        mImageUrl = in.readString();
+        mSourceUrl = in.readString();
+        mUploader = in.readString();
+        mDescription = in.readString();
     }
 
     @Override
@@ -77,6 +110,10 @@ public class ImageThumb implements Parcelable {
         dest.writeInt(mFaves);
         dest.writeInt(mCommentCount);
         dest.writeString(mThumbUrl);
+        dest.writeString(mImageUrl);
+        dest.writeString(mSourceUrl);
+        dest.writeString(mUploader);
+        dest.writeString(mDescription);
     }
 
     @SuppressWarnings("unused")

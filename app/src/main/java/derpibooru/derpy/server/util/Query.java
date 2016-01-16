@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
+import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
 
 public abstract class Query {
@@ -57,7 +57,7 @@ public abstract class Query {
         InputStream is = null;
 
         try {
-            HttpURLConnection c = (HttpURLConnection) url.openConnection();
+            HttpsURLConnection c = (HttpsURLConnection) url.openConnection();
             c.setReadTimeout(10000);
             c.setConnectTimeout(15000);
             c.setRequestMethod("GET");

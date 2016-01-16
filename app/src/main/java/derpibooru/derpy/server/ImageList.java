@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import derpibooru.derpy.data.types.ImageThumb;
-import derpibooru.derpy.server.util.Json;
+import derpibooru.derpy.server.util.JsonParser;
 import derpibooru.derpy.server.util.Query;
 import derpibooru.derpy.server.util.QueryHandler;
 import derpibooru.derpy.server.util.UrlBuilder;
@@ -85,7 +85,7 @@ public class ImageList extends Query {
 
     @Override
     public void processResponse(String response) {
-        Json json = new Json(response);
+        JsonParser json = new JsonParser(response);
         ArrayList<ImageThumb> img = json.readImageThumbs();
         mQueryHandler.queryPerformed(img);
     }

@@ -5,16 +5,16 @@ import android.content.Context;
 
 import java.net.URL;
 
-import derpibooru.derpy.data.types.Image;
-import derpibooru.derpy.server.util.Json;
+import derpibooru.derpy.data.types.ImageFullInfo;
+import derpibooru.derpy.server.util.HtmlParser;
 import derpibooru.derpy.server.util.Query;
 import derpibooru.derpy.server.util.QueryHandler;
 import derpibooru.derpy.server.util.UrlBuilder;
 
 /**
- * Asynchronous image data (id, score, etc.) fetcher. The receiving object has to implement the
+ * Asynchronous full image info (tags, faved by) fetcher. The receiving object has to implement the
  * 'QueryHandler' interface. Server response is passed via the 'queryPerformed' method as an
- * 'Image' object.
+ * 'ImageFullInfo' object.
  */
 public class ImageFetcher extends Query {
     private Integer mId;
@@ -48,10 +48,10 @@ public class ImageFetcher extends Query {
 
     @Override
     public void processResponse(String response) {
-        Json json = new Json(response);
-        Image i = json.readImage();
+        HtmlParser html = new HtmlParser(response);
+        ImageFullInfo i = html.readImage();
         if (i != null) {
-            mQueryHandler.queryPerformed(json.readImage());
+            mQueryHandler.queryPerformed(i);
         } else {
             mQueryHandler.queryFailed();
         }

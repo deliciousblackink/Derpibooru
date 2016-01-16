@@ -31,11 +31,11 @@ public class UrlBuilder {
     }
 
     public static URL generateImageUrl(int imageId) {
-        String request = String.format("%simages/%d.json", DERPIBOORU_DOMAIN, imageId);
+        String request = String.format("%simages/%d", DERPIBOORU_DOMAIN, imageId);
         try {
             return new URL(request);
         } catch (MalformedURLException e) {
-            Log.e("UrlBuilder", String.format("Could not form an Image URL, id=%d", imageId));
+            Log.e("UrlBuilder", String.format("Could not form an image URL, id=%d", imageId));
             return null;
         }
     }

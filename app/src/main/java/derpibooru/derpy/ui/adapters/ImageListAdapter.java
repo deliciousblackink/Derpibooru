@@ -36,30 +36,32 @@ public class ImageListAdapter extends ArrayAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
+        View view = convertView;
         ViewHolder holder;
 
-        if (row == null) {
+        if (view == null) {
             LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-            row = inflater.inflate(mLayoutResourceId, parent, false);
+            view = inflater.inflate(mLayoutResourceId, parent, false);
             holder = new ViewHolder();
-            holder.info = (TextView) row.findViewById(R.id.text);
-            holder.image = (ImageView) row.findViewById(R.id.image);
-            holder.data = mImages.get(position);
-            row.setTag(holder);
+            holder.info = (TextView) view.findViewById(R.id.text);
+            holder.image = (ImageView) view.findViewById(R.id.image);
+
+            view.setTag(holder);
         } else {
-            holder = (ViewHolder) row.getTag();
+            holder = (ViewHolder) view.getTag();
         }
 
+        holder.data = mImages.get(position);
+
         Glide.with(mContext)
-                .load(mImages.get(position).getThumbUrl())
+                .load(holder.data.getThumbUrl())
                 .centerCrop()
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(holder.image);
 
-        holder.info.setText(Integer.toString(mImages.get(position).getScore()));
-        return row;
+        holder.info.setText(Integer.toString(holder.data.getScore()));
+        return view;
     }
 
     public static class ViewHolder {

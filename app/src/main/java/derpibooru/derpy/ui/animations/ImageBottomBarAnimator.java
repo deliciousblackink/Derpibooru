@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
  * elements. It does not work inside scrollable views as it
  * assumes the full layout of the bar to be hidden beneath the screen.
  */
-public class ImageBottomBarAnimation {
+public class ImageBottomBarAnimator {
     private static final long ANIMATION_DURATION = 200;
     private static final float IMAGE_VIEW_EXTENDED_LAYOUT_WEIGHT = 4.0f;
     private static final float IMAGE_VIEW_COMPRESSED_LAYOUT_WEIGHT = 2.0f;
@@ -24,7 +24,7 @@ public class ImageBottomBarAnimation {
     /**
      * @param topView the View located above the bar
      */
-    public ImageBottomBarAnimation(View topView) {
+    public ImageBottomBarAnimator(View topView) {
         mTopView = topView;
     }
 

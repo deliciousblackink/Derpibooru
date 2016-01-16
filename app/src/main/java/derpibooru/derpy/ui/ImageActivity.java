@@ -17,29 +17,23 @@ import derpibooru.derpy.data.types.DerpibooruImageInfo;
 import derpibooru.derpy.data.types.DerpibooruImageThumb;
 import derpibooru.derpy.server.ImageFetcher;
 import derpibooru.derpy.server.util.QueryHandler;
-import derpibooru.derpy.ui.animations.ImageBottomBarAnimation;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
-import derpibooru.derpy.ui.views.ImageBottomBarViewHandler;
 import derpibooru.derpy.ui.views.ImageTopBarView;
 
 public class ImageActivity extends AppCompatActivity
-        implements QueryHandler, ImageBottomBarViewHandler {
-    private ImageBottomBarAnimation mBottomBarAnimation;
-
+                           implements QueryHandler {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mBottomBarAnimation = new ImageBottomBarAnimation(findViewById(R.id.imageViewLayout));
-
         DerpibooruImageThumb thumb = getIntent().getParcelableExtra("image_thumb");
         setBasicImageInfo(thumb);
         loadImageWithGlide(thumb.getImageUrl());
 
         ImageFetcher i = new ImageFetcher(this, this);
-        i.imageByThumb(thumb).fetch();
+        i.imageByThumb(thumb).fetch(); /* async load; see 'queryFailed' and 'queryPerformed' */
     }
 
     private void setBasicImageInfo(DerpibooruImageThumb thumb) {
@@ -50,7 +44,7 @@ public class ImageActivity extends AppCompatActivity
 
         ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
                 .setFragmentManager(getSupportFragmentManager())
-                .setBottomToolbarViewHandler(this)
+                .setViewAbove(findViewById(R.id.imageViewLayout))
                 .setBasicInfo(thumb.getFaves(), thumb.getCommentCount());
     }
 
@@ -85,16 +79,6 @@ public class ImageActivity extends AppCompatActivity
     @Override
     public void queryFailed() {
 
-    }
-
-    @Override
-    public void showBottomBarOnly() {
-        mBottomBarAnimation.animateBottomBarCompression();
-    }
-
-    @Override
-    public void showBottomBarWithTabs() {
-        mBottomBarAnimation.animateBottomBarExtension();
     }
 
     /* Respond to ActionBar's Up (Back) button */

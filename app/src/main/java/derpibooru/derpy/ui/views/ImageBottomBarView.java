@@ -1,16 +1,11 @@
 package derpibooru.derpy.ui.views;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +13,7 @@ import android.widget.TextView;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.types.DerpibooruImageInfo;
 import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
+import derpibooru.derpy.ui.animations.ImageBottomBarAnimator;
 
 public class ImageBottomBarView extends FrameLayout {
     private static final int[] LAYOUT_BUTTONS = {
@@ -27,7 +23,7 @@ public class ImageBottomBarView extends FrameLayout {
 
     private ViewPager mPager;
     private FragmentManager mFragmentManager;
-    private ImageBottomBarViewHandler mViewHandler;
+    private ImageBottomBarAnimator mAnimator;
     private boolean mIsExtended = false;
 
     public ImageBottomBarView(Context context) {
@@ -47,8 +43,8 @@ public class ImageBottomBarView extends FrameLayout {
         return this;
     }
 
-    public ImageBottomBarView setBottomToolbarViewHandler(ImageBottomBarViewHandler handler) {
-        mViewHandler = handler;
+    public ImageBottomBarView setViewAbove(View v) {
+        mAnimator = new ImageBottomBarAnimator(v);
         return this;
     }
 
@@ -73,7 +69,7 @@ public class ImageBottomBarView extends FrameLayout {
             }
             if (!mIsExtended) {
                 mIsExtended = true;
-                mViewHandler.showBottomBarWithTabs();
+                mAnimator.animateBottomBarExtension();
             }
 
             /* navigate ViewPager to the corresponding tab */
@@ -93,9 +89,8 @@ public class ImageBottomBarView extends FrameLayout {
             }
         } else {
             v.setSelected(false);
-            /* clicking on the active button hides the ViewPager */
             mPager.setVisibility(View.GONE);
-            mViewHandler.showBottomBarOnly();
+            mAnimator.animateBottomBarCompression();
             mIsExtended = false;
         }
     }

@@ -61,7 +61,7 @@ public class ImageBottomBarView extends FrameLayout {
     }
 
     public void setTabInfo(DerpibooruImageInfo info) {
-        setUpViewPagerWithActualContent(info);
+        setUpViewPager(info);
     }
 
     public void selectButton(View v) {
@@ -130,9 +130,7 @@ public class ImageBottomBarView extends FrameLayout {
             });
         }
 
-         /* set up ViewPager */
         mPager = (ViewPager) findViewById(R.id.bottomTabsPager);
-        setUpViewPagerWithProgressBar();
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -152,30 +150,7 @@ public class ImageBottomBarView extends FrameLayout {
         });
     }
 
-    private void setUpViewPagerWithActualContent(DerpibooruImageInfo content) {
+    private void setUpViewPager(DerpibooruImageInfo content) {
         mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content));
-    }
-
-    private void setUpViewPagerWithProgressBar() {
-        mPager.setAdapter(new FragmentPagerAdapter(mFragmentManager) {
-            @Override
-            public Fragment getItem(int position) {
-                return new Fragment() {
-                    @Override
-                    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                             Bundle savedInstanceState) {
-                        return inflater.inflate(R.layout.fragment_image_loading_tab, container, false);
-                    }
-                };
-            }
-
-            @Override
-            public int getCount() {
-                /* enables user to navigate between
-                 * info/faves/comments tabs.
-                 */
-                return 3;
-            }
-        });
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import java.net.URL;
 
 import derpibooru.derpy.data.types.DerpibooruImageInfo;
+import derpibooru.derpy.data.types.DerpibooruImageThumb;
 import derpibooru.derpy.server.util.HtmlParser;
 import derpibooru.derpy.server.util.Query;
 import derpibooru.derpy.server.util.QueryHandler;
@@ -16,19 +17,19 @@ import derpibooru.derpy.server.util.UrlBuilder;
  * 'DerpibooruImageInfo' object.
  */
 public class ImageFetcher extends Query {
-    private Integer mId;
+    private DerpibooruImageThumb mThumb;
 
     public ImageFetcher(Context context, QueryHandler handler) {
         super(context, handler);
     }
 
     /**
-     * Sets the image ID.
+     * Returns an ImageFetcher for the particular image thumb.
      *
-     * @param id image ID in the Derpibooru database
+     * @param thumb an image thumb
      */
-    public ImageFetcher id(int id) {
-        mId = id;
+    public ImageFetcher imageByThumb(DerpibooruImageThumb thumb) {
+        mThumb = thumb;
         return this;
     }
 
@@ -37,7 +38,7 @@ public class ImageFetcher extends Query {
      * via 'id' method of the class.
      */
     public void fetch() {
-        URL url = UrlBuilder.generateImageUrl(mId);
+        URL url = UrlBuilder.generateImageUrl(mThumb.getId());
         if (url != null) {
             executeQuery(url);
         } else {
@@ -50,6 +51,9 @@ public class ImageFetcher extends Query {
         HtmlParser html = new HtmlParser(response);
         DerpibooruImageInfo i = html.readImage();
         if (i != null) {
+            i.setImageInfoFromThumb(mThumb.getId(),
+                                    mThumb.getImageUrl(), mThumb.getSourceUrl(),
+                                    mThumb.getUploader(), mThumb.getDescription());
             mQueryHandler.queryPerformed(i);
         } else {
             mQueryHandler.queryFailed();

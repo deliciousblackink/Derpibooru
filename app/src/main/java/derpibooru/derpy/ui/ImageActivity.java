@@ -1,14 +1,11 @@
 package derpibooru.derpy.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -27,45 +24,40 @@ import derpibooru.derpy.ui.views.ImageTopBarView;
 
 public class ImageActivity extends AppCompatActivity
         implements QueryHandler, ImageBottomBarViewHandler {
-    private static final int TOOLBAR_ANIMATION_DURATION = 200;
-
-    private DerpibooruImageThumb mImageInfo;
     private ImageBottomBarAnimation mBottomBarAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        mImageInfo = intent.getParcelableExtra("image_data");
         mBottomBarAnimation = new ImageBottomBarAnimation(findViewById(R.id.imageViewLayout));
 
-        setImageInfo();
-        loadImageWithGlide();
+        DerpibooruImageThumb thumb = getIntent().getParcelableExtra("image_thumb");
+        setBasicImageInfo(thumb);
+        loadImageWithGlide(thumb.getImageUrl());
 
         ImageFetcher i = new ImageFetcher(this, this);
-        i.id(mImageInfo.getId()).fetch();
+        i.imageByThumb(thumb).fetch();
     }
 
-    private void setImageInfo() {
-        setTitle("#" + Integer.toString(mImageInfo.getId()));
+    private void setBasicImageInfo(DerpibooruImageThumb thumb) {
+        setTitle("#" + Integer.toString(thumb.getId()));
 
-        ImageTopBarView iiv = (ImageTopBarView) findViewById(R.id.imageInfo);
-        iiv.setInfo(mImageInfo.getUpvotes(), mImageInfo.getDownvotes(), mImageInfo.getScore());
+        ((ImageTopBarView) findViewById(R.id.imageInfo))
+                .setInfo(thumb.getUpvotes(), thumb.getDownvotes(), thumb.getScore());
 
-        ImageBottomBarView ibbv = (ImageBottomBarView) findViewById(R.id.imageBottomBar);
-        ibbv.setFragmentManager(getSupportFragmentManager())
-                .setBottomToolbarViewHandler(this);
-        ibbv.setInfo(mImageInfo.getFaves(), mImageInfo.getCommentCount());
+        ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
+                .setFragmentManager(getSupportFragmentManager())
+                .setBottomToolbarViewHandler(this)
+                .setBasicInfo(thumb.getFaves(), thumb.getCommentCount());
     }
 
-    private void loadImageWithGlide() {
+    private void loadImageWithGlide(String url) {
         ImageView iv = (ImageView) findViewById(R.id.imageView);
         Glide.with(this)
-                .load(mImageInfo.getImageUrl())
+                .load(url)
                 .fitCenter()
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
@@ -86,7 +78,8 @@ public class ImageActivity extends AppCompatActivity
 
     @Override
     public void queryPerformed(Object image) {
-        DerpibooruImageInfo i = (DerpibooruImageInfo) image;
+        ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
+                .setTabInfo((DerpibooruImageInfo) image);
     }
 
     @Override

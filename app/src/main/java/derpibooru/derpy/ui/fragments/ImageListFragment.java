@@ -27,15 +27,15 @@ public abstract class ImageListFragment extends Fragment
         ArrayList<DerpibooruImageThumb> images = (ArrayList<DerpibooruImageThumb>) imageList;
 
         GridView gv = (GridView) getView().findViewById(R.id.gallery);
-        ImageListAdapter ila = new ImageListAdapter(getContext(), R.layout.view_gallery_item, images);
+        ImageListAdapter ila = new ImageListAdapter(getActivity(), R.layout.view_gallery_item, images);
         gv.setAdapter(ila);
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Intent intent = new Intent(getContext(), ImageActivity.class);
-                intent.putExtra("image_data", ((ImageListAdapter.ViewHolder) v.getTag()).data);
+                Intent intent = new Intent(getActivity(), ImageActivity.class);
+                intent.putExtra("image_thumb", ((ImageListAdapter.ViewHolder) v.getTag()).data);
                 startActivity(intent);
             }
         });

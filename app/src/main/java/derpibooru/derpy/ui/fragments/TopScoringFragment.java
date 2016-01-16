@@ -16,7 +16,7 @@ public class TopScoringFragment extends ImageListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ImageList il = new ImageList(getContext(), this);
+        ImageList il = new ImageList(getActivity(), this);
         il.type(ImageList.Type.TopScoring).inDays(3).load();
         /* ImageList handling is implemented in the ImageListFragment abstract class */
 

@@ -3,7 +3,8 @@ package derpibooru.derpy.data.types;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/* http://www.parcelabler.com/ is a lifesaver */
+/* created automatically via
+ * http://www.parcelabler.com/ */
 
 public class DerpibooruImageThumb implements Parcelable {
     private int mId;
@@ -12,11 +13,11 @@ public class DerpibooruImageThumb implements Parcelable {
     private int mDownvotes;
     private int mFaves;
     private int mCommentCount;
+    private String mThumbUrl;
 
     /* These values are not used in image lists, but they are
      * more easily acquired via JSON request than via HTML parsing,
      * hence they are stored there and passed to the ImageActivity. */
-    private String mThumbUrl;
     private String mImageUrl;
     private String mSourceUrl;
     private String mUploader;

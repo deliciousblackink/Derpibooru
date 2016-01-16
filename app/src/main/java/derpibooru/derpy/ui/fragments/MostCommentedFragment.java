@@ -16,7 +16,7 @@ public class MostCommentedFragment extends ImageListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ImageList il = new ImageList(getContext(), this);
+        ImageList il = new ImageList(getActivity(), this);
         il.type(ImageList.Type.MostCommented).inDays(3).load();
         /* Query handling is implemented in the ImageListFragment abstract class */
 

@@ -26,11 +26,11 @@
             android:paddingTop="1dp"
             android:paddingLeft="5dp"/>
 
-        <LinearLayout
-            android:id="@+id/layoutImageFavedBy"
+        <ListView
+            android:id="@+id/listFavedBy"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
-        </LinearLayout>
+        </ListView>
     </LinearLayout>
 </ScrollView>

@@ -1,10 +1,13 @@
 package derpibooru.derpy.ui.adapters;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
 import java.util.ArrayList;
 
+import derpibooru.derpy.data.types.DerpibooruImageInfo;
 import derpibooru.derpy.ui.fragments.ImageCommentsTabFragment;
 import derpibooru.derpy.ui.fragments.ImageFavoritesTabFragment;
 import derpibooru.derpy.ui.fragments.ImageInfoTabFragment;
@@ -12,13 +15,24 @@ import derpibooru.derpy.ui.fragments.ImageInfoTabFragment;
 public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
     private ArrayList<Tab> mTabs;
 
-    public ImageBottomBarTabAdapter(FragmentManager fm) {
+    public ImageBottomBarTabAdapter(FragmentManager fm,
+                                    DerpibooruImageInfo info) {
         super(fm);
 
+        Bundle imageInfoBundle = new Bundle();
+        imageInfoBundle.putParcelable("image_info", info);
+
+        ImageInfoTabFragment infoTab = new ImageInfoTabFragment();
+        infoTab.setArguments(imageInfoBundle);
+        ImageFavoritesTabFragment favesTab = new ImageFavoritesTabFragment();
+        favesTab.setArguments(imageInfoBundle);
+        ImageCommentsTabFragment commentsTab = new ImageCommentsTabFragment();
+        commentsTab.setArguments(imageInfoBundle);
+
         mTabs = new ArrayList<>();
-        mTabs.add(new Tab(ImageBottomBarTabs.ImageInfo.getID(), new ImageInfoTabFragment()));
-        mTabs.add(new Tab(ImageBottomBarTabs.Faves.getID(), new ImageFavoritesTabFragment()));
-        mTabs.add(new Tab(ImageBottomBarTabs.Comments.getID(), new ImageCommentsTabFragment()));
+        mTabs.add(new Tab(ImageBottomBarTabs.ImageInfo.id(), infoTab));
+        mTabs.add(new Tab(ImageBottomBarTabs.Faves.id(), favesTab));
+        mTabs.add(new Tab(ImageBottomBarTabs.Comments.id(), commentsTab));
     }
 
     @Override
@@ -47,7 +61,7 @@ public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
             mID = id;
         }
 
-        public int getID() {
+        public int id() {
             return mID;
         }
     }

@@ -1,16 +1,22 @@
 package derpibooru.derpy.ui.views;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.types.DerpibooruImageInfo;
 import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
 
 public class ImageBottomBarView extends FrameLayout {
@@ -46,8 +52,7 @@ public class ImageBottomBarView extends FrameLayout {
         return this;
     }
 
-    /* To be removed */
-    public void setInfo(int faves, int comments) {
+    public void setBasicInfo(int faves, int comments) {
         init();
         TextView d = (TextView) this.findViewById(R.id.textFaves);
         d.setText(Integer.toString(faves));
@@ -55,21 +60,11 @@ public class ImageBottomBarView extends FrameLayout {
         u.setText(Integer.toString(comments));
     }
 
-    public void onButtonTouched(View v) {
-        /* deselect other buttons */
-        for (int layoutId : LAYOUT_BUTTONS) {
-            LinearLayout ll = (LinearLayout) findViewById(layoutId);
-            if (!ll.equals(v)) {
-                ll.setSelected(false);
-            }
-        }
+    public void setTabInfo(DerpibooruImageInfo info) {
+        setUpViewPagerWithActualContent(info);
     }
 
-    public void onButtonClicked(View v) {
-        if (mPager == null) {
-            initViewPager();
-        }
-
+    public void selectButton(View v) {
         if (!v.isSelected()) {
             v.setSelected(true);
             /* show ViewPager */
@@ -84,15 +79,15 @@ public class ImageBottomBarView extends FrameLayout {
             /* navigate ViewPager to the corresponding tab */
             switch (v.getId()) {
                 case R.id.buttonInfo:
-                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.ImageInfo.getID(),
+                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.ImageInfo.id(),
                             true);
                     break;
                 case R.id.buttonFaves:
-                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Faves.getID(),
+                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Faves.id(),
                             true);
                     break;
                 case R.id.buttonComments:
-                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Comments.getID(),
+                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Comments.id(),
                             true);
                     break;
             }
@@ -105,33 +100,39 @@ public class ImageBottomBarView extends FrameLayout {
         }
     }
 
+    public void deselectButtonsOtherThan(View v) {
+        for (int layoutId : LAYOUT_BUTTONS) {
+            LinearLayout ll = (LinearLayout) findViewById(layoutId);
+            if (!ll.equals(v)) {
+                ll.setSelected(false);
+            }
+        }
+    }
+
     private void init() {
         View view = inflate(getContext(), R.layout.view_image_bottom_bar, null);
         addView(view);
 
-        /* TODO: a cleaner solution */
         for (int layoutId : LAYOUT_BUTTONS) {
             LinearLayout ll = (LinearLayout) findViewById(layoutId);
             ll.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    onButtonTouched(v);
+                    deselectButtonsOtherThan(v);
                     return false;
                 }
             });
             ll.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onButtonClicked(v);
+                    selectButton(v);
                 }
             });
         }
-    }
 
-    private void initViewPager() {
-        /* set up ViewPager */
+         /* set up ViewPager */
         mPager = (ViewPager) findViewById(R.id.bottomTabsPager);
-        mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager));
+        setUpViewPagerWithProgressBar();
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -142,11 +143,38 @@ public class ImageBottomBarView extends FrameLayout {
             public void onPageSelected(int position) {
                 LinearLayout ll = (LinearLayout) findViewById(LAYOUT_BUTTONS[position]);
                 ll.setSelected(true);
-                onButtonTouched(ll); /* deselect other buttons */
+                deselectButtonsOtherThan(ll);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
+            }
+        });
+    }
+
+    private void setUpViewPagerWithActualContent(DerpibooruImageInfo content) {
+        mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content));
+    }
+
+    private void setUpViewPagerWithProgressBar() {
+        mPager.setAdapter(new FragmentPagerAdapter(mFragmentManager) {
+            @Override
+            public Fragment getItem(int position) {
+                return new Fragment() {
+                    @Override
+                    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                             Bundle savedInstanceState) {
+                        return inflater.inflate(R.layout.fragment_image_loading_tab, container, false);
+                    }
+                };
+            }
+
+            @Override
+            public int getCount() {
+                /* enables user to navigate between
+                 * info/faves/comments tabs.
+                 */
+                return 3;
             }
         });
     }

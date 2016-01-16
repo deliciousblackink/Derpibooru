@@ -78,7 +78,7 @@ public class ImageBottomBarView extends FrameLayout {
             }
             if (!mIsExtended) {
                 mIsExtended = true;
-                mViewHandler.showBottomToolbarWithTabs();
+                mViewHandler.showBottomBarWithTabs();
             }
 
             /* navigate ViewPager to the corresponding tab */
@@ -100,7 +100,7 @@ public class ImageBottomBarView extends FrameLayout {
             v.setSelected(false);
             /* clicking on the active button hides the ViewPager */
             mPager.setVisibility(View.GONE);
-            mViewHandler.showBottomToolbarOnly();
+            mViewHandler.showBottomBarOnly();
             mIsExtended = false;
         }
     }
@@ -135,7 +135,7 @@ public class ImageBottomBarView extends FrameLayout {
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                /* TODO: insert transition for the button color */
+                /* TODO: insert animated transition for the button color */
             }
 
             @Override

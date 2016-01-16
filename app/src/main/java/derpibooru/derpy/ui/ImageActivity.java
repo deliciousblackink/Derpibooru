@@ -20,7 +20,7 @@ import derpibooru.derpy.data.types.DerpibooruImageInfo;
 import derpibooru.derpy.data.types.DerpibooruImageThumb;
 import derpibooru.derpy.server.ImageFetcher;
 import derpibooru.derpy.server.util.QueryHandler;
-import derpibooru.derpy.ui.animations.ExpandViewAnimation;
+import derpibooru.derpy.ui.animations.ImageBottomBarAnimation;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
 import derpibooru.derpy.ui.views.ImageBottomBarViewHandler;
 import derpibooru.derpy.ui.views.ImageTopBarView;
@@ -30,6 +30,7 @@ public class ImageActivity extends AppCompatActivity
     private static final int TOOLBAR_ANIMATION_DURATION = 200;
 
     private DerpibooruImageThumb mImageInfo;
+    private ImageBottomBarAnimation mBottomBarAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class ImageActivity extends AppCompatActivity
 
         Intent intent = getIntent();
         mImageInfo = intent.getParcelableExtra("image_data");
+        mBottomBarAnimation = new ImageBottomBarAnimation(findViewById(R.id.imageViewLayout));
 
         setImageInfo();
         loadImageWithGlide();
@@ -93,31 +95,13 @@ public class ImageActivity extends AppCompatActivity
     }
 
     @Override
-    public void showBottomToolbarOnly() {
-        RelativeLayout imageView = (RelativeLayout) findViewById(R.id.imageViewLayout);
-        /* TODO: move the magic numbers away
-         * ! don't forget to change the layout file;
-         * ImageBottomBarView's weight is also hardcoded
-         */
-        toggleToolbarAnimation(imageView, 2.0f, 4.0f);
+    public void showBottomBarOnly() {
+        mBottomBarAnimation.animateBottomBarCompression();
     }
 
     @Override
-    public void showBottomToolbarWithTabs() {
-        RelativeLayout imageView = (RelativeLayout) findViewById(R.id.imageViewLayout);
-         /* TODO: move the magic numbers away
-         * ! don't forget to change the layout file;
-         * ImageBottomBarView's weight is also hardcoded
-         */
-        toggleToolbarAnimation(imageView, 4.0f, 2.0f);
-    }
-
-    private void toggleToolbarAnimation(View content, float currentWeight,
-                                        float targetWeight) {
-        Animation a;
-        a = new ExpandViewAnimation(content, currentWeight, targetWeight);
-        a.setDuration(TOOLBAR_ANIMATION_DURATION);
-        content.startAnimation(a);
+    public void showBottomBarWithTabs() {
+        mBottomBarAnimation.animateBottomBarExtension();
     }
 
     /* Respond to ActionBar's Up (Back) button */

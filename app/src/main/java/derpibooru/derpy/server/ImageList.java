@@ -5,7 +5,7 @@ import android.content.Context;
 import java.net.URL;
 import java.util.ArrayList;
 
-import derpibooru.derpy.data.types.ImageThumb;
+import derpibooru.derpy.data.types.DerpibooruImageThumb;
 import derpibooru.derpy.server.util.JsonParser;
 import derpibooru.derpy.server.util.Query;
 import derpibooru.derpy.server.util.QueryHandler;
@@ -14,7 +14,7 @@ import derpibooru.derpy.server.util.UrlBuilder;
 /**
  * Asynchronous image list (an array of {id, score, etc.}) fetcher. The receiving object has to
  * implement the 'QueryHandler' interface. Server response is passed via the 'queryPerformed'
- * method as an 'ArrayList<ImageThumb>' object.
+ * method as an 'ArrayList<DerpibooruImageThumb>' object.
  */
 public class ImageList extends Query {
     private static final String ALL_TIME = "520w";
@@ -86,7 +86,7 @@ public class ImageList extends Query {
     @Override
     public void processResponse(String response) {
         JsonParser json = new JsonParser(response);
-        ArrayList<ImageThumb> img = json.readImageThumbs();
+        ArrayList<DerpibooruImageThumb> img = json.readImageThumbs();
         mQueryHandler.queryPerformed(img);
     }
 

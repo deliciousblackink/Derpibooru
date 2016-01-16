@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 /* http://www.parcelabler.com/ is a lifesaver */
 
-public class ImageThumb implements Parcelable {
+public class DerpibooruImageThumb implements Parcelable {
     private int mId;
     private int mScore;
     private int mUpvotes;
@@ -22,9 +22,9 @@ public class ImageThumb implements Parcelable {
     private String mUploader;
     private String mDescription;
 
-    public ImageThumb(int id, int score, int upvotes, int downvotes, int faves,
-                      int comments, String thumbUrl, String imageUrl, String sourceUrl,
-                      String uploader, String description) {
+    public DerpibooruImageThumb(int id, int score, int upvotes, int downvotes, int faves,
+                                int comments, String thumbUrl, String imageUrl, String sourceUrl,
+                                String uploader, String description) {
         mId = id;
         mScore = score;
         mUpvotes = upvotes;
@@ -82,7 +82,7 @@ public class ImageThumb implements Parcelable {
         return mDescription;
     }
 
-    protected ImageThumb(Parcel in) {
+    protected DerpibooruImageThumb(Parcel in) {
         mId = in.readInt();
         mScore = in.readInt();
         mUpvotes = in.readInt();
@@ -117,15 +117,15 @@ public class ImageThumb implements Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<ImageThumb> CREATOR = new Parcelable.Creator<ImageThumb>() {
+    public static final Parcelable.Creator<DerpibooruImageThumb> CREATOR = new Parcelable.Creator<DerpibooruImageThumb>() {
         @Override
-        public ImageThumb createFromParcel(Parcel in) {
-            return new ImageThumb(in);
+        public DerpibooruImageThumb createFromParcel(Parcel in) {
+            return new DerpibooruImageThumb(in);
         }
 
         @Override
-        public ImageThumb[] newArray(int size) {
-            return new ImageThumb[size];
+        public DerpibooruImageThumb[] newArray(int size) {
+            return new DerpibooruImageThumb[size];
         }
     };
 }

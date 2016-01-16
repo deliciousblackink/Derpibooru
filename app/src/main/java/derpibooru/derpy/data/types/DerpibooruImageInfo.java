@@ -2,13 +2,13 @@ package derpibooru.derpy.data.types;
 
 import java.util.ArrayList;
 
-public class ImageFullInfo {
+public class DerpibooruImageInfo {
     private String mImgUrl;
     private ArrayList<DerpibooruTag> mTags;
     private ArrayList<String> mFavedBy;
 
-    public ImageFullInfo(String imgUrl, ArrayList<DerpibooruTag> tags,
-                         ArrayList<String> favedBy) {
+    public DerpibooruImageInfo(String imgUrl, ArrayList<DerpibooruTag> tags,
+                               ArrayList<String> favedBy) {
         mImgUrl = "https:" + imgUrl;
         mTags = tags;
         mFavedBy = favedBy;

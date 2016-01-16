@@ -6,15 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
 
-import derpibooru.derpy.data.types.ImageFullInfo;
-import derpibooru.derpy.data.types.ImageThumb;
+import derpibooru.derpy.data.types.DerpibooruImageThumb;
 
 public class JsonParser {
     private String mRawJson;
@@ -23,8 +17,8 @@ public class JsonParser {
         mRawJson = raw;
     }
 
-    public ArrayList<ImageThumb> readImageThumbs() {
-        ArrayList<ImageThumb> output = new ArrayList<>();
+    public ArrayList<DerpibooruImageThumb> readImageThumbs() {
+        ArrayList<DerpibooruImageThumb> output = new ArrayList<>();
         try {
             JSONObject json = new JSONObject(mRawJson);
             JSONArray images = json.getJSONArray("images");
@@ -34,7 +28,7 @@ public class JsonParser {
                 JSONObject img = images.getJSONObject(x);
 
                 /* TODO: move the magic strings into a dedicated data structure */
-                ImageThumb it = new ImageThumb(img.getInt("id_number"),
+                DerpibooruImageThumb it = new DerpibooruImageThumb(img.getInt("id_number"),
                         img.getInt("score"), img.getInt("upvotes"),
                         img.getInt("downvotes"), img.getInt("faves"),
                         img.getInt("comment_count"),

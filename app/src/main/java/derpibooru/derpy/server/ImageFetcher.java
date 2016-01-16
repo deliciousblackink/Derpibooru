@@ -1,11 +1,10 @@
 package derpibooru.derpy.server;
 
-
 import android.content.Context;
 
 import java.net.URL;
 
-import derpibooru.derpy.data.types.ImageFullInfo;
+import derpibooru.derpy.data.types.DerpibooruImageInfo;
 import derpibooru.derpy.server.util.HtmlParser;
 import derpibooru.derpy.server.util.Query;
 import derpibooru.derpy.server.util.QueryHandler;
@@ -14,7 +13,7 @@ import derpibooru.derpy.server.util.UrlBuilder;
 /**
  * Asynchronous full image info (tags, faved by) fetcher. The receiving object has to implement the
  * 'QueryHandler' interface. Server response is passed via the 'queryPerformed' method as an
- * 'ImageFullInfo' object.
+ * 'DerpibooruImageInfo' object.
  */
 public class ImageFetcher extends Query {
     private Integer mId;
@@ -49,7 +48,7 @@ public class ImageFetcher extends Query {
     @Override
     public void processResponse(String response) {
         HtmlParser html = new HtmlParser(response);
-        ImageFullInfo i = html.readImage();
+        DerpibooruImageInfo i = html.readImage();
         if (i != null) {
             mQueryHandler.queryPerformed(i);
         } else {

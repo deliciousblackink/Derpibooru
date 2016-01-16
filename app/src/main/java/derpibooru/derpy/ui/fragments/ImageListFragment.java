@@ -9,7 +9,7 @@ import android.widget.GridView;
 import java.util.ArrayList;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.types.ImageThumb;
+import derpibooru.derpy.data.types.DerpibooruImageThumb;
 import derpibooru.derpy.server.util.QueryHandler;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.ImageListAdapter;
@@ -24,7 +24,7 @@ public abstract class ImageListFragment extends Fragment
     }
 
     public void queryPerformed(Object imageList) {
-        ArrayList<ImageThumb> images = (ArrayList<ImageThumb>) imageList;
+        ArrayList<DerpibooruImageThumb> images = (ArrayList<DerpibooruImageThumb>) imageList;
 
         GridView gv = (GridView) getView().findViewById(R.id.gallery);
         ImageListAdapter ila = new ImageListAdapter(getContext(), R.layout.view_gallery_item, images);

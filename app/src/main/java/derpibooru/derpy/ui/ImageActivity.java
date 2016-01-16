@@ -16,8 +16,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.types.ImageFullInfo;
-import derpibooru.derpy.data.types.ImageThumb;
+import derpibooru.derpy.data.types.DerpibooruImageInfo;
+import derpibooru.derpy.data.types.DerpibooruImageThumb;
 import derpibooru.derpy.server.ImageFetcher;
 import derpibooru.derpy.server.util.QueryHandler;
 import derpibooru.derpy.ui.animations.ExpandViewAnimation;
@@ -29,7 +29,7 @@ public class ImageActivity extends AppCompatActivity
         implements QueryHandler, ImageBottomBarViewHandler {
     private static final int TOOLBAR_ANIMATION_DURATION = 200;
 
-    private ImageThumb mImageInfo;
+    private DerpibooruImageThumb mImageInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class ImageActivity extends AppCompatActivity
 
     @Override
     public void queryPerformed(Object image) {
-        ImageFullInfo i = (ImageFullInfo) image;
+        DerpibooruImageInfo i = (DerpibooruImageInfo) image;
 
     }
 

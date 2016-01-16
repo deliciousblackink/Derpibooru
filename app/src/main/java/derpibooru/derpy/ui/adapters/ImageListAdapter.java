@@ -15,14 +15,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.types.ImageThumb;
+import derpibooru.derpy.data.types.DerpibooruImageThumb;
 
 public class ImageListAdapter extends ArrayAdapter {
     private Context mContext;
     private int mLayoutResourceId;
-    private ArrayList<ImageThumb> mImages;
+    private ArrayList<DerpibooruImageThumb> mImages;
 
-    public ImageListAdapter(Context context, int layoutResourceId, ArrayList<ImageThumb> images) {
+    public ImageListAdapter(Context context, int layoutResourceId, ArrayList<DerpibooruImageThumb> images) {
         super(context, layoutResourceId);
         this.mLayoutResourceId = layoutResourceId;
         this.mContext = context;
@@ -67,6 +67,6 @@ public class ImageListAdapter extends ArrayAdapter {
     public static class ViewHolder {
         public TextView info;
         public ImageView image;
-        public ImageThumb data; /* to be passed to ImageActivity upon opening the image */
+        public DerpibooruImageThumb data; /* to be passed to ImageActivity upon opening the image */
     }
 }

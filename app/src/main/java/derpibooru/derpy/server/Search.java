@@ -3,7 +3,7 @@ package derpibooru.derpy.server;
 import java.util.List;
 import java.util.Map;
 
-import derpibooru.derpy.data.types.ImageThumb;
+import derpibooru.derpy.data.types.DerpibooruImageThumb;
 
 public class Search {
     Map<String, String> mQueryParams;
@@ -11,7 +11,7 @@ public class Search {
     public Search() {
     }
 
-    public List<ImageThumb> getThumbs() {
+    public List<DerpibooruImageThumb> getThumbs() {
         throw new UnsupportedOperationException();
     }
 

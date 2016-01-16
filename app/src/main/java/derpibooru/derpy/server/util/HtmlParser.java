@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import derpibooru.derpy.data.types.DerpibooruImageInfo;
 import derpibooru.derpy.data.types.DerpibooruTag;
-import derpibooru.derpy.data.types.ImageFullInfo;
 
 public class HtmlParser {
     private String mRawHtml;
@@ -19,7 +19,7 @@ public class HtmlParser {
         mRawHtml = raw;
     }
 
-    public ImageFullInfo readImage() {
+    public DerpibooruImageInfo readImage() {
         Document doc = Jsoup.parse(mRawHtml);
 
         Element imgUrl = doc.select("div.image-show").first();
@@ -54,6 +54,6 @@ public class HtmlParser {
             favedBy.add(user.text());
         }
 
-        return new ImageFullInfo(url, tags, favedBy);
+        return new DerpibooruImageInfo(url, tags, favedBy);
     }
 }

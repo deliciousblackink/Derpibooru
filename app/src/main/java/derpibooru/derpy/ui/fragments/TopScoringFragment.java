@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 import derpibooru.derpy.R;
 import derpibooru.derpy.server.ImageList;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class TopScoringFragment extends ImageListFragment {
     public TopScoringFragment() {
         super();

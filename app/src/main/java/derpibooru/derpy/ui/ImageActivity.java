@@ -85,7 +85,6 @@ public class ImageActivity extends AppCompatActivity
     @Override
     public void queryPerformed(Object image) {
         DerpibooruImageInfo i = (DerpibooruImageInfo) image;
-
     }
 
     @Override

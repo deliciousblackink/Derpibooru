@@ -12,36 +12,39 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal">
+        android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/textUploaded"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Uploaded by {} on {}"
             android:scaleType="fitCenter"
-            android:gravity="center_vertical|center_horizontal"
             android:textSize="20sp"
-            android:padding="5dp"/>
+            android:padding="5dp"
+            android:layout_margin="10dp"/>
 
         <TextView
             android:id="@+id/textDescription"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Description"
             android:scaleType="fitCenter"
-            android:gravity="center_vertical|center_horizontal"
             android:textSize="16sp"
-            android:padding="10dp"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:padding="5dp"/>
 
-        <LinearLayout
+        <derpibooru.derpy.ui.views.FlowLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:horizontalSpacing="10dp"
+            app:verticalSpacing="10dp"
             android:id="@+id/layoutImageTags"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+        </derpibooru.derpy.ui.views.FlowLayout>
     </LinearLayout>
 </ScrollView>

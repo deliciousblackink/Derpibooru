@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -21,6 +22,9 @@ import java.util.Locale;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.types.DerpibooruImageInfo;
+import derpibooru.derpy.data.types.DerpibooruTag;
+import derpibooru.derpy.ui.views.FlowLayout;
+import derpibooru.derpy.ui.views.ImageTagView;
 
 public class ImageInfoTabFragment extends Fragment {
     public ImageInfoTabFragment() {
@@ -36,6 +40,7 @@ public class ImageInfoTabFragment extends Fragment {
 
         setImageUploader(info, v);
         setImageDescription(info, v);
+        setImageTags(info, v);
 
         return v;
     }
@@ -73,6 +78,15 @@ public class ImageInfoTabFragment extends Fragment {
         } else {
             layout.findViewById(R.id.textDescription)
                     .setVisibility(View.GONE);
+        }
+    }
+
+    private void setImageTags(DerpibooruImageInfo info, View layout) {
+        FlowLayout l = (FlowLayout) layout.findViewById(R.id.layoutImageTags);
+        for (DerpibooruTag tag : info.getTags()) {
+            ImageTagView itv = new ImageTagView(getActivity());
+            itv.setTagInfo(tag);
+            l.addView(itv);
         }
     }
 

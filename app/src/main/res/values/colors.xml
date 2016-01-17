@@ -7,4 +7,11 @@
 
     <color name="colorImageToolbar">#cccccc</color>
     <color name="colorImageToolbarText">#fbfbfb</color>
+
+    <color name="colorImageArtistTag">#a2a6d4</color>
+    <color name="colorImageArtistTagText">#4d4574</color>
+    <color name="colorImageContentSafetyTag">#b1cee2</color>
+    <color name="colorImageContentSafetyTagText">#4c90c0</color>
+    <color name="colorImageGeneralTag">#cde69a</color>
+    <color name="colorImageGeneralTagText">#82ad2b</color>
 </resources>

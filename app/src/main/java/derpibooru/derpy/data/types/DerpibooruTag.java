@@ -10,11 +10,13 @@ public class DerpibooruTag implements Parcelable {
     private int mId;
     private int mImageCount;
     private String mName;
+    private TagType mType;
 
-    public DerpibooruTag(int id, int imageCount, String name) {
+    public DerpibooruTag(int id, int imageCount, String name, TagType type) {
         mId = id;
         mImageCount = imageCount;
         mName = name;
+        mType = type;
     }
 
     public int getId() {
@@ -29,10 +31,15 @@ public class DerpibooruTag implements Parcelable {
         return mName;
     }
 
+    public TagType getType() {
+        return mType;
+    }
+
     protected DerpibooruTag(Parcel in) {
         mId = in.readInt();
         mImageCount = in.readInt();
         mName = in.readString();
+        mType = TagType.getFromValue(in.readInt());
     }
 
     @Override
@@ -45,6 +52,7 @@ public class DerpibooruTag implements Parcelable {
         dest.writeInt(mId);
         dest.writeInt(mImageCount);
         dest.writeString(mName);
+        dest.writeInt(mType.convertToValue());
     }
 
     @SuppressWarnings("unused")
@@ -59,4 +67,29 @@ public class DerpibooruTag implements Parcelable {
             return new DerpibooruTag[size];
         }
     };
+
+    public enum TagType {
+        Artist(1),
+        ContentSafety(2),
+        General(3);
+
+        private int mValue;
+
+        TagType(int value) {
+            mValue = value;
+        }
+
+        public static TagType getFromValue(int value) {
+            for (TagType type : values()) {
+                if (type.mValue == value) {
+                    return type;
+                }
+            }
+            return General;
+        }
+
+        public int convertToValue() {
+            return mValue;
+        }
+    }
 }

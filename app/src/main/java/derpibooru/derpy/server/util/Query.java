@@ -11,7 +11,7 @@ import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
 
 public abstract class Query {
-    public QueryHandler mQueryHandler;
+    protected QueryHandler mQueryHandler;
     private Context mContext;
 
     public Query(Context context, QueryHandler listener) {
@@ -19,9 +19,9 @@ public abstract class Query {
         mQueryHandler = listener;
     }
 
-    public abstract void processResponse(String response);
+    protected abstract void processResponse(String response);
 
-    public void executeQuery(URL from) {
+    protected void executeQuery(URL from) {
         if (isConnected()) {
             new RequestTask().execute(from);
         } else {
@@ -73,7 +73,7 @@ public abstract class Query {
         }
     }
 
-    static String readInputStream(java.io.InputStream is) {
+    private static String readInputStream(java.io.InputStream is) {
         /* http://stackoverflow.com/questions/309424/read-convert-an-inputstream-to-a-string */
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";

@@ -12,7 +12,7 @@ import derpibooru.derpy.server.util.UrlBuilder;
 
 /**
  * Asynchronous full image info (tags, faved by) provider. The receiving object has to implement the
- * 'QueryHandler' interface. Server response is passed via the 'queryPerformed' method as an
+ * 'QueryHandler' interface. Server response is passed via the 'queryPerformed' method as a
  * 'DerpibooruImageInfo' object.
  */
 public class ImageInfoProvider extends Query {
@@ -46,7 +46,7 @@ public class ImageInfoProvider extends Query {
     }
 
     @Override
-    public void processResponse(String response) {
+    protected void processResponse(String response) {
         HtmlParser html = new HtmlParser(response);
         DerpibooruImageInfo i = html.readImage(mId);
         if (i != null) {

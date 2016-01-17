@@ -84,7 +84,7 @@ public class ImageListProvider extends Query {
     }
 
     @Override
-    public void processResponse(String response) {
+    protected void processResponse(String response) {
         JsonParser json = new JsonParser(response);
         ArrayList<DerpibooruImageThumb> img = json.readImageThumbs();
         mQueryHandler.queryPerformed(img);

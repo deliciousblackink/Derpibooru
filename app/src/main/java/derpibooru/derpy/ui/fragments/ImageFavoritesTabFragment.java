@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.GridView;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.types.DerpibooruImageInfo;
@@ -26,7 +26,7 @@ public class ImageFavoritesTabFragment extends Fragment {
         ArrayAdapter<String> aa =
                 new ArrayAdapter<>(getActivity(), R.layout.view_image_favorites_item,
                                    info.getFavedBy());
-        ((ListView) v.findViewById(R.id.listFavedBy))
+        ((GridView) v.findViewById(R.id.gridFavedBy))
                 .setAdapter(aa);
 
         return v;

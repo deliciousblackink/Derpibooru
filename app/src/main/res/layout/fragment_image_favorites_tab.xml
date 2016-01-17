@@ -1,36 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/bottomFavesScroll"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:id="@+id/layoutImageFaves"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical|center_horizontal">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/layoutImageFaves"
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/textFavedBy"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal">
+        android:text="People who favorited this image:"
+        android:scaleType="fitCenter"
+        android:gravity="center_vertical|center_horizontal"
+        android:textSize="16sp"
+        android:paddingTop="1dp"
+        android:paddingLeft="5dp"/>
 
-        <TextView
-            android:id="@+id/textFavedBy"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="People who favorited this image:"
-            android:scaleType="fitCenter"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="16sp"
-            android:paddingTop="1dp"
-            android:paddingLeft="5dp"/>
-
-        <ListView
-            android:id="@+id/listFavedBy"
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-        </ListView>
-    </LinearLayout>
-</ScrollView>
+    <GridView
+        android:id="@+id/gridFavedBy"
+        android:drawSelectorOnTop="true"
+        android:numColumns="auto_fit"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:gravity="center">
+    </GridView>
+</LinearLayout>

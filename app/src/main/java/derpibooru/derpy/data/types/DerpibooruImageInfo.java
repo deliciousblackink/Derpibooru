@@ -6,52 +6,25 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 public class DerpibooruImageInfo implements Parcelable {
-    /* parsed from HTML */
-    private String mImgUrl;
-    private ArrayList<DerpibooruTag> mTags;
-    private ArrayList<String> mFavedBy;
-
-    /* copied from DerpibooruImageThumb */
     private int mId;
-    private String mImageUrl;
     private String mSourceUrl;
     private String mUploader;
     private String mDescription;
+    private ArrayList<DerpibooruTag> mTags;
+    private ArrayList<String> mFavedBy;
 
-    public DerpibooruImageInfo(String imgUrl, ArrayList<DerpibooruTag> tags,
-                               ArrayList<String> favedBy) {
-        mImgUrl = "https:" + imgUrl;
+    public DerpibooruImageInfo(int id, String sourceUrl, String uploader, String description,
+                               ArrayList<DerpibooruTag> tags, ArrayList<String> favedBy) {
+        mId = id;
+        mSourceUrl = sourceUrl;
+        mUploader = uploader;
+        mDescription = description;
         mTags = tags;
         mFavedBy = favedBy;
     }
 
-    public void setImageInfoFromThumb(int id, String imageUrl, String sourceUrl,
-                                      String uploader, String description) {
-        mId = id;
-        mImageUrl = imageUrl;
-        mSourceUrl = sourceUrl;
-        mUploader = uploader;
-        mDescription = description;
-    }
-
-    public String getImgUrl() {
-        return mImgUrl;
-    }
-
-    public ArrayList<DerpibooruTag> getTags() {
-        return mTags;
-    }
-
-    public ArrayList<String> getFavedBy() {
-        return mFavedBy;
-    }
-
     public int getId() {
         return mId;
-    }
-
-    public String getImageUrl() {
-        return mImageUrl;
     }
 
     public String getSourceUrl() {
@@ -66,15 +39,21 @@ public class DerpibooruImageInfo implements Parcelable {
         return mDescription;
     }
 
+    public ArrayList<DerpibooruTag> getTags() {
+        return mTags;
+    }
+
+    public ArrayList<String> getFavedBy() {
+        return mFavedBy;
+    }
+
     protected DerpibooruImageInfo(Parcel in) {
-        mImgUrl = in.readString();
-        in.readTypedList(mTags, DerpibooruTag.CREATOR);
-        in.readStringList(mFavedBy);
         mId = in.readInt();
-        mImageUrl = in.readString();
         mSourceUrl = in.readString();
         mUploader = in.readString();
         mDescription = in.readString();
+        in.readTypedList(mTags, DerpibooruTag.CREATOR);
+        in.readStringList(mFavedBy);
     }
 
     @Override
@@ -84,14 +63,12 @@ public class DerpibooruImageInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mImgUrl);
-        dest.writeList(mTags);
-        dest.writeStringList(mFavedBy);
         dest.writeInt(mId);
-        dest.writeString(mImageUrl);
         dest.writeString(mSourceUrl);
         dest.writeString(mUploader);
         dest.writeString(mDescription);
+        dest.writeList(mTags);
+        dest.writeStringList(mFavedBy);
     }
 
     @SuppressWarnings("unused")

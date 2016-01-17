@@ -19,17 +19,29 @@ public class HtmlParser {
         mRawHtml = raw;
     }
 
-    public DerpibooruImageInfo readImage() {
+    public DerpibooruImageInfo readImage(int imageId) {
         Document doc = Jsoup.parse(mRawHtml);
 
-        Element imgUrl = doc.select("div.image-show").first();
-        String url = imgUrl.attr("data-download-uri");
+        Element source = doc.select("input#image_source_url").first();
+        String imageSourceUrl = "";
+        if (source != null) {
+            imageSourceUrl = source.attr("value");
+        }
 
+        Element upld = doc.select("span.image_uploader").first().select("a").first();
+        String imageUploader = upld.text();
         /* TODO: parse uploader's badges */
 
-        Elements imgTags = doc.select("span[^data-tag]");
-        ArrayList<DerpibooruTag> tags = new ArrayList<>();
-        for (Element tag : imgTags) {
+        Element descr = doc.select("div.image-description").first();
+        String imageDescription = "";
+        if (descr != null) {
+            descr.select("h3").first().remove();
+            imageDescription = descr.html();
+        }
+
+        Elements tags = doc.select("span[^data-tag]");
+        ArrayList<DerpibooruTag> imageTags = new ArrayList<>();
+        for (Element tag : tags) {
             int id = Integer.parseInt(tag.attr("data-tag-id"));
             String name = tag.attr("data-tag-name");
 
@@ -45,15 +57,16 @@ public class HtmlParser {
              * excalibur(1981)(3)+SH */
             int imgCount = m.find() ? Integer.parseInt(m.group(m.groupCount() - 1)) : 0;
 
-            tags.add(new DerpibooruTag(id, imgCount, name));
+            imageTags.add(new DerpibooruTag(id, imgCount, name));
         }
 
         Elements users = doc.select("a.interaction-user-list-item");
-        ArrayList<String> favedBy = new ArrayList<>();
+        ArrayList<String> imageFavedBy = new ArrayList<>();
         for (Element user : users) {
-            favedBy.add(user.text());
+            imageFavedBy.add(user.text());
         }
 
-        return new DerpibooruImageInfo(url, tags, favedBy);
+        return new DerpibooruImageInfo(imageId, imageSourceUrl, imageUploader,
+                                       imageDescription, imageTags, imageFavedBy);
     }
 }

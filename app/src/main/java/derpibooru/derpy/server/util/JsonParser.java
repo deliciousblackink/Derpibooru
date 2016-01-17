@@ -33,10 +33,7 @@ public class JsonParser {
                         img.getInt("downvotes"), img.getInt("faves"),
                         img.getInt("comment_count"),
                         img.getJSONObject("representations").getString("thumb"),
-                        img.getString("image"),
-                        img.getString("source_url"),
-                        img.getString("uploader"),
-                        img.getString("description"));
+                        img.getString("image"));
 
                 output.add(it);
             }

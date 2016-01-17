@@ -30,10 +30,10 @@ public class ImageActivity extends AppCompatActivity
 
         DerpibooruImageThumb thumb = getIntent().getParcelableExtra("image_thumb");
         setBasicImageInfo(thumb);
-        loadImageWithGlide(thumb.getImageUrl());
+        loadImageWithGlide(thumb.getFullImageUrl());
 
         ImageFetcher i = new ImageFetcher(this, this);
-        i.imageByThumb(thumb).fetch(); /* async load; see 'queryFailed' and 'queryPerformed' */
+        i.id(thumb.getId()).fetch(); /* async load; see 'queryFailed' and 'queryPerformed' */
     }
 
     private void setBasicImageInfo(DerpibooruImageThumb thumb) {

@@ -10,15 +10,18 @@ public class DerpibooruImageInfo implements Parcelable {
     private String mSourceUrl;
     private String mUploader;
     private String mDescription;
+    private String mCreatedAt;
     private ArrayList<DerpibooruTag> mTags;
     private ArrayList<String> mFavedBy;
 
-    public DerpibooruImageInfo(int id, String sourceUrl, String uploader, String description,
+    public DerpibooruImageInfo(int id, String sourceUrl,
+                               String uploader, String description, String createdAt,
                                ArrayList<DerpibooruTag> tags, ArrayList<String> favedBy) {
         mId = id;
         mSourceUrl = sourceUrl;
         mUploader = uploader;
         mDescription = description;
+        mCreatedAt = createdAt;
         mTags = tags;
         mFavedBy = favedBy;
     }
@@ -39,6 +42,10 @@ public class DerpibooruImageInfo implements Parcelable {
         return mDescription;
     }
 
+    public String getCreatedAt() {
+        return mCreatedAt;
+    }
+
     public ArrayList<DerpibooruTag> getTags() {
         return mTags;
     }
@@ -52,6 +59,7 @@ public class DerpibooruImageInfo implements Parcelable {
         mSourceUrl = in.readString();
         mUploader = in.readString();
         mDescription = in.readString();
+        mCreatedAt = in.readString();
         in.readTypedList(mTags, DerpibooruTag.CREATOR);
         in.readStringList(mFavedBy);
     }
@@ -67,6 +75,7 @@ public class DerpibooruImageInfo implements Parcelable {
         dest.writeString(mSourceUrl);
         dest.writeString(mUploader);
         dest.writeString(mDescription);
+        dest.writeString(mCreatedAt);
         dest.writeList(mTags);
         dest.writeStringList(mFavedBy);
     }

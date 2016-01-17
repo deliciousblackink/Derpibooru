@@ -39,6 +39,9 @@ public class HtmlParser {
             imageDescription = descr.html();
         }
 
+        Element date = doc.select("time").first();
+        String imageCreatedAt = date.attr("datetime");
+
         Elements tags = doc.select("span[^data-tag]");
         ArrayList<DerpibooruTag> imageTags = new ArrayList<>();
         for (Element tag : tags) {
@@ -67,6 +70,7 @@ public class HtmlParser {
         }
 
         return new DerpibooruImageInfo(imageId, imageSourceUrl, imageUploader,
-                                       imageDescription, imageTags, imageFavedBy);
+                                       imageDescription, imageCreatedAt,
+                                       imageTags, imageFavedBy);
     }
 }

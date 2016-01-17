@@ -22,9 +22,20 @@
             android:text="Uploaded by {} on {}"
             android:scaleType="fitCenter"
             android:gravity="center_vertical|center_horizontal"
+            android:textSize="20sp"
+            android:padding="5dp"/>
+
+        <TextView
+            android:id="@+id/textDescription"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:scaleType="fitCenter"
+            android:gravity="center_vertical|center_horizontal"
             android:textSize="16sp"
-            android:paddingTop="1dp"
-            android:paddingLeft="5dp"/>
+            android:padding="10dp"
+            android:layout_margin="10dp"/>
 
         <LinearLayout
             android:id="@+id/layoutImageTags"

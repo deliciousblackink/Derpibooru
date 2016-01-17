@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.server.ImageList;
+import derpibooru.derpy.server.ImageListProvider;
 
 public class TopScoringFragment extends ImageListFragment {
     public TopScoringFragment() {
@@ -16,9 +16,9 @@ public class TopScoringFragment extends ImageListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ImageList il = new ImageList(getActivity(), this);
-        il.type(ImageList.Type.TopScoring).inDays(3).load();
-        /* ImageList handling is implemented in the ImageListFragment abstract class */
+        ImageListProvider ilp = new ImageListProvider(getActivity(), this);
+        ilp.type(ImageListProvider.Type.TopScoring).inDays(3).load();
+        /* ImageListProvider handling is implemented in the ImageListFragment abstract class */
 
         return inflater.inflate(R.layout.fragment_top_scoring, container, false);
     }

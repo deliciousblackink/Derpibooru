@@ -12,18 +12,18 @@ import derpibooru.derpy.server.util.QueryHandler;
 import derpibooru.derpy.server.util.UrlBuilder;
 
 /**
- * Asynchronous image list (an array of {id, score, etc.}) fetcher. The receiving object has to
+ * Asynchronous image list (an array of {id, score, etc.}) provider. The receiving object has to
  * implement the 'QueryHandler' interface. Server response is passed via the 'queryPerformed'
  * method as an 'ArrayList<DerpibooruImageThumb>' object.
  */
-public class ImageList extends Query {
+public class ImageListProvider extends Query {
     private static final String ALL_TIME = "520w";
     /* 520 weeks (10 years) effectively equals to 'All Time' */
 
     private Type mListType;
     private String mTime = ALL_TIME;
 
-    public ImageList(Context context, QueryHandler handler) {
+    public ImageListProvider(Context context, QueryHandler handler) {
         super(context, handler);
     }
 
@@ -32,7 +32,7 @@ public class ImageList extends Query {
      *
      * @param listType the type of the image list
      */
-    public ImageList type(Type listType) {
+    public ImageListProvider type(Type listType) {
         mListType = listType;
         return this;
     }
@@ -43,7 +43,7 @@ public class ImageList extends Query {
      *
      * @param hours the time limit in hours
      */
-    public ImageList inHours(int hours) {
+    public ImageListProvider inHours(int hours) {
         mTime = Integer.toString(hours) + "h";
         return this;
     }
@@ -54,7 +54,7 @@ public class ImageList extends Query {
      *
      * @param days the time limit in days
      */
-    public ImageList inDays(int days) {
+    public ImageListProvider inDays(int days) {
         mTime = Integer.toString(days) + "d";
         return this;
     }
@@ -65,7 +65,7 @@ public class ImageList extends Query {
      *
      * @param weeks the time limit in weeks
      */
-    public ImageList inWeeks(int weeks) {
+    public ImageListProvider inWeeks(int weeks) {
         mTime = Integer.toString(weeks) + "w";
         return this;
     }

@@ -8,12 +8,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 
 import derpibooru.derpy.data.types.DerpibooruImageInfo;
+import derpibooru.derpy.data.types.FragmentTab;
 import derpibooru.derpy.ui.fragments.ImageCommentsTabFragment;
 import derpibooru.derpy.ui.fragments.ImageFavoritesTabFragment;
 import derpibooru.derpy.ui.fragments.ImageInfoTabFragment;
 
 public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
-    private ArrayList<Tab> mTabs;
+    private ArrayList<FragmentTab> mTabs;
 
     public ImageBottomBarTabAdapter(FragmentManager fm,
                                     DerpibooruImageInfo info) {
@@ -30,9 +31,9 @@ public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
         commentsTab.setArguments(imageInfoBundle);
 
         mTabs = new ArrayList<>();
-        mTabs.add(new Tab(ImageBottomBarTabs.ImageInfo.id(), infoTab));
-        mTabs.add(new Tab(ImageBottomBarTabs.Faves.id(), favesTab));
-        mTabs.add(new Tab(ImageBottomBarTabs.Comments.id(), commentsTab));
+        mTabs.add(new FragmentTab(ImageBottomBarTabs.ImageInfo.id(), infoTab));
+        mTabs.add(new FragmentTab(ImageBottomBarTabs.Faves.id(), favesTab));
+        mTabs.add(new FragmentTab(ImageBottomBarTabs.Comments.id(), commentsTab));
     }
 
     @Override

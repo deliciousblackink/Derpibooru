@@ -15,7 +15,7 @@ import com.bumptech.glide.request.target.Target;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.types.DerpibooruImageInfo;
 import derpibooru.derpy.data.types.DerpibooruImageThumb;
-import derpibooru.derpy.server.ImageFetcher;
+import derpibooru.derpy.server.ImageInfoProvider;
 import derpibooru.derpy.server.util.QueryHandler;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
 import derpibooru.derpy.ui.views.ImageTopBarView;
@@ -32,7 +32,7 @@ public class ImageActivity extends AppCompatActivity
         setBasicImageInfo(thumb);
         loadImageWithGlide(thumb.getFullImageUrl());
 
-        ImageFetcher i = new ImageFetcher(this, this);
+        ImageInfoProvider i = new ImageInfoProvider(this, this);
         i.id(thumb.getId()).fetch(); /* async load; see 'queryFailed' and 'queryPerformed' */
     }
 

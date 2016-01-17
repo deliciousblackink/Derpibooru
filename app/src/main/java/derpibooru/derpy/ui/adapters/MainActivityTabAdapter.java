@@ -6,18 +6,19 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
+import derpibooru.derpy.data.types.FragmentTab;
 import derpibooru.derpy.ui.fragments.MostCommentedFragment;
 import derpibooru.derpy.ui.fragments.TopScoringFragment;
 
 public class MainActivityTabAdapter extends FragmentPagerAdapter {
-    private ArrayList<Tab> mTabs;
+    private ArrayList<FragmentTab> mTabs;
 
     public MainActivityTabAdapter(FragmentManager fm) {
         super(fm);
 
         mTabs = new ArrayList<>();
-        mTabs.add(new Tab(0, "Top Scoring", new TopScoringFragment()));
-        mTabs.add(new Tab(1, "Most Commented", new MostCommentedFragment()));
+        mTabs.add(new FragmentTab(0, "Top Scoring", new TopScoringFragment()));
+        mTabs.add(new FragmentTab(1, "Most Commented", new MostCommentedFragment()));
     }
 
     @Override

@@ -11,23 +11,23 @@ import derpibooru.derpy.server.util.QueryHandler;
 import derpibooru.derpy.server.util.UrlBuilder;
 
 /**
- * Asynchronous full image info (tags, faved by) fetcher. The receiving object has to implement the
+ * Asynchronous full image info (tags, faved by) provider. The receiving object has to implement the
  * 'QueryHandler' interface. Server response is passed via the 'queryPerformed' method as an
  * 'DerpibooruImageInfo' object.
  */
-public class ImageFetcher extends Query {
+public class ImageInfoProvider extends Query {
     private int mId;
 
-    public ImageFetcher(Context context, QueryHandler handler) {
+    public ImageInfoProvider(Context context, QueryHandler handler) {
         super(context, handler);
     }
 
     /**
-     * Returns an ImageFetcher for the particular image ID.
+     * Returns an ImageInfoProvider for the particular image ID.
      *
      * @param id image ID
      */
-    public ImageFetcher id(int id) {
+    public ImageInfoProvider id(int id) {
         mId = id;
         return this;
     }

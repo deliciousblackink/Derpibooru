@@ -9,5 +9,5 @@
         android:icon="@drawable/ic_search_white_24dp"
         android:menuCategory="secondary"
         app:showAsAction="always"
-        android:title="@string/action_search"/>
+        android:title="@string/activity_search"/>
 </menu>

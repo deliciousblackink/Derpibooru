@@ -23,5 +23,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.ImageActivity"/>
+        <activity android:name=".ui.SearchActivity"/>
     </application>
 </manifest>

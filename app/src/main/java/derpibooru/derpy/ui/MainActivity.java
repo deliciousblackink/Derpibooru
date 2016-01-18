@@ -1,5 +1,6 @@
 package derpibooru.derpy.ui;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_search) {
-            return true;
+            startActivity(new Intent(this, SearchActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

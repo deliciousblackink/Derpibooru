@@ -3,10 +3,15 @@
     <color name="colorPrimary">#6eaede</color>
     <color name="colorPrimaryDark">#519ed7</color>
     <color name="colorAccent">#ff4081</color>
-    <color name="colorTabBackground">#eeeeee</color>
 
-    <color name="colorImageToolbar">#cccccc</color>
-    <color name="colorImageToolbarText">#fbfbfb</color>
+    <color name="colorTextLight">#fafafa</color>
+    <color name="colorTextDark">#212121</color>
+
+    <color name="colorTabBackground">#6eaede</color>
+    <color name="colorTabTextSelected">#ffffff</color>
+    <color name="colorTabTextUnselected">#96ffffff</color>
+
+    <color name="colorImageToolbar">#d7e2ea</color> <!-- used to be #cccccc -->
 
     <color name="colorImageArtistTag">#a2a6d4</color>
     <color name="colorImageArtistTagText">#4d4574</color>

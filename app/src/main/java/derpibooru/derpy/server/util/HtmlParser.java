@@ -28,8 +28,14 @@ public class HtmlParser {
             imageSourceUrl = source.attr("value");
         }
 
-        Element upld = doc.select("span.image_uploader").first().select("a").first();
-        String imageUploader = upld.text();
+        Element upld = doc.select("span.image_uploader").first();
+        String imageUploader;
+        if (upld.select("a").first() != null) {
+            imageUploader = upld.select("a").first().text();
+        } else {
+            imageUploader = upld.select("strong").first().text();
+        }
+
         /* TODO: parse uploader's badges */
 
         Element descr = doc.select("div.image-description").first();

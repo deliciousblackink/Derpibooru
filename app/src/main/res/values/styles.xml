@@ -11,11 +11,11 @@
     <style name="TabLayout" parent="Widget.Design.TabLayout">
         <item name="tabTextAppearance">@style/TabTextAppearance</item>
         <item name="tabBackground">@color/colorTabBackground</item>
+        <item name="tabSelectedTextColor">@color/colorTabTextSelected</item>
     </style>
 
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
-        <!-- <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item> -->
+        <item name="android:textColor">@color/colorTabTextUnselected</item>
     </style>
 
     <style name="ImageTagArtist" parent="@android:style/TextAppearance.Medium">

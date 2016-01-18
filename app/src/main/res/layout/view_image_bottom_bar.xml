@@ -31,7 +31,7 @@
                 android:background="@drawable/toolbar_button_selector"
                 android:scaleType="fitCenter"
                 android:gravity="center_vertical|center_horizontal"
-                android:textColor="@color/colorImageToolbarText"
+                android:textColor="@color/colorTextLight"
                 android:textSize="30sp"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -67,7 +67,7 @@
                 android:background="@drawable/toolbar_button_selector"
                 android:scaleType="fitCenter"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorImageToolbarText"
+                android:textColor="@color/colorTextLight"
                 android:textSize="16sp"
                 android:paddingTop="1dp"
                 android:paddingLeft="5dp"/>
@@ -104,7 +104,7 @@
                 android:background="@drawable/toolbar_button_selector"
                 android:scaleType="fitCenter"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorImageToolbarText"
+                android:textColor="@color/colorTextLight"
                 android:textSize="16sp"
                 android:paddingTop="1dp"
                 android:paddingLeft="5dp"/>

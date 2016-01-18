@@ -40,7 +40,7 @@
                 android:text="2800"
                 android:scaleType="fitCenter"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorImageToolbarText"
+                android:textColor="@color/colorTextLight"
                 android:textSize="16sp"
                 android:paddingTop="1dp"
                 android:background="@drawable/toolbar_button_selector"
@@ -57,7 +57,7 @@
             android:background="@color/colorImageToolbar"
             android:scaleType="fitCenter"
             android:gravity="center_vertical|center_horizontal"
-            android:textColor="@color/colorImageToolbarText"
+            android:textColor="@color/colorTextLight"
             android:textSize="30sp"
             android:paddingTop="1dp"/>
 
@@ -91,7 +91,7 @@
                 android:text="1034"
                 android:scaleType="fitCenter"
                 android:gravity="center_vertical"
-                android:textColor="@color/colorImageToolbarText"
+                android:textColor="@color/colorTextLight"
                 android:textSize="16sp"
                 android:paddingTop="1dp"
                 android:background="@drawable/toolbar_button_selector"

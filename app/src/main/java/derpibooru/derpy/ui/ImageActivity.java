@@ -22,6 +22,11 @@ import derpibooru.derpy.ui.views.ImageTopBarView;
 
 public class ImageActivity extends AppCompatActivity
                            implements QueryHandler {
+
+    /* TODO: should be a singleTop activity
+     * http://developer.android.com/reference/android/app/Activity.html#onNewIntent(android.content.Intent)
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

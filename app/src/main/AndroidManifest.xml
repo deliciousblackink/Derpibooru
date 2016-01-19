@@ -24,5 +24,6 @@
         </activity>
         <activity android:name=".ui.ImageActivity"/>
         <activity android:name=".ui.SearchActivity"/>
+        <activity android:name=".ui.SearchResultActivity"/>
     </application>
 </manifest>

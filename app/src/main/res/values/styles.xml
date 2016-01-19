@@ -18,6 +18,13 @@
         <item name="android:textColor">@color/colorTabTextUnselected</item>
     </style>
 
+    <style name="Divider">
+        <!-- http://stackoverflow.com/a/14533085/1726690 -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
+
     <style name="ImageTagArtist" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/colorImageArtistTagText</item>
         <item name="android:textSize">16sp</item>

@@ -4,22 +4,22 @@ import android.content.Context;
 
 import java.net.URL;
 
-import derpibooru.derpy.data.types.DerpibooruImageInfo;
-import derpibooru.derpy.server.util.HtmlParser;
 import derpibooru.derpy.server.util.Query;
-import derpibooru.derpy.server.util.QueryHandler;
+import derpibooru.derpy.server.util.QueryResultHandler;
 import derpibooru.derpy.server.util.UrlBuilder;
+import derpibooru.derpy.server.util.parsers.ImageInfoParser;
 
 /**
  * Asynchronous full image info (tags, faved by) provider. The receiving object has to implement the
- * 'QueryHandler' interface. Server response is passed via the 'queryPerformed' method as a
+ * 'QueryResultHandler' interface. Server response is passed via the 'onQueryExecuted' method as a
  * 'DerpibooruImageInfo' object.
  */
-public class ImageInfoProvider extends Query {
+public class ImageInfoProvider {
     private int mId;
+    private Query mQuery;
 
-    public ImageInfoProvider(Context context, QueryHandler handler) {
-        super(context, handler);
+    public ImageInfoProvider(Context context, QueryResultHandler handler) {
+        mQuery = new Query(context, handler);
     }
 
     /**
@@ -38,21 +38,6 @@ public class ImageInfoProvider extends Query {
      */
     public void fetch() {
         URL url = UrlBuilder.generateImageUrl(mId);
-        if (url != null) {
-            executeQuery(url);
-        } else {
-            mQueryHandler.queryFailed();
-        }
-    }
-
-    @Override
-    protected void processResponse(String response) {
-        HtmlParser html = new HtmlParser(response);
-        DerpibooruImageInfo i = html.readImage(mId);
-        if (i != null) {
-            mQueryHandler.queryPerformed(i);
-        } else {
-            mQueryHandler.queryFailed();
-        }
+        mQuery.executeQuery(url, new ImageInfoParser());
     }
 }

@@ -9,11 +9,14 @@ import java.util.ArrayList;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 
 public class ImageListParser implements ServerResponseParser {
+    public ImageListParser() {
+    }
+
     public Object parseResponse(String rawResponse) throws JSONException {
         ArrayList<DerpibooruImageThumb> output = new ArrayList<>();
 
         JSONObject json = new JSONObject(rawResponse);
-        JSONArray images = json.getJSONArray("images");
+        JSONArray images = getRootArray(json);
 
         int imgCount = images.length();
         for (int x = 0; x < imgCount; x++) {
@@ -29,5 +32,15 @@ public class ImageListParser implements ServerResponseParser {
             output.add(it);
         }
         return output;
+    }
+
+    private JSONArray getRootArray(JSONObject json) throws JSONException {
+        if (!json.isNull("images")) {
+            return json.getJSONArray("images");
+        } else {
+            /* image list parser is also used for search results,
+             * where the root tag is 'search' */
+            return json.getJSONArray("search");
+        }
     }
 }

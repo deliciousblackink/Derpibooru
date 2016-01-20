@@ -1,11 +1,12 @@
 package derpibooru.derpy.ui;
 
-import android.app.SearchManager;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import derpibooru.derpy.R;
+import derpibooru.derpy.ui.adapters.SearchResultActivityTabAdapter;
+import derpibooru.derpy.ui.views.FragmentTabPagerView;
 
 public class SearchResultActivity extends AppCompatActivity {
     /* TODO: should be a singleTop activity
@@ -16,15 +17,24 @@ public class SearchResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        handleIntent(getIntent());
+        String searchQuery = getIntent().getStringExtra("query");
+
+        ((FragmentTabPagerView) findViewById(R.id.fragmentPagerView))
+                .setFragmentAdapter(new SearchResultActivityTabAdapter(getSupportFragmentManager(),
+                                                                       searchQuery));
+
     }
 
-    private void handleIntent(Intent intent) {
-
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            /* TODO: implement search */
+    /* Respond to ActionBar's Up (Back) button */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

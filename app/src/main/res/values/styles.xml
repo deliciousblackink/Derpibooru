@@ -1,11 +1,11 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!-- http://stackoverflow.com/a/33000467/1726690 -->
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="TabLayout" parent="Widget.Design.TabLayout">

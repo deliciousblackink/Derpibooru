@@ -2,7 +2,6 @@ package derpibooru.derpy.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,27 +11,28 @@ import android.widget.GridView;
 import java.util.ArrayList;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruImageListType;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.server.ImageListProvider;
+import derpibooru.derpy.server.SearchResultProvider;
 import derpibooru.derpy.server.util.QueryResultHandler;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.ImageListAdapter;
 
-public class ImageListTabFragment extends Fragment
-                                  implements QueryResultHandler {
-    public ImageListTabFragment() {
+public class SearchResultTabFragment extends ImageListTabFragment
+                                     implements QueryResultHandler {
+    public SearchResultTabFragment() {
         super();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ImageListProvider provider = new ImageListProvider(getActivity(), this);
-        provider
-                .type(DerpibooruImageListType.getFromValue(getArguments().getInt("type")))
-                .inDays(3)
-                .load();
+        SearchResultProvider provider = new SearchResultProvider(getActivity(), this);
+        provider.search(getArguments().getString("query"));
+
+        /* note: since search results are presented in an image grid, they are
+         * basically an extension of a list view; hence the image list tab layout
+         * can be reused without unnecessary copy-paste.
+         */
         return inflater.inflate(R.layout.fragment_image_list_tab, container, false);
     }
 

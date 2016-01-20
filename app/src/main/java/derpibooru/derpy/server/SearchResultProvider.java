@@ -1,18 +1,27 @@
 package derpibooru.derpy.server;
 
-import java.util.List;
-import java.util.Map;
+import android.content.Context;
 
-import derpibooru.derpy.data.types.DerpibooruImageThumb;
+import java.net.URL;
+import java.util.HashMap;
+
+import derpibooru.derpy.server.util.Query;
+import derpibooru.derpy.server.util.QueryResultHandler;
+import derpibooru.derpy.server.util.UrlBuilder;
+import derpibooru.derpy.server.util.parsers.ImageListParser;
 
 public class SearchResultProvider {
-    Map<String, String> mQueryParams;
+    private HashMap<String, String> mQueryParams;
+    private Query mQuery;
 
-    public SearchResultProvider() {
+    public SearchResultProvider(Context context, QueryResultHandler handler) {
+        mQuery = new Query(context, handler);
+        mQueryParams = new HashMap<>();
     }
 
-    public List<DerpibooruImageThumb> getThumbs() {
-        throw new UnsupportedOperationException();
+    public void search(String query) {
+        URL url = UrlBuilder.generateSearchUrl(mQueryParams, query);
+        mQuery.executeQuery(url, new ImageListParser());
     }
 
     public SearchResultProvider sortBy(Sorting s) {

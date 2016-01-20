@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import derpibooru.derpy.data.types.DerpibooruImageThumb;
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 
 public class ImageListParser implements ServerResponseParser {
     public Object parseResponse(String rawResponse) throws JSONException {

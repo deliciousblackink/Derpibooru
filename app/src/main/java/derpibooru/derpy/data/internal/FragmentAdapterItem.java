@@ -1,19 +1,19 @@
-package derpibooru.derpy.data.types;
+package derpibooru.derpy.data.internal;
 
 import android.support.v4.app.Fragment;
 
-public class FragmentTab {
+public class FragmentAdapterItem {
     private int mPosition;
     private String mTitle;
     private Fragment mContent;
 
-    public FragmentTab(int position, String title, Fragment content) {
+    public FragmentAdapterItem(int position, String title, Fragment content) {
         this.mPosition = position;
         this.mTitle = title;
         this.mContent = content;
     }
 
-    public FragmentTab(int position, Fragment content) {
+    public FragmentAdapterItem(int position, Fragment content) {
         this.mPosition = position;
         this.mContent = content;
 

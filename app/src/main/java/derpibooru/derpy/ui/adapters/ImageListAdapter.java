@@ -15,7 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.types.DerpibooruImageThumb;
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 
 public class ImageListAdapter extends ArrayAdapter {
     private Context mContext;

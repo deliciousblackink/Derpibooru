@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.net.URL;
 
+import derpibooru.derpy.data.server.DerpibooruImageListType;
 import derpibooru.derpy.server.util.Query;
 import derpibooru.derpy.server.util.QueryResultHandler;
 import derpibooru.derpy.server.util.UrlBuilder;
@@ -18,7 +19,7 @@ public class ImageListProvider {
     private static final String ALL_TIME = "520w";
     /* 520 weeks (10 years) effectively equals to 'All Time' */
 
-    private Type mListType;
+    private DerpibooruImageListType mListType;
     private String mTime = ALL_TIME;
 
     private Query mQuery;
@@ -32,7 +33,7 @@ public class ImageListProvider {
      *
      * @param listType the type of the image list
      */
-    public ImageListProvider type(Type listType) {
+    public ImageListProvider type(DerpibooruImageListType listType) {
         mListType = listType;
         return this;
     }
@@ -77,10 +78,5 @@ public class ImageListProvider {
     public void load() {
         URL url = UrlBuilder.generateListUrl(mListType, mTime);
         mQuery.executeQuery(url, new ImageListParser());
-    }
-
-    public enum Type {
-        TopScoring,
-        MostCommented
     }
 }

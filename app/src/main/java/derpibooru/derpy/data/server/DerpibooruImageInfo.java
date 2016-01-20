@@ -1,4 +1,4 @@
-package derpibooru.derpy.data.types;
+package derpibooru.derpy.data.server;
 
 import android.os.Parcel;
 import android.os.Parcelable;

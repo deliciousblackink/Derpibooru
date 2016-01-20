@@ -13,8 +13,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.types.DerpibooruImageInfo;
-import derpibooru.derpy.data.types.DerpibooruImageThumb;
+import derpibooru.derpy.data.server.DerpibooruImageInfo;
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.server.ImageInfoProvider;
 import derpibooru.derpy.server.util.QueryResultHandler;
 import derpibooru.derpy.ui.views.ImageBottomBarView;

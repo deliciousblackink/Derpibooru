@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.types.DerpibooruImageInfo;
+import derpibooru.derpy.data.server.DerpibooruImageInfo;
 import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
 import derpibooru.derpy.ui.animations.ImageBottomBarAnimator;
 

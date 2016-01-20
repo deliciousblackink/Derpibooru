@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -21,8 +20,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.types.DerpibooruImageInfo;
-import derpibooru.derpy.data.types.DerpibooruTag;
+import derpibooru.derpy.data.server.DerpibooruImageInfo;
+import derpibooru.derpy.data.server.DerpibooruTag;
 import derpibooru.derpy.ui.views.FlowLayout;
 import derpibooru.derpy.ui.views.ImageTagView;
 

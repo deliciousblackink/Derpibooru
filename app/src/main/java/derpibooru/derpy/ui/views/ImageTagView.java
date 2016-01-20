@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.types.DerpibooruTag;
+import derpibooru.derpy.data.server.DerpibooruTag;
 
 public class ImageTagView extends LinearLayout {
     public ImageTagView(Context context) {

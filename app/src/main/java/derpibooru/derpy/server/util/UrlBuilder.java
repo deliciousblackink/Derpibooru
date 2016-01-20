@@ -5,12 +5,13 @@ import android.util.Log;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import derpibooru.derpy.data.server.DerpibooruImageListType;
 import derpibooru.derpy.server.ImageListProvider;
 
 public class UrlBuilder {
     private static final String DERPIBOORU_DOMAIN = "https://trixiebooru.org/";
 
-    public static URL generateListUrl(ImageListProvider.Type type, String time) {
+    public static URL generateListUrl(DerpibooruImageListType type, String time) {
         String request = DERPIBOORU_DOMAIN;
         switch (type) {
             case TopScoring:
@@ -24,8 +25,7 @@ public class UrlBuilder {
         try {
             return new URL(request);
         } catch (MalformedURLException e) {
-            Log.e("UrlBuilder", String.format("Could not form an ImageListProvider URL, type=%s, time=%s",
-                    type.toString(), time));
+            Log.e("UrlBuilder", "generateListUrl", e);
             return null;
         }
     }
@@ -35,7 +35,7 @@ public class UrlBuilder {
         try {
             return new URL(request);
         } catch (MalformedURLException e) {
-            Log.e("UrlBuilder", String.format("Could not form an image URL, id=%d", imageId));
+            Log.e("UrlBuilder", "generateImageUrl", e);
             return null;
         }
     }

@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import derpibooru.derpy.data.types.DerpibooruImageInfo;
-import derpibooru.derpy.data.types.DerpibooruTag;
+import derpibooru.derpy.data.server.DerpibooruImageInfo;
+import derpibooru.derpy.data.server.DerpibooruTag;
 
 public class ImageInfoParser implements ServerResponseParser {
     public Object parseResponse(String rawResponse) throws Exception {

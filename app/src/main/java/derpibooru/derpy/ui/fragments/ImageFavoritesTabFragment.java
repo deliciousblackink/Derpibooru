@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.types.DerpibooruImageInfo;
+import derpibooru.derpy.data.server.DerpibooruImageInfo;
 
 public class ImageFavoritesTabFragment extends Fragment {
     public ImageFavoritesTabFragment() {

@@ -10,6 +10,7 @@
     android:orientation="vertical">
 
     <derpibooru.derpy.ui.views.FloatingSearchView
+        android:id="@+id/floatingSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

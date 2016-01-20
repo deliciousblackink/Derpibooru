@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import derpibooru.derpy.R;
+import derpibooru.derpy.ui.views.FloatingSearchView;
 
 public class SearchActivity extends AppCompatActivity {
     @Override
@@ -16,6 +17,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((FloatingSearchView) findViewById(R.id.floatingSearch)).setSearchResultActivity(SearchResultActivity.class);
     }
 
     /* Respond to ActionBar's Up (Back) button */

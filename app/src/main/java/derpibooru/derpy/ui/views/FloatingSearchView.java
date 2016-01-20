@@ -1,8 +1,7 @@
 package derpibooru.derpy.ui.views;
 
-import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.UiThread;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,7 +26,6 @@ public class FloatingSearchView extends LinearLayout {
     private static final int ICON_SEARCH = R.drawable.ic_search_white_24dp;
     private static final int ICON_BACK = R.drawable.ic_arrow_back_white_24dp;
 
-    private Activity mSearchResultActivity;
     private RecyclerView mRecentSearchView;
     private View mRecentSearchDivider;
     private ImageView mSearchButton;
@@ -116,16 +114,17 @@ public class FloatingSearchView extends LinearLayout {
         mAdapter.notifyDataSetChanged();
     }
 
-    public void setSearchResultActivity(Activity searchResultActivity) {
-        mSearchResultActivity = searchResultActivity;
-
+    public void setSearchResultActivity(final Class searchResultActivity) {
         mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                            return true;
-                 }
-                 return false;
+                    Intent i = new Intent(v.getContext(), searchResultActivity);
+                    i.putExtra("query", v.getText().toString());
+                    v.getContext().startActivity(i);
+                    return true;
+                }
+                return false;
             }});
     }
 }

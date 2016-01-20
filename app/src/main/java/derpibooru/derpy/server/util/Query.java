@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.net.ssl.HttpsURLConnection;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 
 import derpibooru.derpy.server.util.parsers.ServerResponseParser;
@@ -59,12 +57,7 @@ public class Query {
                 String response = getResponse(params[0].getTargetUrl());
                 return params[0].getParser().parseResponse(response);
             } catch (Exception e) {
-                /* write a stack trace to string */
-                StringWriter sw = new StringWriter();
-                e.printStackTrace(new PrintWriter(sw));
-                String stack = sw.toString();
-                /* log */
-                Log.e("Query failed", e.getMessage() + " | " + stack);
+                Log.e("Derpy Query", "error: ", e);
                 mQueryResultHandler.onQueryFailed();
                 return null;
             }

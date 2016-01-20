@@ -20,11 +20,11 @@ public class SearchResultActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String searchQuery = getIntent().getStringExtra("query");
+        setTitle(searchQuery);
 
         ((FragmentTabPagerView) findViewById(R.id.fragmentPagerView))
                 .setFragmentAdapter(new SearchResultActivityTabAdapter(getSupportFragmentManager(),
                                                                        searchQuery));
-
     }
 
     /* Respond to ActionBar's Up (Back) button */

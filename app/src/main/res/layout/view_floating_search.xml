@@ -5,8 +5,12 @@
               android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp">
         <!-- TODO: IMPORTANT there seems to be a bug with the layout
         inflater or my code (probably the latter) that causes the whole view
         to have a weird appearance with this LinearLayout being nested in the main
@@ -15,11 +19,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
             android:gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:id="@+id/linearLayout">
@@ -46,7 +46,8 @@
                 android:textSize="18sp"
                 android:gravity="center_vertical"
                 android:inputType="text"
-                android:imeOptions="actionSearch"/>
+                android:imeOptions="actionSearch"
+                android:paddingRight="10dp"/>
         </LinearLayout>
     </RelativeLayout>
 

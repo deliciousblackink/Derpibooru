@@ -8,6 +8,9 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <style name="Spinner" parent="Widget.AppCompat.Spinner.Underlined">
+    </style>
+
     <style name="TabLayout" parent="Widget.Design.TabLayout">
         <item name="tabTextAppearance">@style/TabTextAppearance</item>
         <item name="tabBackground">@color/colorTabBackground</item>

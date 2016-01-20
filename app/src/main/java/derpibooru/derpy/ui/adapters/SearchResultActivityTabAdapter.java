@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.data.internal.FragmentAdapterItem;
 import derpibooru.derpy.ui.fragments.SearchResultTabFragment;
+import derpibooru.derpy.ui.fragments.SearchOptionsTabFragment;
 
 public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
     private ArrayList<FragmentAdapterItem> mTabs;
@@ -24,6 +25,7 @@ public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
         fragmentSearchResults.setArguments(args);
 
         mTabs.add(new FragmentAdapterItem(0, "Search Results", fragmentSearchResults));
+        mTabs.add(new FragmentAdapterItem(1, "Options", new SearchOptionsTabFragment()));
     }
 
     @Override

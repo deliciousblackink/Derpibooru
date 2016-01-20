@@ -3,28 +3,28 @@ package derpibooru.derpy.server;
 import android.content.Context;
 
 import java.net.URL;
-import java.util.ArrayList;
 
-import derpibooru.derpy.data.types.DerpibooruImageThumb;
-import derpibooru.derpy.server.util.JsonParser;
 import derpibooru.derpy.server.util.Query;
-import derpibooru.derpy.server.util.QueryHandler;
+import derpibooru.derpy.server.util.QueryResultHandler;
 import derpibooru.derpy.server.util.UrlBuilder;
+import derpibooru.derpy.server.util.parsers.ImageListParser;
 
 /**
  * Asynchronous image list (an array of {id, score, etc.}) provider. The receiving object has to
- * implement the 'QueryHandler' interface. Server response is passed via the 'queryPerformed'
+ * implement the 'QueryResultHandler' interface. Server response is passed via the 'onQueryExecuted'
  * method as an 'ArrayList<DerpibooruImageThumb>' object.
  */
-public class ImageListProvider extends Query {
+public class ImageListProvider {
     private static final String ALL_TIME = "520w";
     /* 520 weeks (10 years) effectively equals to 'All Time' */
 
     private Type mListType;
     private String mTime = ALL_TIME;
 
-    public ImageListProvider(Context context, QueryHandler handler) {
-        super(context, handler);
+    private Query mQuery;
+
+    public ImageListProvider(Context context, QueryResultHandler handler) {
+        mQuery = new Query(context, handler);
     }
 
     /**
@@ -76,18 +76,7 @@ public class ImageListProvider extends Query {
      */
     public void load() {
         URL url = UrlBuilder.generateListUrl(mListType, mTime);
-        if (url != null) {
-            executeQuery(url);
-        } else {
-            mQueryHandler.queryFailed();
-        }
-    }
-
-    @Override
-    protected void processResponse(String response) {
-        JsonParser json = new JsonParser(response);
-        ArrayList<DerpibooruImageThumb> img = json.readImageThumbs();
-        mQueryHandler.queryPerformed(img);
+        mQuery.executeQuery(url, new ImageListParser());
     }
 
     public enum Type {

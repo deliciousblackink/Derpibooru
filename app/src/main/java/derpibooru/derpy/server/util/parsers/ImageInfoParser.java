@@ -1,4 +1,4 @@
-package derpibooru.derpy.server.util;
+package derpibooru.derpy.server.util.parsers;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,59 +12,88 @@ import java.util.regex.Pattern;
 import derpibooru.derpy.data.types.DerpibooruImageInfo;
 import derpibooru.derpy.data.types.DerpibooruTag;
 
-public class HtmlParser {
-    private String mRawHtml;
+public class ImageInfoParser implements ServerResponseParser {
+    public Object parseResponse(String rawResponse) throws Exception {
+        Document doc = Jsoup.parse(rawResponse);
 
-    public HtmlParser(String raw) {
-        mRawHtml = raw;
-    }
-
-    public DerpibooruImageInfo readImage(int imageId) {
-        Document doc = Jsoup.parse(mRawHtml);
-
-        Element source = doc.select("input#image_source_url").first();
-        String imageSourceUrl = "";
-        if (source != null) {
-            imageSourceUrl = source.attr("value");
-        }
-
-        Element upld = doc.select("span.image_uploader").first().select("a").first();
-        String imageUploader = upld.text();
-        /* TODO: parse uploader's badges */
-
-        Element descr = doc.select("div.image-description").first();
-        String imageDescription = "";
-        if (descr != null) {
-            descr.select("h3").first().remove();
-            imageDescription = descr.html();
-        }
-
-        Element date = doc.select("time").first();
-        String imageCreatedAt = date.attr("datetime");
-
-        Elements tags = doc.select("span[^data-tag]");
-        ArrayList<DerpibooruTag> imageTags = new ArrayList<>();
-        for (Element tag : tags) {
-            int tagId = Integer.parseInt(tag.attr("data-tag-id"));
-            int tagImgCount = getNumberOfImagesFromTagText(tag.text());
-            String tagName = tag.attr("data-tag-name");
-            DerpibooruTag.TagType tagType = getTagTypeFromName(tagName);
-
-            imageTags.add(new DerpibooruTag(tagId, tagImgCount, tagName, tagType));
-        }
-
-        Elements users = doc.select("a.interaction-user-list-item");
-        ArrayList<String> imageFavedBy = new ArrayList<>();
-        for (Element user : users) {
-            imageFavedBy.add(user.text());
-        }
+        int imageId = parseImageId(doc);
+        String imageSourceUrl = parseSourceUrl(doc);
+        String imageUploader = parseUploader(doc);
+        String imageDescription = parseDescription(doc);
+        String imageCreatedAt = parseDateCreatedAt(doc);
+        ArrayList<String> imageFavedBy = parseFavedBy(doc);
+        ArrayList<DerpibooruTag> imageTags = parseTags(doc);
 
         return new DerpibooruImageInfo(imageId, imageSourceUrl, imageUploader,
                                        imageDescription, imageCreatedAt,
                                        imageTags, imageFavedBy);
     }
 
-    private int getNumberOfImagesFromTagText(String renderedTagText) {
+    private int parseImageId(Document doc) {
+        String title = doc.select("title").first().text();
+        Matcher m = Pattern.compile("^(?:#)([\\d]*)").matcher(title);
+        /* m.group(0) is '#000000', m.group(1) is '000000' */
+        return m.find() ? Integer.parseInt(m.group(1)) : 0;
+    }
+
+    private String parseSourceUrl(Document doc) {
+        Element source = doc.select("input#image_source_url").first();
+        String imageSourceUrl = "";
+        if (source != null) {
+            imageSourceUrl = source.attr("value");
+        }
+        return imageSourceUrl;
+    }
+
+    private String parseUploader(Document doc) {
+        Element upld = doc.select("span.image_uploader").first();
+        if (upld.select("a").first() != null) {
+            return upld.select("a").first().text();
+        } else {
+            return upld.select("strong").first().text();
+        }
+        /* TODO: parse uploader's badges */
+    }
+
+    private String parseDescription(Document doc) {
+        Element descr = doc.select("div.image-description").first();
+        String imageDescription = "";
+        if (descr != null) {
+            descr.select("h3").first().remove();
+            imageDescription = descr.html();
+        }
+        return imageDescription;
+    }
+
+    private String parseDateCreatedAt(Document doc) {
+        Element date = doc.select("time").first();
+        return date.attr("datetime");
+    }
+
+    private ArrayList<String> parseFavedBy(Document doc) {
+        Elements users = doc.select("a.interaction-user-list-item");
+        ArrayList<String> imageFavedBy = new ArrayList<>();
+        for (Element user : users) {
+            imageFavedBy.add(user.text());
+        }
+        return imageFavedBy;
+    }
+
+    private ArrayList<DerpibooruTag> parseTags(Document doc) {
+        Elements tags = doc.select("span[^data-tag]");
+        ArrayList<DerpibooruTag> imageTags = new ArrayList<>();
+        for (Element tag : tags) {
+            int tagId = Integer.parseInt(tag.attr("data-tag-id"));
+            int tagImgCount = parseNumberOfImagesFromTagText(tag.text());
+            String tagName = tag.attr("data-tag-name");
+            DerpibooruTag.TagType tagType = parseTagTypeFromName(tagName);
+
+            imageTags.add(new DerpibooruTag(tagId, tagImgCount, tagName, tagType));
+        }
+        return imageTags;
+    }
+
+    private int parseNumberOfImagesFromTagText(String renderedTagText) {
         /* alternate hairstyle (7280) +SH
          * ->
          * alternatehairstyle(7280)+SH */
@@ -73,12 +102,19 @@ public class HtmlParser {
          * ->
          * 7280 */
         Matcher m = Pattern.compile("(?!\\()([\\d*\\.]+)(?=\\))").matcher(s);
-        /* m.groupCount() - 1 to handle cases like
-         * excalibur(1981)(3)+SH */
-        return m.find() ? Integer.parseInt(m.group(m.groupCount() - 1)) : 0;
+
+        int count = 0;
+        while (m.find()) {
+             /* handle cases like
+              * excalibur(1981)(3)+SH
+              * where the matcher will have two "find()" matches
+              */
+            count = Integer.parseInt(m.group(m.groupCount() - 1));
+        }
+        return count;
     }
 
-    private DerpibooruTag.TagType getTagTypeFromName(String tagName) {
+    private DerpibooruTag.TagType parseTagTypeFromName(String tagName) {
         /* TODO: add spoiler and OC tags */
         /* fixed tag names */
         switch (tagName) {

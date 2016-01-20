@@ -16,12 +16,12 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.types.DerpibooruImageInfo;
 import derpibooru.derpy.data.types.DerpibooruImageThumb;
 import derpibooru.derpy.server.ImageInfoProvider;
-import derpibooru.derpy.server.util.QueryHandler;
+import derpibooru.derpy.server.util.QueryResultHandler;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
 import derpibooru.derpy.ui.views.ImageTopBarView;
 
 public class ImageActivity extends AppCompatActivity
-                           implements QueryHandler {
+                           implements QueryResultHandler {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +33,7 @@ public class ImageActivity extends AppCompatActivity
         loadImageWithGlide(thumb.getFullImageUrl());
 
         ImageInfoProvider i = new ImageInfoProvider(this, this);
-        i.id(thumb.getId()).fetch(); /* async load; see 'queryFailed' and 'queryPerformed' */
+        i.id(thumb.getId()).fetch(); /* async load; see 'onQueryFailed' and 'onQueryExecuted' */
     }
 
     private void setBasicImageInfo(DerpibooruImageThumb thumb) {
@@ -71,13 +71,13 @@ public class ImageActivity extends AppCompatActivity
     }
 
     @Override
-    public void queryPerformed(Object image) {
+    public void onQueryExecuted(Object image) {
         ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
                 .setTabInfo((DerpibooruImageInfo) image);
     }
 
     @Override
-    public void queryFailed() {
+    public void onQueryFailed() {
 
     }
 

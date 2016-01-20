@@ -10,20 +10,20 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.types.DerpibooruImageThumb;
-import derpibooru.derpy.server.util.QueryHandler;
+import derpibooru.derpy.server.util.QueryResultHandler;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.ImageListAdapter;
 
 public abstract class ImageListFragment extends Fragment
-        implements QueryHandler {
+        implements QueryResultHandler {
     public ImageListFragment() {
     }
 
-    public void queryFailed() {
+    public void onQueryFailed() {
 
     }
 
-    public void queryPerformed(Object imageList) {
+    public void onQueryExecuted(Object imageList) {
         ArrayList<DerpibooruImageThumb> images = (ArrayList<DerpibooruImageThumb>) imageList;
 
         GridView gv = (GridView) getView().findViewById(R.id.gallery);

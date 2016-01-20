@@ -1,24 +1,36 @@
 package derpibooru.derpy.ui.adapters;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
-import derpibooru.derpy.data.types.FragmentTab;
-import derpibooru.derpy.ui.fragments.MostCommentedFragment;
-import derpibooru.derpy.ui.fragments.TopScoringFragment;
+import derpibooru.derpy.data.internal.FragmentAdapterItem;
+import derpibooru.derpy.data.server.DerpibooruImageListType;
+import derpibooru.derpy.ui.fragments.ImageListTabFragment;
 
 public class MainActivityTabAdapter extends FragmentPagerAdapter {
-    private ArrayList<FragmentTab> mTabs;
+    private ArrayList<FragmentAdapterItem> mTabs;
 
     public MainActivityTabAdapter(FragmentManager fm) {
         super(fm);
 
         mTabs = new ArrayList<>();
-        mTabs.add(new FragmentTab(0, "Top Scoring", new TopScoringFragment()));
-        mTabs.add(new FragmentTab(1, "Most Commented", new MostCommentedFragment()));
+
+        ImageListTabFragment fragmentTopScoring = new ImageListTabFragment();
+        Bundle args = new Bundle();
+        args.putInt("type", DerpibooruImageListType.TopScoring.convertToValue());
+        fragmentTopScoring.setArguments(args);
+
+        ImageListTabFragment fragmentMostCommented = new ImageListTabFragment();
+        args = new Bundle();
+        args.putInt("type", DerpibooruImageListType.MostCommented.convertToValue());
+        fragmentMostCommented.setArguments(args);
+
+        mTabs.add(new FragmentAdapterItem(0, "Top Scoring", fragmentTopScoring));
+        mTabs.add(new FragmentAdapterItem(1, "Most Commented", fragmentMostCommented));
     }
 
     @Override

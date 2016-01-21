@@ -28,12 +28,16 @@ public class ImageListTabFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        loadImages();
+        return inflater.inflate(R.layout.fragment_image_list_tab, container, false);
+    }
+
+    protected void loadImages() {
         ImageListProvider provider = new ImageListProvider(getActivity(), this);
         provider
                 .type(DerpibooruImageListType.getFromValue(getArguments().getInt("type")))
-                .inDays(3)
+                .inDays(3) /* TODO: pass the time limit as an argument */
                 .load();
-        return inflater.inflate(R.layout.fragment_image_list_tab, container, false);
     }
 
     public void onQueryFailed() {

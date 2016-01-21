@@ -25,7 +25,6 @@ public class SearchResultProvider {
     }
 
     public void search(String query, DerpibooruSearchOptions options) {
-
         URL url = UrlBuilder.generateSearchUrl(searchOptionsToUrlParams(options), query);
         mQuery.executeQuery(url, new ImageListParser());
     }
@@ -55,6 +54,12 @@ public class SearchResultProvider {
         urlParams.put(keyValuePair[0], keyValuePair[1]);
 
         keyValuePair = watchedTagsFilterParams(options.getWatchedTagsFilter());
+        urlParams.put(keyValuePair[0], keyValuePair[1]);
+
+        keyValuePair = minScoreParams(options.getMinScore());
+        urlParams.put(keyValuePair[0], keyValuePair[1]);
+
+        keyValuePair = maxScoreParams(options.getMaxScore());
         urlParams.put(keyValuePair[0], keyValuePair[1]);
 
         return urlParams;

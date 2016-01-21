@@ -59,6 +59,10 @@ public class ImageListTabFragment extends Fragment
         });
     }
 
+    protected void stopFetchingImages() {
+        mImageFetcher.stop();
+    }
+
     public void onQueryFailed() {
         /* TODO: display error message */
     }

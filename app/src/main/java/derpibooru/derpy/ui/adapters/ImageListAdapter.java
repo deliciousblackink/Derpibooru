@@ -34,6 +34,27 @@ public class ImageListAdapter extends ArrayAdapter {
         this.mImages = images;
     }
 
+    /**
+     * Stops any active downloads.
+     */
+    public void stop() {
+        /* FIXME: a bug without an obvious solution */
+        /* (related only to the search functionality)
+         *
+         * afaik right now Glide does not provide a direct way of
+         * stopping the active requests. unfortunately, those remain
+         * in case the user has changed the search options before
+         * the previous set of images has fully downloaded.
+         *
+         * it should not leave a noticeable impact on the memory usage
+         * since the unused objects get GC'ed quickly & Glide cleans up
+         * after itself when the activity finishes.
+         *
+         * however, it does produce a lot of unnecessary traffic, bad
+         * both for the server & the client.
+         */
+    }
+
     @Override
     public int getCount() {
         return mImages.size();
@@ -58,6 +79,10 @@ public class ImageListAdapter extends ArrayAdapter {
 
         holder.data = mImages.get(position);
 
+        /* TODO: load animated GIFs _after_ static images */
+        /* right now, if there's a huge GIF in the beginning of the list,
+         * the user will have to wait ages before everything loads properly.
+          */
         Glide.with(mContext)
                 .load(holder.data.getThumbUrl())
                 .centerCrop()

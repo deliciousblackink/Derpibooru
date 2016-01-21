@@ -15,6 +15,7 @@ public class SearchResultTabFragment extends ImageListTabFragment {
     }
 
     public void setSearchOptions(DerpibooruSearchOptions searchOptions) {
+        stopFetchingImages(); /* there may still be downloads in progress for the previous search request */
         new SearchResultProvider(getActivity(), this)
                 .search(getArguments().getString("query"), searchOptions);
     }

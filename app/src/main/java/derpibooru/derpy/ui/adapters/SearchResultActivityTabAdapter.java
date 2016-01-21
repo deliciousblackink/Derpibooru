@@ -41,7 +41,7 @@ public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
                 if (position == 0) {
                     DerpibooruSearchOptions newSearchOptions =
                             ((SearchOptionsTabFragment) mTabs.get(1).getContent()).getSelectedOptions();
-                    if (mCurrentSearchOptions != newSearchOptions) {
+                    if (!mCurrentSearchOptions.equals(newSearchOptions)) {
                         ((SearchResultTabFragment) mTabs.get(0).getContent())
                                 .setSearchOptions(newSearchOptions);
                         mCurrentSearchOptions = newSearchOptions;

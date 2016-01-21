@@ -58,15 +58,33 @@ public class DerpibooruSearchOptions {
     }
 
     public Integer getMinScore() {
-        /* POSSIBLE NULLPOINTEREXCEPTION HERE
-         * (CHECK FOR NULL?)
-         * DO NOT COMMIT BEFORE TESTING!
-         */
         return mMinScore;
     }
 
     public Integer getMaxScore() {
         return mMaxScore;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof DerpibooruSearchOptions) {
+            DerpibooruSearchOptions comp = (DerpibooruSearchOptions) o;
+            return (this.getSortBy() == comp.getSortBy())
+                    && (this.getSortDirection() == comp.getSortDirection())
+                    && (this.getFavesFilter() == comp.getFavesFilter())
+                    && (this.getUpvotesFilter() == comp.getUpvotesFilter())
+                    && (this.getUploadsFilter() == comp.getUploadsFilter())
+                    && (this.getWatchedTagsFilter() == comp.getWatchedTagsFilter())
+                    && (bothNullOrEqual(this.getMinScore(), comp.getMinScore()))
+                    && (bothNullOrEqual(this.getMaxScore(), comp.getMaxScore()));
+        }
+        return super.equals(o);
+    }
+
+    private boolean bothNullOrEqual(Object o1, Object o2) {
+        /* Java's native Objects.equals requires API 19 */
+        return (o1 == null && o2 == null) ||
+                (!(o1 == null || o2 == null)) && o1.equals(o2);
     }
 
     public enum SortBy {

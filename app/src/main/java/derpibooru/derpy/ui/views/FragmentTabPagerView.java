@@ -47,6 +47,10 @@ public class FragmentTabPagerView extends LinearLayout {
         setTabsTypeface();
     }
 
+    public ViewPager getViewPager() {
+        return mViewPager;
+    }
+
     /**
      * Sets the TabLayout typeface to Roboto Medium, as per the guidelines
      * of Material Design (versions prior to Lollipop do not have it pre-installed).

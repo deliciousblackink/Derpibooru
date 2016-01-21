@@ -21,10 +21,14 @@ public class SearchResultActivity extends AppCompatActivity {
 
         String searchQuery = getIntent().getStringExtra("query");
         setTitle(searchQuery);
+        initTabPager(searchQuery);
+    }
 
-        ((FragmentTabPagerView) findViewById(R.id.fragmentPagerView))
-                .setFragmentAdapter(new SearchResultActivityTabAdapter(getSupportFragmentManager(),
-                                                                       searchQuery));
+    private void initTabPager(String searchQuery) {
+        FragmentTabPagerView pager = (FragmentTabPagerView) findViewById(R.id.fragmentPagerView);
+        pager.setFragmentAdapter(new SearchResultActivityTabAdapter(getSupportFragmentManager(),
+                                                                    pager.getViewPager(),
+                                                                    searchQuery));
     }
 
     /* Respond to ActionBar's Up (Back) button */

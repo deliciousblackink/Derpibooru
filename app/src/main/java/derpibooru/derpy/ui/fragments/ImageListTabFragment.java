@@ -21,6 +21,8 @@ import derpibooru.derpy.ui.adapters.ImageListAdapter;
 
 public class ImageListTabFragment extends Fragment
                                   implements QueryResultHandler {
+    private ImageListAdapter mImageFetcher;
+
     public ImageListTabFragment() {
         super();
     }
@@ -28,11 +30,11 @@ public class ImageListTabFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        loadImages();
+        fetchDerpibooruImageThumbs();
         return inflater.inflate(R.layout.fragment_image_list_tab, container, false);
     }
 
-    protected void loadImages() {
+    protected void fetchDerpibooruImageThumbs() {
         ImageListProvider provider = new ImageListProvider(getActivity(), this);
         provider
                 .type(DerpibooruImageListType.getFromValue(getArguments().getInt("type")))
@@ -40,17 +42,11 @@ public class ImageListTabFragment extends Fragment
                 .load();
     }
 
-    public void onQueryFailed() {
-
-    }
-
-    public void onQueryExecuted(Object imageList) {
-        ArrayList<DerpibooruImageThumb> images = (ArrayList<DerpibooruImageThumb>) imageList;
-
+    private void fetchImages(ArrayList<DerpibooruImageThumb> imageThumbs) {
         /* TODO: NullPointerException when changing phone's orientation */
         GridView gv = (GridView) getView().findViewById(R.id.imageGrid);
-        ImageListAdapter ila = new ImageListAdapter(getActivity(), R.layout.view_image_list_item, images);
-        gv.setAdapter(ila);
+        mImageFetcher = new ImageListAdapter(getActivity(), imageThumbs);
+        gv.setAdapter(mImageFetcher);
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -61,5 +57,13 @@ public class ImageListTabFragment extends Fragment
                 startActivity(intent);
             }
         });
+    }
+
+    public void onQueryFailed() {
+        /* TODO: display error message */
+    }
+
+    public void onQueryExecuted(Object imageList) {
+        fetchImages((ArrayList<DerpibooruImageThumb>) imageList);
     }
 }

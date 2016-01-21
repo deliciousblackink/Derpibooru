@@ -17,14 +17,19 @@ import java.util.ArrayList;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 
+/**
+ * Asynchronously downloads images/animated GIFs and places them into a
+ * custom ViewHolder defined by the 'view_image_list_item.xml' layout.
+ */
 public class ImageListAdapter extends ArrayAdapter {
     private Context mContext;
     private int mLayoutResourceId;
     private ArrayList<DerpibooruImageThumb> mImages;
 
-    public ImageListAdapter(Context context, int layoutResourceId, ArrayList<DerpibooruImageThumb> images) {
-        super(context, layoutResourceId);
-        this.mLayoutResourceId = layoutResourceId;
+    public ImageListAdapter(Context context, ArrayList<DerpibooruImageThumb> images) {
+        super(context, R.layout.view_image_list_item);
+        mLayoutResourceId = R.layout.view_image_list_item;
+
         this.mContext = context;
         this.mImages = images;
     }

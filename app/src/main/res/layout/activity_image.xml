@@ -10,7 +10,7 @@
     <derpibooru.derpy.ui.views.ImageTopBarView
         android:id="@+id/imageInfo"
         android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        android:layout_height="56dp"/>
 
     <RelativeLayout
         android:id="@+id/imageViewLayout"
@@ -35,7 +35,7 @@
     <derpibooru.derpy.ui.views.ImageBottomBarView
         android:id="@+id/imageBottomBar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="56dp"
         android:layout_weight="2"
         android:layout_alignParentEnd="false"
         android:layout_alignParentRight="false"

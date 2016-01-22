@@ -11,7 +11,7 @@
     <color name="colorTabTextSelected">#ffffff</color>
     <color name="colorTabTextUnselected">#96ffffff</color>
 
-    <color name="colorImageToolbar">#d7e2ea</color> <!-- used to be #cccccc -->
+    <color name="colorImageToolbar">#6eaede</color> <!-- used to be #cccccc and #d7e2ea -->
 
     <color name="colorImageArtistTag">#a2a6d4</color>
     <color name="colorImageArtistTagText">#4d4574</color>

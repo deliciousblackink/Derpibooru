@@ -1,0 +1,61 @@
+<resources>
+    <string name="text_search">Search</string>
+    <string name="search_sort_by">Sort by</string>
+    <string-array name="search_sort_by_options">
+        <item>Creation date</item>
+        <item>Score</item>
+        <item>Relevance</item>
+        <item>Width</item>
+        <item>Height</item>
+        <item>Comments</item>
+        <item>Random!</item>
+    </string-array>
+    <string name="search_sort_direction">Sorting\ndirection</string>
+    <string-array name="search_sort_direction_options">
+        <item>Descending</item>
+        <item>Ascending</item>
+    </string-array>
+    <string name="search_faves">Filter my\nfavorites</string>
+    <string-array name="search_faves_options">
+        <item>No</item>
+        <item>Show my faves only</item>
+        <item>Don\'t show my faves</item>
+    </string-array>
+    <string name="search_upvotes">Filter my\nupvotes</string>
+    <string-array name="search_upvotes_options">
+        <item>No</item>
+        <item>Show my upvotes only</item>
+        <item>Don\'t show my upvotes</item>
+    </string-array>
+    <string name="search_uploads">Filter my\nuploads</string>
+    <string-array name="search_uploads_options">
+        <item>No</item>
+        <item>Show my uploads only</item>
+        <item>Don\'t show my uploads</item>
+    </string-array>
+    <string name="search_watched_tags">Filter my\nwatched tags</string>
+    <string-array name="search_watched_tags_options">
+        <item>No</item>
+        <item>Show my watched tags only</item>
+        <item>Don\'t show my watched tags</item>
+    </string-array>
+    <string name="search_min_score">Minimum\nscore</string>
+    <string name="search_max_score">Maximum\nscore</string>
+
+    <!-- TODO: rewrite -->
+    <string name="search_help">
+		<![CDATA[
+        <h3>Search basics</h3>
+        <p>Derpibooru\'s search engine is based on the tags associated with the uploaded images. A
+        search for <strong>pinkie pie</strong>, for example, yields the entries featuring Pinkie Pie.</p>
+        <p>Separate multiple tags with a comma or <strong>&&</strong>. The queries are not case sensitive — the
+        capitalization does not matter.</p>
+        <p>You can mark the tags you do not want to appear with either <strong>!</strong> or <strong>-</strong>:<br>
+        <strong>!fluttershy</strong> or <strong>-fluttershy</strong> matches pictures that do not feature Fluttershy.</p>
+        <p>To request uploads that meet only a part of the criteria, use the disjunction (OR expression)
+        specified with <strong>||</strong>, and separate the subexpressions with parentheses.</p>
+        <p>Consider the following example: <strong>(twilight sparkle || fluttershy) && pinkie pie</strong> returns results that have
+		either Twilight Sparkle or Fluttershy, and always Pinkie Pie.</p>
+        ]]>
+    </string>
+</resources>

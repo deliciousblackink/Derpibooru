@@ -26,11 +26,11 @@ public class FloatingSearchView extends LinearLayout {
     private static final int ICON_SEARCH = R.drawable.ic_search_white_24dp;
     private static final int ICON_BACK = R.drawable.ic_arrow_back_white_24dp;
 
+    private OnLayoutSizeChangedListener mLayoutSizeChangedListener;
     private RecyclerView mRecentSearchView;
     private View mRecentSearchDivider;
     private ImageView mSearchButton;
     private EditText mSearchText;
-
     private RecentSearchListAdapter mAdapter;
 
     private boolean isExtended = false;
@@ -97,9 +97,17 @@ public class FloatingSearchView extends LinearLayout {
         mSearchButton.setImageDrawable(ContextCompat.getDrawable(getContext(), ICON_SEARCH));
         mRecentSearchView.setVisibility(View.GONE);
         mRecentSearchDivider.setVisibility(View.GONE);
-        findViewById(R.id.linearLayout).requestFocus();
-        ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
-                .hideSoftInputFromWindow(mSearchText.getWindowToken(), 0);
+        findViewById(R.id.searchViewLayout).requestFocus();
+
+        InputMethodManager inputManager =
+                (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputManager != null) {
+            inputManager.hideSoftInputFromWindow(mSearchText.getWindowToken(), 0);
+        }
+
+        if (mLayoutSizeChangedListener != null) {
+            mLayoutSizeChangedListener.onSizeChanged();
+        }
     }
 
     private void expandSearch() {
@@ -112,6 +120,10 @@ public class FloatingSearchView extends LinearLayout {
                 .showSoftInput(mSearchText, InputMethodManager.SHOW_IMPLICIT);
         /* play item animations */
         mAdapter.notifyDataSetChanged();
+
+        if (mLayoutSizeChangedListener != null) {
+            mLayoutSizeChangedListener.onSizeChanged();
+        }
     }
 
     public void setSearchResultActivity(final Class searchResultActivity) {
@@ -125,6 +137,15 @@ public class FloatingSearchView extends LinearLayout {
                     return true;
                 }
                 return false;
-            }});
+            }
+        });
+    }
+
+    public void setOnLayoutSizeChangedListener(OnLayoutSizeChangedListener listener) {
+        mLayoutSizeChangedListener = listener;
+    }
+
+    public interface OnLayoutSizeChangedListener {
+        void onSizeChanged();
     }
 }

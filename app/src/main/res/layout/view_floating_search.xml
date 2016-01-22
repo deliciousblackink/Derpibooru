@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/topLayout"
               android:layout_width="match_parent"
               android:orientation="vertical"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -10,7 +11,8 @@
         android:background="@color/colorPrimary"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:id="@+id/searchViewLayout">
         <!-- TODO: IMPORTANT there seems to be a bug with the layout
         inflater or my code (probably the latter) that causes the whole view
         to have a weird appearance with this LinearLayout being nested in the main
@@ -21,8 +23,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:id="@+id/linearLayout">
+            android:focusableInTouchMode="true">
             <!-- focusable and focusableInTouchMode
             to prevent EditText from receiving focus on startup -->
 
@@ -51,10 +52,8 @@
         </LinearLayout>
     </RelativeLayout>
 
-
     <View style="@style/Divider"
           android:id="@+id/viewRecentSearchDivider"
-          android:layout_below="@+id/linearLayout"
           android:layout_marginLeft="10dp"
           android:layout_marginRight="10dp"/>
 
@@ -63,10 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="192dp"
         android:background="@color/colorPrimary"
-        android:layout_below="@+id/viewRecentSearchDivider"
-        android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
-
     </android.support.v7.widget.RecyclerView>
 </LinearLayout>

@@ -2,6 +2,7 @@ package derpibooru.derpy.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
@@ -17,7 +18,19 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((FloatingSearchView) findViewById(R.id.floatingSearch)).setSearchResultActivity(SearchResultActivity.class);
+
+        FloatingSearchView search = (FloatingSearchView) findViewById(R.id.floatingSearch);
+        search.setSearchResultActivity(SearchResultActivity.class);
+        search.setOnLayoutSizeChangedListener(new FloatingSearchView.OnLayoutSizeChangedListener() {
+            @Override
+            public void onSizeChanged() {
+                findViewById(R.id.topLayout).requestLayout();
+            }
+        });
+
+        ((TextView) findViewById(R.id.textSearchHelp))
+                .setText(Html.fromHtml(getString(R.string.search_help)));
+
     }
 
     /* Respond to ActionBar's Up (Back) button */

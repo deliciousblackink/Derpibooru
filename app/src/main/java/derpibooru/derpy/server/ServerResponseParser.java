@@ -1,9 +1,9 @@
-package derpibooru.derpy.server.util.parsers;
+package derpibooru.derpy.server;
 
 /**
  * An interface for Derpibooru response parsers.
  */
-public interface ServerResponseParser {
+interface ServerResponseParser {
     /**
      * Parses the server response.
      *

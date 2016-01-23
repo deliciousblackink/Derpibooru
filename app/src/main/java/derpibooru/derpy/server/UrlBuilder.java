@@ -1,4 +1,4 @@
-package derpibooru.derpy.server.util;
+package derpibooru.derpy.server;
 
 import android.util.Log;
 
@@ -8,8 +8,6 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 import derpibooru.derpy.data.server.DerpibooruImageListType;
-import derpibooru.derpy.server.ImageListProvider;
-import derpibooru.derpy.server.SearchResultProvider;
 
 public class UrlBuilder {
     private static final String DERPIBOORU_DOMAIN = "https://trixiebooru.org/";

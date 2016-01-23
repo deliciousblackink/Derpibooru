@@ -15,13 +15,13 @@ import com.bumptech.glide.request.target.Target;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
+import derpibooru.derpy.server.DataProviderRequestHandler;
 import derpibooru.derpy.server.ImageInfoProvider;
-import derpibooru.derpy.server.util.QueryResultHandler;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
 import derpibooru.derpy.ui.views.ImageTopBarView;
 
 public class ImageActivity extends AppCompatActivity
-                           implements QueryResultHandler {
+                           implements DataProviderRequestHandler {
 
     /* TODO: should be a singleTop activity
      * http://developer.android.com/reference/android/app/Activity.html#onNewIntent(android.content.Intent)
@@ -76,13 +76,13 @@ public class ImageActivity extends AppCompatActivity
     }
 
     @Override
-    public void onQueryExecuted(Object image) {
+    public void onDataFetched(Object image) {
         ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
                 .setTabInfo((DerpibooruImageInfo) image);
     }
 
     @Override
-    public void onQueryFailed() {
+    public void onDataRequestFailed() {
 
     }
 

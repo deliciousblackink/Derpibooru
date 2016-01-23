@@ -2,30 +2,17 @@ package derpibooru.derpy.server;
 
 import android.content.Context;
 
-import java.net.URL;
-
 import derpibooru.derpy.data.server.DerpibooruImageListType;
-import derpibooru.derpy.server.util.Query;
-import derpibooru.derpy.server.util.QueryResultHandler;
-import derpibooru.derpy.server.util.UrlBuilder;
-import derpibooru.derpy.server.util.parsers.ImageListParser;
 
-/**
- * Asynchronous image list (an array of {id, score, etc.}) provider. The receiving object has to
- * implement the 'QueryResultHandler' interface. Server response is passed via the 'onQueryExecuted'
- * method as an 'ArrayList<DerpibooruImageThumb>' object.
- */
-public class ImageListProvider {
+public class ImageListProvider extends DataProvider {
     private static final String ALL_TIME = "520w";
     /* 520 weeks (10 years) effectively equals to 'All Time' */
 
     private DerpibooruImageListType mListType;
     private String mTime = ALL_TIME;
 
-    private Query mQuery;
-
-    public ImageListProvider(Context context, QueryResultHandler handler) {
-        mQuery = new Query(context, handler);
+    public ImageListProvider(Context context, DataProviderRequestHandler handler) {
+        super(context, handler);
     }
 
     /**
@@ -71,12 +58,25 @@ public class ImageListProvider {
         return this;
     }
 
-    /**
-     * Requests Derpibooru server to fetch an image list with the parameters
-     * specified via public methods of the class.
-     */
-    public void load() {
-        URL url = UrlBuilder.generateListUrl(mListType, mTime);
-        mQuery.executeQuery(url, new ImageListParser());
+    @Override
+    protected String generateUrl() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(DERPIBOORU_DOMAIN);
+        switch (mListType) {
+            case TopScoring:
+                sb.append("lists/top_scoring.json");
+                break;
+            case MostCommented:
+                sb.append("lists/top_commented.json");
+                break;
+        }
+        sb.append("?last=");
+        sb.append(mTime);
+        return sb.toString();
+    }
+
+    @Override
+    public void fetch() {
+        super.executeQuery(generateUrl(), new ImageListParser());
     }
 }

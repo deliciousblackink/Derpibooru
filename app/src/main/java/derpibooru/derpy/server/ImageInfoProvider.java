@@ -2,24 +2,11 @@ package derpibooru.derpy.server;
 
 import android.content.Context;
 
-import java.net.URL;
-
-import derpibooru.derpy.server.util.Query;
-import derpibooru.derpy.server.util.QueryResultHandler;
-import derpibooru.derpy.server.util.UrlBuilder;
-import derpibooru.derpy.server.util.parsers.ImageInfoParser;
-
-/**
- * Asynchronous full image info (tags, faved by) provider. The receiving object has to implement the
- * 'QueryResultHandler' interface. Server response is passed via the 'onQueryExecuted' method as a
- * 'DerpibooruImageInfo' object.
- */
-public class ImageInfoProvider {
+public class ImageInfoProvider extends DataProvider {
     private int mId;
-    private Query mQuery;
 
-    public ImageInfoProvider(Context context, QueryResultHandler handler) {
-        mQuery = new Query(context, handler);
+    public ImageInfoProvider(Context context, DataProviderRequestHandler handler) {
+        super(context, handler);
     }
 
     /**
@@ -32,12 +19,17 @@ public class ImageInfoProvider {
         return this;
     }
 
-    /**
-     * Requests Derpibooru server to fetch the image with an ID specified
-     * via 'id' method of the class.
-     */
+    @Override
+    protected String generateUrl() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(DERPIBOORU_DOMAIN);
+        sb.append("images/");
+        sb.append(mId);
+        return sb.toString();
+    }
+
+    @Override
     public void fetch() {
-        URL url = UrlBuilder.generateImageUrl(mId);
-        mQuery.executeQuery(url, new ImageInfoParser());
+        super.executeQuery(generateUrl(), new ImageInfoParser());
     }
 }

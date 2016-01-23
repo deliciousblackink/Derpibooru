@@ -2,6 +2,7 @@ package derpibooru.derpy.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +15,13 @@ import java.util.ArrayList;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageListType;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
+import derpibooru.derpy.server.DataProviderRequestHandler;
 import derpibooru.derpy.server.ImageListProvider;
-import derpibooru.derpy.server.util.QueryResultHandler;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.ImageListAdapter;
 
 public class ImageListTabFragment extends Fragment
-                                  implements QueryResultHandler {
+                                  implements DataProviderRequestHandler {
     private ImageListAdapter mImageFetcher;
 
     public ImageListTabFragment() {
@@ -39,7 +40,7 @@ public class ImageListTabFragment extends Fragment
         provider
                 .type(DerpibooruImageListType.getFromValue(getArguments().getInt("type")))
                 .inDays(3) /* TODO: pass the time limit as an argument */
-                .load();
+                .fetch();
     }
 
     private void fetchImages(ArrayList<DerpibooruImageThumb> imageThumbs) {
@@ -63,11 +64,13 @@ public class ImageListTabFragment extends Fragment
         mImageFetcher.stop();
     }
 
-    public void onQueryFailed() {
+    @Override
+    public void onDataRequestFailed() {
         /* TODO: display error message */
     }
 
-    public void onQueryExecuted(Object imageList) {
+    @Override
+    public void onDataFetched(Object imageList) {
         fetchImages((ArrayList<DerpibooruImageThumb>) imageList);
     }
 }

@@ -76,15 +76,15 @@ public class ImageBottomBarView extends FrameLayout {
             switch (v.getId()) {
                 case R.id.buttonInfo:
                     mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.ImageInfo.id(),
-                            true);
+                                          true);
                     break;
                 case R.id.buttonFaves:
                     mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Faves.id(),
-                            true);
+                                          true);
                     break;
                 case R.id.buttonComments:
                     mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Comments.id(),
-                            true);
+                                          true);
                     break;
             }
         } else {

@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 
-import derpibooru.derpy.data.server.DerpibooruImageInfo;
 import derpibooru.derpy.data.internal.FragmentAdapterItem;
+import derpibooru.derpy.data.server.DerpibooruImageInfo;
 import derpibooru.derpy.ui.fragments.ImageCommentsTabFragment;
 import derpibooru.derpy.ui.fragments.ImageFavoritesTabFragment;
 import derpibooru.derpy.ui.fragments.ImageInfoTabFragment;

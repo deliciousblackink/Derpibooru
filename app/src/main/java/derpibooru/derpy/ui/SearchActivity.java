@@ -1,12 +1,9 @@
 package derpibooru.derpy.ui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import derpibooru.derpy.R;
@@ -30,7 +27,6 @@ public class SearchActivity extends AppCompatActivity {
 
         ((TextView) findViewById(R.id.textSearchHelp))
                 .setText(Html.fromHtml(getString(R.string.search_help)));
-
     }
 
     /* Respond to ActionBar's Up (Back) button */

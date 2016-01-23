@@ -93,5 +93,4 @@ public class ImageBottomBarAnimator {
             return true;
         }
     }
-
 }

@@ -55,21 +55,18 @@ public class FlowLayout extends ViewGroup {
         int spacing = 0;
 
         final int count = getChildCount();
-        for (int i = 0; i < count; i++)
-        {
+        for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             measureChild(child, widthMeasureSpec, heightMeasureSpec);
 
             LayoutParams lp = (LayoutParams) child.getLayoutParams();
             spacing = mHorizontalSpacing;
 
-            if (lp.horizontalSpacing >= 0)
-            {
+            if (lp.horizontalSpacing >= 0) {
                 spacing = lp.horizontalSpacing;
             }
 
-            if (growHeight && (breakLine || ((currentWidth + child.getMeasuredWidth()) > widthLimit)))
-            {
+            if (growHeight && (breakLine || ((currentWidth + child.getMeasuredWidth()) > widthLimit))) {
                 newLine = true;
                 currentHeight += maxChildHeight + mVerticalSpacing;
 
@@ -77,9 +74,7 @@ public class FlowLayout extends ViewGroup {
 
                 currentWidth = getPaddingLeft();
                 maxChildHeight = 0;
-            }
-            else
-            {
+            } else {
                 newLine = false;
             }
 
@@ -93,8 +88,7 @@ public class FlowLayout extends ViewGroup {
             breakLine = lp.breakLine;
         }
 
-        if (!newLine)
-        {
+        if (!newLine) {
             width = Math.max(width, currentWidth - spacing);
         }
 
@@ -156,11 +150,10 @@ public class FlowLayout extends ViewGroup {
     }
 
     public static class LayoutParams extends ViewGroup.LayoutParams {
-        int x;
-        int y;
-
         public int horizontalSpacing;
         public boolean breakLine;
+        int x;
+        int y;
 
         public LayoutParams(Context context, AttributeSet attrs) {
             super(context, attrs);

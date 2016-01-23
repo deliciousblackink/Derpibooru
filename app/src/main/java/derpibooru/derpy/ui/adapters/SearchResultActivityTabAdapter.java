@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.data.internal.FragmentAdapterItem;
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
-import derpibooru.derpy.ui.fragments.SearchResultTabFragment;
 import derpibooru.derpy.ui.fragments.SearchOptionsTabFragment;
+import derpibooru.derpy.ui.fragments.SearchResultTabFragment;
 
 public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
     private ArrayList<FragmentAdapterItem> mTabs;
@@ -34,7 +34,8 @@ public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
         /* TODO: the adapter should not hold a reference to the viewpager */
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
             public void onPageSelected(int position) {
@@ -50,7 +51,8 @@ public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) { }
+            public void onPageScrollStateChanged(int state) {
+            }
         });
     }
 

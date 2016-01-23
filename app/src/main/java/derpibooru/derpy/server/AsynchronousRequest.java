@@ -71,6 +71,7 @@ class AsynchronousRequest implements Runnable {
 
     interface RequestHandler {
         void onRequestCompleted(Object parsedResponse);
+
         void onRequestFailed();
     }
 }

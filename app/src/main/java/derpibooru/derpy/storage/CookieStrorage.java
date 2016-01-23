@@ -12,12 +12,12 @@ public class CookieStrorage {
         mPreferences = context.getSharedPreferences(PREFERENCES_NAME, 0);
     }
 
+    public String getCookie() {
+        return mPreferences.getString("cookie", "");
+    }
+
     public void setCookie(String cookie) {
         mPreferences.edit()
                 .putString("cookie", cookie).apply();
-    }
-
-    public String getCookie() {
-        return mPreferences.getString("cookie", "");
     }
 }

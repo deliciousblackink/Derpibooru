@@ -75,7 +75,7 @@ public class FloatingSearchView extends LinearLayout {
             }
         });
 
-        mSearchText =  (EditText) findViewById(R.id.textSearch);
+        mSearchText = (EditText) findViewById(R.id.textSearch);
         mSearchText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {

@@ -40,7 +40,7 @@ public class SearchOptionsTabFragment extends Fragment {
         mSortBySpinner.setAdapter(adapter);
 
         adapter = ArrayAdapter.createFromResource(getActivity(), R.array.search_sort_direction_options,
-                                                android.R.layout.simple_spinner_item);
+                                                  android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSortDirectionSpinner = (Spinner) v.findViewById(R.id.spinnerSortDirection);
         mSortDirectionSpinner.setAdapter(adapter);
@@ -172,7 +172,7 @@ public class SearchOptionsTabFragment extends Fragment {
 
     private Integer getMinScoreFilter() {
         String input = mMinScoreFilterText.getText().toString();
-        if  (!input.equals("")) {
+        if (!input.equals("")) {
             return Integer.parseInt(input);
         }
         return null;
@@ -180,7 +180,7 @@ public class SearchOptionsTabFragment extends Fragment {
 
     private Integer getMaxScoreFilter() {
         String input = mMaxScoreFilterText.getText().toString();
-        if  (!input.equals("")) {
+        if (!input.equals("")) {
             return Integer.parseInt(input);
         }
         return null;

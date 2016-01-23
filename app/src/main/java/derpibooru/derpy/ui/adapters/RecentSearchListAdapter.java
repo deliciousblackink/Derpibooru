@@ -16,7 +16,7 @@ import derpibooru.derpy.R;
  * An adapter that populates FloatingSearchView's recent search list.
  *
  * @see <a href="http://developer.android.com/training/material/lists-cards.html">
- *     implementation details</a>
+ * implementation details</a>
  */
 public class RecentSearchListAdapter extends RecyclerView
                                                      .Adapter<RecentSearchListAdapter.ViewHolder> {
@@ -35,7 +35,7 @@ public class RecentSearchListAdapter extends RecyclerView
 
     @Override
     public RecentSearchListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+                                                                 int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_floating_search_recent_item, parent, false);
         return new ViewHolder(v);
@@ -57,10 +57,8 @@ public class RecentSearchListAdapter extends RecyclerView
      *
      * @see <a href="http://stackoverflow.com/a/26748274/1726690">Copied from StackOverflow</a>
      */
-    private void setAnimation(View viewToAnimate, int position)
-    {
-        if (position > mLastPosition)
-        {
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > mLastPosition) {
             Animation animation = AnimationUtils.loadAnimation(mContext,
                                                                android.R.anim.slide_in_left);
             viewToAnimate.startAnimation(animation);

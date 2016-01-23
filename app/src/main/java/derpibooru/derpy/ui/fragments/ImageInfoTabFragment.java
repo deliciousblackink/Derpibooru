@@ -44,7 +44,7 @@ public class ImageInfoTabFragment extends Fragment {
         return v;
     }
 
-    private void onLinkClick(View v){
+    private void onLinkClick(View v) {
         /* TODO: handle profile view/image link/external link */
     }
 
@@ -59,7 +59,6 @@ public class ImageInfoTabFragment extends Fragment {
             uploaderHtml = String.format("Uploaded by <a href=\"%s\">%s</a><br>on %s",
                                          info.getUploader(), info.getUploader(),
                                          format.format(imageCreatedAt));
-
         } catch (ParseException e) {
             Log.e("ImageInfoTabFragment", "setImageUploader: " + e.getMessage());
             uploaderHtml = String.format("Uploaded by <a href=\"%s\">%s</a>",
@@ -89,13 +88,12 @@ public class ImageInfoTabFragment extends Fragment {
         }
     }
 
-    private void setTextViewFromHtml(TextView view, String html)
-    {
+    private void setTextViewFromHtml(TextView view, String html) {
         /* http://stackoverflow.com/a/19989677/1726690 */
         CharSequence sequence = Html.fromHtml(html);
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
         URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
-        for(URLSpan span : urls) {
+        for (URLSpan span : urls) {
             makeLinkClickable(strBuilder, span);
         }
         view.setText(strBuilder);
@@ -103,8 +101,7 @@ public class ImageInfoTabFragment extends Fragment {
         view.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    private void makeLinkClickable(SpannableStringBuilder strBuilder, URLSpan span)
-    {
+    private void makeLinkClickable(SpannableStringBuilder strBuilder, URLSpan span) {
         /* http://stackoverflow.com/a/19989677/1726690 */
         int start = strBuilder.getSpanStart(span);
         int end = strBuilder.getSpanEnd(span);

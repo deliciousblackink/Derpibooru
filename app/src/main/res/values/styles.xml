@@ -6,9 +6,23 @@
         <item name="colorAccent">@color/colorAccent</item>
         <!-- http://stackoverflow.com/a/33000467/1726690 -->
         <item name="android:windowContentOverlay">@null</item>
+        <!-- sets unselected CheckBox border (apparently there's no other way; custom styles set
+        for AppCompatCheckBox having this parameter do not change anything) -->
+        <item name="android:textColorSecondary">@color/colorPrimaryDark</item>
     </style>
 
     <style name="Spinner" parent="Widget.AppCompat.Spinner.Underlined">
+    </style>
+
+    <style name="TextInput" parent="TextAppearance.AppCompat">
+        <!-- http://stackoverflow.com/a/30914037/1726690 -->
+        <item name="android:textColorHint">@color/colorTextLight</item>
+        <item name="colorAccent">@color/colorTextLight</item>
+        <item name="colorControlNormal">@color/colorTextLight</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <!-- fixes layout designer error messages -->
+        <item name="android:textColorHighlight">@color/colorTextLight</item>
+        <item name="android:textColorLink">@color/colorTextLight</item>
     </style>
 
     <style name="TabLayout" parent="Widget.Design.TabLayout">

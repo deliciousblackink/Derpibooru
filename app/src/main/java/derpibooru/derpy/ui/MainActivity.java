@@ -13,6 +13,8 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.ui.adapters.MainActivityTabAdapter;
 import derpibooru.derpy.ui.views.FragmentTabPagerView;
 
+/* TODO: https://github.com/JakeWharton/butterknife */
+
 public class MainActivity extends AppCompatActivity {
     private NavigationDrawer mNavigationDrawer;
 

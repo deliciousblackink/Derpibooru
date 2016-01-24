@@ -1,6 +1,7 @@
 package derpibooru.derpy.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,9 +13,11 @@ import derpibooru.derpy.R;
 
 class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout mDrawerLayout;
+    private Activity mParent;
 
     public NavigationDrawer(Activity parent, DrawerLayout drawer, Toolbar toolbar, NavigationView menu) {
         mDrawerLayout = drawer;
+        mParent = parent;
 
         ActionBarDrawerToggle toggle =
                 new ActionBarDrawerToggle(parent, mDrawerLayout, toolbar,
@@ -38,7 +41,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         int id = item.getItemId();
 
         if (id == R.id.navigationLogIn) {
-            /* TODO: navigation */
+            mParent.startActivity(new Intent(mParent, LoginActivity.class));
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);

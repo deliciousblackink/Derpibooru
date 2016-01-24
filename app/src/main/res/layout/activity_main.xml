@@ -30,6 +30,6 @@
                                                   android:fitsSystemWindows="true"
                                                   app:headerLayout="@layout/navigation_drawer_header"
                                                   app:menu="@menu/menu_navigation_drawer"
-                                                  app:itemIconTint="@drawable/navigation_drawer_item_icon_tint_selector"
-                                                  app:itemTextColor="@drawable/navigation_drawer_item_text_color_selector"/>
+                                                  app:itemIconTint="@drawable/selector_navigation_drawer_item_icon_tint"
+                                                  app:itemTextColor="@drawable/selector_navigation_drawer_item_text_color"/>
 </android.support.v4.widget.DrawerLayout>

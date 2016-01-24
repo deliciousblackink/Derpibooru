@@ -21,14 +21,14 @@
             android:orientation="horizontal"
             android:gravity="center_horizontal"
             android:padding="0dp"
-            android:background="@drawable/toolbar_button_selector">
+            android:background="@drawable/selector_toolbar_button">
 
             <TextView
                 android:layout_gravity="center_vertical"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:text="i"
-                android:background="@drawable/toolbar_button_selector"
+                android:background="@drawable/selector_toolbar_button"
                 android:scaleType="fitCenter"
                 android:gravity="center_vertical|center_horizontal"
                 android:textColor="@color/colorTextLight"
@@ -45,7 +45,7 @@
             android:orientation="horizontal"
             android:gravity="center_horizontal"
             android:padding="0dp"
-            android:background="@drawable/toolbar_button_selector">
+            android:background="@drawable/selector_toolbar_button">
 
             <ImageView
                 android:id="@+id/imgFave"
@@ -53,7 +53,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_star_white_24dp"
-                android:background="@drawable/toolbar_button_selector"
+                android:background="@drawable/selector_toolbar_button"
                 android:scaleType="fitCenter"
                 android:paddingTop="10dp"
                 android:paddingBottom="12dp"/>
@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="1400"
-                android:background="@drawable/toolbar_button_selector"
+                android:background="@drawable/selector_toolbar_button"
                 android:scaleType="fitCenter"
                 android:gravity="center_vertical"
                 android:textColor="@color/colorTextLight"
@@ -82,7 +82,7 @@
             android:orientation="horizontal"
             android:gravity="center_horizontal"
             android:padding="0dp"
-            android:background="@drawable/toolbar_button_selector">
+            android:background="@drawable/selector_toolbar_button">
 
             <ImageView
                 android:id="@+id/imgComments"
@@ -90,7 +90,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_comment_white_24dp"
-                android:background="@drawable/toolbar_button_selector"
+                android:background="@drawable/selector_toolbar_button"
                 android:scaleType="fitCenter"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"/>
@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="1400"
-                android:background="@drawable/toolbar_button_selector"
+                android:background="@drawable/selector_toolbar_button"
                 android:scaleType="fitCenter"
                 android:gravity="center_vertical"
                 android:textColor="@color/colorTextLight"

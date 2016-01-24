@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Derpy</string>
+    <string name="app_name">Derpibooru</string>
 
-    <string name="activity_main">Derpibooru</string>
+    <string name="activity_login">Log in</string>
     <string name="activity_search">Search</string>
-
     <string name="action_settings">Settings</string>
 </resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigationLogIn"
+            android:icon="@drawable/ic_key_black_24dp"
+            android:title="Log in"/>
+        <item
+            android:id="@+id/navigationFilters"
+            android:icon="@drawable/ic_block_black_24dp"
+            android:title="Filters"/>
+    </group>
+    <item android:title="Account">
+        <menu>
+            <item
+                android:id="@+id/navigationFaves"
+                android:icon="@drawable/ic_star_black_24dp"
+                android:title="Favorites"/>
+        </menu>
+    </item>
+</menu>

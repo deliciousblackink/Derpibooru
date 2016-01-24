@@ -6,6 +6,7 @@
 
     <color name="colorTextLight">#fafafa</color>
     <color name="colorTextDark">#212121</color>
+    <color name="colorTextGray">#8a000000</color>
 
     <color name="colorTabBackground">#6eaede</color>
     <color name="colorTabTextSelected">#ffffff</color>

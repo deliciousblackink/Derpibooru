@@ -2,6 +2,8 @@ package derpibooru.derpy.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -12,6 +14,8 @@ import derpibooru.derpy.ui.adapters.MainActivityTabAdapter;
 import derpibooru.derpy.ui.views.FragmentTabPagerView;
 
 public class MainActivity extends AppCompatActivity {
+    private NavigationDrawer mNavigationDrawer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +26,20 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mNavigationDrawer = new NavigationDrawer(this,
+                                                 ((DrawerLayout) findViewById(R.id.drawerLayout)),
+                                                 toolbar,
+                                                 ((NavigationView) findViewById(R.id.navigationView)));
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mNavigationDrawer.isDrawerOpen()) {
+            mNavigationDrawer.closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

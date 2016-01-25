@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary">
+            android:background="@color/colorPrimary"
+            android:id="@+id/viewLogin">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -55,16 +56,23 @@
             android:layout_marginLeft="-4dp"/>
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_login"
+            android:id="@+id/buttonLogin"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="40dp"
             android:padding="12dp"
             android:background="@drawable/selector_button_login"
             android:textColor="@color/colorTextLight"
             android:text="Login"
             android:textSize="16dp"/>
 
+        <ProgressBar
+            android:id="@+id/progressLogin"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="12dp"/>
     </LinearLayout>
 </ScrollView>

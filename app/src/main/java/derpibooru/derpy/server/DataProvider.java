@@ -39,7 +39,7 @@ abstract class DataProvider {
         threadHandler.post(requestThread);
     }
 
-    private class UiThreadMessageSender implements Runnable {
+    protected class UiThreadMessageSender implements Runnable {
         private Object mMessage;
 
         public UiThreadMessageSender(Object message, boolean isError) {

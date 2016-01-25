@@ -7,20 +7,25 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.method.KeyListener;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.server.DerpibooruSignInForm;
+import derpibooru.derpy.server.AuthManager;
+import derpibooru.derpy.server.DataProviderRequestHandler;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int MIN_ACCEPTED_PASSWORD_LENGTH = 6;
 
     private EditText mEmailText;
     private EditText mPasswordText;
-    private boolean mIsAuthInProgress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,26 +42,15 @@ public class LoginActivity extends AppCompatActivity {
                 .setTypeface(Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf"));
 
         findViewById(R.id.buttonLogin).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    login();
-                }
-            });
-    }
+            @Override
+            public void onClick(View view) {
+                login();
+            }
+        });
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putBoolean("authInProgress", mIsAuthInProgress);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mIsAuthInProgress = savedInstanceState.getBoolean("authInProgress");
-        if (mIsAuthInProgress) {
-            showProgressBar();
-        }
+        ((ProgressBar) findViewById(R.id.progressLogin)).getIndeterminateDrawable()
+                .setColorFilter(ContextCompat.getColor(this, R.color.colorAccent),
+                                android.graphics.PorterDuff.Mode.SRC_IN);
     }
 
     /* Respond to ActionBar's Up (Back) button */
@@ -71,7 +65,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void showSnackbar(String content) {
-        Snackbar.make(findViewById(android.R.id.content),
+        //Snackbar.make(findViewById(android.R.id.content),
+        //              content, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(findViewById(R.id.viewLogin),
                       content, Snackbar.LENGTH_LONG).show();
     }
 
@@ -86,24 +82,37 @@ public class LoginActivity extends AppCompatActivity {
             showSnackbar("The password is too short");
             return;
         }
-        mIsAuthInProgress = true;
+
+        DerpibooruSignInForm form =
+                new DerpibooruSignInForm(email, password,
+                                         ((CheckBox) findViewById(R.id.checkRememberMe)).isChecked());
+
+        AuthManager manager = new AuthManager(this, form, new DataProviderRequestHandler() {
+            @Override
+            public void onDataFetched(Object result) {
+                if ((boolean) result) {
+                    finish();
+                } else {
+                    hideProgressBar();
+                    showSnackbar("Invalid e-mail or password");
+                }
+            }
+
+            @Override
+            public void onDataRequestFailed() {
+
+            }
+        });
+
         showProgressBar();
     }
 
     private void showProgressBar() {
-        ProgressBar progress = (ProgressBar) findViewById(R.id.progressLogin);
-        progress.getIndeterminateDrawable()
-                .setColorFilter(ContextCompat.getColor(this, R.color.colorAccent),
-                                android.graphics.PorterDuff.Mode.SRC_IN);
-        progress.setVisibility(View.VISIBLE);
-        progress.setFocusable(true);
+        findViewById(R.id.progressLogin).setVisibility(View.VISIBLE);
+        findViewById(R.id.buttonLogin).setVisibility(View.GONE);
 
-        mEmailText.setTag(mEmailText.getKeyListener());
-        mEmailText.setKeyListener(null);
-        mEmailText.setFocusable(false);
-        mPasswordText.setTag(mPasswordText.getKeyListener());
-        mPasswordText.setKeyListener(null);
-        mPasswordText.setFocusable(false);
+        mEmailText.setEnabled(false);
+        mPasswordText.setEnabled(false);
         findViewById(R.id.checkRememberMe).setEnabled(false);
 
         InputMethodManager inputManager =
@@ -112,8 +121,15 @@ public class LoginActivity extends AppCompatActivity {
             inputManager.hideSoftInputFromWindow(mEmailText.getWindowToken(), 0);
             inputManager.hideSoftInputFromWindow(mPasswordText.getWindowToken(), 0);
         }
+    }
 
-        findViewById(R.id.buttonLogin).setVisibility(View.GONE);
+    private void hideProgressBar() {
+        findViewById(R.id.progressLogin).setVisibility(View.GONE);
+        findViewById(R.id.buttonLogin).setVisibility(View.VISIBLE);
+
+        mEmailText.setEnabled(true);
+        mPasswordText.setEnabled(true);
+        findViewById(R.id.checkRememberMe).setEnabled(true);
     }
 
     private boolean isEmailValid(String email) {

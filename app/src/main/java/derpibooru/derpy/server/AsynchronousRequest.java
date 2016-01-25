@@ -16,11 +16,11 @@ import okhttp3.Response;
 class AsynchronousRequest implements Runnable {
     private OkHttpClient mHttpClient;
 
-    private ServerResponseParser mResponseParser;
-    private CookieStrorage mCookieStorage;
-    private String mUrl;
+    protected ServerResponseParser mResponseParser;
+    protected CookieStrorage mCookieStorage;
+    protected String mUrl;
 
-    private RequestHandler mRequestHandler;
+    protected RequestHandler mRequestHandler;
 
     public AsynchronousRequest(Context context,
                                ServerResponseParser parser,
@@ -34,12 +34,8 @@ class AsynchronousRequest implements Runnable {
     }
 
     public void run() {
-        Request request = new Request.Builder()
-                .url(mUrl)
-                .addHeader("cookie", mCookieStorage.getCookie())
-                .build();
-
-        mHttpClient.newCall(request).enqueue(new Callback() {
+        Request r = generateRequest();
+        mHttpClient.newCall(r).enqueue(new Callback() {
             @Override
             public void onFailure(Call request, IOException e) {
                 Log.e("AsynchronousRequest", request.toString(), e);
@@ -53,15 +49,21 @@ class AsynchronousRequest implements Runnable {
                     mRequestHandler.onRequestFailed();
                 }
                 mCookieStorage.setCookie(response.header("set-cookie"));
-                mRequestHandler.onRequestCompleted
-                        (parseResponse(response.body().string()));
+                mRequestHandler.onRequestCompleted(parseResponse(response));
             }
         });
     }
 
-    private Object parseResponse(String response) {
+    protected Request generateRequest() {
+        return new Request.Builder()
+                .url(mUrl)
+                .addHeader("cookie", mCookieStorage.getCookie())
+                .build();
+    }
+
+    protected Object parseResponse(Response response) {
         try {
-            return mResponseParser.parseResponse(response);
+            return mResponseParser.parseResponse(response.body().string());
         } catch (Exception e) {
             Log.e("AsynchronousRequest", "Error parsing response", e);
             mRequestHandler.onRequestFailed();

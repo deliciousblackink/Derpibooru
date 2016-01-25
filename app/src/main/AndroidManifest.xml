@@ -31,7 +31,8 @@
             android:name=".ui.SearchResultActivity"/>
         <activity
             android:label="@string/activity_login"
-            android:name=".ui.LoginActivity">
+            android:name=".ui.LoginActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 </manifest>

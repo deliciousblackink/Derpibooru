@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import derpibooru.derpy.server.parsers.ServerResponseParser;
+
 abstract class DataProvider {
     protected static final String DERPIBOORU_DOMAIN = "https://trixiebooru.org/";
 

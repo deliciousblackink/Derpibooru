@@ -7,8 +7,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
-import android.text.method.KeyListener;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -18,7 +16,7 @@ import android.widget.ProgressBar;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruSignInForm;
-import derpibooru.derpy.server.AuthManager;
+import derpibooru.derpy.server.Authenticator;
 import derpibooru.derpy.server.DataProviderRequestHandler;
 
 public class LoginActivity extends AppCompatActivity {
@@ -87,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                 new DerpibooruSignInForm(email, password,
                                          ((CheckBox) findViewById(R.id.checkRememberMe)).isChecked());
 
-        AuthManager manager = new AuthManager(this, form, new DataProviderRequestHandler() {
+        Authenticator auth = new Authenticator(this, form, new DataProviderRequestHandler() {
             @Override
             public void onDataFetched(Object result) {
                 if ((boolean) result) {
@@ -103,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+        auth.attemptAuth();
 
         showProgressBar();
     }

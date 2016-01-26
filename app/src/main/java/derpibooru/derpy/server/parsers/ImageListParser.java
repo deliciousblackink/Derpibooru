@@ -1,4 +1,4 @@
-package derpibooru.derpy.server;
+package derpibooru.derpy.server.parsers;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 
-class ImageListParser implements ServerResponseParser {
+public class ImageListParser implements ServerResponseParser {
     public ImageListParser() {
     }
 

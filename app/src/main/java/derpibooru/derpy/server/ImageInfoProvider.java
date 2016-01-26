@@ -2,6 +2,8 @@ package derpibooru.derpy.server;
 
 import android.content.Context;
 
+import derpibooru.derpy.server.parsers.ImageInfoParser;
+
 public class ImageInfoProvider extends DataProvider {
     private int mId;
 

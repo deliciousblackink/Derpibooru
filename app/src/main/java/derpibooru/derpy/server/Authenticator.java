@@ -12,31 +12,34 @@ import org.jsoup.select.Elements;
 import java.util.HashMap;
 
 import derpibooru.derpy.data.server.DerpibooruSignInForm;
+import derpibooru.derpy.server.parsers.ServerResponseParser;
 
-public class AuthManager {
+public class Authenticator {
     private DerpibooruSignInForm mSignInForm;
     private Context mContext;
 
     private DataProviderRequestHandler mHandler;
 
-    public AuthManager(Context context, DerpibooruSignInForm form,
-                       DataProviderRequestHandler handler) {
+    public Authenticator(Context context, DerpibooruSignInForm form,
+                         DataProviderRequestHandler handler) {
         mSignInForm = form;
         mContext = context;
         mHandler = handler;
+    }
 
+    public void attemptAuth() {
         AuthenticityTokenProvider authTokenProvider =
                 new AuthenticityTokenProvider(mContext, new DataProviderRequestHandler() {
-            @Override
-            public void onDataFetched(Object result) {
-                onAuthTokenFetched((String) result);
-            }
+                    @Override
+                    public void onDataFetched(Object result) {
+                        onAuthTokenFetched((String) result);
+                    }
 
-            @Override
-            public void onDataRequestFailed() {
+                    @Override
+                    public void onDataRequestFailed() {
 
-            }
-        });
+                    }
+                });
         authTokenProvider.fetch();
     }
 

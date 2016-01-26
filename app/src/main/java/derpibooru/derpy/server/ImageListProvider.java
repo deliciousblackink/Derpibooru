@@ -3,6 +3,7 @@ package derpibooru.derpy.server;
 import android.content.Context;
 
 import derpibooru.derpy.data.server.DerpibooruImageListType;
+import derpibooru.derpy.server.parsers.ImageListParser;
 
 public class ImageListProvider extends DataProvider {
     private static final String ALL_TIME = "520w";

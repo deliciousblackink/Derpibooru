@@ -5,6 +5,7 @@ import android.content.Context;
 import java.net.URLEncoder;
 
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
+import derpibooru.derpy.server.parsers.ImageListParser;
 
 public class SearchProvider extends DataProvider {
     private String mSearchQuery;

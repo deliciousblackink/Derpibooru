@@ -1,4 +1,4 @@
-package derpibooru.derpy.server;
+package derpibooru.derpy.server.parsers;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
 import derpibooru.derpy.data.server.DerpibooruTag;
 
-class ImageInfoParser implements ServerResponseParser {
+public class ImageInfoParser implements ServerResponseParser {
     public Object parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
 

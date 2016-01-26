@@ -2,6 +2,13 @@ package derpibooru.derpy;
 
 import android.app.Application;
 
+import java.util.List;
+
+import derpibooru.derpy.storage.CookieStrorage;
+
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 
 public class Derpibooru extends Application {
@@ -11,10 +18,29 @@ public class Derpibooru extends Application {
      * single instance you are afforded a shared response cache, thread pool,
      * connection re-use, etc."
      */
-    private final OkHttpClient mHttpClient;
+    private OkHttpClient mHttpClient;
+    private CookieStrorage mCookieStorage;
 
-    public Derpibooru() {
-        mHttpClient = new OkHttpClient();
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        mCookieStorage = new CookieStrorage(getApplicationContext());
+        mHttpClient = new OkHttpClient.Builder()
+                .followRedirects(false)
+                .cookieJar(new CookieJar() {
+                    @Override
+                    public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                        mCookieStorage.setCookies(url.host(), cookies);
+                    }
+
+                    @Override
+                    public List<Cookie> loadForRequest(HttpUrl url) {
+                        List<Cookie> cookies = mCookieStorage.getCookies(url.host().toString());
+                        return cookies;
+                    }
+                })
+                .build();
     }
 
     public OkHttpClient getHttpClient() {

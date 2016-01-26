@@ -6,7 +6,6 @@ import android.util.Log;
 import java.io.IOException;
 
 import derpibooru.derpy.Derpibooru;
-import derpibooru.derpy.storage.CookieStrorage;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -17,7 +16,6 @@ class AsynchronousRequest implements Runnable {
     private OkHttpClient mHttpClient;
 
     protected ServerResponseParser mResponseParser;
-    protected CookieStrorage mCookieStorage;
     protected String mUrl;
 
     protected RequestHandler mRequestHandler;
@@ -27,7 +25,6 @@ class AsynchronousRequest implements Runnable {
                                String url,
                                RequestHandler requestHandler) {
         mHttpClient = ((Derpibooru) context.getApplicationContext()).getHttpClient();
-        mCookieStorage = new CookieStrorage(context);
         mResponseParser = parser;
         mUrl = url;
         mRequestHandler = requestHandler;
@@ -48,7 +45,6 @@ class AsynchronousRequest implements Runnable {
                     Log.e("AsynchronousRequest", request.toString());
                     mRequestHandler.onRequestFailed();
                 }
-                mCookieStorage.setCookie(response.header("set-cookie"));
                 mRequestHandler.onRequestCompleted(parseResponse(response));
             }
         });
@@ -57,7 +53,6 @@ class AsynchronousRequest implements Runnable {
     protected Request generateRequest() {
         return new Request.Builder()
                 .url(mUrl)
-                .addHeader("cookie", mCookieStorage.getCookie())
                 .build();
     }
 

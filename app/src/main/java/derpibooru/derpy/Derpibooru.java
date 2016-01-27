@@ -27,6 +27,7 @@ public class Derpibooru extends Application {
 
         mCookieStorage = new CookieStrorage(getApplicationContext());
         mHttpClient = new OkHttpClient.Builder()
+                .followRedirects(false) /* login page redirect is breaking the authentication */
                 .cookieJar(new CookieJar() {
                     @Override
                     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {

@@ -14,6 +14,7 @@ import java.util.List;
 import okhttp3.Cookie;
 
 public class CookieStrorage {
+    /* TODO: memory caching */
     public static final String PREFERENCES_NAME = "Cookies";
 
     private SharedPreferences mPreferences;

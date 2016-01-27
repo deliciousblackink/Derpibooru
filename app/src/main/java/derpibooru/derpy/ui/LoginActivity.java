@@ -57,15 +57,20 @@ public class LoginActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                setResult(Activity.RESULT_CANCELED);
                 finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        setResult(Activity.RESULT_CANCELED);
+        super.onBackPressed();
+    }
+
     private void showSnackbar(String content) {
-        //Snackbar.make(findViewById(android.R.id.content),
-        //              content, Snackbar.LENGTH_LONG).show();
         Snackbar.make(findViewById(R.id.viewLogin),
                       content, Snackbar.LENGTH_LONG).show();
     }
@@ -100,11 +105,11 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onDataRequestFailed() {
-
+                hideProgressBar();
+                showSnackbar("An error occurred, please try again later");
             }
         });
         auth.attemptAuth();
-
         showProgressBar();
     }
 

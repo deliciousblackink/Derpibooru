@@ -3,29 +3,47 @@
               android:layout_width="match_parent"
               android:layout_height="180dp"
               android:background="@color/colorPrimary"
-              android:gravity="bottom"
               android:orientation="vertical"
               android:theme="@style/ThemeOverlay.AppCompat.Dark"
               android:padding="10dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/profile_image"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:src="@drawable/no_avatar"
-        app:civ_border_width="4dp"
-        app:civ_border_color="@color/colorPrimary"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/no_avatar"
+            app:civ_border_width="4dp"
+            app:civ_border_color="@color/colorPrimary"
+            android:layout_marginTop="4dp"/>
+        <ImageView
+            android:id="@+id/buttonRefreshUserData"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_sync_white_24dp"
+            android:clickable="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="4dp"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textHeaderUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="4dp"
         android:text="Not logged in"
         android:textColor="@color/colorTextLight"
-        android:textSize="16dp"
-        android:paddingLeft="4dp"/>
+        android:textSize="20dp"
+        android:paddingLeft="4dp"
+        />
 
     <TextView
         android:id="@+id/textHeaderFilter"
@@ -33,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:text="Loading..."
-        android:paddingLeft="4dp"/>
+        android:paddingLeft="4dp"
+        android:textSize="16dp"/>
 
 </LinearLayout>

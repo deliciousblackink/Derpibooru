@@ -36,6 +36,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mNavigationDrawer.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onBackPressed() {
         if (mNavigationDrawer.isDrawerOpen()) {
             mNavigationDrawer.closeDrawer();

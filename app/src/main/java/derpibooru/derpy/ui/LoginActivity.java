@@ -1,5 +1,6 @@
 package derpibooru.derpy.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.design.widget.Snackbar;
@@ -89,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataFetched(Object result) {
                 if ((boolean) result) {
+                    setResult(Activity.RESULT_OK);
                     finish();
                 } else {
                     hideProgressBar();

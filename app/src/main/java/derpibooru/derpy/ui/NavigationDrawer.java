@@ -9,32 +9,24 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruUser;
-import derpibooru.derpy.server.DataProviderRequestHandler;
-import derpibooru.derpy.server.UserDataProvider;
-import derpibooru.derpy.storage.UserDataStorage;
+import derpibooru.derpy.server.User;
 
 class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListener {
     private final int ACTIVITY_LOGIN_REQUEST_CODE = 1;
-
-    private UserDataProvider mUserProvider;
-    private UserDataStorage mUserDataStorage;
     private Activity mParent;
 
     private View mNavigationDrawerHeader;
     private DrawerLayout mDrawerLayout;
 
+    private User mUser;
+
     public NavigationDrawer(Activity parent, DrawerLayout drawer, Toolbar toolbar, NavigationView menu) {
         mDrawerLayout = drawer;
         mParent = parent;
-
-        initDrawerToggle(parent, toolbar, drawer, menu);
-        initUserProvider(parent);
-
         mNavigationDrawerHeader = ((NavigationView)
                 mDrawerLayout.findViewById(R.id.navigationView)).getHeaderView(0);
 
@@ -45,9 +37,10 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
                         refreshUserData();
                     }
                 });
+        initDrawerToggle(parent, toolbar, drawer, menu);
 
-        mUserDataStorage = new UserDataStorage(parent);
-        setUserDataFromStorage();
+        mUser = new User(parent, new UserDataHandler());
+        mUser.fetchUserData();
     }
 
     public boolean isDrawerOpen() {
@@ -66,8 +59,13 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
             mParent.startActivityForResult(new Intent(mParent, LoginActivity.class),
                                            ACTIVITY_LOGIN_REQUEST_CODE);
         }
+        if (id == R.id.navigationLogOut) {
+            mUser.logout();
+            /* do not hide the drawer */
+            return true;
+        }
 
-        mDrawerLayout.closeDrawer(GravityCompat.START);
+        closeDrawer();
         return true;
     }
 
@@ -75,20 +73,11 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         switch (requestCode) {
             case (ACTIVITY_LOGIN_REQUEST_CODE):
                 if (resultCode == Activity.RESULT_OK) {
-                    mUserProvider.fetch();
+                    mUser.refreshUserData();
                 }
                 ((NavigationView) mDrawerLayout.findViewById(R.id.navigationView))
                         .getMenu().findItem(R.id.navigationLogIn).setChecked(false);
                 break;
-        }
-    }
-
-    private void setUserDataFromStorage() {
-        DerpibooruUser user = mUserDataStorage.getUserData();
-        if (user == null) {
-            refreshUserData();
-        } else {
-            displayUserData(user);
         }
     }
 
@@ -97,36 +86,39 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
                 .setVisibility(View.INVISIBLE);
         ((TextView) mNavigationDrawerHeader.findViewById(R.id.textHeaderFilter))
                 .setText("Loading...");
-        mUserProvider.fetch();
+        mUser.refreshUserData();
     }
 
     private void displayUserData(DerpibooruUser user) {
         mNavigationDrawerHeader.findViewById(R.id.buttonRefreshUserData)
                 .setVisibility(View.VISIBLE);
         if (!user.isLoggedIn()) {
-            ((TextView) mNavigationDrawerHeader.findViewById(R.id.textHeaderUser))
-                    .setText("Not logged in");
+            onUserLoggedOut(user);
         } else {
-            ((TextView) mNavigationDrawerHeader.findViewById(R.id.textHeaderUser))
-                    .setText(user.getUsername());
+            onUserLoggedIn(user);
         }
         ((TextView) mNavigationDrawerHeader.findViewById(R.id.textHeaderFilter))
                 .setText("Filter: " + user.getCurrentFilter().getName());
     }
 
-    private void initUserProvider(Activity parent) {
-        mUserProvider = new UserDataProvider(parent, new DataProviderRequestHandler() {
-            @Override
-            public void onDataFetched(Object result) {
-                displayUserData((DerpibooruUser) result);
-                mUserDataStorage.setUserData((DerpibooruUser) result);
-            }
+    private void onUserLoggedIn(DerpibooruUser user) {
+        ((TextView) mNavigationDrawerHeader.findViewById(R.id.textHeaderUser))
+                .setText(user.getUsername());
+        ((NavigationView)
+                mDrawerLayout.findViewById(R.id.navigationView)).getMenu().clear();
+        ((NavigationView)
+                mDrawerLayout.findViewById(R.id.navigationView))
+                .inflateMenu(R.menu.menu_navigation_drawer_logged_in);
+    }
 
-            @Override
-            public void onDataRequestFailed() {
-
-            }
-        });
+    private void onUserLoggedOut(DerpibooruUser user) {
+        ((TextView) mNavigationDrawerHeader.findViewById(R.id.textHeaderUser))
+                .setText("Not logged in");
+        ((NavigationView)
+                mDrawerLayout.findViewById(R.id.navigationView)).getMenu().clear();
+        ((NavigationView)
+                mDrawerLayout.findViewById(R.id.navigationView))
+                .inflateMenu(R.menu.menu_navigation_drawer_logged_out);
     }
 
     private void initDrawerToggle(Activity parent, Toolbar toolbar,
@@ -137,5 +129,21 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         menu.setNavigationItemSelectedListener(this);
+    }
+
+    private class UserDataHandler implements User.UserActionPerformedHandler {
+        @Override
+        public void onUserDataObtained(DerpibooruUser userData) {
+            displayUserData(userData);
+        }
+
+        @Override
+        public void onFailedLogin() { }
+
+        @Override
+        public void onFailedLogout() { }
+
+        @Override
+        public void onNetworkError() { }
     }
 }

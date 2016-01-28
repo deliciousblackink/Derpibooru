@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navigationLogIn"
+            android:id="@+id/navigationLogOut"
             android:icon="@drawable/ic_key_black_24dp"
-            android:title="Log in"/>
+            android:title="Log out"/>
         <item
             android:id="@+id/navigationFilters"
             android:icon="@drawable/ic_block_black_24dp"

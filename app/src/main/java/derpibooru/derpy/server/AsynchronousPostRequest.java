@@ -5,7 +5,6 @@ import android.content.Context;
 import java.util.HashMap;
 import java.util.Map;
 
-import derpibooru.derpy.server.parsers.ServerResponseParser;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -14,10 +13,9 @@ class AsynchronousPostRequest extends AsynchronousRequest {
     private  HashMap<String, String> mPostFormData;
 
     public AsynchronousPostRequest(Context context,
-                               ServerResponseParser parser,
                                String url, HashMap<String, String> postFormItems,
                                RequestHandler requestHandler) {
-        super(context, parser, url, requestHandler);
+        super(context, null, url, requestHandler);
         mPostFormData = postFormItems;
     }
 

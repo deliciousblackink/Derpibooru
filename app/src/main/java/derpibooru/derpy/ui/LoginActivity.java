@@ -16,9 +16,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruSignInForm;
-import derpibooru.derpy.server.Authenticator;
-import derpibooru.derpy.server.DataProviderRequestHandler;
+import derpibooru.derpy.data.server.DerpibooruLoginForm;
+import derpibooru.derpy.data.server.DerpibooruUser;
+import derpibooru.derpy.server.User;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int MIN_ACCEPTED_PASSWORD_LENGTH = 6;
@@ -87,29 +87,33 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        DerpibooruSignInForm form =
-                new DerpibooruSignInForm(email, password,
+        DerpibooruLoginForm form =
+                new DerpibooruLoginForm(email, password,
                                          ((CheckBox) findViewById(R.id.checkRememberMe)).isChecked());
 
-        Authenticator auth = new Authenticator(this, form, new DataProviderRequestHandler() {
+        User user = new User(this, new User.UserActionPerformedHandler() {
             @Override
-            public void onDataFetched(Object result) {
-                if ((boolean) result) {
-                    setResult(Activity.RESULT_OK);
-                    finish();
-                } else {
-                    hideProgressBar();
-                    showSnackbar("Invalid e-mail or password");
-                }
+            public void onUserDataObtained(DerpibooruUser userData) {
+                setResult(Activity.RESULT_OK);
+                finish();
             }
 
             @Override
-            public void onDataRequestFailed() {
+            public void onFailedLogin() {
+                hideProgressBar();
+                showSnackbar("Invalid e-mail or password");
+            }
+
+            @Override
+            public void onNetworkError() {
                 hideProgressBar();
                 showSnackbar("An error occurred, please try again later");
             }
+
+            @Override
+            public void onFailedLogout() { }
         });
-        auth.attemptAuth();
+        user.login(form);
         showProgressBar();
     }
 

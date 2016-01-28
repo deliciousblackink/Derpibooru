@@ -1,6 +1,7 @@
 package derpibooru.derpy.server;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ class AsynchronousRequest implements Runnable {
     protected RequestHandler mRequestHandler;
 
     public AsynchronousRequest(Context context,
-                               ServerResponseParser parser,
+                               @Nullable ServerResponseParser parser,
                                String url,
                                RequestHandler requestHandler) {
         mHttpClient = ((Derpibooru) context.getApplicationContext()).getHttpClient();
@@ -42,8 +43,8 @@ class AsynchronousRequest implements Runnable {
 
             @Override
             public void onResponse(Call request, Response response) throws IOException {
-                if (!response.isSuccessful()) {
-                    Log.e("AsynchronousRequest", request.toString());
+                if (!response.isSuccessful() && response.code() != 302) {
+                    Log.e("AsynchronousRequest", "run(): Callback() onResponse");
                     mRequestHandler.onRequestFailed();
                 }
                 mRequestHandler.onRequestCompleted(parseResponse(response));
@@ -58,11 +59,13 @@ class AsynchronousRequest implements Runnable {
     }
 
     protected Object parseResponse(Response response) {
-        try {
-            return mResponseParser.parseResponse(response.body().string());
-        } catch (Exception e) {
-            Log.e("AsynchronousRequest", "Error parsing response", e);
-            mRequestHandler.onRequestFailed();
+        if (mResponseParser != null) {
+            try {
+                return mResponseParser.parseResponse(response.body().string());
+            } catch (Exception e) {
+                Log.e("AsynchronousRequest", "Error parsing response", e);
+                mRequestHandler.onRequestFailed();
+            }
         }
         return null;
     }

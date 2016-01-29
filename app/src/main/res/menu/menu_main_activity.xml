@@ -5,9 +5,9 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_search"
-        android:icon="@drawable/ic_search_white_24dp"
+        android:id="@+id/actionRandomImage"
+        android:icon="@drawable/ic_shuffle_white_24dp"
         android:menuCategory="secondary"
         app:showAsAction="always"
-        android:title="@string/activity_search"/>
+        android:title="Random image"/>
 </menu>

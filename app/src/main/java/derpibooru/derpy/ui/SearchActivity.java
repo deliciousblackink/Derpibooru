@@ -9,12 +9,12 @@ import android.widget.TextView;
 import derpibooru.derpy.R;
 import derpibooru.derpy.ui.views.FloatingSearchView;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends NavigationDrawerActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initializeNavigationDrawer();
 
         FloatingSearchView search = (FloatingSearchView) findViewById(R.id.floatingSearch);
         search.setSearchResultActivity(SearchResultActivity.class);
@@ -29,8 +29,7 @@ public class SearchActivity extends AppCompatActivity {
                 .setText(Html.fromHtml(getString(R.string.search_help)));
     }
 
-    /* Respond to ActionBar's Up (Back) button */
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -38,5 +37,5 @@ public class SearchActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 }

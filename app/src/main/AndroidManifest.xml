@@ -26,12 +26,13 @@
         <activity
             android:name=".ui.ImageActivity"/>
         <activity
-            android:name=".ui.SearchActivity"/>
+            android:name=".ui.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.SearchResultActivity"/>
         <activity
-            android:label="@string/activity_login"
             android:name=".ui.LoginActivity"
+            android:label="@string/activity_login"
             android:screenOrientation="portrait">
         </activity>
     </application>

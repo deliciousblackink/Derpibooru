@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                        xmlns:app="http://schemas.android.com/apk/res-auto"
                                         android:id="@+id/drawerLayout"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:orientation="vertical"
-                  android:background="@color/colorPrimary">
-            <android.support.design.widget.AppBarLayout android:layout_width="match_parent"
-                                                        android:layout_height="wrap_content"
-                                                        android:theme="@style/AppTheme.AppBarOverlay">
-                <android.support.v7.widget.Toolbar android:id="@+id/toolbar"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="?attr/actionBarSize"
-                                                   android:background="?attr/colorPrimary"
-                                                   app:popupTheme="@style/AppTheme.PopupOverlay"/>
-            </android.support.design.widget.AppBarLayout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary">
+            <include layout="@layout/navigation_drawer_toolbar"/>
             <derpibooru.derpy.ui.views.FragmentTabPagerView android:id="@+id/fragmentPagerView"
                                                             android:layout_width="match_parent"
                                                             android:layout_height="0px"
                                                             android:layout_weight="1"/>
     </LinearLayout>
-    <include
-        layout="@layout/navigation_drawer_navigation_view"/>
+    <include layout="@layout/navigation_drawer_navigation_view"/>
 </android.support.v4.widget.DrawerLayout>

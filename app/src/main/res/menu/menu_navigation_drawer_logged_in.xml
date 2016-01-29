@@ -2,9 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navigationLogOut"
-            android:icon="@drawable/ic_key_black_24dp"
-            android:title="Log out"/>
+            android:id="@+id/navigationHome"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="Home"/>
+        <item
+            android:id="@+id/navigationSearch"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="Search"/>
         <item
             android:id="@+id/navigationFilters"
             android:icon="@drawable/ic_block_black_24dp"
@@ -16,6 +20,10 @@
                 android:id="@+id/navigationFaves"
                 android:icon="@drawable/ic_star_black_24dp"
                 android:title="Favorites"/>
+            <item
+                android:id="@+id/navigationLogout"
+                android:icon="@drawable/ic_key_black_24dp"
+                android:title="Log out"/>
         </menu>
     </item>
 </menu>

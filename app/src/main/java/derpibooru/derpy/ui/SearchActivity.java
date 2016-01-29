@@ -14,6 +14,7 @@ public class SearchActivity extends NavigationDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        setTitle(R.string.activity_search);
         initializeNavigationDrawer();
 
         FloatingSearchView search = (FloatingSearchView) findViewById(R.id.floatingSearch);

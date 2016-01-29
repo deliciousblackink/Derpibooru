@@ -26,6 +26,10 @@
         <activity
             android:name=".ui.ImageActivity"/>
         <activity
+            android:name=".ui.FiltersActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".ui.SearchActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity

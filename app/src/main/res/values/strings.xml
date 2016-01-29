@@ -2,7 +2,9 @@
 <resources>
     <string name="app_name">Derpibooru</string>
 
-    <string name="activity_login">Log in</string>
     <string name="activity_search">Search</string>
+    <string name="activity_filters">Filters</string>
+
+    <string name="activity_login">Log in</string>
     <string name="action_settings">Settings</string>
 </resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/navigation_drawer_header"
+        app:menu="@menu/menu_navigation_drawer_logged_out"
+        app:itemIconTint="@drawable/selector_navigation_drawer_item_icon_tint"
+        app:itemTextColor="@drawable/selector_navigation_drawer_item_text_color"/>
+</merge>

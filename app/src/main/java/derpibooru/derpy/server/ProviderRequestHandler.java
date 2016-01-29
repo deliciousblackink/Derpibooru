@@ -1,6 +1,6 @@
 package derpibooru.derpy.server;
 
-public interface DataProviderRequestHandler {
+public interface ProviderRequestHandler {
     /**
      * Successfully executed Derpibooru request.
      *

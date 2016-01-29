@@ -4,10 +4,10 @@ import android.content.Context;
 
 import derpibooru.derpy.server.parsers.ImageInfoParser;
 
-public class ImageInfoProvider extends DataProvider {
+public class ImageInfoProvider extends Provider {
     private int mId;
 
-    public ImageInfoProvider(Context context, DataProviderRequestHandler handler) {
+    public ImageInfoProvider(Context context, ProviderRequestHandler handler) {
         super(context, handler);
     }
 

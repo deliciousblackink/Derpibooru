@@ -9,7 +9,6 @@ import derpibooru.derpy.server.parsers.UserDataParser;
 import derpibooru.derpy.storage.UserDataStorage;
 
 public class User {
-    private Context mContext;
     private UserActionPerformedHandler mHandler;
 
     private UserDataStorage mUserDataStorage;
@@ -19,9 +18,8 @@ public class User {
     private AuthenticatorAction mCurrentAction;
 
     public User(Context context, UserActionPerformedHandler handler) {
-        mContext = context;
         mHandler = handler;
-        mAuth = new Authenticator(context, new DataProviderRequestHandler() {
+        mAuth = new Authenticator(context, new ProviderRequestHandler() {
             @Override
             public void onDataFetched(Object result) {
                 onAuthenticatorResponseReceived((boolean) result);
@@ -33,7 +31,7 @@ public class User {
             }
         });
         mUserDataStorage = new UserDataStorage(context);
-        mUserProvider = new UserDataProvider(context, new DataProviderRequestHandler() {
+        mUserProvider = new UserDataProvider(context, new ProviderRequestHandler() {
             @Override
             public void onDataFetched(Object result) {
                 onUserDataFetched((DerpibooruUser) result);
@@ -111,8 +109,8 @@ public class User {
         void onNetworkError();
     }
 
-    private class UserDataProvider extends DataProvider {
-        public UserDataProvider(Context context, DataProviderRequestHandler handler) {
+    private class UserDataProvider extends Provider {
+        public UserDataProvider(Context context, ProviderRequestHandler handler) {
             super(context, handler);
         }
 

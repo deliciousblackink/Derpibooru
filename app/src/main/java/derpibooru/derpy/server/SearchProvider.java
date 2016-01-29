@@ -7,11 +7,11 @@ import java.net.URLEncoder;
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 import derpibooru.derpy.server.parsers.ImageListParser;
 
-public class SearchProvider extends DataProvider {
+public class SearchProvider extends Provider {
     private String mSearchQuery;
     private DerpibooruSearchOptions mSearchOptions;
 
-    public SearchProvider(Context context, DataProviderRequestHandler handler) {
+    public SearchProvider(Context context, ProviderRequestHandler handler) {
         super(context, handler);
     }
 

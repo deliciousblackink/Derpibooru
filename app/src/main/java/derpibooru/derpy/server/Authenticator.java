@@ -18,9 +18,9 @@ class Authenticator {
     private DerpibooruLoginForm mSignInForm;
     private Context mContext;
 
-    private DataProviderRequestHandler mHandler;
+    private ProviderRequestHandler mHandler;
 
-    public Authenticator(Context context, DataProviderRequestHandler handler) {
+    public Authenticator(Context context, ProviderRequestHandler handler) {
         mContext = context;
         mHandler = handler;
     }
@@ -28,7 +28,7 @@ class Authenticator {
     public void attemptLogin(DerpibooruLoginForm form) {
         mSignInForm = form;
         LoginAuthenticityTokenProvider authTokenProvider =
-                new LoginAuthenticityTokenProvider(mContext, new DataProviderRequestHandler() {
+                new LoginAuthenticityTokenProvider(mContext, new ProviderRequestHandler() {
                     @Override
                     public void onDataFetched(Object result) {
                         loginWithToken((String) result);
@@ -44,7 +44,7 @@ class Authenticator {
 
     public void attemptLogout() {
         AuthenticityTokenProvider authTokenProvider =
-                new AuthenticityTokenProvider(mContext, new DataProviderRequestHandler() {
+                new AuthenticityTokenProvider(mContext, new ProviderRequestHandler() {
                     @Override
                     public void onDataFetched(Object result) {
                         logoutWithToken((String) result);
@@ -92,9 +92,9 @@ class Authenticator {
         return form;
     }
 
-    private class AuthenticityTokenProvider extends DataProvider {
+    private class AuthenticityTokenProvider extends Provider {
         public AuthenticityTokenProvider(Context context,
-                                         DataProviderRequestHandler handler) {
+                                         ProviderRequestHandler handler) {
             super(context, handler);
         }
 
@@ -125,11 +125,11 @@ class Authenticator {
         }
     }
 
-    private class LoginProvider extends DataProvider {
+    private class LoginProvider extends Provider {
         private HashMap<String, String> mForm;
 
         public LoginProvider(Context context,
-                             DataProviderRequestHandler handler,
+                             ProviderRequestHandler handler,
                              HashMap<String, String> form) {
             super(context, handler);
             mForm = form;
@@ -171,7 +171,7 @@ class Authenticator {
 
     private class LoginAuthenticityTokenProvider extends AuthenticityTokenProvider {
         public LoginAuthenticityTokenProvider(Context context,
-                                         DataProviderRequestHandler handler) {
+                                         ProviderRequestHandler handler) {
             super(context, handler);
         }
 
@@ -185,7 +185,7 @@ class Authenticator {
 
     private class LogoutProvider extends LoginProvider {
         public LogoutProvider(Context context,
-                              DataProviderRequestHandler handler,
+                              ProviderRequestHandler handler,
                               HashMap<String, String> form) {
             super(context, handler, form);
         }

@@ -5,14 +5,14 @@ import android.content.Context;
 import derpibooru.derpy.data.server.DerpibooruImageListType;
 import derpibooru.derpy.server.parsers.ImageListParser;
 
-public class ImageListProvider extends DataProvider {
+public class ImageListProvider extends Provider {
     private static final String ALL_TIME = "520w";
     /* 520 weeks (10 years) effectively equals to 'All Time' */
 
     private DerpibooruImageListType mListType;
     private String mTime = ALL_TIME;
 
-    public ImageListProvider(Context context, DataProviderRequestHandler handler) {
+    public ImageListProvider(Context context, ProviderRequestHandler handler) {
         super(context, handler);
     }
 

@@ -14,13 +14,13 @@ import java.util.ArrayList;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageListType;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.server.DataProviderRequestHandler;
+import derpibooru.derpy.server.ProviderRequestHandler;
 import derpibooru.derpy.server.ImageListProvider;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.ImageListAdapter;
 
 public class ImageListTabFragment extends Fragment
-                                  implements DataProviderRequestHandler {
+                                  implements ProviderRequestHandler {
     private ImageListAdapter mImageFetcher;
 
     public ImageListTabFragment() {

@@ -6,13 +6,13 @@ import android.os.Looper;
 
 import derpibooru.derpy.server.parsers.ServerResponseParser;
 
-abstract class DataProvider {
+abstract class Provider {
     protected static final String DERPIBOORU_DOMAIN = "https://trixiebooru.org/";
 
-    private DataProviderRequestHandler mHandler;
+    private ProviderRequestHandler mHandler;
     private Context mContext;
 
-    public DataProvider(Context context, DataProviderRequestHandler handler) {
+    public Provider(Context context, ProviderRequestHandler handler) {
         mContext = context;
         mHandler = handler;
     }

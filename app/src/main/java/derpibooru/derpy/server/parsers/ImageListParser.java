@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 
 public class ImageListParser implements ServerResponseParser {
-    public ImageListParser() {
-    }
-
     public Object parseResponse(String rawResponse) throws JSONException {
         ArrayList<DerpibooruImageThumb> output = new ArrayList<>();
 

@@ -16,16 +16,4 @@
 		either Twilight Sparkle or Fluttershy, and always Pinkie Pie.</p>
         ]]>
     </string>
-    <string name="filters_help">
-        <![CDATA[
-        <h3>Content safety</h3>
-        <p>The vast majority of content on Derpibooru (about 80%) is safe and suitable for all ages. By default, this is all you\'ll see on
-        the site, and how most of our users browse. The default filters focus on art, so filter out things like memes and what some users
-        would consider "spam".</p>
-        <p>Filters let you customize what content you see on the site. This means that with the appropriate filter selected, you can access
-        content which is not suitable for everyone, such as 18+ rated sexually explicit content, grimdark or gore.</p>
-        <p><strong>By changing away from the default filters, you accept you are legally permitted to view this content in your jurisdiction.
-        If in doubt, stick with the recommended default filters.</strong></p>
-        ]]>
-    </string>
 </resources>

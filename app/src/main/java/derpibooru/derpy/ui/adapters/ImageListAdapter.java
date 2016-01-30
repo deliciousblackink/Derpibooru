@@ -44,7 +44,7 @@ public class ImageListAdapter extends ArrayAdapter {
          * afaik right now Glide does not provide a direct way of
          * stopping the active requests. unfortunately, those remain
          * in case the user has changed the search options before
-         * the previous set of images has fully downloaded.
+         * the previous set of images has been fully downloaded.
          *
          * it should not leave a noticeable impact on the memory usage
          * since the unused objects get GC'ed quickly & Glide cleans up
@@ -81,8 +81,7 @@ public class ImageListAdapter extends ArrayAdapter {
 
         /* TODO: load animated GIFs _after_ static images */
         /* right now, if there's a huge GIF in the beginning of the list,
-         * the user will have to wait ages before everything loads properly.
-          */
+         * the user will have to wait ages before everything loads properly. */
         Glide.with(mContext)
                 .load(holder.data.getThumbUrl())
                 .centerCrop()

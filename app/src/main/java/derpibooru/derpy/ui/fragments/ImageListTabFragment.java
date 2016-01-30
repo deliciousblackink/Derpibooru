@@ -3,6 +3,7 @@ package derpibooru.derpy.ui.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,20 +44,23 @@ public class ImageListTabFragment extends Fragment
     }
 
     private void fetchImages(ArrayList<DerpibooruImageThumb> imageThumbs) {
-        /* TODO: NullPointerException when changing phone's orientation */
-        GridView gv = (GridView) getView().findViewById(R.id.imageGrid);
-        mImageFetcher = new ImageListAdapter(getActivity(), imageThumbs);
-        gv.setAdapter(mImageFetcher);
+        try {
+            GridView gv = (GridView) getView().findViewById(R.id.imageGrid);
+            mImageFetcher = new ImageListAdapter(getActivity(), imageThumbs);
+            gv.setAdapter(mImageFetcher);
 
-        gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Intent intent = new Intent(getActivity(), ImageActivity.class);
-                intent.putExtra("image_thumb", ((ImageListAdapter.ViewHolder) v.getTag()).data);
-                startActivity(intent);
-            }
-        });
+            gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v,
+                                        int position, long id) {
+                    Intent intent = new Intent(getActivity(), ImageActivity.class);
+                    intent.putExtra("image_thumb", ((ImageListAdapter.ViewHolder) v.getTag()).data);
+                    startActivity(intent);
+                }
+            });
+        } catch (NullPointerException e) {
+            Log.e("ImageListTabFragment", "parent layout is null");
+        }
     }
 
     protected void stopFetchingImages() {

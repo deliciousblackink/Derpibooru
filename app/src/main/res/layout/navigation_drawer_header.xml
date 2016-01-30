@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="180dp"
+              android:layout_height="170dp"
               android:background="@color/colorPrimary"
               android:orientation="vertical"
               android:theme="@style/ThemeOverlay.AppCompat.Dark"
@@ -41,7 +41,7 @@
         android:layout_marginTop="4dp"
         android:text="Not logged in"
         android:textColor="@color/colorTextLight"
-        android:textSize="20dp"
+        android:textSize="16dp"
         android:paddingLeft="4dp"
         />
 
@@ -52,6 +52,6 @@
         android:layout_marginTop="6dp"
         android:text="Loading..."
         android:paddingLeft="4dp"
-        android:textSize="16dp"/>
+        android:textSize="14dp"/>
 
 </LinearLayout>

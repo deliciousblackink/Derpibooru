@@ -12,7 +12,7 @@ import derpibooru.derpy.server.Filters;
 import derpibooru.derpy.ui.adapters.FiltersViewAdapter;
 
 public class FiltersActivity extends NavigationDrawerActivity {
-    private Filters mFilters;
+    private ArrayList<DerpibooruFilter> mFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,22 +21,38 @@ public class FiltersActivity extends NavigationDrawerActivity {
         setTitle(R.string.activity_filters);
         initializeNavigationDrawer();
 
-        fetchAvailableFilters();
+        if (savedInstanceState != null) {
+            mFilters = savedInstanceState.getParcelableArrayList("filters");
+            if (mFilters != null) {
+                displayFilters();
+            } else {
+                fetchAvailableFilters();
+            }
+        } else {
+            fetchAvailableFilters();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelableArrayList("filters", mFilters);
     }
 
     private void fetchAvailableFilters() {
-        mFilters = new Filters(this, new Filters.FiltersHandler() {
+        Filters f = new Filters(this, new Filters.FiltersHandler() {
             @Override
             public void onAvailableFiltersFetched(ArrayList<DerpibooruFilter> filters) {
-                displayFilters(filters);
+                mFilters = filters;
+                displayFilters();
             }
         });
-        mFilters.fetchAvailableFilters();
+        f.fetchAvailableFilters();
     }
 
-    private void displayFilters(ArrayList<DerpibooruFilter> filters) {
+    private void displayFilters() {
         LinearLayoutManager llm = new LinearLayoutManager(this);
-        FiltersViewAdapter fva = new FiltersViewAdapter(filters);
+        FiltersViewAdapter fva = new FiltersViewAdapter(mFilters);
 
         RecyclerView view = ((RecyclerView) findViewById(R.id.viewFilters));
         view.setLayoutManager(llm);

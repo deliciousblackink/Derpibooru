@@ -1,8 +1,13 @@
 package derpibooru.derpy.data.server;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.common.primitives.Ints;
+
 import java.util.List;
 
-public class DerpibooruFilter {
+public class DerpibooruFilter implements Parcelable {
     private int mId;
     private String mName;
     private List<Integer> mSpoileredTags;
@@ -65,4 +70,49 @@ public class DerpibooruFilter {
     public int getUserCount() {
         return mUserCount;
     }
+
+    protected DerpibooruFilter(Parcel in) {
+        mId = in.readInt();
+        mName = in.readString();
+
+        int[] spoileredTags = new int[0];
+        in.readIntArray(spoileredTags);
+        mSpoileredTags = Ints.asList(spoileredTags);
+
+        mDescription = in.readString();
+        in.readStringList(mHiddenTagNames);
+        in.readStringList(mSpoileredTagNames);
+        mSystemFilter = (in.readInt() == 1);
+        mUserCount = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeString(mName);
+        dest.writeIntArray(Ints.toArray(mSpoileredTags));
+        dest.writeString(mDescription);
+        dest.writeStringList(mHiddenTagNames);
+        dest.writeStringList(mSpoileredTagNames);
+        dest.writeInt(mSystemFilter ? 1 : 0);
+        dest.writeInt(mUserCount);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<DerpibooruFilter> CREATOR = new Parcelable.Creator<DerpibooruFilter>() {
+        @Override
+        public DerpibooruFilter createFromParcel(Parcel in) {
+            return new DerpibooruFilter(in);
+        }
+
+        @Override
+        public DerpibooruFilter[] newArray(int size) {
+            return new DerpibooruFilter[size];
+        }
+    };
 }

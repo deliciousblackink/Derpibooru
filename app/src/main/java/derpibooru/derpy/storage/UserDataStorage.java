@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruUser;
 
 public class UserDataStorage {
@@ -32,6 +33,12 @@ public class UserDataStorage {
         mPreferences.edit()
                 .putString("user", json)
                 .apply();
+    }
+
+    public void setCurrentFilter(DerpibooruFilter newFilter) {
+        DerpibooruUser user = getUserData();
+        user.setCurrentFilter(newFilter);
+        setUserData(user);
     }
 
     /* TODO: clear user data from the device if "Remember me" is not set */

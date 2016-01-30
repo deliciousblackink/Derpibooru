@@ -69,7 +69,6 @@ public class User {
     }
 
     public void refreshUserData() {
-        mUserDataStorage.clearUserData();
         mUserProvider.fetch();
     }
 

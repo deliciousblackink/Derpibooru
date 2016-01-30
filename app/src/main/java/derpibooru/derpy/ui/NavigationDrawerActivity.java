@@ -27,6 +27,10 @@ abstract class NavigationDrawerActivity extends AppCompatActivity {
                                                  ((NavigationView) findViewById(R.id.navigationView)));
     }
 
+    protected void refreshUserData() {
+        mNavigationDrawer.refreshUserData();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

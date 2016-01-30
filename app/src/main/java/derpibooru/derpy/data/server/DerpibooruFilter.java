@@ -35,6 +35,14 @@ public class DerpibooruFilter implements Parcelable {
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof DerpibooruFilter) {
+            return (((DerpibooruFilter) o).getId() == this.getId());
+        }
+        return super.equals(o);
+    }
+
     public int getId() {
         return mId;
     }

@@ -6,6 +6,8 @@ import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,12 +80,15 @@ public class UserDataParser implements ServerResponseParser {
                     .matcher(scriptHtml);
             m.find();
             String tagIdsArray = m.group(1);
-            List<String> stringIds = new ArrayList<>(Arrays.asList(tagIdsArray.split(",")));
-            List<Integer> intIds = new ArrayList<>();
-            for (String stringId : stringIds) {
-                intIds.add(Integer.parseInt(stringId));
+            if (!tagIdsArray.equals("")) {
+                List<String> stringIds = new ArrayList<>(Arrays.asList(tagIdsArray.split(",")));
+                List<Integer> intIds = new ArrayList<>();
+                for (String stringId : stringIds) {
+                    intIds.add(Integer.parseInt(stringId));
+                }
+                return intIds;
             }
-            return intIds;
+            return Collections.emptyList();
         }
     }
 

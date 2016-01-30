@@ -59,6 +59,14 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         }
     }
 
+    public void refreshUserData() {
+        mDrawerHeader.findViewById(R.id.buttonRefreshUserData)
+                .setVisibility(View.INVISIBLE);
+        ((TextView) mDrawerHeader.findViewById(R.id.textHeaderFilter))
+                .setText("Loading...");
+        mUser.refreshUserData();
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -106,14 +114,6 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
                         .findItem(mParentNavigationId).setChecked(false);
                 break;
         }
-    }
-
-    private void refreshUserData() {
-        mDrawerHeader.findViewById(R.id.buttonRefreshUserData)
-                .setVisibility(View.INVISIBLE);
-        ((TextView) mDrawerHeader.findViewById(R.id.textHeaderFilter))
-                .setText("Loading...");
-        mUser.refreshUserData();
     }
 
     private void displayUserData(DerpibooruUser user) {

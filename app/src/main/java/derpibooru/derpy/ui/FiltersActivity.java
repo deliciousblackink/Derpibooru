@@ -12,18 +12,19 @@ import derpibooru.derpy.server.Filters;
 import derpibooru.derpy.ui.adapters.FiltersViewAdapter;
 
 public class FiltersActivity extends NavigationDrawerActivity {
-    private ArrayList<DerpibooruFilter> mFilters;
+    private ArrayList<DerpibooruFilter> mAvailableFilterList;
+    private Filters mFilterActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filters);
         setTitle(R.string.activity_filters);
-        initializeNavigationDrawer();
+        super.initializeNavigationDrawer();
 
         if (savedInstanceState != null) {
-            mFilters = savedInstanceState.getParcelableArrayList("filters");
-            if (mFilters != null) {
+            mAvailableFilterList = savedInstanceState.getParcelableArrayList("filters");
+            if (mAvailableFilterList != null) {
                 displayFilters();
             } else {
                 fetchAvailableFilters();
@@ -36,23 +37,53 @@ public class FiltersActivity extends NavigationDrawerActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putParcelableArrayList("filters", mFilters);
+        savedInstanceState.putParcelableArrayList("filters", mAvailableFilterList);
     }
 
     private void fetchAvailableFilters() {
-        Filters f = new Filters(this, new Filters.FiltersHandler() {
+        if (mFilterActions == null) {
+            initFilterActions();
+        }
+        mFilterActions.fetchAvailableFilters();
+    }
+
+    private void setCurrentFilter(DerpibooruFilter newFilter) {
+        if (mFilterActions == null) {
+            initFilterActions();
+        }
+        mFilterActions.changeCurrentFilterTo(newFilter);
+    }
+
+    private void initFilterActions() {
+        mFilterActions = new Filters(this, new Filters.FiltersHandler() {
             @Override
             public void onAvailableFiltersFetched(ArrayList<DerpibooruFilter> filters) {
-                mFilters = filters;
+                mAvailableFilterList = filters;
                 displayFilters();
             }
+
+            @Override
+            public void onFilterChangedSuccessfully() {
+                fetchAvailableFilters();
+                FiltersActivity.super.refreshUserData();
+            }
+
+            @Override
+            public void onNetworkError() {
+
+            }
         });
-        f.fetchAvailableFilters();
     }
 
     private void displayFilters() {
         LinearLayoutManager llm = new LinearLayoutManager(this);
-        FiltersViewAdapter fva = new FiltersViewAdapter(mFilters);
+        FiltersViewAdapter fva = new FiltersViewAdapter(mFilterActions.getCurrentFilter(), mAvailableFilterList,
+                                                        new FiltersViewAdapter.OnFilterSelectedHandler() {
+            @Override
+            public void changeFilterTo(DerpibooruFilter newFilter) {
+                setCurrentFilter(newFilter);
+            }
+        });
 
         RecyclerView view = ((RecyclerView) findViewById(R.id.viewFilters));
         view.setLayoutManager(llm);

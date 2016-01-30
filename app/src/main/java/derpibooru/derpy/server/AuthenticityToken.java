@@ -47,7 +47,7 @@ class AuthenticityToken extends Provider {
 
     public enum TokenAction {
         Login("users/sign_in/"),
-        ChangeFilter("filters"),
+        ChangeFilter("filters/"),
         General("");
 
         private final String url;

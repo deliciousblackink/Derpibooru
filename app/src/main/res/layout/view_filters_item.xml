@@ -41,23 +41,22 @@
             android:paddingTop="6dp"/>
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/buttonDetails"
+            android:id="@+id/buttonUse"
             android:layout_width="90dp"
             android:layout_height="48dp"
             android:textColor="@color/colorTextLight"
-            android:text="Details"
-            android:layout_alignTop="@+id/buttonUse"
-            android:layout_toLeftOf="@+id/buttonUse"
-            android:layout_toStartOf="@+id/buttonUse"/>
+            android:text="Use"
+            android:layout_alignTop="@+id/buttonDetails"
+            android:layout_toLeftOf="@+id/buttonDetails"
+            android:layout_toStartOf="@+id/buttonDetails"/>
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/buttonUse"
+            android:id="@+id/buttonDetails"
             android:layout_width="80dp"
             android:layout_height="48dp"
             android:textColor="@color/colorTextLight"
-            android:text="Use"
+            android:text="Details"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            />
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

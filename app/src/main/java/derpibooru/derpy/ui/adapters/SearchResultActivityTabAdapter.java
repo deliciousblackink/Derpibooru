@@ -31,7 +31,7 @@ public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
         mTabs.add(new FragmentAdapterItem(0, "Search Results", fragmentSearchResults));
         mTabs.add(new FragmentAdapterItem(1, "Options", new SearchOptionsTabFragment()));
 
-        /* TODO: the adapter should not hold a reference to the viewpager */
+        /* TODO: an adapter should not hold a reference to the viewpager */
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

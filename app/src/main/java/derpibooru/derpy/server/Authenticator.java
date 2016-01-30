@@ -4,11 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import java.util.HashMap;
 
 import derpibooru.derpy.data.server.DerpibooruLoginForm;
@@ -27,8 +22,8 @@ class Authenticator {
 
     public void attemptLogin(DerpibooruLoginForm form) {
         mSignInForm = form;
-        LoginAuthenticityTokenProvider authTokenProvider =
-                new LoginAuthenticityTokenProvider(mContext, new ProviderRequestHandler() {
+        AuthenticityToken authToken =
+                new AuthenticityToken(mContext, new ProviderRequestHandler() {
                     @Override
                     public void onDataFetched(Object result) {
                         loginWithToken((String) result);
@@ -38,13 +33,13 @@ class Authenticator {
                     public void onDataRequestFailed() {
 
                     }
-                });
-        authTokenProvider.fetch();
+                }, AuthenticityToken.TokenAction.Login);
+        authToken.fetch();
     }
 
     public void attemptLogout() {
-        AuthenticityTokenProvider authTokenProvider =
-                new AuthenticityTokenProvider(mContext, new ProviderRequestHandler() {
+        AuthenticityToken authToken =
+                new AuthenticityToken(mContext, new ProviderRequestHandler() {
                     @Override
                     public void onDataFetched(Object result) {
                         logoutWithToken((String) result);
@@ -54,8 +49,8 @@ class Authenticator {
                     public void onDataRequestFailed() {
 
                     }
-                });
-        authTokenProvider.fetch();
+                }, AuthenticityToken.TokenAction.General);
+        authToken.fetch();
     }
 
     private void loginWithToken(String token) {
@@ -90,39 +85,6 @@ class Authenticator {
         form.put("_method", "delete");
         form.put("authenticity_token", token);
         return form;
-    }
-
-    private class AuthenticityTokenProvider extends Provider {
-        public AuthenticityTokenProvider(Context context,
-                                         ProviderRequestHandler handler) {
-            super(context, handler);
-        }
-
-        @Override
-        protected String generateUrl() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(DERPIBOORU_DOMAIN);
-            return sb.toString();
-        }
-
-        @Override
-        public void fetch() {
-            super.executeQuery(generateUrl(), new AuthenticityTokenParser());
-        }
-    }
-
-    private class AuthenticityTokenParser implements ServerResponseParser {
-        @Override
-        public Object parseResponse(String rawResponse) throws Exception {
-            Document doc = Jsoup.parse(rawResponse);
-            Elements metaHeaders = doc.select("head").first().select("meta");
-            for (Element header : metaHeaders) {
-                if (header.attr("name").equals("csrf-token")) {
-                    return header.attr("content");
-                }
-            }
-            return null;
-        }
     }
 
     private class LoginProvider extends Provider {
@@ -166,20 +128,6 @@ class Authenticator {
                                                     }
                                                 });
             threadHandler.post(requestThread);
-        }
-    }
-
-    private class LoginAuthenticityTokenProvider extends AuthenticityTokenProvider {
-        public LoginAuthenticityTokenProvider(Context context,
-                                         ProviderRequestHandler handler) {
-            super(context, handler);
-        }
-
-        @Override
-        protected String generateUrl() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(DERPIBOORU_DOMAIN).append("users/sign_in/");
-            return sb.toString();
         }
     }
 

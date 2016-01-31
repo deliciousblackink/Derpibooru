@@ -3,8 +3,7 @@ package derpibooru.derpy.data.server;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/* created automatically via
- * http://www.parcelabler.com/ */
+import java.util.List;
 
 public class DerpibooruImageThumb implements Parcelable {
     private int mId;
@@ -16,8 +15,12 @@ public class DerpibooruImageThumb implements Parcelable {
     private String mThumbUrl;
     private String mFullImageUrl;
 
+    private List<String> mSpoileredTagNames;
+    private String mSpoilerImageUrl;
+
     public DerpibooruImageThumb(int id, int score, int upvotes, int downvotes, int faves,
-                                int comments, String thumbUrl, String fullImageUrl) {
+                                int comments, String thumbUrl, String fullImageUrl,
+                                List<String> spoileredTagNames, String spoilerImageUrl) {
         mId = id;
         mScore = score;
         mUpvotes = upvotes;
@@ -26,6 +29,9 @@ public class DerpibooruImageThumb implements Parcelable {
         mCommentCount = comments;
         mThumbUrl = "https:" + thumbUrl;
         mFullImageUrl = "https:" + fullImageUrl;
+
+        mSpoileredTagNames = spoileredTagNames;
+        mSpoilerImageUrl = spoilerImageUrl;
     }
 
     public int getId() {
@@ -60,6 +66,18 @@ public class DerpibooruImageThumb implements Parcelable {
         return mFullImageUrl;
     }
 
+    public boolean isSpoilered() {
+        return (mSpoileredTagNames.size() > 0);
+    }
+
+    public List<String> getSpoileredTagNames() {
+        return mSpoileredTagNames;
+    }
+
+    public String getSpoilerImageUrl() {
+        return mSpoilerImageUrl;
+    }
+
     protected DerpibooruImageThumb(Parcel in) {
         mId = in.readInt();
         mScore = in.readInt();
@@ -69,6 +87,8 @@ public class DerpibooruImageThumb implements Parcelable {
         mCommentCount = in.readInt();
         mThumbUrl = in.readString();
         mFullImageUrl = in.readString();
+        in.readStringList(mSpoileredTagNames);
+        mSpoilerImageUrl = in.readString();
     }
 
     @Override
@@ -86,6 +106,8 @@ public class DerpibooruImageThumb implements Parcelable {
         dest.writeInt(mCommentCount);
         dest.writeString(mThumbUrl);
         dest.writeString(mFullImageUrl);
+        dest.writeStringList(mSpoileredTagNames);
+        dest.writeString(mSpoilerImageUrl);
     }
 
     @SuppressWarnings("unused")

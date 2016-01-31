@@ -2,7 +2,10 @@ package derpibooru.derpy.server;
 
 import android.content.Context;
 
+import java.util.List;
+
 import derpibooru.derpy.data.server.DerpibooruImageListType;
+import derpibooru.derpy.data.server.DerpibooruTagFull;
 import derpibooru.derpy.server.parsers.ImageListParser;
 
 public class ImageListProvider extends Provider {
@@ -78,6 +81,16 @@ public class ImageListProvider extends Provider {
 
     @Override
     public void fetch() {
-        super.executeQuery(generateUrl(), new ImageListParser());
+        Tags t = new Tags(mContext, new Tags.TagRequestHandler() {
+            @Override
+            public void onTagsFetched(List<DerpibooruTagFull> tagList) {
+                fetchImages(tagList);
+            }
+        });
+        t.fetchSpoileredTagsForCurrentFilter();
+    }
+
+    private void fetchImages(List<DerpibooruTagFull> spoileredTags) {
+        super.executeQuery(generateUrl(), new ImageListParser(spoileredTags));
     }
 }

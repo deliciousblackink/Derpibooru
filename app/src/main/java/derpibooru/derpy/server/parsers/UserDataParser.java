@@ -64,7 +64,7 @@ public class UserDataParser implements ServerResponseParser {
         private String getFilterName(Document doc) {
             if (mIsLoggedIn) {
                 return doc.select("form#filter-quick-form").first()
-                        .select("option").first().text();
+                        .select("option[selected]").first().text();
             } else {
                 String filter = doc.select("div.userbox").first()
                         .select("a.hide-mobile").text();

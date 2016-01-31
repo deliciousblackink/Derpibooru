@@ -1,5 +1,7 @@
 package derpibooru.derpy.data.server;
 
+import com.google.common.base.Objects;
+
 public class DerpibooruSearchOptions {
     private SortBy mSortBy = SortBy.CreatedAt;
     private SortDirection mSortDirection = SortDirection.Descending;
@@ -75,16 +77,10 @@ public class DerpibooruSearchOptions {
                     && (this.getUpvotesFilter() == comp.getUpvotesFilter())
                     && (this.getUploadsFilter() == comp.getUploadsFilter())
                     && (this.getWatchedTagsFilter() == comp.getWatchedTagsFilter())
-                    && (bothNullOrEqual(this.getMinScore(), comp.getMinScore()))
-                    && (bothNullOrEqual(this.getMaxScore(), comp.getMaxScore()));
+                    && (Objects.equal(this.getMinScore(), comp.getMinScore()))
+                    && (Objects.equal(this.getMaxScore(), comp.getMaxScore()));
         }
         return super.equals(o);
-    }
-
-    private boolean bothNullOrEqual(Object o1, Object o2) {
-        /* Java's native Objects.equals requires API 19 */
-        return (o1 == null && o2 == null) ||
-                (!(o1 == null || o2 == null)) && o1.equals(o2);
     }
 
     public enum SortBy {

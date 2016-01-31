@@ -86,9 +86,8 @@ public class ImageInfoParser implements ServerResponseParser {
             int tagId = Integer.parseInt(tag.attr("data-tag-id"));
             int tagImgCount = parseNumberOfImagesFromTagText(tag.text());
             String tagName = tag.attr("data-tag-name");
-            DerpibooruTag.TagType tagType = parseTagTypeFromName(tagName);
 
-            imageTags.add(new DerpibooruTag(tagId, tagImgCount, tagName, tagType));
+            imageTags.add(new DerpibooruTag(tagId, tagImgCount, tagName));
         }
         return imageTags;
     }
@@ -112,38 +111,5 @@ public class ImageInfoParser implements ServerResponseParser {
             count = Integer.parseInt(m.group(m.groupCount() - 1));
         }
         return count;
-    }
-
-    private DerpibooruTag.TagType parseTagTypeFromName(String tagName) {
-        /* TODO: add spoiler and OC tags */
-        /* fixed tag names */
-        switch (tagName) {
-            case "anonymous artist":
-                return DerpibooruTag.TagType.Artist;
-            case "artist needed":
-                return DerpibooruTag.TagType.Artist;
-            case "edit":
-                return DerpibooruTag.TagType.Artist;
-            case "explicit":
-                return DerpibooruTag.TagType.ContentSafety;
-            case "grimdark":
-                return DerpibooruTag.TagType.ContentSafety;
-            case "grotesque":
-                return DerpibooruTag.TagType.ContentSafety;
-            case "questionable":
-                return DerpibooruTag.TagType.ContentSafety;
-            case "safe":
-                return DerpibooruTag.TagType.ContentSafety;
-            case "semi-grimdark":
-                return DerpibooruTag.TagType.ContentSafety;
-            case "suggestive":
-                return DerpibooruTag.TagType.ContentSafety;
-        }
-        /* check if the tag name contains "artist:" prefix */
-        if (Pattern.compile("^(artist:)")
-                .matcher(tagName).find()) {
-            return DerpibooruTag.TagType.Artist;
-        }
-        return DerpibooruTag.TagType.General;
     }
 }

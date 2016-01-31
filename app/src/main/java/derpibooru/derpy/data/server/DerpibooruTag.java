@@ -3,8 +3,10 @@ package derpibooru.derpy.data.server;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/* created automatically via
- * http://www.parcelabler.com/ */
+import com.google.common.collect.ImmutableMap;
+
+import java.util.Map;
+import java.util.regex.Pattern;
 
 public class DerpibooruTag implements Parcelable {
     private int mId;
@@ -12,11 +14,11 @@ public class DerpibooruTag implements Parcelable {
     private String mName;
     private TagType mType;
 
-    public DerpibooruTag(int id, int imageCount, String name, TagType type) {
+    public DerpibooruTag(int id, int imageCount, String name) {
         mId = id;
         mImageCount = imageCount;
         mName = name;
-        mType = type;
+        mType = setTagType();
     }
 
     public int getId() {
@@ -92,4 +94,32 @@ public class DerpibooruTag implements Parcelable {
             return mValue;
         }
     }
+
+    private TagType setTagType() {
+        /* TODO: add spoiler and OC tags */
+        if (Pattern.compile("^(artist:)").matcher(mName).find()) {
+            return DerpibooruTag.TagType.Artist;
+        }
+        for (Map.Entry<String, TagType> tag : SYSTEM_TAGS.entrySet()) {
+            if (mName.equals(tag.getKey())) {
+                return tag.getValue();
+            }
+        }
+        return DerpibooruTag.TagType.General;
+    }
+
+    static final Map<String, TagType> SYSTEM_TAGS = ImmutableMap.<String, TagType>builder()
+            /* artist tags */
+            .put("anonymous artist", TagType.Artist)
+            .put("artist needed", TagType.Artist)
+            .put("edit", TagType.Artist)
+             /* content safety tags */
+            .put("explicit", TagType.ContentSafety)
+            .put("grimdark", TagType.ContentSafety)
+            .put("grotesque", TagType.ContentSafety)
+            .put("questionable", TagType.ContentSafety)
+            .put("safe", TagType.ContentSafety)
+            .put("semi-grimdark", TagType.ContentSafety)
+            .put("suggestive", TagType.ContentSafety)
+            .build();
 }

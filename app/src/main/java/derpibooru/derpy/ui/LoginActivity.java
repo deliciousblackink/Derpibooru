@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                 new DerpibooruLoginForm(email, password,
                                         ((CheckBox) findViewById(R.id.checkRememberMe)).isChecked());
 
-        User user = new User(this, new User.UserActionPerformedHandler() {
+        User user = new User(this, new User.UserRequestHandler() {
             @Override
             public void onUserDataObtained(DerpibooruUser userData) {
                 setResult(Activity.RESULT_OK);

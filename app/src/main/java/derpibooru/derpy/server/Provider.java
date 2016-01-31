@@ -8,6 +8,7 @@ import derpibooru.derpy.server.parsers.ServerResponseParser;
 
 abstract class Provider {
     protected static final String DERPIBOORU_DOMAIN = "https://trixiebooru.org/";
+    protected static final String DERPIBOORU_API_ENDPOINT = "/api/v2/";
 
     private ProviderRequestHandler mHandler;
     private Context mContext;

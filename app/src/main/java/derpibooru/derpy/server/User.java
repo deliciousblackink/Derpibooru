@@ -9,7 +9,7 @@ import derpibooru.derpy.server.parsers.UserDataParser;
 import derpibooru.derpy.storage.UserDataStorage;
 
 public class User {
-    private UserActionPerformedHandler mHandler;
+    private UserRequestHandler mHandler;
 
     private UserDataStorage mUserDataStorage;
     private UserDataProvider mUserProvider;
@@ -17,7 +17,7 @@ public class User {
 
     private AuthenticatorAction mCurrentAction;
 
-    public User(Context context, UserActionPerformedHandler handler) {
+    public User(Context context, UserRequestHandler handler) {
         mHandler = handler;
         mAuth = new Authenticator(context, new ProviderRequestHandler() {
             @Override
@@ -58,7 +58,6 @@ public class User {
         mAuth.attemptLogout();
     }
 
-    @Nullable
     public void fetchUserData() {
         DerpibooruUser cached = mUserDataStorage.getUserData();
         if (cached == null) {
@@ -101,7 +100,7 @@ public class User {
         Logout
     }
 
-    public interface UserActionPerformedHandler {
+    public interface UserRequestHandler {
         void onUserDataObtained(DerpibooruUser userData);
         void onFailedLogin();
         void onFailedLogout();

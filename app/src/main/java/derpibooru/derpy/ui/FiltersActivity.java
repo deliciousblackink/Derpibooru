@@ -55,7 +55,7 @@ public class FiltersActivity extends NavigationDrawerActivity {
     }
 
     private void initFilterActions() {
-        mFilterActions = new Filters(this, new Filters.FiltersHandler() {
+        mFilterActions = new Filters(this, new Filters.FiltersRequestHandler() {
             @Override
             public void onAvailableFiltersFetched(ArrayList<DerpibooruFilter> filters) {
                 mAvailableFilterList = filters;

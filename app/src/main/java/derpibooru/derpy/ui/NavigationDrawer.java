@@ -164,7 +164,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    private class UserDataHandler implements User.UserActionPerformedHandler {
+    private class UserDataHandler implements User.UserRequestHandler {
         @Override
         public void onUserDataObtained(DerpibooruUser userData) {
             displayUserData(userData);

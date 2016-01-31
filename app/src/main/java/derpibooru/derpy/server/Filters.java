@@ -14,10 +14,10 @@ import derpibooru.derpy.storage.UserDataStorage;
 
 public class Filters {
     private UserDataStorage mStorage;
-    private FiltersHandler mHandler;
+    private FiltersRequestHandler mHandler;
     private Context mContext;
 
-    public Filters(Context context, FiltersHandler handler) {
+    public Filters(Context context, FiltersRequestHandler handler) {
         mContext = context;
         mHandler = handler;
         mStorage = new UserDataStorage(context);
@@ -86,7 +86,7 @@ public class Filters {
         }
     }
 
-    public interface FiltersHandler {
+    public interface FiltersRequestHandler {
         void onAvailableFiltersFetched(ArrayList<DerpibooruFilter> filters);
         void onFilterChangedSuccessfully();
         void onNetworkError();

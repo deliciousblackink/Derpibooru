@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.common.primitives.Ints;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DerpibooruFilter implements Parcelable {
@@ -13,8 +14,8 @@ public class DerpibooruFilter implements Parcelable {
     private List<Integer> mSpoileredTags;
 
     private String mDescription;
-    private List<String> mHiddenTagNames;
-    private List<String> mSpoileredTagNames;
+    private List<String> mHiddenTagNames = new ArrayList<>();
+    private List<String> mSpoileredTagNames = new ArrayList<>();
     private boolean mSystemFilter;
     private int mUserCount;
 

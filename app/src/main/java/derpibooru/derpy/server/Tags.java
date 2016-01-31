@@ -2,6 +2,8 @@ package derpibooru.derpy.server;
 
 import android.content.Context;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +26,11 @@ public class Tags {
         mTagListProvider = new TagListProvider(context, new ProviderRequestHandler() {
             @Override
             public void onRequestCompleted(Object result) {
-                mHandler.onTagsFetched((List<DerpibooruTagFull>) result);
+                List<DerpibooruTagFull> tags = (List<DerpibooruTagFull>) result;
+                mHandler.onTagsFetched(tags);
+                for (DerpibooruTagFull tag : tags) {
+                    mTagStorage.setTag(tag);
+                }
             }
 
             @Override
@@ -99,12 +105,17 @@ public class Tags {
             StringBuilder sb = new StringBuilder();
             sb.append(DERPIBOORU_DOMAIN);
             sb.append(DERPIBOORU_API_ENDPOINT);
-            sb.append("fetch_many.json?");
+            sb.append("tags/fetch_many.json?");
             for (int tagId : mTagIds) {
-                sb.append("ids[]=");
-                sb.append(tagId);
-                sb.append("&");
+                try {
+                    sb.append(URLEncoder.encode("ids[]", "UTF-8"))
+                            .append("=").append(tagId).append("&");
+                } catch (UnsupportedEncodingException e) {
+                    break;
+                }
             }
+            /* remove & */
+            sb.deleteCharAt(sb.length() - 1);
             return sb.toString();
         }
 

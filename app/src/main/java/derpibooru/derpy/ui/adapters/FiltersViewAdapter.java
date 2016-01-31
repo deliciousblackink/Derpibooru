@@ -46,10 +46,10 @@ public class FiltersViewAdapter extends RecyclerView.Adapter<FiltersViewAdapter.
         if (position == 0) {
             /* show current filter */
             displayFilterInViewHolder(holder, mCurrentFilter);
-            holder.mButtonUse.setVisibility(View.GONE);
+            holder.buttonUse.setVisibility(View.GONE);
         } else {
             displayFilterInViewHolder(holder, mFilters.get(position - 1));
-            holder.mButtonUse.setOnClickListener(new View.OnClickListener() {
+            holder.buttonUse.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mHandler.changeFilterTo(mFilters.get(position - 1));
@@ -59,13 +59,13 @@ public class FiltersViewAdapter extends RecyclerView.Adapter<FiltersViewAdapter.
     }
 
     private void displayFilterInViewHolder(ViewHolder holder, DerpibooruFilter filter) {
-        holder.mTextName.setText(filter.getName());
-        holder.mTextUsedBy.setText(String.format("Used by %d people",
+        holder.textName.setText(filter.getName());
+        holder.textUsedBy.setText(String.format("Used by %d people",
                                                  filter.getUserCount()));
-        holder.mTextStatistics.setText(String.format("Spoilers %d tags and hides %d tags",
+        holder.textStatistics.setText(String.format("Spoilers %d tags and hides %d tags",
                                                      filter.getSpoileredTagNames().size(),
                                                      filter.getHiddenTagNames().size()));
-        holder.mTextDescription.setText(filter.getDescription());
+        holder.textDescription.setText(filter.getDescription());
     }
 
     @Override
@@ -74,23 +74,23 @@ public class FiltersViewAdapter extends RecyclerView.Adapter<FiltersViewAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextName;
-        public TextView mTextUsedBy;
-        public TextView mTextStatistics;
-        public TextView mTextDescription;
+        public TextView textName;
+        public TextView textUsedBy;
+        public TextView textStatistics;
+        public TextView textDescription;
 
-        public AppCompatButton mButtonDetails;
-        public AppCompatButton mButtonUse;
+        public AppCompatButton buttonDetails;
+        public AppCompatButton buttonUse;
 
         public ViewHolder(View v) {
             super(v);
-            mTextName = (TextView) v.findViewById(R.id.textName);
-            mTextUsedBy = (TextView) v.findViewById(R.id.textUsedBy);
-            mTextStatistics = (TextView) v.findViewById(R.id.textStatistics);
-            mTextDescription = (TextView) v.findViewById(R.id.textDescription);
+            textName = (TextView) v.findViewById(R.id.textName);
+            textUsedBy = (TextView) v.findViewById(R.id.textUsedBy);
+            textStatistics = (TextView) v.findViewById(R.id.textStatistics);
+            textDescription = (TextView) v.findViewById(R.id.textDescription);
 
-            mButtonDetails = (AppCompatButton) v.findViewById(R.id.buttonDetails);
-            mButtonUse = (AppCompatButton) v.findViewById(R.id.buttonUse);
+            buttonDetails = (AppCompatButton) v.findViewById(R.id.buttonDetails);
+            buttonUse = (AppCompatButton) v.findViewById(R.id.buttonUse);
         }
     }
 

@@ -3,7 +3,7 @@
                 android:layout_height="150dp">
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/imageView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
@@ -11,20 +11,32 @@
         android:scaleType="fitXY"/>
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/textInfo"
         android:text="placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
-
         android:textColor="@android:color/white"
         android:background="#5f000000"
         android:textAlignment="center"/>
 
+    <TextView
+        android:id="@+id/textSpoiler"
+        android:text="suggestive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:textColor="@android:color/white"
+        android:background="#5f000000"
+        android:textAlignment="center"/>
 </RelativeLayout>

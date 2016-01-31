@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
 
@@ -64,38 +66,53 @@ public class ImageListAdapter extends ArrayAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         ViewHolder holder;
-
         if (view == null) {
             LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
             view = inflater.inflate(mLayoutResourceId, parent, false);
-            holder = new ViewHolder();
-            holder.info = (TextView) view.findViewById(R.id.text);
-            holder.image = (ImageView) view.findViewById(R.id.image);
-
+            holder = new ViewHolder(view);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
-
         holder.data = mImages.get(position);
 
-        /* TODO: load animated GIFs _after_ static images */
-        /* right now, if there's a huge GIF in the beginning of the list,
-         * the user will have to wait ages before everything loads properly. */
-        Glide.with(mContext)
-                .load(holder.data.getThumbUrl())
-                .centerCrop()
-                .crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .into(holder.image);
-
-        holder.info.setText(Integer.toString(holder.data.getScore()));
+        if (holder.data.isSpoilered()) {
+            String spoilers = Joiner.on(", ").skipNulls()
+                    .join(holder.data.getSpoileredTagNames());
+            holder.textSpoiler.setText(spoilers);
+            displayImageWithGlide(holder.data.getSpoilerImageUrl(),
+                                  Priority.NORMAL, holder.imageView);
+        } else {
+            holder.textSpoiler.setVisibility(View.GONE);
+            Priority loadingPriority =
+                    holder.data.getThumbUrl().endsWith(".gif") ? Priority.LOW : Priority.NORMAL;
+            displayImageWithGlide(holder.data.getThumbUrl(),
+                                  loadingPriority, holder.imageView);
+        }
+        holder.textInfo.setText(Integer.toString(holder.data.getScore()));
         return view;
     }
 
+    private void displayImageWithGlide(String url, Priority priority, ImageView target) {
+        Glide.with(mContext)
+                .load(url)
+                .centerCrop()
+                .crossFade()
+                .priority(priority)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .into(target);
+    }
+
     public static class ViewHolder {
-        public TextView info;
-        public ImageView image;
-        public DerpibooruImageThumb data; /* to be passed to ImageActivity upon opening the image */
+        public TextView textInfo;
+        public TextView textSpoiler;
+        public ImageView imageView;
+        public DerpibooruImageThumb data;
+
+        public ViewHolder(View v) {
+            textInfo = (TextView) v.findViewById(R.id.textInfo);
+            textSpoiler = (TextView) v.findViewById(R.id.textSpoiler);
+            imageView = (ImageView) v.findViewById(R.id.imageView);
+        }
     }
 }

@@ -3,6 +3,7 @@ package derpibooru.derpy.data.server;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DerpibooruImageThumb implements Parcelable {
@@ -15,7 +16,7 @@ public class DerpibooruImageThumb implements Parcelable {
     private String mThumbUrl;
     private String mFullImageUrl;
 
-    private List<String> mSpoileredTagNames;
+    private List<String> mSpoileredTagNames = new ArrayList<>();
     private String mSpoilerImageUrl;
 
     public DerpibooruImageThumb(int id, int score, int upvotes, int downvotes, int faves,

@@ -7,7 +7,7 @@ import java.net.URLEncoder;
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 import derpibooru.derpy.server.parsers.ImageListParser;
 
-public class SearchProvider extends Provider {
+public class SearchProvider extends ImageListProvider {
     private String mSearchQuery;
     private DerpibooruSearchOptions mSearchOptions;
 
@@ -44,14 +44,6 @@ public class SearchProvider extends Provider {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    @Override
-    public void fetch() {
-        /* a search query yields a JSON reponse that has the
-         * same structure as that of an image list, hence
-         * ImageListParser is used. */
-        super.executeQuery(generateUrl(), new ImageListParser());
     }
 
     private String sortByParams() {

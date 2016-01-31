@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
  * Performs bottom bar extension/compression animation by
  * changing the layout weight of the container located above
  * the bar.
- *
+ * <p/>
  * This approach prevents the bar from overlapping other layout
  * elements. It does not work inside scrollable views as it
  * assumes the full layout of the bar to be hidden beneath the screen.

@@ -10,11 +10,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 class AsynchronousPostRequest extends AsynchronousRequest {
-    private  HashMap<String, String> mPostFormData;
+    private HashMap<String, String> mPostFormData;
 
     public AsynchronousPostRequest(Context context,
-                               String url, HashMap<String, String> postFormItems,
-                               RequestHandler requestHandler) {
+                                   String url, HashMap<String, String> postFormItems,
+                                   RequestHandler requestHandler) {
         super(context, null, url, requestHandler);
         mPostFormData = postFormItems;
     }

@@ -5,7 +5,6 @@ import android.app.Application;
 import java.util.List;
 
 import derpibooru.derpy.storage.CookieStrorage;
-
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;

@@ -89,7 +89,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
                 break;
             case (R.id.navigationLogin):
                 mParent.startActivityForResult(new Intent(mParent, LoginActivity.class),
-                                                 ACTIVITY_LOGIN_REQUEST_CODE);
+                                               ACTIVITY_LOGIN_REQUEST_CODE);
                 mNavigationView.getMenu()
                         .findItem(mParentNavigationId).setChecked(false);
                 break;

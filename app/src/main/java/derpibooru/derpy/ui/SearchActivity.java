@@ -1,9 +1,7 @@
 package derpibooru.derpy.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import derpibooru.derpy.R;

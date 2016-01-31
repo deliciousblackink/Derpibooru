@@ -91,27 +91,26 @@ public class LoginActivity extends AppCompatActivity {
                 new DerpibooruLoginForm(email, password,
                                         ((CheckBox) findViewById(R.id.checkRememberMe)).isChecked());
 
-        User user = new User(this, new User.UserRequestHandler() {
+        User user = new User(this,
+        new User.UserRequestHandler() {
             @Override
             public void onUserDataObtained(DerpibooruUser userData) {
                 setResult(Activity.RESULT_OK);
                 finish();
             }
-
-            @Override
-            public void onFailedLogin() {
-                hideProgressBar();
-                showSnackbar("Invalid e-mail or password");
-            }
-
             @Override
             public void onNetworkError() {
+            }
+        }, new User.AuthenticationRequestHandler() {
+            @Override
+            public void onFailedLogin() {
                 hideProgressBar();
                 showSnackbar("An error occurred, please try again later");
             }
 
             @Override
-            public void onFailedLogout() { }
+            public void onFailedLogout() {
+            }
         });
         user.login(form);
         showProgressBar();

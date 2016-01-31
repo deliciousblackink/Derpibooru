@@ -25,12 +25,12 @@ class Authenticator {
         AuthenticityToken authToken =
                 new AuthenticityToken(mContext, new ProviderRequestHandler() {
                     @Override
-                    public void onDataFetched(Object result) {
+                    public void onRequestCompleted(Object result) {
                         loginWithToken((String) result);
                     }
 
                     @Override
-                    public void onDataRequestFailed() {
+                    public void onRequestFailed() {
 
                     }
                 }, AuthenticityToken.TokenAction.Login);
@@ -41,12 +41,12 @@ class Authenticator {
         AuthenticityToken authToken =
                 new AuthenticityToken(mContext, new ProviderRequestHandler() {
                     @Override
-                    public void onDataFetched(Object result) {
+                    public void onRequestCompleted(Object result) {
                         logoutWithToken((String) result);
                     }
 
                     @Override
-                    public void onDataRequestFailed() {
+                    public void onRequestFailed() {
 
                     }
                 }, AuthenticityToken.TokenAction.General);

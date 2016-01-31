@@ -11,7 +11,8 @@ abstract class Provider {
     protected static final String DERPIBOORU_API_ENDPOINT = "/api/v2/";
 
     private ProviderRequestHandler mHandler;
-    private Context mContext;
+
+    protected Context mContext;
 
     public Provider(Context context, ProviderRequestHandler handler) {
         mContext = context;
@@ -56,9 +57,9 @@ abstract class Provider {
         @Override
         public void run() {
             if (mMessage != null) {
-                mHandler.onDataFetched(mMessage);
+                mHandler.onRequestCompleted(mMessage);
             } else {
-                mHandler.onDataRequestFailed();
+                mHandler.onRequestFailed();
             }
         }
     }

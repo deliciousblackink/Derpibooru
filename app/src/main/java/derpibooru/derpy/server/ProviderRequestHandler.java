@@ -6,10 +6,10 @@ public interface ProviderRequestHandler {
      *
      * @param result requested object
      */
-    void onDataFetched(Object result);
+    void onRequestCompleted(Object result);
 
     /**
      * Failed Derpibooru request.
      */
-    void onDataRequestFailed();
+    void onRequestFailed();
 }

@@ -31,12 +31,12 @@ public class Filters {
     public void fetchAvailableFilters() {
         FilterListProvider flp = new FilterListProvider(mContext, new ProviderRequestHandler() {
             @Override
-            public void onDataFetched(Object result) {
+            public void onRequestCompleted(Object result) {
                 mHandler.onAvailableFiltersFetched((ArrayList<DerpibooruFilter>) result);
             }
 
             @Override
-            public void onDataRequestFailed() { }
+            public void onRequestFailed() { }
         });
         flp.fetch();
     }
@@ -45,12 +45,12 @@ public class Filters {
         AuthenticityToken authToken =
                 new AuthenticityToken(mContext, new ProviderRequestHandler() {
                     @Override
-                    public void onDataFetched(Object result) {
+                    public void onRequestCompleted(Object result) {
                         requestFilterChange((String) result, newFilter);
                     }
 
                     @Override
-                    public void onDataRequestFailed() {
+                    public void onRequestFailed() {
 
                     }
                 }, AuthenticityToken.TokenAction.ChangeFilter);
@@ -63,13 +63,13 @@ public class Filters {
         form.put("authenticity_token", token);
         FilterChangeProvider provider = new FilterChangeProvider(mContext, new ProviderRequestHandler() {
             @Override
-            public void onDataFetched(Object result) {
+            public void onRequestCompleted(Object result) {
                 mStorage.setCurrentFilter(newFilter);
                 onFilterChangeResponseReceived((boolean) result);
             }
 
             @Override
-            public void onDataRequestFailed() {
+            public void onRequestFailed() {
                 mHandler.onNetworkError();
             }
         }, form, newFilter.getId());

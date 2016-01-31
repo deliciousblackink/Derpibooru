@@ -45,7 +45,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
 
         initDrawerToggle(parent, toolbar, drawer, menu);
 
-        mUser = new User(parent, new UserDataHandler());
+        mUser = new User(parent, new UserHandler(), new AuthenticationHandler());
         mUser.fetchUserData();
     }
 
@@ -164,19 +164,22 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    private class UserDataHandler implements User.UserRequestHandler {
+    private class UserHandler implements User.UserRequestHandler {
         @Override
         public void onUserDataObtained(DerpibooruUser userData) {
             displayUserData(userData);
         }
 
         @Override
+        public void onNetworkError() { }
+    }
+
+    private class AuthenticationHandler implements User.AuthenticationRequestHandler {
+        @Override
         public void onFailedLogin() { }
 
         @Override
         public void onFailedLogout() { }
 
-        @Override
-        public void onNetworkError() { }
     }
 }

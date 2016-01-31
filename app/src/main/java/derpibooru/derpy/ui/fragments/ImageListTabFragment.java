@@ -68,12 +68,12 @@ public class ImageListTabFragment extends Fragment
     }
 
     @Override
-    public void onDataRequestFailed() {
+    public void onRequestFailed() {
         /* TODO: display error message */
     }
 
     @Override
-    public void onDataFetched(Object imageList) {
+    public void onRequestCompleted(Object imageList) {
         fetchImages((ArrayList<DerpibooruImageThumb>) imageList);
     }
 }

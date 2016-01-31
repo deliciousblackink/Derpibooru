@@ -76,13 +76,13 @@ public class ImageActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDataFetched(Object image) {
+    public void onRequestCompleted(Object image) {
         ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
                 .setTabInfo((DerpibooruImageInfo) image);
     }
 
     @Override
-    public void onDataRequestFailed() {
+    public void onRequestFailed() {
 
     }
 

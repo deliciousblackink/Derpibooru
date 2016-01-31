@@ -10,35 +10,46 @@ import derpibooru.derpy.storage.UserDataStorage;
 
 public class User {
     private UserRequestHandler mHandler;
-
     private UserDataStorage mUserDataStorage;
     private UserDataProvider mUserProvider;
     private Authenticator mAuth;
 
     private AuthenticatorAction mCurrentAction;
+    private AuthenticationRequestHandler mAuthHandler;
 
     public User(Context context, UserRequestHandler handler) {
         mHandler = handler;
+        initUserProvider(context);
+    }
+
+    public User(Context context, UserRequestHandler handler,
+                AuthenticationRequestHandler authHandler) {
+        mHandler = handler;
+        mAuthHandler = authHandler;
         mAuth = new Authenticator(context, new ProviderRequestHandler() {
             @Override
-            public void onDataFetched(Object result) {
+            public void onRequestCompleted(Object result) {
                 onAuthenticatorResponseReceived((boolean) result);
             }
 
             @Override
-            public void onDataRequestFailed() {
+            public void onRequestFailed() {
                 mHandler.onNetworkError();
             }
         });
+        initUserProvider(context);
+    }
+
+    private void initUserProvider(Context context) {
         mUserDataStorage = new UserDataStorage(context);
         mUserProvider = new UserDataProvider(context, new ProviderRequestHandler() {
             @Override
-            public void onDataFetched(Object result) {
+            public void onRequestCompleted(Object result) {
                 onUserDataFetched((DerpibooruUser) result);
             }
 
             @Override
-            public void onDataRequestFailed() {
+            public void onRequestFailed() {
                 mHandler.onNetworkError();
             }
         });
@@ -49,13 +60,17 @@ public class User {
     }
 
     public void login(DerpibooruLoginForm form) {
-        mCurrentAction = AuthenticatorAction.Login;
-        mAuth.attemptLogin(form);
+        if (mAuthHandler != null) {
+            mCurrentAction = AuthenticatorAction.Login;
+            mAuth.attemptLogin(form);
+        }
     }
 
     public void logout() {
-        mCurrentAction = AuthenticatorAction.Logout;
-        mAuth.attemptLogout();
+        if (mAuthHandler != null) {
+            mCurrentAction = AuthenticatorAction.Logout;
+            mAuth.attemptLogout();
+        }
     }
 
     public void fetchUserData() {
@@ -77,14 +92,14 @@ public class User {
                 if (result) {
                     mUserProvider.fetch();
                 } else {
-                    mHandler.onFailedLogin();
+                    mAuthHandler.onFailedLogin();
                 }
                 break;
             case Logout:
                 if (result) {
                     mUserProvider.fetch();
                 } else {
-                    mHandler.onFailedLogout();
+                    mAuthHandler.onFailedLogout();
                 }
                 break;
         }
@@ -102,9 +117,12 @@ public class User {
 
     public interface UserRequestHandler {
         void onUserDataObtained(DerpibooruUser userData);
+        void onNetworkError();
+    }
+
+    public interface AuthenticationRequestHandler {
         void onFailedLogin();
         void onFailedLogout();
-        void onNetworkError();
     }
 
     private class UserDataProvider extends Provider {

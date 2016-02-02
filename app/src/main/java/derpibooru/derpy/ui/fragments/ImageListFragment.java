@@ -76,24 +76,6 @@ public abstract class ImageListFragment extends Fragment {
         } else {
             mImageListAdapter.appendImageThumbs(imageThumbs);
         }
-
-        /*try {
-            GridView gv = (GridView) getView().findViewById(R.id.imageGrid);
-            mImageAdapter = new ImageListAdapter(getActivity(), imageThumbs);
-            gv.setAdapter(mImageAdapter);
-
-            gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View v,
-                                        int position, long id) {
-                    Intent intent = new Intent(getActivity(), ImageActivity.class);
-                    intent.putExtra("image_thumb", ((mImageAdapter.ViewHolder) v.getTag()).data);
-                    startActivity(intent);
-                }
-            });
-        } catch (NullPointerException e) {
-            Log.e("ImageListTabFragment", "parent layout is null");
-        }*/
     }
 
     /**

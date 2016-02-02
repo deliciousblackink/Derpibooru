@@ -1,6 +1,7 @@
 package derpibooru.derpy.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
+import derpibooru.derpy.ui.ImageActivity;
 
 public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ViewHolder> {
     private Context mContext;
@@ -43,7 +45,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.data = mImages.get(position);
 
         if (holder.data.isSpoilered()) {
@@ -59,7 +61,15 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
             displayImageWithGlide(holder.data.getThumbUrl(),
                                   loadingPriority, holder.imageView);
         }
-        holder.textInfo.setText(Integer.toString(holder.data.getScore()));
+        holder.textInfo.setText(String.format("%d", holder.data.getScore()));
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ImageActivity.class);
+                intent.putExtra("image_thumb", holder.data);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     private void displayImageWithGlide(String url, Priority priority, ImageView target) {

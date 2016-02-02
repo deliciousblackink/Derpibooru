@@ -5,7 +5,6 @@ import android.content.Context;
 import java.net.URLEncoder;
 
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
-import derpibooru.derpy.server.parsers.ImageListParser;
 
 public class SearchProvider extends ImageListProvider {
     private String mSearchQuery;
@@ -25,6 +24,11 @@ public class SearchProvider extends ImageListProvider {
         return this;
     }
 
+    public SearchProvider startingFromFirstPage() {
+        super.resetPageNumber();
+        return this;
+    }
+
     @Override
     protected String generateUrl() {
         try {
@@ -40,6 +44,10 @@ public class SearchProvider extends ImageListProvider {
                     .append("&watched=").append(filterParams(mSearchOptions.getWatchedTagsFilter()))
                     .append("&min_score=").append(scoreFilterParams(mSearchOptions.getMinScore()))
                     .append("&max_score=").append(scoreFilterParams(mSearchOptions.getMaxScore()));
+            sb.append("&perpage=");
+            sb.append(IMAGES_PER_PAGE);
+            sb.append("&page=");
+            sb.append(super.getCurrentPage());
             return sb.toString();
         } catch (Exception e) {
             return null;

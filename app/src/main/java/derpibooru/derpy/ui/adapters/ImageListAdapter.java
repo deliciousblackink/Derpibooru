@@ -1,11 +1,10 @@
 package derpibooru.derpy.ui.adapters;
 
-import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,61 +18,32 @@ import java.util.ArrayList;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 
-/**
- * Asynchronously downloads images/animated GIFs and places them into a
- * custom ViewHolder defined by the 'view_image_list_item.xml' layout.
- */
-public class ImageListAdapter extends ArrayAdapter {
+public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ViewHolder> {
     private Context mContext;
-    private int mLayoutResourceId;
     private ArrayList<DerpibooruImageThumb> mImages;
 
     public ImageListAdapter(Context context, ArrayList<DerpibooruImageThumb> images) {
-        super(context, R.layout.view_image_list_item);
-        mLayoutResourceId = R.layout.view_image_list_item;
-
-        this.mContext = context;
-        this.mImages = images;
-    }
-
-    /**
-     * Stops any active downloads.
-     */
-    public void stop() {
-        /* FIXME: a bug without an obvious solution */
-        /* (related only to the search functionality)
-         *
-         * afaik right now Glide does not provide a direct way of
-         * stopping the active requests. unfortunately, those remain
-         * in case the user has changed the search options before
-         * the previous set of images has been fully downloaded.
-         *
-         * it should not leave a noticeable impact on the memory usage
-         * since the unused objects get GC'ed quickly & Glide cleans up
-         * after itself when the activity finishes.
-         *
-         * however, it does produce a lot of unnecessary traffic, bad
-         * both for the server & the client.
-         */
+        mContext = context;
+        mImages = images;
     }
 
     @Override
-    public int getCount() {
-        return mImages.size();
+    public ImageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                            int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.view_image_list_item, parent, false);
+        return new ViewHolder(v);
+    }
+
+    public void appendImageThumbs(ArrayList<DerpibooruImageThumb> newImages) {
+        int oldImageCount = mImages.size();
+        mImages.addAll(newImages);
+        int newImageCount = mImages.size() - 1;
+        super.notifyItemRangeChanged(oldImageCount, newImageCount);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View view = convertView;
-        ViewHolder holder;
-        if (view == null) {
-            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-            view = inflater.inflate(mLayoutResourceId, parent, false);
-            holder = new ViewHolder(view);
-            view.setTag(holder);
-        } else {
-            holder = (ViewHolder) view.getTag();
-        }
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.data = mImages.get(position);
 
         if (holder.data.isSpoilered()) {
@@ -90,26 +60,30 @@ public class ImageListAdapter extends ArrayAdapter {
                                   loadingPriority, holder.imageView);
         }
         holder.textInfo.setText(Integer.toString(holder.data.getScore()));
-        return view;
     }
 
     private void displayImageWithGlide(String url, Priority priority, ImageView target) {
-        Glide.with(mContext)
-                .load(url)
-                .centerCrop()
-                .crossFade()
+        Glide.with(mContext).load(url)
+                .centerCrop().crossFade()
                 .priority(priority)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                /* the image is going to be resized due to orientation changes */
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(target);
     }
 
-    public static class ViewHolder {
+    @Override
+    public int getItemCount() {
+        return mImages.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textInfo;
         public TextView textSpoiler;
         public ImageView imageView;
         public DerpibooruImageThumb data;
 
         public ViewHolder(View v) {
+            super(v);
             textInfo = (TextView) v.findViewById(R.id.textInfo);
             textSpoiler = (TextView) v.findViewById(R.id.textSpoiler);
             imageView = (ImageView) v.findViewById(R.id.imageView);

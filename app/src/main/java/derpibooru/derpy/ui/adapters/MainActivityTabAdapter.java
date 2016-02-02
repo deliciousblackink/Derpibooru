@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.data.internal.FragmentAdapterItem;
 import derpibooru.derpy.data.server.DerpibooruImageListType;
-import derpibooru.derpy.ui.fragments.ImageListTabFragment;
+import derpibooru.derpy.ui.fragments.RankingsTabFragment;
 
 public class MainActivityTabAdapter extends FragmentPagerAdapter {
     private ArrayList<FragmentAdapterItem> mTabs;
@@ -19,12 +19,13 @@ public class MainActivityTabAdapter extends FragmentPagerAdapter {
 
         mTabs = new ArrayList<>();
 
-        ImageListTabFragment fragmentTopScoring = new ImageListTabFragment();
+        /* TODO: do not initialize the tabs right away! */
+        RankingsTabFragment fragmentTopScoring = new RankingsTabFragment();
         Bundle args = new Bundle();
         args.putInt("type", DerpibooruImageListType.TopScoring.convertToValue());
         fragmentTopScoring.setArguments(args);
 
-        ImageListTabFragment fragmentMostCommented = new ImageListTabFragment();
+        RankingsTabFragment fragmentMostCommented = new RankingsTabFragment();
         args = new Bundle();
         args.putInt("type", DerpibooruImageListType.MostCommented.convertToValue());
         fragmentMostCommented.setArguments(args);

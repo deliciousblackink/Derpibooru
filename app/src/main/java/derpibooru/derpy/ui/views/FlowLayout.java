@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import derpibooru.derpy.R;
 
 /**
- * @see <a href="http://stackoverflow.com/a/4474533/1726690">stackoverflow.com/a/4474533/1726690</a>
+ * @author http://stackoverflow.com/a/4474533/1726690
  */
 public class FlowLayout extends ViewGroup {
     private int mHorizontalSpacing;

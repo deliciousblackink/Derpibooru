@@ -78,10 +78,15 @@ public class FiltersActivity extends NavigationDrawerActivity {
     private void displayFilters() {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         FiltersViewAdapter fva = new FiltersViewAdapter(mFilterActions.getCurrentFilter(), mAvailableFilterList,
-                                                        new FiltersViewAdapter.OnFilterSelectedHandler() {
+                                                        new FiltersViewAdapter.FiltersViewHandler() {
             @Override
             public void changeFilterTo(DerpibooruFilter newFilter) {
                 setCurrentFilter(newFilter);
+            }
+
+            @Override
+            public void refreshUserInformation() {
+                refreshUserData();
             }
         });
 

@@ -1,7 +1,7 @@
 <!-- TODO: Optimize (simplify) the layout -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
-             android:layout_height="56dp"
+             android:layout_height="?attr/actionBarSize"
              android:background="@color/colorImageToolbar">
 
     <LinearLayout
@@ -18,18 +18,14 @@
             android:clickable="true"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
-            android:padding="0dp"
             android:background="@drawable/selector_toolbar_button">
 
             <ImageView
                 android:id="@+id/imgUpvote"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_thumb_up_white_24dp"
-                android:scaleType="fitCenter"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:background="@drawable/selector_toolbar_button"/>
 
             <TextView
@@ -38,11 +34,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="2800"
-                android:scaleType="fitCenter"
-                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
                 android:textColor="@color/colorTextLight"
-                android:textSize="16sp"
-                android:paddingTop="1dp"
+                android:gravity="center_vertical"
                 android:background="@drawable/selector_toolbar_button"
                 android:paddingLeft="5dp"/>
         </LinearLayout>
@@ -51,15 +45,12 @@
             android:id="@+id/textScore"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:padding="0dp"
             android:layout_height="match_parent"
             android:text="1766"
-            android:background="@color/colorImageToolbar"
-            android:scaleType="fitCenter"
-            android:gravity="center_vertical|center_horizontal"
+            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
             android:textColor="@color/colorTextLight"
-            android:textSize="30sp"
-            android:paddingTop="1dp"/>
+            android:background="@color/colorImageToolbar"
+            android:gravity="center_vertical|center_horizontal"/>
 
         <LinearLayout
             android:id="@+id/buttonDownvote"
@@ -69,18 +60,14 @@
             android:clickable="true"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
-            android:padding="0dp"
             android:background="@drawable/selector_toolbar_button">
 
             <ImageView
                 android:id="@+id/imgDownvote"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_thumb_down_white_24dp"
-                android:scaleType="fitCenter"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:background="@drawable/selector_toolbar_button"/>
 
             <TextView
@@ -89,11 +76,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="1034"
-                android:scaleType="fitCenter"
-                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
                 android:textColor="@color/colorTextLight"
-                android:textSize="16sp"
-                android:paddingTop="1dp"
+                android:gravity="center_vertical"
                 android:background="@drawable/selector_toolbar_button"
                 android:paddingLeft="5dp"/>
         </LinearLayout>

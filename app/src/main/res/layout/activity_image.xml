@@ -31,13 +31,13 @@
     <derpibooru.derpy.ui.views.ImageTopBarView
         android:id="@+id/imageTopBar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="?attr/actionBarSize"
         android:layout_below="@id/toolbarLayout"/>
     <derpibooru.derpy.ui.views.ImageBottomBarView
         android:clickable="true"
         android:id="@+id/imageBottomBar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"/>
     <ProgressBar

@@ -70,9 +70,18 @@ public class ImageActivity extends AppCompatActivity {
         ((ImageTopBarView) findViewById(R.id.imageTopBar))
                 .setInfo(thumb.getUpvotes(), thumb.getDownvotes(), thumb.getScore());
 
-        ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
-                .setFragmentManager(getSupportFragmentManager())
-                .setBasicInfo(thumb.getFaves(), thumb.getCommentCount());
+        final ImageBottomBarView bottomBar = ((ImageBottomBarView) findViewById(R.id.imageBottomBar));
+        bottomBar.setFragmentManager(getSupportFragmentManager())
+                .setBasicInfo(thumb.getFaves(), thumb.getCommentCount())
+                .post(new Runnable() {
+                    @Override
+                    public void run() {
+                         int bottomBarMaximumHeightWhenExtended = findViewById(R.id.imageView).getMeasuredHeight()
+                                 - (findViewById(R.id.toolbarLayout).getMeasuredHeight()
+                                 + findViewById(R.id.imageTopBar).getMeasuredHeight());
+                         bottomBar.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
+                     }
+                 });
     }
 
     private void loadImageWithGlide(String url) {

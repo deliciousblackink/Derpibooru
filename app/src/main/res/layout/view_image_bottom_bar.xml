@@ -3,7 +3,8 @@
               android:id="@+id/bottomBarLayout"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:background="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,16 +21,14 @@
             android:clickable="true"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
-            android:padding="0dp"
             android:background="@drawable/selector_toolbar_button">
 
             <TextView
                 android:layout_gravity="center_vertical"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="i"
                 android:background="@drawable/selector_toolbar_button"
-                android:scaleType="fitCenter"
                 android:gravity="center_vertical|center_horizontal"
                 android:textColor="@color/colorTextLight"
                 android:textSize="24sp"
@@ -44,19 +43,16 @@
             android:clickable="true"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
-            android:padding="0dp"
             android:background="@drawable/selector_toolbar_button">
 
             <ImageView
                 android:id="@+id/imgFave"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_star_white_24dp"
                 android:background="@drawable/selector_toolbar_button"
-                android:scaleType="fitCenter"
-                android:paddingTop="10dp"
-                android:paddingBottom="12dp"/>
+                android:layout_marginBottom="1dp"/>
 
             <TextView
                 android:id="@+id/textFaves"
@@ -64,12 +60,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="1400"
-                android:background="@drawable/selector_toolbar_button"
-                android:scaleType="fitCenter"
-                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
                 android:textColor="@color/colorTextLight"
-                android:textSize="16sp"
-                android:paddingTop="1dp"
+                android:background="@drawable/selector_toolbar_button"
+                android:gravity="center_vertical"
                 android:paddingLeft="5dp"/>
         </LinearLayout>
 
@@ -86,14 +80,11 @@
 
             <ImageView
                 android:id="@+id/imgComments"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_comment_white_24dp"
-                android:background="@drawable/selector_toolbar_button"
-                android:scaleType="fitCenter"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"/>
+                android:background="@drawable/selector_toolbar_button"/>
 
             <TextView
                 android:id="@+id/textComments"
@@ -101,12 +92,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="1400"
-                android:background="@drawable/selector_toolbar_button"
-                android:scaleType="fitCenter"
-                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
                 android:textColor="@color/colorTextLight"
-                android:textSize="16sp"
-                android:paddingTop="1dp"
+                android:background="@drawable/selector_toolbar_button"
+                android:gravity="center_vertical"
                 android:paddingLeft="5dp"/>
         </LinearLayout>
     </LinearLayout>

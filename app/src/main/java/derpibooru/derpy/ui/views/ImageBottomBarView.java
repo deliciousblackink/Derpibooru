@@ -21,9 +21,9 @@ public class ImageBottomBarView extends FrameLayout {
             R.id.buttonFaves,
             R.id.buttonComments };
 
-    private ViewPager mPager;
-    private FragmentManager mFragmentManager;
     private ImageBottomBarAnimator mAnimator;
+    private FragmentManager mFragmentManager;
+    private ViewPager mPager;
     private boolean mIsExtended = false;
 
     public ImageBottomBarView(Context context) {
@@ -43,17 +43,23 @@ public class ImageBottomBarView extends FrameLayout {
         return this;
     }
 
-    public ImageBottomBarView setViewAbove(View v) {
-        mAnimator = new ImageBottomBarAnimator(v);
+    /**
+     * Defines the behavior of bottom bar when it is extended.
+     * @param maximumExtensionHeight total height of an extended bottom bar (including the header buttons)
+     * @return
+     */
+    public ImageBottomBarView setBarExtensionAttrs(int maximumExtensionHeight) {
+        mAnimator = new ImageBottomBarAnimator(this, maximumExtensionHeight);
         return this;
     }
 
-    public void setBasicInfo(int faves, int comments) {
+    public ImageBottomBarView setBasicInfo(int faves, int comments) {
         init();
         TextView d = (TextView) this.findViewById(R.id.textFaves);
         d.setText(Integer.toString(faves));
         TextView u = (TextView) this.findViewById(R.id.textComments);
         u.setText(Integer.toString(comments));
+        return this;
     }
 
     public void setTabInfo(DerpibooruImageInfo info) {

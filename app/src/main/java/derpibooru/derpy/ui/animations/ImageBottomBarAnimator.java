@@ -1,58 +1,51 @@
 package derpibooru.derpy.ui.animations;
 
+import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 
 /**
- * Performs bottom bar extension/compression animation by
- * changing the layout weight of the container located above
- * the bar.
- * <p/>
- * This approach prevents the bar from overlapping other layout
- * elements. It does not work inside scrollable views as it
- * assumes the full layout of the bar to be hidden beneath the screen.
+ * Performs bottom bar extension/compression animation.
  */
 public class ImageBottomBarAnimator {
     private static final long ANIMATION_DURATION = 200;
-    private static final float IMAGE_VIEW_EXTENDED_LAYOUT_WEIGHT = 4.0f;
-    private static final float IMAGE_VIEW_COMPRESSED_LAYOUT_WEIGHT = 2.0f;
 
-    private View mTopView;
+    private final int mDefaultExtendedHeight;
+    private int mMaximumHeight;
+    private int mCompressedHeight;
+    private View mBottomBar;
 
-    /**
-     * @param topView the View located above the bar
-     */
-    public ImageBottomBarAnimator(View topView) {
-        mTopView = topView;
+    public ImageBottomBarAnimator(View bottomBar, int maximumHeight) {
+        mDefaultExtendedHeight = maximumHeight / 2;
+        mMaximumHeight = maximumHeight;
+        mCompressedHeight = bottomBar.getMeasuredHeight();
+        mBottomBar = bottomBar;
     }
 
-    /**
-     * Frees layout space for the bar by compressing
-     * the View located above it.
-     */
     public void animateBottomBarExtension() {
-        new LayoutWeightAnimation(mTopView)
-                .from(IMAGE_VIEW_EXTENDED_LAYOUT_WEIGHT)
-                .to(IMAGE_VIEW_COMPRESSED_LAYOUT_WEIGHT)
-                .during(ANIMATION_DURATION)
-                .run();
+        animateHeightChange(mCompressedHeight, mDefaultExtendedHeight);
     }
 
-    /**
-     * Hides the bar by extending the View above it.
-     */
     public void animateBottomBarCompression() {
-        new LayoutWeightAnimation(mTopView)
-                .from(IMAGE_VIEW_COMPRESSED_LAYOUT_WEIGHT)
-                .to(IMAGE_VIEW_EXTENDED_LAYOUT_WEIGHT)
-                .during(ANIMATION_DURATION)
-                .run();
+        animateHeightChange(mDefaultExtendedHeight, mCompressedHeight);
+    }
+
+    private void animateHeightChange(int startHeight, int targetHeight) {
+        ValueAnimator va = ValueAnimator.ofInt(startHeight, targetHeight);
+        va.setDuration(ANIMATION_DURATION);
+        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mBottomBar.getLayoutParams().height =
+                        (Integer) animation.getAnimatedValue();
+                mBottomBar.requestLayout();
+            }
+        });
+        va.start();
     }
 
     private class LayoutWeightAnimation extends Animation {
-        /* http://stackoverflow.com/questions/18024591/change-the-weight-of-layout-with-an-animation */
         private float mStartWeight;
         private float mDeltaWeight;
 

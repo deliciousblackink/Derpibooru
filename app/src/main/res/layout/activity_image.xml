@@ -1,44 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              tools:context="derpibooru.derpy.ui.ImageActivity"
-              android:weightSum="4">
-
-    <derpibooru.derpy.ui.views.ImageTopBarView
-        android:id="@+id/imageInfo"
+              android:animateLayoutChanges="true"
+              tools:context="derpibooru.derpy.ui.ImageActivity">
+    <!-- it is important for ImageView to be the first child, otherwise
+    other views do not receive onClick events (even despite the
+    "clickable=true" attribute set -->
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="56dp"/>
-
-    <RelativeLayout
-        android:id="@+id/imageViewLayout"
+        android:layout_height="match_parent"
+        android:clickable="true"/>
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4">
-
-        <ImageView
-            android:id="@+id/imageView"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:clickable="true">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <ProgressBar
-            android:id="@+id/imageProgress"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="visible"/>
-    </RelativeLayout>
-
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:navigationIcon="?homeAsUpIndicator"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+    </android.support.design.widget.AppBarLayout>
+    <derpibooru.derpy.ui.views.ImageTopBarView
+        android:id="@+id/imageTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@id/toolbarLayout"/>
     <derpibooru.derpy.ui.views.ImageBottomBarView
+        android:clickable="true"
         android:id="@+id/imageBottomBar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_weight="2"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentRight="false"
-        android:layout_alignParentLeft="false"
+        android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"/>
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressImage"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"/>
+</RelativeLayout>

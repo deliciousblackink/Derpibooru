@@ -1,9 +1,10 @@
 package derpibooru.derpy.ui;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -21,9 +22,10 @@ import derpibooru.derpy.server.ProviderRequestHandler;
 import derpibooru.derpy.server.ImageInfoProvider;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
 import derpibooru.derpy.ui.views.ImageTopBarView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class ImageActivity extends AppCompatActivity
-                           implements ProviderRequestHandler {
+public class ImageActivity extends AppCompatActivity {
+    private PhotoViewAttacher mImageViewZoomAttacher;
 
     /* TODO: should be a singleTop activity
      * http://developer.android.com/reference/android/app/Activity.html#onNewIntent(android.content.Intent)
@@ -33,33 +35,53 @@ public class ImageActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Toolbar toolbar = ((Toolbar) findViewById(R.id.toolbar));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         DerpibooruImageThumb thumb = getIntent().getParcelableExtra("image_thumb");
-        setBasicImageInfo(thumb);
+        setImageScoreFavesCommentCount(thumb, toolbar);
         loadImageWithGlide(thumb.getFullImageUrl());
 
-        ImageInfoProvider i = new ImageInfoProvider(this, this);
-        i.id(thumb.getId()).fetch(); /* async load; see 'onQueryFailed' and 'onQueryExecuted' */
+        /* get image uploader, description, tags */
+        ImageInfoProvider i = new ImageInfoProvider(this, new ProviderRequestHandler() {
+            @Override
+            public void onRequestCompleted(Object result) {
+                ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
+                        .setTabInfo((DerpibooruImageInfo) result);
+            }
+
+            @Override
+            public void onRequestFailed() {
+
+            }
+        });
+        i.id(thumb.getId()).fetch();
     }
 
-    private void setBasicImageInfo(DerpibooruImageThumb thumb) {
-        setTitle("#" + Integer.toString(thumb.getId()));
+    private void setImageScoreFavesCommentCount(DerpibooruImageThumb thumb, Toolbar toolbar) {
+        toolbar.setTitle("#" + Integer.toString(thumb.getId()));
 
-        ((ImageTopBarView) findViewById(R.id.imageInfo))
+        ((ImageTopBarView) findViewById(R.id.imageTopBar))
                 .setInfo(thumb.getUpvotes(), thumb.getDownvotes(), thumb.getScore());
 
         ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
                 .setFragmentManager(getSupportFragmentManager())
-                .setViewAbove(findViewById(R.id.imageViewLayout))
                 .setBasicInfo(thumb.getFaves(), thumb.getCommentCount());
     }
 
     private void loadImageWithGlide(String url) {
-        ImageView iv = (ImageView) findViewById(R.id.imageView);
+        ((ProgressBar) findViewById(R.id.progressImage)).getIndeterminateDrawable()
+                .setColorFilter(ContextCompat.getColor(this, R.color.colorAccent),
+                                android.graphics.PorterDuff.Mode.SRC_IN);
+        final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         Glide.with(this)
                 .load(url)
-                .fitCenter()
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -69,40 +91,29 @@ public class ImageActivity extends AppCompatActivity
 
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        ProgressBar pb = (ProgressBar) findViewById(R.id.imageProgress);
+                        ProgressBar pb = (ProgressBar) findViewById(R.id.progressImage);
                         pb.setVisibility(View.GONE);
+
+                        mImageViewZoomAttacher = new PhotoViewAttacher(imageView);
+                        mImageViewZoomAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                            @Override
+                            public void onViewTap(View view, float x, float y) {
+                                if (findViewById(R.id.toolbarLayout).getVisibility() == View.VISIBLE) {
+                                    findViewById(R.id.toolbarLayout).setVisibility(View.INVISIBLE);
+                                    findViewById(R.id.imageTopBar).setVisibility(View.INVISIBLE);
+                                    findViewById(R.id.imageBottomBar).setVisibility(View.INVISIBLE);
+                                } else {
+                                    findViewById(R.id.toolbarLayout).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.imageTopBar).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.imageBottomBar).setVisibility(View.VISIBLE);
+                                }
+                            }
+                        });
                         return false;
                     }
                 })
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(iv);
-    }
-
-    @Override
-    public void onRequestCompleted(Object image) {
-        ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
-                .setTabInfo((DerpibooruImageInfo) image);
-    }
-
-    @Override
-    public void onRequestFailed() {
-
-    }
-
-    /* Respond to ActionBar's Up (Back) button */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
+                .into(imageView);
     }
 }

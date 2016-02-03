@@ -24,7 +24,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.ImageActivity"/>
+            android:name=".ui.ImageActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.FiltersActivity"
             android:theme="@style/AppTheme.NoActionBar">

@@ -42,22 +42,12 @@ public class ImageBottomBarView extends FrameLayout {
         return this;
     }
 
-    public ImageBottomBarView setOverlayTouchHandler(final TransparentOverlayTouchHandler handler) {
-        /* disable scrollview on transparent overlay */
-        mBottomBarScroll.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                getRootView().findViewById(R.id.transparentOverlay).getParent().requestDisallowInterceptTouchEvent(false);
-                return false;
-            }
-        });
-        /* dispatch the transparent overlay touch event to the handler */
-        getRootView().findViewById(R.id.transparentOverlay).setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                handler.onTouch(event);
-                return true;
-            }
-        });
+    public ImageBottomBarView setBasicInfo(int faves, int comments) {
+        init();
+        TextView d = (TextView) this.findViewById(R.id.textFaves);
+        d.setText(Integer.toString(faves));
+        TextView u = (TextView) this.findViewById(R.id.textComments);
+        u.setText(Integer.toString(comments));
         return this;
     }
 
@@ -77,12 +67,22 @@ public class ImageBottomBarView extends FrameLayout {
         return this;
     }
 
-    public ImageBottomBarView setBasicInfo(int faves, int comments) {
-        init();
-        TextView d = (TextView) this.findViewById(R.id.textFaves);
-        d.setText(Integer.toString(faves));
-        TextView u = (TextView) this.findViewById(R.id.textComments);
-        u.setText(Integer.toString(comments));
+    public ImageBottomBarView setOverlayTouchHandler(final TransparentOverlayTouchHandler handler) {
+        /* disable scrollview on transparent overlay */
+        mBottomBarScroll.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                getRootView().findViewById(R.id.transparentOverlay).getParent().requestDisallowInterceptTouchEvent(false);
+                return false;
+            }
+        });
+        /* dispatch the transparent overlay touch event to the handler */
+        getRootView().findViewById(R.id.transparentOverlay).setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                handler.onTouch(event);
+                return true;
+            }
+        });
         return this;
     }
 

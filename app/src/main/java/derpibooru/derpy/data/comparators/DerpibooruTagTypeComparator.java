@@ -24,6 +24,6 @@ public class DerpibooruTagTypeComparator implements Comparator<DerpibooruTag> {
     private int compare(DerpibooruTag.TagType a, DerpibooruTag.TagType b) {
         return (a == DerpibooruTag.TagType.ContentSafety) ? GREATER_THAN :
                ((b == DerpibooruTag.TagType.ContentSafety) ? LESS_THAN
-                                             : EQUAL);
+                                                           : EQUAL);
     }
 }

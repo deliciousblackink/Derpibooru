@@ -1,7 +1,6 @@
 package derpibooru.derpy.server;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 
 import derpibooru.derpy.data.server.DerpibooruLoginForm;
 import derpibooru.derpy.data.server.DerpibooruUser;

@@ -31,7 +31,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
 
     @Override
     public ImageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                            int viewType) {
+                                                          int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_image_list_item, parent, false);
         return new ViewHolder(v);

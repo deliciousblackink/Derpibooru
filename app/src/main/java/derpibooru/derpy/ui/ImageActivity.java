@@ -26,6 +26,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageActivity extends AppCompatActivity {
     private PhotoViewAttacher mImageViewZoomAttacher;
+    private ImageBottomBarView mBottomBarView;
 
     /* TODO: should be a singleTop activity
      * http://developer.android.com/reference/android/app/Activity.html#onNewIntent(android.content.Intent)
@@ -44,9 +45,12 @@ public class ImageActivity extends AppCompatActivity {
             }
         });
 
+        mBottomBarView = ((ImageBottomBarView) findViewById(R.id.imageBottomBar));
         DerpibooruImageThumb thumb = getIntent().getParcelableExtra("image_thumb");
-        setImageScoreFavesCommentCount(thumb, toolbar);
+        setImageInfoFromThumb(thumb, toolbar);
         loadImageWithGlide(thumb.getFullImageUrl());
+
+        /* FIXME: handle configuration changes (save DerpibooruImageInfo) */
 
         /* get image uploader, description, tags */
         ImageInfoProvider i = new ImageInfoProvider(this, new ProviderRequestHandler() {
@@ -64,14 +68,13 @@ public class ImageActivity extends AppCompatActivity {
         i.id(thumb.getId()).fetch();
     }
 
-    private void setImageScoreFavesCommentCount(DerpibooruImageThumb thumb, Toolbar toolbar) {
+    private void setImageInfoFromThumb(DerpibooruImageThumb thumb, Toolbar toolbar) {
         toolbar.setTitle("#" + Integer.toString(thumb.getId()));
 
         ((ImageTopBarView) findViewById(R.id.imageTopBar))
                 .setInfo(thumb.getUpvotes(), thumb.getDownvotes(), thumb.getScore());
 
-        final ImageBottomBarView bottomBar = ((ImageBottomBarView) findViewById(R.id.imageBottomBar));
-        bottomBar.setFragmentManager(getSupportFragmentManager())
+        mBottomBarView.setFragmentManager(getSupportFragmentManager())
                 .setBasicInfo(thumb.getFaves(), thumb.getCommentCount())
                 .post(new Runnable() {
                     @Override
@@ -79,9 +82,9 @@ public class ImageActivity extends AppCompatActivity {
                         int bottomBarMaximumHeightWhenExtended = findViewById(R.id.imageView).getMeasuredHeight()
                                 - (findViewById(R.id.toolbarLayout).getMeasuredHeight()
                                 + findViewById(R.id.imageTopBar).getMeasuredHeight());
-                        bottomBar.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
-                        bottomBar.getLayoutParams().height = bottomBarMaximumHeightWhenExtended;
-                        bottomBar.requestLayout();
+                        mBottomBarView.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
+                        mBottomBarView.getLayoutParams().height = bottomBarMaximumHeightWhenExtended;
+                        mBottomBarView.requestLayout();
                     }
                 });
     }
@@ -117,14 +120,13 @@ public class ImageActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                        ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
-                                .setOverlayTouchHandler(new ImageBottomBarView.TransparentOverlayTouchHandler() {
-                                    @Override
-                                    public void onTouch(MotionEvent event) {
-                                        imageView.dispatchTouchEvent(event);
-                                        mImageViewZoomAttacher.onTouch(imageView, event);
-                                    }
-                                });
+                        mBottomBarView.setOverlayTouchHandler(new ImageBottomBarView.TransparentOverlayTouchHandler() {
+                            @Override
+                            public void onTouch(MotionEvent event) {
+                                imageView.dispatchTouchEvent(event);
+                                mImageViewZoomAttacher.onTouch(imageView, event);
+                            }
+                        });
                         return false;
                     }
                 })

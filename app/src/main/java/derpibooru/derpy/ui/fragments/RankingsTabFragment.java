@@ -15,7 +15,7 @@ public class RankingsTabFragment extends ImageListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                  Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         super.setImageListProvider(new RankingsProvider(getActivity(),
                                                         new ImageListRequestHandler()));
         return super.onCreateView(inflater, container, savedInstanceState);

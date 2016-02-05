@@ -31,10 +31,10 @@ public class TagListParser implements ServerResponseParser {
             JSONObject source = tags.getJSONObject(x);
 
             DerpibooruTagFull tf = new DerpibooruTagFull(source.getInt("id"),
-                                                          source.getInt("images"),
-                                                          source.getString("name"),
-                                                          source.getString("description"),
-                                                          source.getString("spoiler_image_uri"));
+                                                         source.getInt("images"),
+                                                         source.getString("name"),
+                                                         source.getString("description"),
+                                                         source.getString("spoiler_image_uri"));
             output.add(tf);
         }
 

@@ -71,10 +71,10 @@ public class FiltersViewAdapter extends RecyclerView.Adapter<FiltersViewAdapter.
     private void displayFilterInViewHolder(ViewHolder holder, DerpibooruFilter filter) {
         holder.textName.setText(filter.getName());
         holder.textUsedBy.setText(String.format("Used by %d people",
-                                                 filter.getUserCount()));
+                                                filter.getUserCount()));
         holder.textStatistics.setText(String.format("Spoilers %d tags and hides %d tags",
-                                                     filter.getSpoileredTagNames().size(),
-                                                     filter.getHiddenTagNames().size()));
+                                                    filter.getSpoileredTagNames().size(),
+                                                    filter.getHiddenTagNames().size()));
         holder.textDescription.setText(filter.getDescription());
     }
 

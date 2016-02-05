@@ -141,7 +141,7 @@ public class ImageBottomBarInfoTabFragment extends Fragment {
         @Override
         public void onGlobalLayout() {
             int height = 0;
-            for (int x = 0; x < mLinearLayout.getChildCount(); x++){
+            for (int x = 0; x < mLinearLayout.getChildCount(); x++) {
                 height += mLinearLayout.getChildAt(x).getMeasuredHeight();
             }
             mContentHeightHandler.childHeightUpdated(height);

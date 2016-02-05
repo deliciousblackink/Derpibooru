@@ -74,9 +74,9 @@ public class ImageActivity extends AppCompatActivity {
         ((ImageTopBarView) findViewById(R.id.imageTopBar))
                 .setInfo(thumb.getUpvotes(), thumb.getDownvotes(), thumb.getScore());
 
-        mBottomBarView.setFragmentManager(getSupportFragmentManager())
-                .setBasicInfo(thumb.getFaves(), thumb.getCommentCount())
-                .post(new Runnable() {
+        mBottomBarView.setFragmentManager(getSupportFragmentManager());
+        mBottomBarView.setBasicInfo(thumb.getFaves(), thumb.getCommentCount());
+        mBottomBarView.post(new Runnable() {
                     @Override
                     public void run() {
                         int bottomBarMaximumHeightWhenExtended = findViewById(R.id.imageView).getMeasuredHeight()

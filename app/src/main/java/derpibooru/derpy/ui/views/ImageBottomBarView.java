@@ -42,6 +42,25 @@ public class ImageBottomBarView extends FrameLayout {
         return this;
     }
 
+    public ImageBottomBarView setOverlayTouchHandler(final TransparentOverlayTouchHandler handler) {
+        /* disable scrollview on transparent overlay */
+        mBottomBarScroll.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                getRootView().findViewById(R.id.transparentOverlay).getParent().requestDisallowInterceptTouchEvent(false);
+                return false;
+            }
+        });
+        /* dispatch the transparent overlay touch event to the handler */
+        getRootView().findViewById(R.id.transparentOverlay).setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                handler.onTouch(event);
+                return true;
+            }
+        });
+        return this;
+    }
+
     public ImageBottomBarView setBarExtensionAttrs(int maximumExtensionHeight) {
         mExtensionHeightOnHeaderButtonClick = maximumExtensionHeight / 2;
 
@@ -52,7 +71,7 @@ public class ImageBottomBarView extends FrameLayout {
         getRootView().getLayoutParams().height = maximumExtensionHeight;
         getRootView().requestLayout();
 
-        ((StickyHeaderScrollView) getRootView().findViewById(R.id.bottomBarScrollLayout))
+        mBottomBarScroll
                 .setAnchorView(getRootView().findViewById(R.id.bottomBarHeaderAnchor))
                 .setStickyHeaderView(getRootView().findViewById(R.id.bottomBarHeaderLayout));
         return this;
@@ -67,11 +86,12 @@ public class ImageBottomBarView extends FrameLayout {
         return this;
     }
 
-    public void setTabInfo(DerpibooruImageInfo info) {
+    public ImageBottomBarView setTabInfo(DerpibooruImageInfo info) {
         setUpViewPager(info);
+        return this;
     }
 
-    public void selectButton(View v) {
+    private void selectButton(View v) {
         if (!v.isSelected()) {
             v.setSelected(true);
             if (mPager.getVisibility() == View.GONE) {
@@ -134,6 +154,7 @@ public class ImageBottomBarView extends FrameLayout {
         addView(view);
 
         mBottomBarScroll = (StickyHeaderScrollView) view.findViewById(R.id.bottomBarScrollLayout);
+        mPager = (ViewPager) findViewById(R.id.bottomTabsPager);
 
         for (int layoutId : LAYOUT_BUTTONS) {
             LinearLayout ll = (LinearLayout) findViewById(layoutId);
@@ -152,7 +173,6 @@ public class ImageBottomBarView extends FrameLayout {
             });
         }
 
-        mPager = (ViewPager) findViewById(R.id.bottomTabsPager);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -179,8 +199,11 @@ public class ImageBottomBarView extends FrameLayout {
                public void childHeightUpdated(int newHeight) {
                    getRootView().findViewById(R.id.bottomTabsPager).getLayoutParams().height = newHeight;
                    getRootView().findViewById(R.id.bottomTabsPager).requestLayout();
-
                }
            }));
+    }
+
+    public interface TransparentOverlayTouchHandler {
+        void onTouch(MotionEvent event);
     }
 }

@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -18,8 +19,8 @@ import com.bumptech.glide.request.target.Target;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.server.ProviderRequestHandler;
 import derpibooru.derpy.server.ImageInfoProvider;
+import derpibooru.derpy.server.ProviderRequestHandler;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
 import derpibooru.derpy.ui.views.ImageTopBarView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -76,14 +77,14 @@ public class ImageActivity extends AppCompatActivity {
                 .post(new Runnable() {
                     @Override
                     public void run() {
-                         int bottomBarMaximumHeightWhenExtended = findViewById(R.id.imageView).getMeasuredHeight()
-                                 - (findViewById(R.id.toolbarLayout).getMeasuredHeight()
-                                 + findViewById(R.id.imageTopBar).getMeasuredHeight());
-                         bottomBar.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
-                         bottomBar.getLayoutParams().height = bottomBarMaximumHeightWhenExtended;
-                         bottomBar.requestLayout();
-                     }
-                 });
+                        int bottomBarMaximumHeightWhenExtended = findViewById(R.id.imageView).getMeasuredHeight()
+                                - (findViewById(R.id.toolbarLayout).getMeasuredHeight()
+                                + findViewById(R.id.imageTopBar).getMeasuredHeight());
+                        bottomBar.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
+                        bottomBar.getLayoutParams().height = bottomBarMaximumHeightWhenExtended;
+                        bottomBar.requestLayout();
+                    }
+                });
     }
 
     private void loadImageWithGlide(String url) {
@@ -120,6 +121,14 @@ public class ImageActivity extends AppCompatActivity {
                                 }
                             }
                         });
+                        ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
+                                .setOverlayTouchHandler(new ImageBottomBarView.TransparentOverlayTouchHandler() {
+                                    @Override
+                                    public void onTouch(MotionEvent event) {
+                                        imageView.dispatchTouchEvent(event);
+                                        mImageViewZoomAttacher.onTouch(imageView, event);
+                                    }
+                                });
                         return false;
                     }
                 })

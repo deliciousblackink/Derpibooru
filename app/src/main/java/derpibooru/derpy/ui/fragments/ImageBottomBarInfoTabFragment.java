@@ -1,8 +1,6 @@
 package derpibooru.derpy.ui.fragments;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
@@ -12,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -29,8 +25,9 @@ import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
 import derpibooru.derpy.ui.views.FlowLayout;
 import derpibooru.derpy.ui.views.ImageTagView;
 
-public class ImageBottomBarInfoTabFragment extends Fragment {
-    private ImageBottomBarTabAdapter.ViewPagerContentHeightChangeHandler mContentHeightHandler;
+public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
+    private static final ImageBottomBarTabAdapter.ImageBottomBarTab TAB_ID =
+            ImageBottomBarTabAdapter.ImageBottomBarTab.ImageInfo;
 
     public ImageBottomBarInfoTabFragment() {
         super();
@@ -47,17 +44,9 @@ public class ImageBottomBarInfoTabFragment extends Fragment {
         setImageDescription(info, v);
         setImageTags(info, v);
 
-        if (mContentHeightHandler != null) {
-            v.getViewTreeObserver()
-                    .addOnGlobalLayoutListener(new LayoutHeightHandler((LinearLayout) v));
-        }
-
+        super.setRootViewGroup((ViewGroup) v);
+        super.provideCurrentContentHeight(TAB_ID);
         return v;
-    }
-
-    public void setContentHeightHandler(ImageBottomBarTabAdapter
-                                                .ViewPagerContentHeightChangeHandler handler) {
-        mContentHeightHandler = handler;
     }
 
     private void onLinkClick(View v) {
@@ -129,29 +118,5 @@ public class ImageBottomBarInfoTabFragment extends Fragment {
         };
         strBuilder.setSpan(clickable, start, end, flags);
         strBuilder.removeSpan(span);
-    }
-
-    private class LayoutHeightHandler implements ViewTreeObserver.OnGlobalLayoutListener {
-        private LinearLayout mLinearLayout;
-
-        public LayoutHeightHandler(LinearLayout root) {
-            mLinearLayout = root;
-        }
-
-        @Override
-        public void onGlobalLayout() {
-            int height = 0;
-            for (int x = 0; x < mLinearLayout.getChildCount(); x++) {
-                height += mLinearLayout.getChildAt(x).getMeasuredHeight();
-            }
-            mContentHeightHandler.childHeightUpdated(height);
-
-            ViewTreeObserver obs = mLinearLayout.getViewTreeObserver();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                obs.removeOnGlobalLayoutListener(this);
-            } else {
-                obs.removeGlobalOnLayoutListener(this);
-            }
-        }
     }
 }

@@ -10,15 +10,22 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
+
+import java.util.Map;
+
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
 import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
 
 public class ImageBottomBarView extends FrameLayout {
-    private static final int[] LAYOUT_BUTTONS = {
-            R.id.buttonInfo,
-            R.id.buttonFaves,
-            R.id.buttonComments };
+    private static final BiMap<Integer, ImageBottomBarTabAdapter.ImageBottomBarTab> TABS =
+            ImmutableBiMap.<Integer, ImageBottomBarTabAdapter.ImageBottomBarTab>builder()
+            .put(R.id.buttonInfo, ImageBottomBarTabAdapter.ImageBottomBarTab.ImageInfo)
+            .put(R.id.buttonFaves, ImageBottomBarTabAdapter.ImageBottomBarTab.Faves)
+            .put(R.id.buttonComments, ImageBottomBarTabAdapter.ImageBottomBarTab.Comments).build();
 
     private ImageBottomBarScrollView mBottomBarScroll;
     private FragmentManager mFragmentManager;
@@ -104,22 +111,23 @@ public class ImageBottomBarView extends FrameLayout {
     }
 
     private void navigateViewPagerToTheCurrentlySelectedTab() {
-        for (int layoutId : LAYOUT_BUTTONS) {
-            if (findViewById(layoutId).isSelected()) {
-                extendViewPagerIfHidden();
-                switch (layoutId) {
-                    case R.id.buttonInfo:
-                        mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.ImageInfo.id(), true);
-                        break;
-                    case R.id.buttonFaves:
-                        mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Faves.id(), true);
-                        break;
-                    case R.id.buttonComments:
-                        mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Comments.id(), true);
-                        break;
-                }
+        if (getCurrentTab() != null) {
+            extendViewPagerIfHidden();
+            mPager.setCurrentItem(getCurrentTab().id(), true);
+            if (mTabsHaveLoaded) {
+                ((ImageBottomBarTabAdapter) mPager.getAdapter())
+                        .provideCurrentContentHeight(getCurrentTab());
             }
         }
+    }
+
+    private ImageBottomBarTabAdapter.ImageBottomBarTab getCurrentTab() {
+        for (Map.Entry<Integer, ImageBottomBarTabAdapter.ImageBottomBarTab> tab : TABS.entrySet()) {
+            if (findViewById(tab.getKey()).isSelected()) {
+                return tab.getValue();
+            }
+        }
+        return null;
     }
 
     private void extendViewPagerIfHidden() {
@@ -159,7 +167,7 @@ public class ImageBottomBarView extends FrameLayout {
     }
 
     private void deselectButtonsOtherThan(View v) {
-        for (int layoutId : LAYOUT_BUTTONS) {
+        for (int layoutId : TABS.keySet()) {
             LinearLayout ll = (LinearLayout) findViewById(layoutId);
             if (!ll.equals(v)) {
                 ll.setSelected(false);
@@ -174,7 +182,7 @@ public class ImageBottomBarView extends FrameLayout {
         mBottomBarScroll = (ImageBottomBarScrollView) view.findViewById(R.id.bottomBarScrollLayout);
         mPager = (ViewPager) findViewById(R.id.bottomTabsPager);
 
-        for (int layoutId : LAYOUT_BUTTONS) {
+        for (int layoutId : TABS.keySet()) {
             LinearLayout ll = (LinearLayout) findViewById(layoutId);
             ll.setOnTouchListener(new OnTouchListener() {
                 @Override
@@ -199,7 +207,8 @@ public class ImageBottomBarView extends FrameLayout {
 
             @Override
             public void onPageSelected(int position) {
-                LinearLayout ll = (LinearLayout) findViewById(LAYOUT_BUTTONS[position]);
+                LinearLayout ll = (LinearLayout) findViewById(
+                        TABS.inverse().get(ImageBottomBarTabAdapter.ImageBottomBarTab.fromId(position)));
                 ll.setSelected(true);
                 deselectButtonsOtherThan(ll);
             }
@@ -212,17 +221,19 @@ public class ImageBottomBarView extends FrameLayout {
 
     private void setUpViewPager(DerpibooruImageInfo content) {
         mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content,
-           new ImageBottomBarTabAdapter.ViewPagerContentHeightChangeHandler() {
+           new ImageBottomBarTabAdapter.ImageBottomBarTabHandler() {
                @Override
-               public void childHeightUpdated(int newHeight) {
+               public void onTabHeightProvided(ImageBottomBarTabAdapter.ImageBottomBarTab tab, int newHeight) {
                    /* check if the ProgressBar is still visible, i.e. the content has just loaded */
                    if (findViewById(R.id.progressViewPager).getVisibility() == View.VISIBLE) {
                        findViewById(R.id.progressViewPager).setVisibility(View.GONE);
                        mTabsHaveLoaded = true;
                        navigateViewPagerToTheCurrentlySelectedTab();
                    }
-                   findViewById(R.id.bottomTabsPager).getLayoutParams().height = newHeight;
-                   findViewById(R.id.bottomTabsPager).requestLayout();
+                   if (tab == getCurrentTab()) {
+                       findViewById(R.id.bottomTabsPager).getLayoutParams().height = newHeight;
+                       findViewById(R.id.bottomTabsPager).requestLayout();
+                   }
                }
            }));
     }

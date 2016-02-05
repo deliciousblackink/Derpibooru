@@ -7,8 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import derpibooru.derpy.R;
+import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
 
-public class ImageBottomBarCommentsTabFragment extends Fragment {
+public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment {
+    private static final ImageBottomBarTabAdapter.ImageBottomBarTab TAB_ID =
+            ImageBottomBarTabAdapter.ImageBottomBarTab.Comments;
+
     public ImageBottomBarCommentsTabFragment() {
         super();
     }
@@ -16,6 +20,10 @@ public class ImageBottomBarCommentsTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_image_comments_tab, container, false);
+        View v = inflater.inflate(R.layout.fragment_image_comments_tab, container, false);
+
+        super.setRootViewGroup((ViewGroup) v);
+        super.provideCurrentContentHeight(TAB_ID);
+        return v;
     }
 }

@@ -3,6 +3,7 @@ package derpibooru.derpy.ui.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -10,8 +11,12 @@ import android.widget.GridView;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
+import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
 
-public class ImageBottomBarFavoritesTabFragment extends Fragment {
+public class ImageBottomBarFavoritesTabFragment extends ImageBottomBarTabFragment {
+    private static final ImageBottomBarTabAdapter.ImageBottomBarTab TAB_ID =
+        ImageBottomBarTabAdapter.ImageBottomBarTab.Faves;
+
     public ImageBottomBarFavoritesTabFragment() {
         super();
     }
@@ -28,7 +33,15 @@ public class ImageBottomBarFavoritesTabFragment extends Fragment {
                                    info.getFavedBy());
         ((GridView) v.findViewById(R.id.gridFavedBy))
                 .setAdapter(aa);
+        v.findViewById(R.id.gridFavedBy).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return event.getAction() == MotionEvent.ACTION_MOVE;
+            }
+        });
 
+        super.setRootViewGroup((ViewGroup) v);
+        super.provideCurrentContentHeight(TAB_ID);
         return v;
     }
 }

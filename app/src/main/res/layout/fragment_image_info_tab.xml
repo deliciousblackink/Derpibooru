@@ -36,7 +36,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp">
+        android:padding="5dp">
     </derpibooru.derpy.ui.views.FlowLayout>
 </LinearLayout>

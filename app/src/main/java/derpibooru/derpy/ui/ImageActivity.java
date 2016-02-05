@@ -80,6 +80,8 @@ public class ImageActivity extends AppCompatActivity {
                                  - (findViewById(R.id.toolbarLayout).getMeasuredHeight()
                                  + findViewById(R.id.imageTopBar).getMeasuredHeight());
                          bottomBar.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
+                         bottomBar.getLayoutParams().height = bottomBarMaximumHeightWhenExtended;
+                         bottomBar.requestLayout();
                      }
                  });
     }

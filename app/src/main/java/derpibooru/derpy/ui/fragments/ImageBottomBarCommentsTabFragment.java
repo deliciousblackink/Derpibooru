@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 
 import derpibooru.derpy.R;
 
-public class ImageCommentsTabFragment extends Fragment {
-    public ImageCommentsTabFragment() {
+public class ImageBottomBarCommentsTabFragment extends Fragment {
+    public ImageBottomBarCommentsTabFragment() {
         super();
     }
 

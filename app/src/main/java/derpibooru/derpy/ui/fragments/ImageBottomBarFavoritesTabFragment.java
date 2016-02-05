@@ -11,8 +11,8 @@ import android.widget.GridView;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
 
-public class ImageFavoritesTabFragment extends Fragment {
-    public ImageFavoritesTabFragment() {
+public class ImageBottomBarFavoritesTabFragment extends Fragment {
+    public ImageBottomBarFavoritesTabFragment() {
         super();
     }
 

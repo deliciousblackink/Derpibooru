@@ -1,109 +1,38 @@
-<!-- TODO: Optimize (simplify) the layout -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/bottomBarLayout"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="@android:color/white">
-
-    <LinearLayout
+<derpibooru.derpy.ui.views.StickyHeaderScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottomBarScrollLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none">
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:gravity="center_vertical|center_horizontal"
-        android:weightSum="3"
-        android:background="@color/colorImageToolbar">
-
+        android:layout_height="wrap_content">
         <LinearLayout
-            android:id="@+id/buttonInfo"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:background="@drawable/selector_toolbar_button">
-
-            <TextView
-                android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/transparentOverlay"
+                android:background="@android:color/transparent" />
+            <!-- the real height of the overlay is set through code -->
+            <View
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="i"
-                android:background="@drawable/selector_toolbar_button"
-                android:gravity="center_vertical|center_horizontal"
-                android:textColor="@color/colorTextLight"
-                android:textSize="24sp"
-                android:textStyle="bold"/>
+                android:layout_height="?attr/actionBarSize"
+                android:id="@+id/bottomBarHeaderAnchor"/>
+            <android.support.v4.view.ViewPager
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/bottomTabsPager"
+                android:layout_width="match_parent"
+                android:layout_height="2000dp"
+                android:background="@android:color/white"
+                android:visibility="gone"/>
+            <!-- since viewpager does not support wrap_content for layout_height,
+            a random value is supplied; it is later replaced with the height of its children -->
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/buttonFaves"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:background="@drawable/selector_toolbar_button">
-
-            <ImageView
-                android:id="@+id/imgFave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_star_white_24dp"
-                android:background="@drawable/selector_toolbar_button"
-                android:layout_marginBottom="1dp"/>
-
-            <TextView
-                android:id="@+id/textFaves"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="1400"
-                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                android:textColor="@color/colorTextLight"
-                android:background="@drawable/selector_toolbar_button"
-                android:gravity="center_vertical"
-                android:paddingLeft="5dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/buttonComments"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:padding="0dp"
-            android:background="@drawable/selector_toolbar_button">
-
-            <ImageView
-                android:id="@+id/imgComments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_comment_white_24dp"
-                android:background="@drawable/selector_toolbar_button"/>
-
-            <TextView
-                android:id="@+id/textComments"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="1400"
-                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                android:textColor="@color/colorTextLight"
-                android:background="@drawable/selector_toolbar_button"
-                android:gravity="center_vertical"
-                android:paddingLeft="5dp"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <android.support.v4.view.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/bottomTabsPager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-</LinearLayout>
+        <include layout="@layout/view_image_bottom_bar_header"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"/>
+    </FrameLayout>
+</derpibooru.derpy.ui.views.StickyHeaderScrollView>

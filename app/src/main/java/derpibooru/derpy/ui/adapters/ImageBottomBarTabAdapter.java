@@ -9,31 +9,34 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.data.internal.FragmentAdapterItem;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
-import derpibooru.derpy.ui.fragments.ImageCommentsTabFragment;
-import derpibooru.derpy.ui.fragments.ImageFavoritesTabFragment;
-import derpibooru.derpy.ui.fragments.ImageInfoTabFragment;
+import derpibooru.derpy.ui.fragments.ImageBottomBarCommentsTabFragment;
+import derpibooru.derpy.ui.fragments.ImageBottomBarFavoritesTabFragment;
+import derpibooru.derpy.ui.fragments.ImageBottomBarInfoTabFragment;
 
 public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
     private ArrayList<FragmentAdapterItem> mTabs;
 
     public ImageBottomBarTabAdapter(FragmentManager fm,
-                                    DerpibooruImageInfo info) {
+                                    DerpibooruImageInfo info,
+                                    ViewPagerContentHeightChangeHandler heightHandler) {
         super(fm);
 
         Bundle imageInfoBundle = new Bundle();
         imageInfoBundle.putParcelable("image_info", info);
 
-        ImageInfoTabFragment infoTab = new ImageInfoTabFragment();
+        ImageBottomBarInfoTabFragment infoTab = new ImageBottomBarInfoTabFragment();
         infoTab.setArguments(imageInfoBundle);
-        ImageFavoritesTabFragment favesTab = new ImageFavoritesTabFragment();
+        ImageBottomBarFavoritesTabFragment favesTab = new ImageBottomBarFavoritesTabFragment();
         favesTab.setArguments(imageInfoBundle);
-        ImageCommentsTabFragment commentsTab = new ImageCommentsTabFragment();
+        ImageBottomBarCommentsTabFragment commentsTab = new ImageBottomBarCommentsTabFragment();
         commentsTab.setArguments(imageInfoBundle);
 
         mTabs = new ArrayList<>();
         mTabs.add(new FragmentAdapterItem(ImageBottomBarTabs.ImageInfo.id(), infoTab));
         mTabs.add(new FragmentAdapterItem(ImageBottomBarTabs.Faves.id(), favesTab));
         mTabs.add(new FragmentAdapterItem(ImageBottomBarTabs.Comments.id(), commentsTab));
+
+        infoTab.setContentHeightHandler(heightHandler);
     }
 
     @Override
@@ -65,5 +68,9 @@ public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
         public int id() {
             return mID;
         }
+    }
+
+    public interface ViewPagerContentHeightChangeHandler {
+        void childHeightUpdated(int newHeight);
     }
 }

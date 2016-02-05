@@ -13,7 +13,6 @@ import android.widget.TextView;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
 import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
-import derpibooru.derpy.ui.animations.ImageBottomBarAnimator;
 
 public class ImageBottomBarView extends FrameLayout {
     private static final int[] LAYOUT_BUTTONS = {
@@ -21,10 +20,10 @@ public class ImageBottomBarView extends FrameLayout {
             R.id.buttonFaves,
             R.id.buttonComments };
 
-    private ImageBottomBarAnimator mAnimator;
+    private StickyHeaderScrollView mBottomBarScroll;
     private FragmentManager mFragmentManager;
     private ViewPager mPager;
-    private boolean mIsExtended = false;
+    private int mExtensionHeightOnHeaderButtonClick;
 
     public ImageBottomBarView(Context context) {
         super(context);
@@ -43,13 +42,19 @@ public class ImageBottomBarView extends FrameLayout {
         return this;
     }
 
-    /**
-     * Defines the behavior of bottom bar when it is extended.
-     * @param maximumExtensionHeight total height of an extended bottom bar (including the header buttons)
-     * @return
-     */
     public ImageBottomBarView setBarExtensionAttrs(int maximumExtensionHeight) {
-        mAnimator = new ImageBottomBarAnimator(this, maximumExtensionHeight);
+        mExtensionHeightOnHeaderButtonClick = maximumExtensionHeight / 2;
+
+        int overlayHeight = (maximumExtensionHeight - getRootView().findViewById(R.id.bottomBarHeaderLayout).getMeasuredHeight());
+        getRootView().findViewById(R.id.transparentOverlay).getLayoutParams().height = overlayHeight;
+        getRootView().findViewById(R.id.transparentOverlay).requestLayout();
+
+        getRootView().getLayoutParams().height = maximumExtensionHeight;
+        getRootView().requestLayout();
+
+        ((StickyHeaderScrollView) getRootView().findViewById(R.id.bottomBarScrollLayout))
+                .setAnchorView(getRootView().findViewById(R.id.bottomBarHeaderAnchor))
+                .setStickyHeaderView(getRootView().findViewById(R.id.bottomBarHeaderLayout));
         return this;
     }
 
@@ -69,36 +74,50 @@ public class ImageBottomBarView extends FrameLayout {
     public void selectButton(View v) {
         if (!v.isSelected()) {
             v.setSelected(true);
-            /* show ViewPager */
             if (mPager.getVisibility() == View.GONE) {
                 mPager.setVisibility(View.VISIBLE);
+                scrollToPositionAndLimitScrollingPastIt(mExtensionHeightOnHeaderButtonClick);
             }
-            if (!mIsExtended) {
-                mIsExtended = true;
-                mAnimator.animateBottomBarExtension();
-            }
-
             /* navigate ViewPager to the corresponding tab */
             switch (v.getId()) {
                 case R.id.buttonInfo:
-                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.ImageInfo.id(),
-                                          true);
+                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.ImageInfo.id(), true);
                     break;
                 case R.id.buttonFaves:
-                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Faves.id(),
-                                          true);
+                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Faves.id(), true);
                     break;
                 case R.id.buttonComments:
-                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Comments.id(),
-                                          true);
+                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Comments.id(), true);
                     break;
             }
         } else {
             v.setSelected(false);
-            mPager.setVisibility(View.GONE);
-            mAnimator.animateBottomBarCompression();
-            mIsExtended = false;
+            scrollToPositionAndLimitScrollingPastIt(0);
         }
+    }
+
+    private void scrollToPositionAndLimitScrollingPastIt(final int position) {
+        mBottomBarScroll.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mBottomBarScroll.getMinScrollLimit() > position) {
+                    mBottomBarScroll.setMinScrollLimit(position);
+                }
+                mBottomBarScroll.smoothScrollTo(0, position);
+            }
+        });
+        /* 500ms is a random value taken to allow the smoothScrollTo to finish animation before
+         * placing a limit, since the latter blocks not only user interaction, but smoothScrollTo as well.
+         * this hack is shorter and (i dare say) more elegant than overriding onTouchEvent of ScrollView. */
+        mBottomBarScroll.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (position == 0) {
+                    mPager.setVisibility(View.GONE);
+                }
+                mBottomBarScroll.setMinScrollLimit(position);
+            }
+        }, 500);
     }
 
     public void deselectButtonsOtherThan(View v) {
@@ -113,6 +132,8 @@ public class ImageBottomBarView extends FrameLayout {
     private void init() {
         View view = inflate(getContext(), R.layout.view_image_bottom_bar, null);
         addView(view);
+
+        mBottomBarScroll = (StickyHeaderScrollView) view.findViewById(R.id.bottomBarScrollLayout);
 
         for (int layoutId : LAYOUT_BUTTONS) {
             LinearLayout ll = (LinearLayout) findViewById(layoutId);
@@ -152,6 +173,14 @@ public class ImageBottomBarView extends FrameLayout {
     }
 
     private void setUpViewPager(DerpibooruImageInfo content) {
-        mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content));
+        mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content,
+           new ImageBottomBarTabAdapter.ViewPagerContentHeightChangeHandler() {
+               @Override
+               public void childHeightUpdated(int newHeight) {
+                   getRootView().findViewById(R.id.bottomTabsPager).getLayoutParams().height = newHeight;
+                   getRootView().findViewById(R.id.bottomTabsPager).requestLayout();
+
+               }
+           }));
     }
 }

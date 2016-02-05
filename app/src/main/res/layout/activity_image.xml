@@ -13,6 +13,8 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="?attr/actionBarSize"
+        android:paddingBottom="?attr/actionBarSize"
         android:clickable="true"/>
     <android.support.design.widget.AppBarLayout
         android:id="@+id/toolbarLayout"
@@ -29,12 +31,12 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
     </android.support.design.widget.AppBarLayout>
     <derpibooru.derpy.ui.views.ImageTopBarView
+        android:clickable="true"
         android:id="@+id/imageTopBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_below="@id/toolbarLayout"/>
     <derpibooru.derpy.ui.views.ImageBottomBarView
-        android:clickable="true"
         android:id="@+id/imageBottomBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"

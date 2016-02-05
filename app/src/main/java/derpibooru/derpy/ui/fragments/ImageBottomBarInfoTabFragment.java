@@ -1,5 +1,6 @@
 package derpibooru.derpy.ui.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -22,18 +25,21 @@ import java.util.Locale;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
 import derpibooru.derpy.data.server.DerpibooruTag;
+import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
 import derpibooru.derpy.ui.views.FlowLayout;
 import derpibooru.derpy.ui.views.ImageTagView;
 
-public class ImageInfoTabFragment extends Fragment {
-    public ImageInfoTabFragment() {
+public class ImageBottomBarInfoTabFragment extends Fragment {
+    private ImageBottomBarTabAdapter.ViewPagerContentHeightChangeHandler mContentHeightHandler;
+
+    public ImageBottomBarInfoTabFragment() {
         super();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_image_info_tab, container, false);
+        final View v = inflater.inflate(R.layout.fragment_image_info_tab, container, false);
 
         DerpibooruImageInfo info = this.getArguments().getParcelable("image_info");
 
@@ -41,7 +47,17 @@ public class ImageInfoTabFragment extends Fragment {
         setImageDescription(info, v);
         setImageTags(info, v);
 
+        if (mContentHeightHandler != null) {
+            v.getViewTreeObserver()
+                    .addOnGlobalLayoutListener(new LayoutHeightHandler((LinearLayout) v));
+        }
+
         return v;
+    }
+
+    public void setContentHeightHandler(ImageBottomBarTabAdapter
+                                                .ViewPagerContentHeightChangeHandler handler) {
+        mContentHeightHandler = handler;
     }
 
     private void onLinkClick(View v) {
@@ -113,5 +129,29 @@ public class ImageInfoTabFragment extends Fragment {
         };
         strBuilder.setSpan(clickable, start, end, flags);
         strBuilder.removeSpan(span);
+    }
+
+    private class LayoutHeightHandler implements ViewTreeObserver.OnGlobalLayoutListener {
+        private LinearLayout mLinearLayout;
+
+        public LayoutHeightHandler(LinearLayout root) {
+            mLinearLayout = root;
+        }
+
+        @Override
+        public void onGlobalLayout() {
+            int height = 0;
+            for (int x = 0; x < mLinearLayout.getChildCount(); x++){
+                height += mLinearLayout.getChildAt(x).getMeasuredHeight();
+            }
+            mContentHeightHandler.childHeightUpdated(height);
+
+            ViewTreeObserver obs = mLinearLayout.getViewTreeObserver();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                obs.removeOnGlobalLayoutListener(this);
+            } else {
+                obs.removeGlobalOnLayoutListener(this);
+            }
+        }
     }
 }

@@ -14,8 +14,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="?attr/actionBarSize"
-        android:paddingBottom="?attr/actionBarSize"
         android:clickable="true"/>
+    <!-- frame layout sets padding for the progressbar, so that it is
+    centered vertically in relation to the view less the toolbar -->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="?attr/actionBarSize"
+        android:layout_centerInParent="true">
+        <derpibooru.derpy.ui.views.ProgressBarAccentColor
+            android:id="@+id/progressImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"/>
+    </FrameLayout>
     <android.support.design.widget.AppBarLayout
         android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
@@ -42,11 +54,4 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"/>
-    <derpibooru.derpy.ui.views.ProgressBarAccentColor
-        android:id="@+id/progressImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:layout_gravity="center"
-        android:layout_centerInParent="true"/>
 </RelativeLayout>

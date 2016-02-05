@@ -21,15 +21,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="?attr/actionBarSize"
                 android:id="@+id/bottomBarHeaderAnchor"/>
+            <derpibooru.derpy.ui.views.ProgressBarAccentColor
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/progressViewPager"
+                android:background="@android:color/white"/>
+            <!-- since viewpager does not support wrap_content for layout_height,
+            a random value is supplied; it is later replaced with the height of its children -->
             <android.support.v4.view.ViewPager
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/bottomTabsPager"
                 android:layout_width="match_parent"
-                android:layout_height="2000dp"
+                android:layout_height="3000dp"
                 android:background="@android:color/white"
-                android:visibility="gone"/>
-            <!-- since viewpager does not support wrap_content for layout_height,
-            a random value is supplied; it is later replaced with the height of its children -->
+                android:visibility="invisible"/>
         </LinearLayout>
         <include layout="@layout/view_image_bottom_bar_header"
                  android:layout_width="match_parent"

@@ -24,6 +24,7 @@ public class ImageBottomBarView extends FrameLayout {
     private FragmentManager mFragmentManager;
     private ViewPager mPager;
     private int mExtensionHeightOnHeaderButtonClick;
+    private boolean mTabsHaveLoaded = false;
 
     public ImageBottomBarView(Context context) {
         super(context);
@@ -91,28 +92,45 @@ public class ImageBottomBarView extends FrameLayout {
         return this;
     }
 
-    private void selectButton(View v) {
+    private void toggleButton(View v) {
         if (!v.isSelected()) {
             v.setSelected(true);
-            if (mPager.getVisibility() == View.GONE) {
-                mPager.setVisibility(View.VISIBLE);
-                scrollToPositionAndLimitScrollingPastIt(mExtensionHeightOnHeaderButtonClick);
-            }
-            /* navigate ViewPager to the corresponding tab */
-            switch (v.getId()) {
-                case R.id.buttonInfo:
-                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.ImageInfo.id(), true);
-                    break;
-                case R.id.buttonFaves:
-                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Faves.id(), true);
-                    break;
-                case R.id.buttonComments:
-                    mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Comments.id(), true);
-                    break;
-            }
+            navigateViewPagerToTheCurrentlySelectedTab();
         } else {
             v.setSelected(false);
+            /* play ViewPager collapsing animation and set its visibility to INVISIBLE */
             scrollToPositionAndLimitScrollingPastIt(0);
+        }
+    }
+
+    private void navigateViewPagerToTheCurrentlySelectedTab() {
+        for (int layoutId : LAYOUT_BUTTONS) {
+            if (findViewById(layoutId).isSelected()) {
+                extendViewPagerIfHidden();
+                switch (layoutId) {
+                    case R.id.buttonInfo:
+                        mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.ImageInfo.id(), true);
+                        break;
+                    case R.id.buttonFaves:
+                        mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Faves.id(), true);
+                        break;
+                    case R.id.buttonComments:
+                        mPager.setCurrentItem(ImageBottomBarTabAdapter.ImageBottomBarTabs.Comments.id(), true);
+                        break;
+                }
+            }
+        }
+    }
+
+    private void extendViewPagerIfHidden() {
+        if (!mTabsHaveLoaded) {
+            /* extend ProgressBar */
+            scrollToPositionAndLimitScrollingPastIt(findViewById(R.id.progressViewPager).getMeasuredHeight());
+            return;
+        }
+        if (mPager.getVisibility() == View.INVISIBLE) {
+            mPager.setVisibility(View.VISIBLE);
+            scrollToPositionAndLimitScrollingPastIt(mExtensionHeightOnHeaderButtonClick);
         }
     }
 
@@ -133,14 +151,14 @@ public class ImageBottomBarView extends FrameLayout {
             @Override
             public void run() {
                 if (position == 0) {
-                    mPager.setVisibility(View.GONE);
+                    mPager.setVisibility(View.INVISIBLE);
                 }
                 mBottomBarScroll.setMinScrollLimit(position);
             }
         }, 500);
     }
 
-    public void deselectButtonsOtherThan(View v) {
+    private void deselectButtonsOtherThan(View v) {
         for (int layoutId : LAYOUT_BUTTONS) {
             LinearLayout ll = (LinearLayout) findViewById(layoutId);
             if (!ll.equals(v)) {
@@ -168,7 +186,7 @@ public class ImageBottomBarView extends FrameLayout {
             ll.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    selectButton(v);
+                    toggleButton(v);
                 }
             });
         }
@@ -197,8 +215,14 @@ public class ImageBottomBarView extends FrameLayout {
            new ImageBottomBarTabAdapter.ViewPagerContentHeightChangeHandler() {
                @Override
                public void childHeightUpdated(int newHeight) {
-                   getRootView().findViewById(R.id.bottomTabsPager).getLayoutParams().height = newHeight;
-                   getRootView().findViewById(R.id.bottomTabsPager).requestLayout();
+                   /* check if the ProgressBar is still visible, i.e. the content has just loaded */
+                   if (findViewById(R.id.progressViewPager).getVisibility() == View.VISIBLE) {
+                       findViewById(R.id.progressViewPager).setVisibility(View.GONE);
+                       mTabsHaveLoaded = true;
+                       navigateViewPagerToTheCurrentlySelectedTab();
+                   }
+                   findViewById(R.id.bottomTabsPager).getLayoutParams().height = newHeight;
+                   findViewById(R.id.bottomTabsPager).requestLayout();
                }
            }));
     }

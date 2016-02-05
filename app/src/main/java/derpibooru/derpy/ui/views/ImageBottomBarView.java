@@ -20,7 +20,7 @@ public class ImageBottomBarView extends FrameLayout {
             R.id.buttonFaves,
             R.id.buttonComments };
 
-    private StickyHeaderScrollView mBottomBarScroll;
+    private ImageBottomBarScrollView mBottomBarScroll;
     private FragmentManager mFragmentManager;
     private ViewPager mPager;
     private int mExtensionHeightOnHeaderButtonClick;
@@ -63,7 +63,7 @@ public class ImageBottomBarView extends FrameLayout {
         getRootView().requestLayout();
 
         mBottomBarScroll
-                .setAnchorView(getRootView().findViewById(R.id.bottomBarHeaderAnchor))
+                .setAnchorViewForStickyHeader(getRootView().findViewById(R.id.bottomBarHeaderAnchor))
                 .setStickyHeaderView(getRootView().findViewById(R.id.bottomBarHeaderLayout));
         return this;
     }
@@ -171,7 +171,7 @@ public class ImageBottomBarView extends FrameLayout {
         View view = inflate(getContext(), R.layout.view_image_bottom_bar, null);
         addView(view);
 
-        mBottomBarScroll = (StickyHeaderScrollView) view.findViewById(R.id.bottomBarScrollLayout);
+        mBottomBarScroll = (ImageBottomBarScrollView) view.findViewById(R.id.bottomBarScrollLayout);
         mPager = (ViewPager) findViewById(R.id.bottomTabsPager);
 
         for (int layoutId : LAYOUT_BUTTONS) {

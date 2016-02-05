@@ -8,37 +8,37 @@ import android.widget.ScrollView;
 /**
  * @see <a href="http://wiresareobsolete.com/2011/09/synchronizing-scrollview/">Implementation details</a>
  */
-public class StickyHeaderScrollView extends ScrollView {
+public class ImageBottomBarScrollView extends ScrollView {
     private View mAnchorView;
     private View mHeaderView;
 
     private int mScrollLimitMin = 0;
 
-    public StickyHeaderScrollView(Context context) {
+    public ImageBottomBarScrollView(Context context) {
         super(context);
     }
 
-    public StickyHeaderScrollView(Context context, AttributeSet attrs) {
+    public ImageBottomBarScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public StickyHeaderScrollView(Context context, AttributeSet attrs, int defStyle) {
+    public ImageBottomBarScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public StickyHeaderScrollView setAnchorView(View v) {
+    public ImageBottomBarScrollView setAnchorViewForStickyHeader(View v) {
         mAnchorView = v;
         syncViews();
         return this;
     }
 
-    public StickyHeaderScrollView setStickyHeaderView(View v) {
+    public ImageBottomBarScrollView setStickyHeaderView(View v) {
         mHeaderView = v;
         syncViews();
         return this;
     }
 
-    public StickyHeaderScrollView setMinScrollLimit(int limit) {
+    public ImageBottomBarScrollView setMinScrollLimit(int limit) {
         mScrollLimitMin = limit;
         return this;
     }

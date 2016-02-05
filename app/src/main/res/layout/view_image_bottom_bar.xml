@@ -1,4 +1,4 @@
-<derpibooru.derpy.ui.views.StickyHeaderScrollView
+<derpibooru.derpy.ui.views.ImageBottomBarScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/bottomBarScrollLayout"
     android:layout_width="match_parent"
@@ -41,4 +41,4 @@
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"/>
     </FrameLayout>
-</derpibooru.derpy.ui.views.StickyHeaderScrollView>
+</derpibooru.derpy.ui.views.ImageBottomBarScrollView>

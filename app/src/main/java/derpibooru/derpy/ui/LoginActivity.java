@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruLoginForm;
@@ -46,10 +44,6 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
-
-        ((ProgressBar) findViewById(R.id.progressLogin)).getIndeterminateDrawable()
-                .setColorFilter(ContextCompat.getColor(this, R.color.colorAccent),
-                                android.graphics.PorterDuff.Mode.SRC_IN);
     }
 
     /* Respond to ActionBar's Up (Back) button */

@@ -1,7 +1,6 @@
 package derpibooru.derpy.ui;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -88,9 +87,6 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     private void loadImageWithGlide(String url) {
-        ((ProgressBar) findViewById(R.id.progressImage)).getIndeterminateDrawable()
-                .setColorFilter(ContextCompat.getColor(this, R.color.colorAccent),
-                                android.graphics.PorterDuff.Mode.SRC_IN);
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
         Glide.with(this)
                 .load(url)

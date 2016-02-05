@@ -42,9 +42,8 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"/>
-    <ProgressBar
+    <derpibooru.derpy.ui.views.ProgressBarAccentColor
         android:id="@+id/progressImage"
-        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"

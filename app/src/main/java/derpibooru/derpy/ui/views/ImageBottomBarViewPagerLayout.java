@@ -204,9 +204,9 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
 
     protected void setUpViewPager(DerpibooruImageInfo content) {
         mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content,
-                   new ImageBottomBarTabAdapter.ImageBottomBarTabHandler() {
-                       @Override
-                       public void onTabHeightProvided(ImageBottomBarTabAdapter.ImageBottomBarTab tab, int newHeight) {
+           new ImageBottomBarTabAdapter.ImageBottomBarTabHandler() {
+               @Override
+               public void onTabHeightProvided(ImageBottomBarTabAdapter.ImageBottomBarTab tab, int newHeight) {
                    /* check if the ProgressBar is still visible, i.e. the content has just loaded */
                    if (findViewById(R.id.progressViewPager).getVisibility() == View.VISIBLE) {
                        findViewById(R.id.progressViewPager).setVisibility(View.GONE);

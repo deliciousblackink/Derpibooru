@@ -16,10 +16,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruImageInfo;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.server.ImageInfoProvider;
-import derpibooru.derpy.server.ProviderRequestHandler;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
 import derpibooru.derpy.ui.views.ImageTopBarView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -50,22 +47,7 @@ public class ImageActivity extends AppCompatActivity {
         setImageInfoFromThumb(thumb, toolbar);
         loadImageWithGlide(thumb.getFullImageUrl());
 
-        /* FIXME: handle configuration changes (save DerpibooruImageInfo) */
-
-        /* get image uploader, description, tags */
-        ImageInfoProvider i = new ImageInfoProvider(this, new ProviderRequestHandler() {
-            @Override
-            public void onRequestCompleted(Object result) {
-                ((ImageBottomBarView) findViewById(R.id.imageBottomBar))
-                        .setTabInfo((DerpibooruImageInfo) result);
-            }
-
-            @Override
-            public void onRequestFailed() {
-
-            }
-        });
-        i.id(thumb.getId()).fetch();
+        /* FIXME: handle configuration changes */
     }
 
     private void setImageInfoFromThumb(DerpibooruImageThumb thumb, Toolbar toolbar) {
@@ -75,7 +57,7 @@ public class ImageActivity extends AppCompatActivity {
                 .setInfo(thumb.getUpvotes(), thumb.getDownvotes(), thumb.getScore());
 
         mBottomBarView.setFragmentManager(getSupportFragmentManager());
-        mBottomBarView.setBasicInfo(thumb.getFaves(), thumb.getCommentCount());
+        mBottomBarView.setBasicInfo(thumb.getId(), thumb.getFaves(), thumb.getCommentCount());
         mBottomBarView.post(new Runnable() {
                     @Override
                     public void run() {

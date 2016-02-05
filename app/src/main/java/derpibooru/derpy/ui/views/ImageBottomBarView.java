@@ -7,8 +7,12 @@ import android.widget.TextView;
 import derpibooru.derpy.R;
 
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
+import derpibooru.derpy.server.ImageInfoProvider;
+import derpibooru.derpy.server.ProviderRequestHandler;
 
 public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {
+    private ImageInfoProvider mInfoProvider;
+
     public ImageBottomBarView(Context context) {
         super(context);
     }
@@ -21,17 +25,28 @@ public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {
         super(context, attrs, defStyle);
     }
 
-    public ImageBottomBarView setBasicInfo(int faves, int comments) {
+    public void setBasicInfo(int imageId, int faves, int comments) {
         super.inflateLayout();
         TextView d = (TextView) this.findViewById(R.id.textFaves);
         d.setText(Integer.toString(faves));
         TextView u = (TextView) this.findViewById(R.id.textComments);
         u.setText(Integer.toString(comments));
-        return this;
+        loadDetailedInfo(imageId);
     }
 
-    public ImageBottomBarView setTabInfo(DerpibooruImageInfo info) {
-        setUpViewPager(info);
-        return this;
+    private void loadDetailedInfo(int imageId) {
+         /* get image uploader, description, tags */
+        mInfoProvider = new ImageInfoProvider(getContext(), new ProviderRequestHandler() {
+            @Override
+            public void onRequestCompleted(Object result) {
+                setUpViewPager((DerpibooruImageInfo) result);
+            }
+
+            @Override
+            public void onRequestFailed() {
+
+            }
+        });
+        mInfoProvider.id(imageId).fetch();
     }
 }

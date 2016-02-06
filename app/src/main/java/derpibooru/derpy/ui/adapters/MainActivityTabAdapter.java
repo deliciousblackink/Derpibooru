@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 
 import derpibooru.derpy.data.internal.FragmentAdapterItem;
-import derpibooru.derpy.data.server.DerpibooruImageListType;
+import derpibooru.derpy.data.server.DerpibooruRankingsListType;
 import derpibooru.derpy.ui.fragments.RankingsTabFragment;
 
 public class MainActivityTabAdapter extends FragmentPagerAdapter {
@@ -22,12 +22,12 @@ public class MainActivityTabAdapter extends FragmentPagerAdapter {
         /* TODO: do not initialize the tabs right away! */
         RankingsTabFragment fragmentTopScoring = new RankingsTabFragment();
         Bundle args = new Bundle();
-        args.putInt("type", DerpibooruImageListType.TopScoring.convertToValue());
+        args.putInt("type", DerpibooruRankingsListType.TopScoring.convertToValue());
         fragmentTopScoring.setArguments(args);
 
         RankingsTabFragment fragmentMostCommented = new RankingsTabFragment();
         args = new Bundle();
-        args.putInt("type", DerpibooruImageListType.MostCommented.convertToValue());
+        args.putInt("type", DerpibooruRankingsListType.MostCommented.convertToValue());
         fragmentMostCommented.setArguments(args);
 
         mTabs.add(new FragmentAdapterItem(0, "Top Scoring", fragmentTopScoring));

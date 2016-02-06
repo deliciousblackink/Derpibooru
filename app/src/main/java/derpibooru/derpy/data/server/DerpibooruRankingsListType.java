@@ -1,17 +1,17 @@
 package derpibooru.derpy.data.server;
 
-public enum DerpibooruImageListType {
+public enum DerpibooruRankingsListType {
     TopScoring(1),
     MostCommented(2);
 
     private int mValue;
 
-    DerpibooruImageListType(int value) {
+    DerpibooruRankingsListType(int value) {
         mValue = value;
     }
 
-    public static DerpibooruImageListType getFromValue(int value) {
-        for (DerpibooruImageListType type : values()) {
+    public static DerpibooruRankingsListType getFromValue(int value) {
+        for (DerpibooruRankingsListType type : values()) {
             if (type.mValue == value) {
                 return type;
             }

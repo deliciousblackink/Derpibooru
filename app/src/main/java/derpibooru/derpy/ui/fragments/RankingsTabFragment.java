@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import derpibooru.derpy.data.server.DerpibooruImageListType;
+import derpibooru.derpy.data.server.DerpibooruRankingsListType;
 import derpibooru.derpy.server.RankingsProvider;
 
 public class RankingsTabFragment extends ImageListFragment {
@@ -24,7 +24,7 @@ public class RankingsTabFragment extends ImageListFragment {
     @Override
     protected void fetchImageThumbs() {
         ((RankingsProvider) super.getImageListProvider())
-                .type(DerpibooruImageListType.getFromValue(getArguments().getInt("type")))
+                .type(DerpibooruRankingsListType.getFromValue(getArguments().getInt("type")))
                 .inDays(3) /* TODO: pass the time limit as an argument */
                 .fetch();
     }

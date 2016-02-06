@@ -2,13 +2,13 @@ package derpibooru.derpy.server;
 
 import android.content.Context;
 
-import derpibooru.derpy.data.server.DerpibooruImageListType;
+import derpibooru.derpy.data.server.DerpibooruRankingsListType;
 
 public class RankingsProvider extends ImageListProvider {
     private static final String ALL_TIME = "520w";
     /* 520 weeks (10 years) effectively equals to 'All Time' */
 
-    private DerpibooruImageListType mListType;
+    private DerpibooruRankingsListType mListType;
     private String mTime = ALL_TIME;
 
     public RankingsProvider(Context context, ProviderRequestHandler handler) {
@@ -20,7 +20,7 @@ public class RankingsProvider extends ImageListProvider {
      *
      * @param listType the type of the image list
      */
-    public RankingsProvider type(DerpibooruImageListType listType) {
+    public RankingsProvider type(DerpibooruRankingsListType listType) {
         mListType = listType;
         return this;
     }

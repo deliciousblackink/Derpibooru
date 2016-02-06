@@ -39,7 +39,7 @@ public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {
         mInfoProvider = new ImageInfoProvider(getContext(), new ProviderRequestHandler() {
             @Override
             public void onRequestCompleted(Object result) {
-                setUpViewPager((DerpibooruImageInfo) result);
+                populateViewPagerTabsWithImageInfo((DerpibooruImageInfo) result);
             }
 
             @Override

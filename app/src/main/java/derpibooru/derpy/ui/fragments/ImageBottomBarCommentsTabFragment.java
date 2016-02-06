@@ -1,18 +1,14 @@
 package derpibooru.derpy.ui.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
+import derpibooru.derpy.data.server.DerpibooruImageInfo;
 
 public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment {
-    private static final ImageBottomBarTabAdapter.ImageBottomBarTab TAB_ID =
-            ImageBottomBarTabAdapter.ImageBottomBarTab.Comments;
-
     public ImageBottomBarCommentsTabFragment() {
         super();
     }
@@ -21,7 +17,15 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_image_comments_tab, container, false);
+        if (getArguments().containsKey("info")) {
+            displayInfoInView(v, (DerpibooruImageInfo) getArguments().getParcelable("info"));
+        }
         return v;
+    }
+
+    @Override
+    protected void displayInfoInView(View target, DerpibooruImageInfo info) {
+
     }
 
     @Override

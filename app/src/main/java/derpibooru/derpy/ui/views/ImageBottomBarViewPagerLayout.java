@@ -84,6 +84,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
     private void collapseViewPager() {
         new ViewPagerHeightChange()
                 .to(0)
+                /* going from fully-extended length to 0 equals twice the usual half-extension */
                 .multiplyDurationBy(2)
                 .doOnFinish(new Runnable() {
                     @Override
@@ -145,6 +146,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
         }
 
         mPager = (ViewPager) findViewById(R.id.bottomTabsPager);
+        mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager));
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -165,8 +167,8 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
         });
     }
 
-    protected void setUpViewPager(DerpibooruImageInfo content) {
-        mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content));
+    protected void populateViewPagerTabsWithImageInfo(DerpibooruImageInfo content) {
+        ((ImageBottomBarTabAdapter) mPager.getAdapter()).setTabInfo(content);
     }
 
     private boolean isViewPagerFullyExtended() {

@@ -1,5 +1,6 @@
 package derpibooru.derpy.ui.fragments;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -9,9 +10,12 @@ import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import derpibooru.derpy.data.server.DerpibooruImageInfo;
+
 public abstract class ImageBottomBarTabFragment extends Fragment {
     public ImageBottomBarTabFragment() {
         super();
+        setArguments(new Bundle());
     }
 
     protected void setTextViewFromHtml(TextView view, String html) {
@@ -40,6 +44,14 @@ public abstract class ImageBottomBarTabFragment extends Fragment {
         strBuilder.setSpan(clickable, start, end, flags);
         strBuilder.removeSpan(span);
     }
+
+    public void onTabInfoFetched(DerpibooruImageInfo info) {
+        if (getView() != null) {
+            displayInfoInView(getView(), info);
+        }
+    }
+
+    protected abstract void displayInfoInView(View target, DerpibooruImageInfo info);
 
     protected abstract void onLinkClick(View view);
 }

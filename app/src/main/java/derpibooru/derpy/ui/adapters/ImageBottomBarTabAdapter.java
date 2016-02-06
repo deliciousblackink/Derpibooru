@@ -1,6 +1,5 @@
 package derpibooru.derpy.ui.adapters;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -17,24 +16,23 @@ import derpibooru.derpy.ui.fragments.ImageBottomBarTabFragment;
 public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
     private ArrayList<FragmentAdapterItem> mTabs;
 
-    public ImageBottomBarTabAdapter(FragmentManager fm, DerpibooruImageInfo info) {
+    public ImageBottomBarTabAdapter(FragmentManager fm) {
         super(fm);
 
-        Bundle imageInfoBundle = new Bundle();
-        imageInfoBundle.putParcelable("image_info", info);
-
         mTabs = new ArrayList<>();
-        ImageBottomBarInfoTabFragment infoTab = new ImageBottomBarInfoTabFragment();
-        infoTab.setArguments(imageInfoBundle);
-        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.ImageInfo.id(), infoTab));
+        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.ImageInfo.id(),
+                                          new ImageBottomBarInfoTabFragment()));
+        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Faves.id(),
+                                          new ImageBottomBarFavoritesTabFragment()));
+        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Comments.id(),
+                                          new ImageBottomBarCommentsTabFragment()));
+    }
 
-        ImageBottomBarFavoritesTabFragment favesTab = new ImageBottomBarFavoritesTabFragment();
-        favesTab.setArguments(imageInfoBundle);
-        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Faves.id(), favesTab));
-
-        ImageBottomBarCommentsTabFragment commentsTab = new ImageBottomBarCommentsTabFragment();
-        commentsTab.setArguments(imageInfoBundle);
-        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Comments.id(), commentsTab));
+    public void setTabInfo(DerpibooruImageInfo info) {
+        for (FragmentAdapterItem item : mTabs) {
+            item.getContent().getArguments().putParcelable("info", info);
+            ((ImageBottomBarTabFragment) item.getContent()).onTabInfoFetched(info);
+        }
     }
 
     @Override

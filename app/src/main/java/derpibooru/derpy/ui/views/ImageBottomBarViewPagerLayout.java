@@ -2,6 +2,7 @@ package derpibooru.derpy.ui.views;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -113,11 +114,11 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
         return null;
     }
 
-    private void deselectButtonsOtherThan(View v) {
+    private void deselectButtonsOtherThan(@Nullable View view) {
         for (int layoutId : TABS.keySet()) {
-            LinearLayout ll = (LinearLayout) findViewById(layoutId);
-            if (!ll.equals(v)) {
-                ll.setSelected(false);
+            LinearLayout button = (LinearLayout) findViewById(layoutId);
+            if (view == null || !button.equals(view)) {
+                button.setSelected(false);
             }
         }
     }
@@ -125,6 +126,8 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
     protected void inflateLayout() {
         View view = inflate(getContext(), R.layout.view_image_bottom_bar, null);
         addView(view);
+
+        deselectButtonsOtherThan(null);
 
         mTransparentOverlay = findViewById(R.id.transparentOverlay);
 
@@ -156,9 +159,11 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
 
             @Override
             public void onPageSelected(int position) {
-                LinearLayout ll = (LinearLayout) findViewById(TABS.inverse().get(ImageBottomBarTabAdapter.ImageBottomBarTab.fromId(position)));
-                ll.setSelected(true);
-                deselectButtonsOtherThan(ll);
+                if (mPager.getVisibility() == View.VISIBLE) {
+                    LinearLayout ll = (LinearLayout) findViewById(TABS.inverse().get(ImageBottomBarTabAdapter.ImageBottomBarTab.fromId(position)));
+                    ll.setSelected(true);
+                    deselectButtonsOtherThan(ll);
+                }
             }
 
             @Override

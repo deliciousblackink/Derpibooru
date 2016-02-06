@@ -33,12 +33,6 @@ public class ImageBottomBarFavoritesTabFragment extends ImageBottomBarTabFragmen
                                    info.getFavedBy());
         ((GridView) v.findViewById(R.id.gridFavedBy))
                 .setAdapter(aa);
-        v.findViewById(R.id.gridFavedBy).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return event.getAction() == MotionEvent.ACTION_MOVE;
-            }
-        });
 
         return v;
     }

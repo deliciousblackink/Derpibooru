@@ -5,32 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true">
-
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/layoutImageComments"
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal">
-
-        <TextView
-            android:id="@+id/textComments"
+        android:gravity="center">
+        <derpibooru.derpy.ui.views.ProgressBarAccentColor
+            android:id="@+id/progressBottomBarTab"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Loading comments... (insert a progress bar?)"
-            android:scaleType="fitCenter"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="16sp"
-            android:paddingTop="1dp"
-            android:paddingLeft="5dp"/>
-
-        <LinearLayout
-            android:id="@+id/layoutComments"
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-        </LinearLayout>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 </ScrollView>

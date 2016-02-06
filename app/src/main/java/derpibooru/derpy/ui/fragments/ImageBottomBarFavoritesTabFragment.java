@@ -30,6 +30,9 @@ public class ImageBottomBarFavoritesTabFragment extends ImageBottomBarTabFragmen
         ArrayAdapter<String> aa = new ArrayAdapter<>(getActivity(), R.layout.view_image_favorites_item,
                                                      info.getFavedBy());
         ((GridView) target.findViewById(R.id.gridFavedBy)).setAdapter(aa);
+        target.findViewById(R.id.progressBottomBarTab).setVisibility(View.GONE);
+        target.findViewById(R.id.textFavedBy).setVisibility(View.VISIBLE);
+        target.findViewById(R.id.gridFavedBy).setVisibility(View.VISIBLE);
     }
 
     @Override

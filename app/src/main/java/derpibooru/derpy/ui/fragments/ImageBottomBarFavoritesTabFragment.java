@@ -40,8 +40,11 @@ public class ImageBottomBarFavoritesTabFragment extends ImageBottomBarTabFragmen
             }
         });
 
-        super.setRootViewGroup((ViewGroup) v);
-        super.provideCurrentContentHeight(TAB_ID);
         return v;
+    }
+
+    @Override
+    protected void onLinkClick(View view) {
+
     }
 }

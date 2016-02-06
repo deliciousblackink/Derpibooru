@@ -21,9 +21,11 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_image_comments_tab, container, false);
-
-        super.setRootViewGroup((ViewGroup) v);
-        super.provideCurrentContentHeight(TAB_ID);
         return v;
+    }
+
+    @Override
+    protected void onLinkClick(View view) {
+
     }
 }

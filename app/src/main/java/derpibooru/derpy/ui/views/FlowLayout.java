@@ -19,8 +19,6 @@ public class FlowLayout extends ViewGroup {
     private int mVerticalSpacing;
     private Paint mPaint;
 
-    private int mOnMeasureHeight = 0;
-
     public FlowLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -36,10 +34,6 @@ public class FlowLayout extends ViewGroup {
         mPaint.setAntiAlias(true);
         mPaint.setColor(0xffff0000);
         mPaint.setStrokeWidth(2.0f);
-    }
-
-    public int getOnMeasureHeight() {
-        return mOnMeasureHeight;
     }
 
     @Override
@@ -100,8 +94,7 @@ public class FlowLayout extends ViewGroup {
         }
 
         width += getPaddingRight();
-        int height = currentHeight + getPaddingBottom();
-        mOnMeasureHeight = height;
+        int height = currentHeight + maxChildHeight + getPaddingBottom();
 
         setMeasuredDimension(resolveSize(width, widthMeasureSpec),
                              resolveSize(height, heightMeasureSpec));

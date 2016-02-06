@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -83,7 +82,8 @@ public class ImageActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+                                                   boolean isFromMemoryCache, boolean isFirstResource) {
                         ProgressBar pb = (ProgressBar) findViewById(R.id.progressImage);
                         pb.setVisibility(View.GONE);
 
@@ -100,13 +100,6 @@ public class ImageActivity extends AppCompatActivity {
                                     findViewById(R.id.imageTopBar).setVisibility(View.VISIBLE);
                                     findViewById(R.id.imageBottomBar).setVisibility(View.VISIBLE);
                                 }
-                            }
-                        });
-                        mBottomBarView.setOverlayTouchHandler(new ImageBottomBarView.TransparentOverlayTouchHandler() {
-                            @Override
-                            public void onTouch(MotionEvent event) {
-                                imageView.dispatchTouchEvent(event);
-                                mImageViewZoomAttacher.onTouch(imageView, event);
                             }
                         });
                         return false;

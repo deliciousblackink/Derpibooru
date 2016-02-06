@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layoutImageInfo"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:gravity="center_vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/textUploaded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Uploaded by {} on {}"
+                android:scaleType="fitCenter"
+                android:textSize="20sp"
+                android:padding="5dp"
+                android:layout_margin="10dp"/>
 
-    <TextView
-        android:id="@+id/textUploaded"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Uploaded by {} on {}"
-        android:scaleType="fitCenter"
-        android:textSize="20sp"
-        android:padding="5dp"
-        android:layout_margin="10dp"/>
+            <TextView
+                android:id="@+id/textDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Description"
+                android:scaleType="fitCenter"
+                android:textSize="16sp"
+                android:layout_margin="10dp"
+                android:padding="5dp"/>
 
-    <TextView
-        android:id="@+id/textDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:scaleType="fitCenter"
-        android:textSize="16sp"
-        android:layout_margin="10dp"
-        android:padding="5dp"/>
-
-    <derpibooru.derpy.ui.views.FlowLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:horizontalSpacing="10dp"
-        app:verticalSpacing="10dp"
-        android:id="@+id/layoutImageTags"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:padding="5dp">
-    </derpibooru.derpy.ui.views.FlowLayout>
-</LinearLayout>
+            <derpibooru.derpy.ui.views.FlowLayout
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                app:horizontalSpacing="10dp"
+                app:verticalSpacing="10dp"
+                android:id="@+id/layoutImageTags"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:padding="5dp">
+            </derpibooru.derpy.ui.views.FlowLayout>
+        </LinearLayout>
+</ScrollView>

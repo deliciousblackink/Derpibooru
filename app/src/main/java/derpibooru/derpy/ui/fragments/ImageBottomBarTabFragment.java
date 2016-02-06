@@ -1,61 +1,45 @@
 package derpibooru.derpy.ui.fragments;
 
-import android.os.Build;
 import android.support.v4.app.Fragment;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-
-import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
-import derpibooru.derpy.ui.views.FlowLayout;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
+import android.view.View;
+import android.widget.TextView;
 
 public abstract class ImageBottomBarTabFragment extends Fragment {
-    private ImageBottomBarTabAdapter.ImageBottomBarTabHandler mContentHeightHandler;
-    private ViewGroup mRootViewGroup;
-
     public ImageBottomBarTabFragment() {
         super();
     }
 
-    public void setContentHeightHandler(ImageBottomBarTabAdapter.ImageBottomBarTabHandler handler) {
-        mContentHeightHandler = handler;
-    }
-
-    public void provideCurrentContentHeight(ImageBottomBarTabAdapter.ImageBottomBarTab tab) {
-        if (mContentHeightHandler != null) {
-            mRootViewGroup.getViewTreeObserver()
-                    .addOnGlobalLayoutListener(new LayoutHeightHandler(tab));
+    protected void setTextViewFromHtml(TextView view, String html) {
+        /* http://stackoverflow.com/a/19989677/1726690 */
+        CharSequence sequence = Html.fromHtml(html);
+        SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
+        URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
+        for (URLSpan span : urls) {
+            makeLinkClickable(strBuilder, span);
         }
+        view.setText(strBuilder);
+        /* http://stackoverflow.com/a/2746708/1726690 */
+        view.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    protected void setRootViewGroup(ViewGroup root) {
-        mRootViewGroup = root;
-    }
-
-    private class LayoutHeightHandler implements ViewTreeObserver.OnGlobalLayoutListener {
-        private ImageBottomBarTabAdapter.ImageBottomBarTab mTab;
-
-        public LayoutHeightHandler(ImageBottomBarTabAdapter.ImageBottomBarTab tab) {
-            mTab = tab;
-        }
-
-        @Override
-        public void onGlobalLayout() {
-            int height = 0;
-            for (int x = 0; x < mRootViewGroup.getChildCount(); x++) {
-                /* TODO: FlowLayout does not provide correct measurements
-                 using a temp variable hack atm */
-                height += (mRootViewGroup.getChildAt(x) instanceof FlowLayout) ?
-                          ((FlowLayout) mRootViewGroup.getChildAt(x)).getOnMeasureHeight()
-                          : mRootViewGroup.getChildAt(x).getMeasuredHeight();
+    protected void makeLinkClickable(SpannableStringBuilder strBuilder, URLSpan span) {
+        /* http://stackoverflow.com/a/19989677/1726690 */
+        int start = strBuilder.getSpanStart(span);
+        int end = strBuilder.getSpanEnd(span);
+        int flags = strBuilder.getSpanFlags(span);
+        ClickableSpan clickable = new ClickableSpan() {
+            public void onClick(View view) {
+                onLinkClick(view);
             }
-            mContentHeightHandler.onTabHeightProvided(mTab, height);
-
-            ViewTreeObserver obs = mRootViewGroup.getViewTreeObserver();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                obs.removeOnGlobalLayoutListener(this);
-            } else {
-                obs.removeGlobalOnLayoutListener(this);
-            }
-        }
+        };
+        strBuilder.setSpan(clickable, start, end, flags);
+        strBuilder.removeSpan(span);
     }
+
+    protected abstract void onLinkClick(View view);
 }

@@ -17,9 +17,7 @@ import derpibooru.derpy.ui.fragments.ImageBottomBarTabFragment;
 public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
     private ArrayList<FragmentAdapterItem> mTabs;
 
-    public ImageBottomBarTabAdapter(FragmentManager fm,
-                                    DerpibooruImageInfo info,
-                                    ImageBottomBarTabHandler heightHandler) {
+    public ImageBottomBarTabAdapter(FragmentManager fm, DerpibooruImageInfo info) {
         super(fm);
 
         Bundle imageInfoBundle = new Bundle();
@@ -28,23 +26,15 @@ public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
         mTabs = new ArrayList<>();
         ImageBottomBarInfoTabFragment infoTab = new ImageBottomBarInfoTabFragment();
         infoTab.setArguments(imageInfoBundle);
-        infoTab.setContentHeightHandler(heightHandler);
         mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.ImageInfo.id(), infoTab));
 
         ImageBottomBarFavoritesTabFragment favesTab = new ImageBottomBarFavoritesTabFragment();
         favesTab.setArguments(imageInfoBundle);
-        favesTab.setContentHeightHandler(heightHandler);
         mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Faves.id(), favesTab));
 
         ImageBottomBarCommentsTabFragment commentsTab = new ImageBottomBarCommentsTabFragment();
         commentsTab.setArguments(imageInfoBundle);
-        commentsTab.setContentHeightHandler(heightHandler);
         mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Comments.id(), commentsTab));
-    }
-
-    public void provideCurrentContentHeight(ImageBottomBarTab tab) {
-        ((ImageBottomBarTabFragment) mTabs.get(tab.id()).getContent())
-                .provideCurrentContentHeight(tab);
     }
 
     @Override
@@ -85,9 +75,5 @@ public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
             }
             return null;
         }
-    }
-
-    public interface ImageBottomBarTabHandler {
-        void onTabHeightProvided(ImageBottomBarTab tab, int newHeight);
     }
 }

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -44,12 +45,11 @@ public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
         setImageDescription(info, v);
         setImageTags(info, v);
 
-        super.setRootViewGroup((ViewGroup) v);
-        super.provideCurrentContentHeight(TAB_ID);
         return v;
     }
 
-    private void onLinkClick(View v) {
+    @Override
+    protected void onLinkClick(View v) {
         /* TODO: handle profile view/image link/external link */
     }
 
@@ -70,7 +70,7 @@ public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
                                          info.getUploader(), info.getUploader());
         }
 
-        setTextViewFromHtml(((TextView) layout.findViewById(R.id.textUploaded)),
+        super.setTextViewFromHtml(((TextView) layout.findViewById(R.id.textUploaded)),
                             uploaderHtml);
     }
 
@@ -91,32 +91,5 @@ public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
             itv.setTagInfo(tag);
             l.addView(itv);
         }
-    }
-
-    private void setTextViewFromHtml(TextView view, String html) {
-        /* http://stackoverflow.com/a/19989677/1726690 */
-        CharSequence sequence = Html.fromHtml(html);
-        SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
-        URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
-        for (URLSpan span : urls) {
-            makeLinkClickable(strBuilder, span);
-        }
-        view.setText(strBuilder);
-        /* http://stackoverflow.com/a/2746708/1726690 */
-        view.setMovementMethod(LinkMovementMethod.getInstance());
-    }
-
-    private void makeLinkClickable(SpannableStringBuilder strBuilder, URLSpan span) {
-        /* http://stackoverflow.com/a/19989677/1726690 */
-        int start = strBuilder.getSpanStart(span);
-        int end = strBuilder.getSpanEnd(span);
-        int flags = strBuilder.getSpanFlags(span);
-        ClickableSpan clickable = new ClickableSpan() {
-            public void onClick(View view) {
-                onLinkClick(view);
-            }
-        };
-        strBuilder.setSpan(clickable, start, end, flags);
-        strBuilder.removeSpan(span);
     }
 }

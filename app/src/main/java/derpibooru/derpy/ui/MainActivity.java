@@ -19,6 +19,9 @@ public class MainActivity extends NavigationDrawerActivity {
 
         ((FragmentTabPagerView) findViewById(R.id.fragmentPagerView))
                 .setFragmentAdapter(new MainActivityTabAdapter(getSupportFragmentManager()));
+    @Override
+    protected void onUserDataRefreshed() {
+        }
     }
 
     @Override

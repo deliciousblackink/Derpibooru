@@ -24,12 +24,20 @@ abstract class NavigationDrawerActivity extends AppCompatActivity {
         mNavigationDrawer = new NavigationDrawer(this,
                                                  ((DrawerLayout) findViewById(R.id.drawerLayout)),
                                                  toolbar,
-                                                 ((NavigationView) findViewById(R.id.navigationView)));
+                                                 ((NavigationView) findViewById(R.id.navigationView)),
+                                                 new NavigationDrawer.UserDataObtainedHandler() {
+                                                     @Override
+                                                     public void onUserDataObtained() {
+                                                         onUserDataRefreshed();
+                                                     }
+                                                 });
     }
 
     protected void refreshUserData() {
         mNavigationDrawer.refreshUserData();
     }
+
+    protected abstract void onUserDataRefreshed();
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

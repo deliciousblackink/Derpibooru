@@ -35,6 +35,11 @@ public class FiltersActivity extends NavigationDrawerActivity {
     }
 
     @Override
+    protected void onUserDataRefreshed() {
+        /* TODO: handle user data refresh (swap the filter, etc.) */
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putParcelableArrayList("filters", mAvailableFilterList);

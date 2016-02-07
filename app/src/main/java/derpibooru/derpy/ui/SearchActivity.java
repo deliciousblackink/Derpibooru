@@ -28,13 +28,7 @@ public class SearchActivity extends NavigationDrawerActivity {
                 .setText(Html.fromHtml(getString(R.string.search_help)));
     }
 
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
+    @Override
+    protected void onUserDataRefreshed() {
+    }
 }

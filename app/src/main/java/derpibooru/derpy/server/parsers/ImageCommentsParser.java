@@ -50,7 +50,7 @@ public class ImageCommentsParser implements ServerResponseParser {
 
     private String parsePostedAt(Element commentOptions) {
         String info = commentOptions.select("div").first().text();
-        Matcher m = Pattern.compile("^(?:Posted\\s)(.*)(?:\\s\\u2022)").matcher(info);
+        Matcher m = Pattern.compile("^(?:Posted\\s)(.*?)(?:\\s\\u0095)").matcher(info);
         return m.find() ? m.group(1) : "";
     }
 }

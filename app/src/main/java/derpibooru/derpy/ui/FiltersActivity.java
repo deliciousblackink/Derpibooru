@@ -75,7 +75,7 @@ public class FiltersActivity extends NavigationDrawerActivity {
 
             @Override
             public void onNetworkError() {
-
+                /* TODO: handle network errors */
             }
         });
     }

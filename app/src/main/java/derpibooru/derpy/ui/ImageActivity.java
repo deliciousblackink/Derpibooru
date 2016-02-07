@@ -58,15 +58,15 @@ public class ImageActivity extends AppCompatActivity {
         mBottomBarView.setFragmentManager(getSupportFragmentManager());
         mBottomBarView.setBasicInfo(thumb.getId(), thumb.getFaves(), thumb.getCommentCount());
         mBottomBarView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        int bottomBarMaximumHeightWhenExtended = findViewById(R.id.imageView).getMeasuredHeight()
-                                - (findViewById(R.id.toolbarLayout).getMeasuredHeight());
-                        mBottomBarView.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
-                        mBottomBarView.getLayoutParams().height = bottomBarMaximumHeightWhenExtended;
-                        mBottomBarView.requestLayout();
-                    }
-                });
+            @Override
+            public void run() {
+                int bottomBarMaximumHeightWhenExtended = findViewById(R.id.imageView).getMeasuredHeight()
+                        - (findViewById(R.id.toolbarLayout).getMeasuredHeight());
+                mBottomBarView.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
+                mBottomBarView.getLayoutParams().height = bottomBarMaximumHeightWhenExtended;
+                mBottomBarView.requestLayout();
+            }
+        });
     }
 
     private void loadImageWithGlide(String url) {

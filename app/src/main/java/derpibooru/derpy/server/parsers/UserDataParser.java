@@ -21,9 +21,7 @@ public class UserDataParser implements ServerResponseParser {
                 new UserNameParser().parseResponse(rawResponse);
         DerpibooruFilter currentFilter = (DerpibooruFilter)
                 new CurrentFilterParser().parseResponse(rawResponse);
-
         /* TODO: parse avatars */
-
         return new DerpibooruUser(userName)
                 .setCurrentFilter(currentFilter);
     }

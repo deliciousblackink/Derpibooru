@@ -101,15 +101,14 @@ public class ImageInfoParser implements ServerResponseParser {
          * ->
          * 7280 */
         Matcher m = Pattern.compile("(?!\\()([\\d*\\.]+)(?=\\))").matcher(s);
-
-        int count = 0;
+        int numberOfImages = 0;
         while (m.find()) {
              /* handle cases like
               * excalibur(1981)(3)+SH
               * where the matcher will have two "find()" matches
               */
-            count = Integer.parseInt(m.group(m.groupCount() - 1));
+            numberOfImages = Integer.parseInt(m.group(m.groupCount() - 1));
         }
-        return count;
+        return numberOfImages;
     }
 }

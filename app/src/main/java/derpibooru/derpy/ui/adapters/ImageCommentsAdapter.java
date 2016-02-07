@@ -1,10 +1,7 @@
 package derpibooru.derpy.ui.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +27,7 @@ public class ImageCommentsAdapter extends RecyclerView.Adapter<ImageCommentsAdap
 
     @Override
     public ImageCommentsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                          int viewType) {
+                                                              int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_image_bottom_bar_comments_item, parent, false);
         return new ViewHolder(v);
@@ -38,7 +35,7 @@ public class ImageCommentsAdapter extends RecyclerView.Adapter<ImageCommentsAdap
 
     public void resetImageComments(ArrayList<DerpibooruImageComment> newComments) {
         super.notifyItemRangeRemoved(0, mComments.size());
-        mComments =  newComments;
+        mComments = newComments;
         super.notifyItemRangeInserted(0, mComments.size() - 1);
     }
 
@@ -62,7 +59,7 @@ public class ImageCommentsAdapter extends RecyclerView.Adapter<ImageCommentsAdap
         } else {
             Glide.with(mContext).load(R.drawable.no_avatar).dontAnimate().into(holder.imageAvatar);
         }
-        
+
         holder.textAuthor.setText(holder.data.getAuthor());
         holder.textPostedAt.setText(holder.data.getPostedAt());
         holder.textComment.setText(holder.data.getText());

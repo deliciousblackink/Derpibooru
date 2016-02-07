@@ -34,9 +34,7 @@ public class Tags {
             }
 
             @Override
-            public void onRequestFailed() {
-
-            }
+            public void onRequestFailed() { }
         });
         mTagStorage = new TagStorage(context);
     }
@@ -72,8 +70,7 @@ public class Tags {
             }
 
             @Override
-            public void onNetworkError() {
-            }
+            public void onNetworkError() { }
         });
         user.fetchUserData();
     }

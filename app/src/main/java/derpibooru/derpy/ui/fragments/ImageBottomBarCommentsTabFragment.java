@@ -100,6 +100,6 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
 
     @Override
     protected void onLinkClick(View view) {
-
+        /* TODO: handle links in comments */
     }
 }

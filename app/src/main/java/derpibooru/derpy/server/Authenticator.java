@@ -30,9 +30,7 @@ class Authenticator {
                     }
 
                     @Override
-                    public void onRequestFailed() {
-
-                    }
+                    public void onRequestFailed() { }
                 }, AuthenticityToken.TokenAction.Login);
         authToken.fetch();
     }
@@ -46,9 +44,7 @@ class Authenticator {
                     }
 
                     @Override
-                    public void onRequestFailed() {
-
-                    }
+                    public void onRequestFailed() { }
                 }, AuthenticityToken.TokenAction.General);
         authToken.fetch();
     }

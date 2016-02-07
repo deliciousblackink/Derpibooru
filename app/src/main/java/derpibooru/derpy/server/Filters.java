@@ -88,7 +88,9 @@ public class Filters {
 
     public interface FiltersRequestHandler {
         void onAvailableFiltersFetched(ArrayList<DerpibooruFilter> filters);
+
         void onFilterChangedSuccessfully();
+
         void onNetworkError();
     }
 

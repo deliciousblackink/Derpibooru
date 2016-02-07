@@ -15,8 +15,8 @@ import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.server.ImageListProvider;
 import derpibooru.derpy.server.ProviderRequestHandler;
 import derpibooru.derpy.ui.adapters.ImageListAdapter;
-import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 import derpibooru.derpy.ui.views.ImageListRecyclerView;
+import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
 public abstract class ImageListFragment extends Fragment {
     private ImageListAdapter mImageListAdapter;

@@ -3,10 +3,10 @@ package derpibooru.derpy.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -86,25 +86,25 @@ public class LoginActivity extends AppCompatActivity {
                                         ((CheckBox) findViewById(R.id.checkRememberMe)).isChecked());
 
         User user = new User(this,
-        new User.UserRequestHandler() {
-            @Override
-            public void onUserDataObtained(DerpibooruUser userData) {
-                setResult(Activity.RESULT_OK);
-                finish();
-            }
-            @Override
-            public void onNetworkError() {
-            }
-        }, new User.AuthenticationRequestHandler() {
+                             new User.UserRequestHandler() {
+                                 @Override
+                                 public void onUserDataObtained(DerpibooruUser userData) {
+                                     setResult(Activity.RESULT_OK);
+                                     finish();
+                                 }
+
+                                 @Override
+                                 public void onNetworkError() {
+                                 }
+                             }, new User.AuthenticationRequestHandler() {
             @Override
             public void onFailedLogin() {
                 hideProgressBar();
-                showSnackbar("An error occurred, please try again later");
+                showSnackbar("Incorrect e-mail and/or password");
             }
 
             @Override
-            public void onFailedLogout() {
-            }
+            public void onFailedLogout() { }
         });
         user.login(form);
         showProgressBar();

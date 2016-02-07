@@ -52,7 +52,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
 
     public void setBarExtensionAttrs(int maximumBarHeight) {
         int transparentOverlayHeight =
-                maximumBarHeight - findViewById(R.id.bottomBarHeaderLayout).getMeasuredHeight();;
+                maximumBarHeight - findViewById(R.id.bottomBarHeaderLayout).getMeasuredHeight();
         mTransparentOverlay.getLayoutParams().height = transparentOverlayHeight;
         mTransparentOverlay.requestLayout();
 
@@ -167,8 +167,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-            }
+            public void onPageScrollStateChanged(int state) { }
         });
     }
 

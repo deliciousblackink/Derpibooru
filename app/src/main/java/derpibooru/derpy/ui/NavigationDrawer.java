@@ -188,6 +188,5 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
 
         @Override
         public void onFailedLogout() { }
-
     }
 }

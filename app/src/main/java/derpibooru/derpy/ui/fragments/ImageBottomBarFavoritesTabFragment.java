@@ -36,7 +36,5 @@ public class ImageBottomBarFavoritesTabFragment extends ImageBottomBarTabFragmen
     }
 
     @Override
-    protected void onLinkClick(View view) {
-
-    }
+    protected void onLinkClick(View view) { }
 }

@@ -125,11 +125,13 @@ public class User {
 
     public interface UserRequestHandler {
         void onUserDataObtained(DerpibooruUser userData);
+
         void onNetworkError();
     }
 
     public interface AuthenticationRequestHandler {
         void onFailedLogin();
+
         void onFailedLogout();
     }
 

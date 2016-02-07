@@ -25,7 +25,6 @@ class AsynchronousPostRequest extends AsynchronousRequest {
         for (Map.Entry<String, String> formItem : mPostFormData.entrySet()) {
             formBody.add(formItem.getKey(), formItem.getValue());
         }
-
         return new Request.Builder()
                 .url(mUrl)
                 .method("POST", formBody.build())

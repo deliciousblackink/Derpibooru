@@ -16,7 +16,7 @@ public class MainActivityWatchedTabFragment extends ImageListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.setImageListProvider(new WatchedProvider(getActivity(),
-                                                        new ImageListRequestHandler()));
+                                                       new ImageListRequestHandler()));
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

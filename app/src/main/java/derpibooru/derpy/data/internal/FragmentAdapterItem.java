@@ -16,7 +16,6 @@ public class FragmentAdapterItem {
     public FragmentAdapterItem(int position, Fragment content) {
         this.mPosition = position;
         this.mContent = content;
-
         this.mTitle = "";
     }
 

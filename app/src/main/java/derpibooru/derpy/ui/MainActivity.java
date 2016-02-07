@@ -45,12 +45,11 @@ public class MainActivity extends NavigationDrawerActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.actionRandomImage) {
-            /* TODO: random image */
+        switch (item.getItemId()) {
+            case R.id.actionRandomImage:
+                /* TODO: random image */
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

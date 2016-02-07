@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,7 +17,7 @@ public class ImageCommentsParser implements ServerResponseParser {
     public Object parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
         if (doc.select("div.metabar").first() == null) {
-            return null;
+            return new ArrayList<DerpibooruImageComment>();
         }
         ArrayList<DerpibooruImageComment> commentList = new ArrayList<>();
         /* TODO: parse comment author's badges */

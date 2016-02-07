@@ -79,10 +79,14 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
         } else {
             mCommentsAdapter.appendImageComments(comments);
         }
+        showCommentsIfNotVisible();
+    }
+
+    private void showCommentsIfNotVisible() {
         if (getView() != null && getView()
                 .findViewById(R.id.progressBottomBarTab).getVisibility() == View.VISIBLE) {
             getView().findViewById(R.id.progressBottomBarTab).setVisibility(View.GONE);
-            getView().findViewById(R.id.layoutCommentsRefresh).setVisibility(View.VISIBLE);
+            mCommentsRefreshLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -94,7 +98,7 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
 
         @Override
         public void onRequestFailed() {
-            /* TODO: display error message */
+            /* TODO: handle request failure */
         }
     }
 

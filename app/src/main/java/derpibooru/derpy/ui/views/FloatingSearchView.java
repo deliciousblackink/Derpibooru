@@ -26,6 +26,8 @@ public class FloatingSearchView extends LinearLayout {
     private static final int ICON_SEARCH = R.drawable.ic_search_white_24dp;
     private static final int ICON_BACK = R.drawable.ic_arrow_back_white_24dp;
 
+    /* TODO: AutoCompleteTextView */
+
     private OnLayoutSizeChangedListener mLayoutSizeChangedListener;
     private RecyclerView mRecentSearchView;
     private View mRecentSearchDivider;

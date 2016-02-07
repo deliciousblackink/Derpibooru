@@ -29,7 +29,7 @@ public class RecentSearchListAdapter extends RecyclerView
     public RecentSearchListAdapter(Context context) {
         mContext = context;
         //mDataset = myDataset;
-        mDataset = new String[] { "dummy", "lorem ipsum", "placeholder" };
+        mDataset = new String[] { "Search history is not implemented yet." };
         /* TODO: initialize the dataset */
     }
 

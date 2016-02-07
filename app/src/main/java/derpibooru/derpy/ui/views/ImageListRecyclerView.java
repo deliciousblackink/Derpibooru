@@ -1,23 +1,24 @@
 package derpibooru.derpy.ui.views;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
+import derpibooru.derpy.R;
+
 /**
  * @see <a href="http://blog.sqisland.com/2014/12/recyclerview-autofit-grid.html">Based on this AutoFit solution</a>
  */
 public class ImageListRecyclerView extends RecyclerView {
-    private static final int MIN_IMAGE_THUMB_SIZE = 180;
-    private static final int MIN_NUMBER_OF_COLUMNS = 2;
-    private static final int MAX_NUMBER_OF_COLUMNS = 4;
     private static final int SPACING_BETWEEN_IMAGE_THUMBS = 10;
 
     private GridLayoutManager mLayoutManager;
 
+    private int mImageThumbSize;
     private int mLastMeasuredWidth;
     private int mLastMeasuredNumberOfColumns;
 
@@ -29,11 +30,13 @@ public class ImageListRecyclerView extends RecyclerView {
     public ImageListRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
+        setAttrs(context, attrs);
     }
 
     public ImageListRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
+        setAttrs(context, attrs);
     }
 
     private void init() {
@@ -42,30 +45,29 @@ public class ImageListRecyclerView extends RecyclerView {
         addItemDecoration(new ImageListSpacingDecoration());
     }
 
+    private void setAttrs(Context context, AttributeSet attrs) {
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImageListRecyclerView);
+        try {
+            mImageThumbSize =
+                    a.getDimensionPixelSize(R.styleable.ImageListRecyclerView_imageThumbSize, 1);
+        } finally {
+            a.recycle();
+        }
+    }
+
     @Override
     protected void onMeasure(int widthSpec, int heightSpec) {
         super.onMeasure(widthSpec, heightSpec);
         if (getMeasuredWidth() != mLastMeasuredWidth) {
             mLastMeasuredWidth = getMeasuredWidth();
-            mLastMeasuredNumberOfColumns = calculateNumberOfColumns(mLastMeasuredWidth);
+            mLastMeasuredNumberOfColumns =
+                    calculateNumberOfColumns(getMeasuredWidth());
         }
         mLayoutManager.setSpanCount(mLastMeasuredNumberOfColumns);
     }
 
-    private int calculateNumberOfColumns(int recyclerViewWidth) {
-        /* FIXME: this is by far the dirtiest piece of code I've ever written */
-        int currentImageThumbWidth = MIN_IMAGE_THUMB_SIZE;
-        if ((MIN_IMAGE_THUMB_SIZE * MIN_NUMBER_OF_COLUMNS) > recyclerViewWidth) {
-            return 1;  /* ldpi devices */
-        }
-        final int sizeIncrease = 100;
-        int currentColumnCount = 1;
-        while (currentColumnCount < MIN_NUMBER_OF_COLUMNS
-                || currentColumnCount > MAX_NUMBER_OF_COLUMNS) {
-            currentColumnCount = (recyclerViewWidth / currentImageThumbWidth);
-            currentImageThumbWidth += sizeIncrease;
-        }
-        return currentColumnCount;
+    private int calculateNumberOfColumns(int width) {
+        return Math.max(1, (width / mImageThumbSize));
     }
 
     /**

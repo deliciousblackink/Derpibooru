@@ -61,7 +61,8 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
             displayImageWithGlide(holder.data.getThumbUrl(),
                                   loadingPriority, holder.imageView);
         }
-        holder.textInfo.setText(String.format("%d", holder.data.getScore()));
+        holder.textInfo.setText(String.format("S %d — C %d",
+                                              holder.data.getScore(), holder.data.getCommentCount()));
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

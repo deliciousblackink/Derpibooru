@@ -42,9 +42,16 @@ public class FragmentTabPagerView extends LinearLayout {
 
     public void setFragmentAdapter(PagerAdapter adapter) {
         mViewPager.setAdapter(adapter);
-        mTabLayout.setupWithViewPager(mViewPager);
+        refreshTabTitles();
+    }
 
-        setTabsTypeface();
+    public void refreshTabTitles() {
+        mTabLayout.setupWithViewPager(mViewPager);
+        setTabTitleTypeface();
+    }
+
+    public PagerAdapter getFragmentAdapter() {
+        return mViewPager.getAdapter();
     }
 
     public ViewPager getViewPager() {
@@ -55,7 +62,7 @@ public class FragmentTabPagerView extends LinearLayout {
      * Sets the TabLayout typeface to Roboto Medium, as per the guidelines
      * of Material Design (versions prior to Lollipop do not have it pre-installed).
      */
-    private void setTabsTypeface() {
+    private void setTabTitleTypeface() {
         //http://stackoverflow.com/a/31067431/1726690
         ViewGroup vg = (ViewGroup) mTabLayout.getChildAt(0);
         int tabsCount = vg.getChildCount();

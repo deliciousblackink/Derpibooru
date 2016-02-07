@@ -11,16 +11,29 @@ import derpibooru.derpy.ui.views.FragmentTabPagerView;
 /* TODO: https://github.com/JakeWharton/butterknife */
 
 public class MainActivity extends NavigationDrawerActivity {
+    private FragmentTabPagerView mTabViewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeNavigationDrawer();
+        mTabViewPager = (FragmentTabPagerView) findViewById(R.id.fragmentPagerView);
+        mTabViewPager.setFragmentAdapter(
+                new MainActivityTabAdapter(this, getSupportFragmentManager(),
+                                           new MainActivityTabAdapter.TabSetChangeHandler() {
+                                               @Override
+                                               public void onTabSetChanged() {
+                                                   mTabViewPager.refreshTabTitles();
+                                               }
+                                           }));
+        refreshUserData();
+    }
 
-        ((FragmentTabPagerView) findViewById(R.id.fragmentPagerView))
-                .setFragmentAdapter(new MainActivityTabAdapter(getSupportFragmentManager()));
     @Override
     protected void onUserDataRefreshed() {
+        if (mTabViewPager != null) {
+            ((MainActivityTabAdapter) mTabViewPager.getFragmentAdapter()).toggleWatchedTab();
         }
     }
 

@@ -47,10 +47,10 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.data = mImages.get(position);
-
         if (holder.data.isSpoilered()) {
             String spoilers = Joiner.on(", ").skipNulls()
                     .join(holder.data.getSpoileredTagNames());
+            holder.textSpoiler.setVisibility(View.VISIBLE);
             holder.textSpoiler.setText(spoilers);
             displayImageWithGlide(holder.data.getSpoilerImageUrl(),
                                   Priority.NORMAL, holder.imageView);

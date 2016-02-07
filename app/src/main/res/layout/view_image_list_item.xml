@@ -1,8 +1,8 @@
 <derpibooru.derpy.ui.views.SquareRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <!-- the size of the view is set in fragment_image_list_tab
+    android:layout_width="160dp"
+    android:layout_height="160dp">
+    <!-- the real size of the view is set in fragment_image_list_tab
     due to a measuring limitation for RecycleView grid layout -->
     <ImageView
         android:id="@+id/imageView"
@@ -11,31 +11,47 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:scaleType="fitXY"/>
-    <TextView
-        android:id="@+id/textInfo"
-        android:text="placeholder"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:textColor="@android:color/white"
-        android:background="#5f000000"
-        android:textAlignment="center"/>
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:background="#5f000000">
+        <ImageView
+            android:src="@drawable/ic_poll_white_24dp"
+            android:paddingRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/textScore"
+            android:text="2133"
+            android:paddingTop="2dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextLight"/>
+        <ImageView
+            android:src="@drawable/ic_comment_white_24dp"
+            android:paddingTop="3dp"
+            android:paddingRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/textComments"
+            android:text="1092"
+            android:paddingTop="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextLight"/>
+    </LinearLayout>
     <TextView
         android:id="@+id/textSpoiler"
-        android:text="suggestive"
+        android:text="suggestive, vulgar"
+        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
         android:textColor="@android:color/white"
         android:background="#5f000000"
         android:textAlignment="center"/>

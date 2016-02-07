@@ -61,8 +61,8 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
             displayImageWithGlide(holder.data.getThumbUrl(),
                                   loadingPriority, holder.imageView);
         }
-        holder.textInfo.setText(String.format("S %d — C %d",
-                                              holder.data.getScore(), holder.data.getCommentCount()));
+        holder.textScore.setText(String.format("%d", holder.data.getScore()));
+        holder.textComments.setText(String.format("%d", holder.data.getCommentCount()));
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,14 +88,16 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textInfo;
+        public TextView textScore;
+        public TextView textComments;
         public TextView textSpoiler;
         public ImageView imageView;
         public DerpibooruImageThumb data;
 
         public ViewHolder(View v) {
             super(v);
-            textInfo = (TextView) v.findViewById(R.id.textInfo);
+            textScore = (TextView) v.findViewById(R.id.textScore);
+            textComments = (TextView) v.findViewById(R.id.textComments);
             textSpoiler = (TextView) v.findViewById(R.id.textSpoiler);
             imageView = (ImageView) v.findViewById(R.id.imageView);
         }

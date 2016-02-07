@@ -3,13 +3,22 @@
              android:layout_width="match_parent"
              android:layout_height="?attr/actionBarSize"
              android:background="@color/colorImageToolbar">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical|center_horizontal"
         android:weightSum="3">
-
+        <TextView
+            android:id="@+id/textScore"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="1766"
+            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+            android:textColor="@color/colorTextLight"
+            android:background="@color/colorImageToolbar"
+            android:gravity="center_vertical|center_horizontal"/>
+        <!-- upvote -->
         <LinearLayout
             android:id="@+id/buttonUpvote"
             android:layout_width="0dp"
@@ -19,7 +28,6 @@
             android:orientation="horizontal"
             android:gravity="center_horizontal"
             android:background="@drawable/selector_toolbar_button">
-
             <ImageView
                 android:id="@+id/imgUpvote"
                 android:layout_width="wrap_content"
@@ -27,7 +35,6 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_thumb_up_white_24dp"
                 android:background="@drawable/selector_toolbar_button"/>
-
             <TextView
                 android:id="@+id/textUpvotes"
                 android:layout_gravity="center_vertical"
@@ -40,18 +47,7 @@
                 android:background="@drawable/selector_toolbar_button"
                 android:paddingLeft="5dp"/>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/textScore"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:text="1766"
-            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-            android:textColor="@color/colorTextLight"
-            android:background="@color/colorImageToolbar"
-            android:gravity="center_vertical|center_horizontal"/>
-
+        <!-- downvote -->
         <LinearLayout
             android:id="@+id/buttonDownvote"
             android:layout_width="0dp"
@@ -61,7 +57,6 @@
             android:orientation="horizontal"
             android:gravity="center_horizontal"
             android:background="@drawable/selector_toolbar_button">
-
             <ImageView
                 android:id="@+id/imgDownvote"
                 android:layout_width="wrap_content"
@@ -69,7 +64,6 @@
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_thumb_down_white_24dp"
                 android:background="@drawable/selector_toolbar_button"/>
-
             <TextView
                 android:id="@+id/textDownvotes"
                 android:layout_gravity="center_vertical"

@@ -61,8 +61,7 @@ public class ImageActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         int bottomBarMaximumHeightWhenExtended = findViewById(R.id.imageView).getMeasuredHeight()
-                                - (findViewById(R.id.toolbarLayout).getMeasuredHeight()
-                                + findViewById(R.id.imageTopBar).getMeasuredHeight());
+                                - (findViewById(R.id.toolbarLayout).getMeasuredHeight());
                         mBottomBarView.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
                         mBottomBarView.getLayoutParams().height = bottomBarMaximumHeightWhenExtended;
                         mBottomBarView.requestLayout();

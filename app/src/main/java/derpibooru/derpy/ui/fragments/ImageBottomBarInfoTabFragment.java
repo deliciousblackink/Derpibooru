@@ -28,7 +28,7 @@ public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_image_info_tab, container, false);
+        View v = inflater.inflate(R.layout.fragment_image_bottom_bar_info_tab, container, false);
         if (getArguments().containsKey("info")) {
             displayInfoInView(v, (DerpibooruImageInfo) getArguments().getParcelable("info"));
         }

@@ -18,7 +18,7 @@ public class ImageBottomBarFavoritesTabFragment extends ImageBottomBarTabFragmen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_image_favorites_tab, container, false);
+        View v = inflater.inflate(R.layout.fragment_image_bottom_bar_favorites_tab, container, false);
         if (getArguments().containsKey("info")) {
             displayInfoInView(v, (DerpibooruImageInfo) getArguments().getParcelable("info"));
         }
@@ -27,7 +27,7 @@ public class ImageBottomBarFavoritesTabFragment extends ImageBottomBarTabFragmen
 
     @Override
     protected void displayInfoInView(View target, DerpibooruImageInfo info) {
-        ArrayAdapter<String> aa = new ArrayAdapter<>(getActivity(), R.layout.view_image_favorites_item,
+        ArrayAdapter<String> aa = new ArrayAdapter<>(getActivity(), R.layout.view_image_bottom_bar_favorites_item,
                                                      info.getFavedBy());
         ((GridView) target.findViewById(R.id.gridFavedBy)).setAdapter(aa);
         target.findViewById(R.id.progressBottomBarTab).setVisibility(View.GONE);

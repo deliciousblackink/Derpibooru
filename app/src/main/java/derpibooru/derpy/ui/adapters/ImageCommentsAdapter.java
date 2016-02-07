@@ -36,11 +36,17 @@ public class ImageCommentsAdapter extends RecyclerView.Adapter<ImageCommentsAdap
         return new ViewHolder(v);
     }
 
-    public void appendImageComments(ArrayList<DerpibooruImageComment> newImages) {
+    public void resetImageComments(ArrayList<DerpibooruImageComment> newComments) {
+        super.notifyItemRangeRemoved(0, mComments.size());
+        mComments =  newComments;
+        super.notifyItemRangeInserted(0, mComments.size() - 1);
+    }
+
+    public void appendImageComments(ArrayList<DerpibooruImageComment> newComments) {
         int oldImageCount = mComments.size();
-        mComments.addAll(newImages);
+        mComments.addAll(newComments);
         int newImageCount = mComments.size() - 1;
-        super.notifyItemRangeChanged(oldImageCount, newImageCount);
+        super.notifyItemRangeInserted(oldImageCount, newImageCount);
     }
 
     @Override

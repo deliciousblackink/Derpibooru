@@ -1,6 +1,7 @@
 package derpibooru.derpy.ui.fragments;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,7 +21,10 @@ import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment {
     private ImageCommentsProvider mCommentsProvider;
     private ImageCommentsAdapter mCommentsAdapter;
+    private SwipeRefreshLayout mCommentsRefreshLayout;
     private RecyclerView mCommentsView;
+
+    private boolean mRefreshingComments = false;
 
     public ImageBottomBarCommentsTabFragment() {
         super();
@@ -35,12 +39,25 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
         if (getArguments().containsKey("info")) {
             displayInfoInView(v, (DerpibooruImageInfo) getArguments().getParcelable("info"));
         }
+        mCommentsRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.layoutCommentsRefresh);
+        mCommentsRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
+        mCommentsRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshComments();
+            }
+        });
         return v;
     }
 
     @Override
     protected void displayInfoInView(View target, DerpibooruImageInfo info) {
         mCommentsProvider.id(info.getId()).fetch();
+    }
+
+    private void refreshComments() {
+        mRefreshingComments = true;
+        mCommentsProvider.resetPageNumber().fetch();
     }
 
     private void displayCommentsFromProvider(ArrayList<DerpibooruImageComment> comments) {
@@ -55,6 +72,10 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
                     mCommentsProvider.nextPage().fetch();
                 }
             });
+        } else if (mRefreshingComments) {
+            mRefreshingComments = false;
+            mCommentsAdapter.resetImageComments(comments);
+            mCommentsRefreshLayout.setRefreshing(false);
         } else {
             mCommentsAdapter.appendImageComments(comments);
         }

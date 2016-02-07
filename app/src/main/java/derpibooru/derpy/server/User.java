@@ -16,6 +16,10 @@ public class User {
     private AuthenticatorAction mCurrentAction;
     private AuthenticationRequestHandler mAuthHandler;
 
+    public User(Context context) {
+        mUserDataStorage = new UserDataStorage(context);
+    }
+
     public User(Context context, UserRequestHandler handler) {
         mHandler = handler;
         initUserProvider(context);
@@ -55,7 +59,8 @@ public class User {
     }
 
     public boolean isLoggedIn() {
-        return mUserDataStorage.getUserData().isLoggedIn();
+        return mUserDataStorage.getUserData() != null
+                && mUserDataStorage.getUserData().isLoggedIn();
     }
 
     public void login(DerpibooruLoginForm form) {
@@ -73,16 +78,20 @@ public class User {
     }
 
     public void fetchUserData() {
-        DerpibooruUser cached = mUserDataStorage.getUserData();
-        if (cached == null) {
-            mUserProvider.fetch();
-        } else {
-            mHandler.onUserDataObtained(cached);
+        if (mUserProvider != null) {
+            DerpibooruUser cached = mUserDataStorage.getUserData();
+            if (cached == null) {
+                mUserProvider.fetch();
+            } else {
+                mHandler.onUserDataObtained(cached);
+            }
         }
     }
 
     public void refreshUserData() {
-        mUserProvider.fetch();
+        if (mUserProvider != null) {
+            mUserProvider.fetch();
+        }
     }
 
     private void onAuthenticatorResponseReceived(boolean result) {

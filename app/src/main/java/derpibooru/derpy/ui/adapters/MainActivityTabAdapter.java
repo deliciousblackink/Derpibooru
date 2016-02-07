@@ -10,10 +10,12 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.data.server.DerpibooruRankingsListType;
 import derpibooru.derpy.server.User;
-import derpibooru.derpy.ui.fragments.RankingsTabFragment;
-import derpibooru.derpy.ui.fragments.WatchedTabFragment;
+import derpibooru.derpy.ui.fragments.MainActivityNewImagesTabFragment;
+import derpibooru.derpy.ui.fragments.MainActivityRankingsTabFragment;
+import derpibooru.derpy.ui.fragments.MainActivityWatchedTabFragment;
 
 public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
+    private static final String TITLE_NEW = "New";
     private static final String TITLE_WATCHED = "Watched";
     private static final String TITLE_TOP_SCORING = "Top Scoring";
     private static final String TITLE_MOST_COMMENTED = "Most Commented";
@@ -27,6 +29,7 @@ public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
         super(fm);
         mContext = context;
         mTabChangeHandler = tabChangeHandler;
+        mTabs.add(TITLE_NEW);
         mTabs.add(TITLE_TOP_SCORING);
         mTabs.add(TITLE_MOST_COMMENTED);
     }
@@ -35,7 +38,7 @@ public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
         boolean loggedIn = new User(mContext).isLoggedIn();
         boolean watchedTabDisplayed = mTabs.contains(TITLE_WATCHED);
         if (loggedIn && !watchedTabDisplayed) {
-            mTabs.add(0, TITLE_WATCHED);
+            mTabs.add(1, TITLE_WATCHED);
             notifyDataSetChanged();
             mTabChangeHandler.onTabSetChanged();
         } else if (!loggedIn && watchedTabDisplayed) {
@@ -48,20 +51,22 @@ public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (mTabs.get(position)) {
+            case TITLE_NEW:
+                return new MainActivityNewImagesTabFragment();
             case TITLE_TOP_SCORING:
                 Bundle args = new Bundle();
                 args.putInt("type", DerpibooruRankingsListType.TopScoring.convertToValue());
-                RankingsTabFragment fragmentTopScoring = new RankingsTabFragment();
+                MainActivityRankingsTabFragment fragmentTopScoring = new MainActivityRankingsTabFragment();
                 fragmentTopScoring.setArguments(args);
                 return fragmentTopScoring;
             case TITLE_MOST_COMMENTED:
-                RankingsTabFragment fragmentMostCommented = new RankingsTabFragment();
+                MainActivityRankingsTabFragment fragmentMostCommented = new MainActivityRankingsTabFragment();
                 args = new Bundle();
                 args.putInt("type", DerpibooruRankingsListType.MostCommented.convertToValue());
                 fragmentMostCommented.setArguments(args);
                 return fragmentMostCommented;
             case TITLE_WATCHED:
-                return new WatchedTabFragment();
+                return new MainActivityWatchedTabFragment();
         }
         return null;
     }

@@ -5,23 +5,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import derpibooru.derpy.server.WatchedProvider;
+import derpibooru.derpy.data.server.DerpibooruRankingsListType;
+import derpibooru.derpy.server.RankingsProvider;
 
-public class WatchedTabFragment extends ImageListFragment {
-    public WatchedTabFragment() {
+public class MainActivityRankingsTabFragment extends ImageListFragment {
+    public MainActivityRankingsTabFragment() {
         super();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.setImageListProvider(new WatchedProvider(getActivity(),
+        super.setImageListProvider(new RankingsProvider(getActivity(),
                                                         new ImageListRequestHandler()));
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     protected void fetchImageThumbs() {
-        super.getImageListProvider().fetch();
+        ((RankingsProvider) super.getImageListProvider())
+                .type(DerpibooruRankingsListType.getFromValue(getArguments().getInt("type")))
+                .inDays(3) /* TODO: pass the time limit as an argument */
+                .fetch();
     }
 }

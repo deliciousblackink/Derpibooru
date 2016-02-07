@@ -7,7 +7,7 @@ import java.util.List;
 import derpibooru.derpy.data.server.DerpibooruTagFull;
 import derpibooru.derpy.server.parsers.ImageListParser;
 
-public abstract class ImageListProvider extends Provider {
+public class ImageListProvider extends Provider {
     protected static final int IMAGES_PER_PAGE = 16;
 
     private int mCurrentPage = 1;
@@ -27,6 +27,18 @@ public abstract class ImageListProvider extends Provider {
 
     protected void resetPageNumber() {
         mCurrentPage = 1;
+    }
+
+    @Override
+    protected String generateUrl() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(DERPIBOORU_DOMAIN);
+        sb.append("images.json");
+        sb.append("?perpage=");
+        sb.append(IMAGES_PER_PAGE);
+        sb.append("&page=");
+        sb.append(getCurrentPage());
+        return sb.toString();
     }
 
     @Override

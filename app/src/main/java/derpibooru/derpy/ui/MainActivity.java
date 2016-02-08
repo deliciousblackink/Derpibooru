@@ -17,7 +17,6 @@ public class MainActivity extends NavigationDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initializeNavigationDrawer();
         mTabViewPager = (FragmentTabPagerView) findViewById(R.id.fragmentPagerView);
         mTabViewPager.setFragmentAdapter(
                 new MainActivityTabAdapter(this, getSupportFragmentManager(),
@@ -27,7 +26,7 @@ public class MainActivity extends NavigationDrawerActivity {
                                                    mTabViewPager.refreshTabTitles();
                                                }
                                            }));
-        refreshUserData();
+        super.initializeNavigationDrawer();
     }
 
     @Override

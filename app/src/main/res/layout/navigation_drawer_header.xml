@@ -14,7 +14,7 @@
         android:baselineAligned="false">
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/profile_image"
+            android:id="@+id/imageAvatar"
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:src="@drawable/no_avatar"

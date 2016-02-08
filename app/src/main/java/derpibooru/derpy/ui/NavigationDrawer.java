@@ -9,7 +9,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruUser;
@@ -129,6 +133,14 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         }
         ((TextView) mDrawerHeader.findViewById(R.id.textHeaderFilter))
                 .setText("Filter: " + user.getCurrentFilter().getName());
+        /* ! copied from ImageCommentsAdapter; perhaps it should be made into a separate class? */
+        if (!user.getAvatarUrl().endsWith(".svg")) {
+            Glide.with(mParent).load(user.getAvatarUrl()).diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .dontAnimate().into((ImageView) mDrawerHeader.findViewById(R.id.imageAvatar));
+        } else {
+            Glide.with(mParent).load(R.drawable.no_avatar).dontAnimate()
+                    .into((ImageView) mDrawerHeader.findViewById(R.id.imageAvatar));
+        }
     }
 
     private void onUserLoggedIn(DerpibooruUser user) {

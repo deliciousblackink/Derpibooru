@@ -3,10 +3,12 @@ package derpibooru.derpy.data.server;
 public class DerpibooruUser {
     private boolean mIsLoggedIn;
     private String mUsername;
+    private String mAvatarUrl;
     private DerpibooruFilter mCurrentFilter;
 
-    public DerpibooruUser(String username) {
+    public DerpibooruUser(String username, String avatarUrl) {
         mUsername = username;
+        mAvatarUrl = "https:" + avatarUrl;
         mIsLoggedIn = (!username.equals(""));
     }
 
@@ -16,6 +18,10 @@ public class DerpibooruUser {
 
     public String getUsername() {
         return mUsername;
+    }
+
+    public String getAvatarUrl() {
+        return mAvatarUrl;
     }
 
     public DerpibooruFilter getCurrentFilter() {

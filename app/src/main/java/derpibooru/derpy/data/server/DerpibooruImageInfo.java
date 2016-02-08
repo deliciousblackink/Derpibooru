@@ -11,8 +11,8 @@ public class DerpibooruImageInfo implements Parcelable {
     private String mUploader;
     private String mDescription;
     private String mCreatedAt;
-    private ArrayList<DerpibooruTag> mTags;
-    private ArrayList<String> mFavedBy;
+    private ArrayList<DerpibooruTag> mTags = new ArrayList<>();
+    private ArrayList<String> mFavedBy = new ArrayList<>();
 
     public DerpibooruImageInfo(int id, String sourceUrl,
                                String uploader, String description, String createdAt,

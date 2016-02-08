@@ -79,7 +79,7 @@ public class Tags {
         void onTagsFetched(List<DerpibooruTagFull> tagList);
     }
 
-    private class TagListProvider extends Provider {
+    private static class TagListProvider extends Provider {
         private List<Integer> mTagIds;
         private List<DerpibooruTagFull> mExistingTags;
 

@@ -20,7 +20,7 @@ import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.User;
 
 class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListener {
-    private final int ACTIVITY_LOGIN_REQUEST_CODE = 1;
+    private static final int ACTIVITY_LOGIN_REQUEST_CODE = 1;
     private Activity mParent;
     private UserDataObtainedHandler mUserDataObtainedHandler;
     private int mParentNavigationId;
@@ -194,7 +194,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         public void onNetworkError() { }
     }
 
-    private class AuthenticationHandler implements User.AuthenticationRequestHandler {
+    private static class AuthenticationHandler implements User.AuthenticationRequestHandler {
         @Override
         public void onFailedLogin() { }
 

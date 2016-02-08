@@ -94,7 +94,7 @@ public class Filters {
         void onNetworkError();
     }
 
-    private class FilterListProvider extends Provider {
+    private static class FilterListProvider extends Provider {
         public FilterListProvider(Context context, ProviderRequestHandler handler) {
             super(context, handler);
         }
@@ -113,7 +113,7 @@ public class Filters {
         }
     }
 
-    private class FilterChangeProvider extends Provider {
+    private static class FilterChangeProvider extends Provider {
         private HashMap<String, String> mForm;
         private int mFilterId;
 

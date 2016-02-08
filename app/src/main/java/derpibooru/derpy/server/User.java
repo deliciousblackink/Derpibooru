@@ -135,7 +135,7 @@ public class User {
         void onFailedLogout();
     }
 
-    private class UserDataProvider extends Provider {
+    private static class UserDataProvider extends Provider {
         public UserDataProvider(Context context, ProviderRequestHandler handler) {
             super(context, handler);
         }

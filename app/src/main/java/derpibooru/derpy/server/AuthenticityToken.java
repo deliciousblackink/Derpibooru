@@ -31,7 +31,7 @@ class AuthenticityToken extends Provider {
         super.executeQuery(generateUrl(), new AuthenticityTokenParser());
     }
 
-    private class AuthenticityTokenParser implements ServerResponseParser {
+    private static class AuthenticityTokenParser implements ServerResponseParser {
         @Override
         public Object parseResponse(String rawResponse) throws Exception {
             Document doc = Jsoup.parse(rawResponse);

@@ -83,6 +83,12 @@ public class DerpibooruSearchOptions {
         return super.equals(o);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getSortBy(), getSortDirection(), getFavesFilter(), getUpvotesFilter(),
+                                getUploadsFilter(), getWatchedTagsFilter(), getMinScore(), getMaxScore());
+    }
+
     public enum SortBy {
         CreatedAt,
         Score,

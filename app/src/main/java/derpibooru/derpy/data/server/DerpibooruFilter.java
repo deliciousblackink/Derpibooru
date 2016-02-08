@@ -3,6 +3,7 @@ package derpibooru.derpy.data.server;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.common.base.Objects;
 import com.google.common.primitives.Ints;
 
 import java.util.ArrayList;
@@ -42,6 +43,11 @@ public class DerpibooruFilter implements Parcelable {
             return (((DerpibooruFilter) o).getId() == this.getId());
         }
         return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId(), getName(), getSpoileredTags());
     }
 
     public int getId() {

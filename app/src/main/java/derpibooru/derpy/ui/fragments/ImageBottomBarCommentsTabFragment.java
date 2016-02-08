@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,10 +35,6 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_image_bottom_bar_comments_tab, container, false);
         mCommentsView = (RecyclerView) v.findViewById(R.id.viewComments);
-        mCommentsProvider = new ImageCommentsProvider(getActivity(), new ImageCommentsRequestHandler());
-        if (getArguments().containsKey("info")) {
-            displayInfoInView(v, (DerpibooruImageInfo) getArguments().getParcelable("info"));
-        }
         mCommentsRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.layoutCommentsRefresh);
         mCommentsRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
         mCommentsRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -46,6 +43,11 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
                 refreshComments();
             }
         });
+        mCommentsProvider = new ImageCommentsProvider(getActivity(), new ImageCommentsRequestHandler());
+        mCommentsAdapter = null;
+        if (getArguments().containsKey("info")) {
+            displayInfoInView(v, (DerpibooruImageInfo) getArguments().getParcelable("info"));
+        }
         return v;
     }
 
@@ -59,6 +61,10 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
     }
 
     private void displayCommentsFromProvider(ArrayList<DerpibooruImageComment> comments) {
+        if (getView() == null) {
+            Log.e("CommentsTabFragment", "displayCommentsFromProvider(...) called on null root View");
+            return;
+        }
         if (mCommentsAdapter == null) {
             mCommentsAdapter = new ImageCommentsAdapter(getActivity(), comments);
             mCommentsView.setLayoutManager(new LinearLayoutManager(getActivity()));

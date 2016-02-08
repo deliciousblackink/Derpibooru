@@ -37,6 +37,12 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         return new ViewHolder(v);
     }
 
+    public void resetImageThumbs(ArrayList<DerpibooruImageThumb> newImages) {
+        super.notifyItemRangeRemoved(0, mImages.size());
+        mImages = newImages;
+        super.notifyItemRangeInserted(0, mImages.size() - 1);
+    }
+
     public void appendImageThumbs(ArrayList<DerpibooruImageThumb> newImages) {
         int oldImageCount = mImages.size();
         mImages.addAll(newImages);

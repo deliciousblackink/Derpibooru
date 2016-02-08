@@ -21,12 +21,13 @@ public class ImageListProvider extends Provider {
         return this;
     }
 
-    protected int getCurrentPage() {
-        return mCurrentPage;
+    public ImageListProvider resetPageNumber() {
+        mCurrentPage = 1;
+        return this;
     }
 
-    protected void resetPageNumber() {
-        mCurrentPage = 1;
+    protected int getCurrentPage() {
+        return mCurrentPage;
     }
 
     @Override

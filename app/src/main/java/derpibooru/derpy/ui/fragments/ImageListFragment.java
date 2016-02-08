@@ -2,6 +2,7 @@ package derpibooru.derpy.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,14 +21,23 @@ import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
 public abstract class ImageListFragment extends Fragment {
     private ImageListAdapter mImageListAdapter;
-    private ImageListRecyclerView mImageView;
     private ImageListProvider mImageListProvider;
+    private ImageListRecyclerView mImageView;
+    private SwipeRefreshLayout mImageRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_image_list_tab, container, false);
         mImageView = (ImageListRecyclerView) v.findViewById(R.id.viewImages);
+        mImageRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.layoutImageRefresh);
+        mImageRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
+        mImageRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshImages();
+            }
+        });
         if (mImageListProvider != null) {
             fetchImageThumbs();
         } else {
@@ -44,22 +54,15 @@ public abstract class ImageListFragment extends Fragment {
         return mImageListProvider;
     }
 
-    protected class ImageListRequestHandler implements ProviderRequestHandler {
-        @Override
-        public void onRequestCompleted(Object result) {
-            displayImagesFromProvider((ArrayList<DerpibooruImageThumb>) result);
-        }
-
-        @Override
-        public void onRequestFailed() {
-            /* TODO: display error message */
-        }
+    protected void resetImageListAdapter() {
+        mImageListAdapter = null;
     }
 
     protected abstract void fetchImageThumbs();
 
-    protected void resetImageListAdapter() {
-        mImageListAdapter = null;
+
+    private void refreshImages() {
+        mImageListProvider.resetPageNumber().fetch();
     }
 
     private void displayImagesFromProvider(ArrayList<DerpibooruImageThumb> imageThumbs) {
@@ -73,8 +76,23 @@ public abstract class ImageListFragment extends Fragment {
                     mImageListProvider.nextPage().fetch();
                 }
             });
+        } else if (mImageRefreshLayout.isRefreshing()) {
+            mImageListAdapter.resetImageThumbs(imageThumbs);
+            mImageRefreshLayout.setRefreshing(false);
         } else {
             mImageListAdapter.appendImageThumbs(imageThumbs);
+        }
+    }
+
+    protected class ImageListRequestHandler implements ProviderRequestHandler {
+        @Override
+        public void onRequestCompleted(Object result) {
+            displayImagesFromProvider((ArrayList<DerpibooruImageThumb>) result);
+        }
+
+        @Override
+        public void onRequestFailed() {
+            /* TODO: display error message */
         }
     }
 }

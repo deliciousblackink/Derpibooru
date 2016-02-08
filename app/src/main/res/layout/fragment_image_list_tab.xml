@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutImageRefresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <derpibooru.derpy.ui.views.ImageListRecyclerView
         app:imageThumbSize="160dp"
         android:id="@+id/viewImages"
@@ -17,4 +18,4 @@
         android:verticalSpacing="5dp"
         android:focusable="true"
         android:clickable="true"/>
-</LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

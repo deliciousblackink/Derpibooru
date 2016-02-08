@@ -21,10 +21,9 @@ import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment {
     private ImageCommentsProvider mCommentsProvider;
     private ImageCommentsAdapter mCommentsAdapter;
+    /* TODO: notify bottom bar when the number of comments changes */
     private SwipeRefreshLayout mCommentsRefreshLayout;
     private RecyclerView mCommentsView;
-
-    private boolean mRefreshingComments = false;
 
     public ImageBottomBarCommentsTabFragment() {
         super();
@@ -56,7 +55,6 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
     }
 
     private void refreshComments() {
-        mRefreshingComments = true;
         mCommentsProvider.resetPageNumber().fetch();
     }
 
@@ -72,8 +70,7 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
                     mCommentsProvider.nextPage().fetch();
                 }
             });
-        } else if (mRefreshingComments) {
-            mRefreshingComments = false;
+        } else if (mCommentsRefreshLayout.isRefreshing()) {
             mCommentsAdapter.resetImageComments(comments);
             mCommentsRefreshLayout.setRefreshing(false);
         } else {

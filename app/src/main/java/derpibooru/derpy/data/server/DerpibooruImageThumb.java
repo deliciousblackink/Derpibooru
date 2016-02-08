@@ -14,13 +14,13 @@ public class DerpibooruImageThumb implements Parcelable {
     private int mFaves;
     private int mCommentCount;
     private String mThumbUrl;
-    private String mFullImageUrl;
+    private String mLargeUrl;
 
     private List<String> mSpoileredTagNames = new ArrayList<>();
     private String mSpoilerImageUrl;
 
     public DerpibooruImageThumb(int id, int score, int upvotes, int downvotes, int faves,
-                                int comments, String thumbUrl, String fullImageUrl,
+                                int comments, String thumbUrl, String largeUrl,
                                 List<String> spoileredTagNames, String spoilerImageUrl) {
         mId = id;
         mScore = score;
@@ -29,7 +29,7 @@ public class DerpibooruImageThumb implements Parcelable {
         mFaves = faves;
         mCommentCount = comments;
         mThumbUrl = "https:" + thumbUrl;
-        mFullImageUrl = "https:" + fullImageUrl;
+        mLargeUrl = "https:" + largeUrl;
 
         mSpoileredTagNames = spoileredTagNames;
         mSpoilerImageUrl = spoilerImageUrl;
@@ -63,8 +63,8 @@ public class DerpibooruImageThumb implements Parcelable {
         return mThumbUrl;
     }
 
-    public String getFullImageUrl() {
-        return mFullImageUrl;
+    public String getLargeImageUrl() {
+        return mLargeUrl;
     }
 
     public boolean isSpoilered() {
@@ -87,7 +87,7 @@ public class DerpibooruImageThumb implements Parcelable {
         mFaves = in.readInt();
         mCommentCount = in.readInt();
         mThumbUrl = in.readString();
-        mFullImageUrl = in.readString();
+        mLargeUrl = in.readString();
         in.readStringList(mSpoileredTagNames);
         mSpoilerImageUrl = in.readString();
     }
@@ -106,7 +106,7 @@ public class DerpibooruImageThumb implements Parcelable {
         dest.writeInt(mFaves);
         dest.writeInt(mCommentCount);
         dest.writeString(mThumbUrl);
-        dest.writeString(mFullImageUrl);
+        dest.writeString(mLargeUrl);
         dest.writeStringList(mSpoileredTagNames);
         dest.writeString(mSpoilerImageUrl);
     }

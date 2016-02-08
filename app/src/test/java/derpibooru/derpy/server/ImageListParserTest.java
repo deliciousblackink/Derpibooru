@@ -40,7 +40,7 @@ public class ImageListParserTest {
         assertThat("Faves do not match", parsed.getFaves(), is(expected.getFaves()));
         assertThat("Number of comments does not match", parsed.getCommentCount(), is(expected.getCommentCount()));
         assertThat("Thumb url does not match", parsed.getThumbUrl(), is(expected.getThumbUrl()));
-        assertThat("Full image url does not match", parsed.getFullImageUrl(), is(expected.getFullImageUrl()));
+        assertThat("Full image url does not match", parsed.getLargeImageUrl(), is(expected.getLargeImageUrl()));
         assertThat("Spoilered tags do not match", parsed.getSpoileredTagNames(), is(expected.getSpoileredTagNames()));
         assertThat("Spoiler image does not match", parsed.getSpoilerImageUrl(), is(expected.getSpoilerImageUrl()));
     }
@@ -48,7 +48,7 @@ public class ImageListParserTest {
     private static final DerpibooruImageThumb firstImageThumb =
             new DerpibooruImageThumb(960596, -20, 3, 23, 1, 4,
                                      "//derpicdn.net/img/2015/8/18/960596/thumb.png",
-                                     "//derpicdn.net/img/view/2015/8/18/960596__safe_sweetie+belle_edit_button+mash_hasbro_artist-colon-pikapetey_buttongate.png",
+                                     "//derpicdn.net/img/2015/8/18/960596/large.png",
                                      Lists.newArrayList("artist:pikapetey"), "https://derpicdn.net/dummy_spoiler");
 
     private static final DerpibooruTagFull dummySpoilerTag =

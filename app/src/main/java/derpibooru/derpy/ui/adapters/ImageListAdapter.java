@@ -72,6 +72,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Glide.get(mContext).clearMemory();
                 Intent intent = new Intent(mContext, ImageActivity.class);
                 intent.putExtra("image_thumb", holder.data);
                 mContext.startActivity(intent);

@@ -35,7 +35,7 @@ public class ImageListParser implements ServerResponseParser {
                                              img.getInt("upvotes"), img.getInt("downvotes"),
                                              img.getInt("faves"), img.getInt("comment_count"),
                                              img.getJSONObject("representations").getString("thumb"),
-                                             img.getString("image"),
+                                             img.getJSONObject("representations").getString("large"),
                                              getSpoileredTagNames(imgTags), getSpoilerUrl(imgTags));
             output.add(it);
         }

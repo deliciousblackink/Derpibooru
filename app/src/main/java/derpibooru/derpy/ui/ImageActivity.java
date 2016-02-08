@@ -44,7 +44,7 @@ public class ImageActivity extends AppCompatActivity {
         mBottomBarView = ((ImageBottomBarView) findViewById(R.id.imageBottomBar));
         DerpibooruImageThumb thumb = getIntent().getParcelableExtra("image_thumb");
         setImageInfoFromThumb(thumb, toolbar);
-        loadImageWithGlide(thumb.getFullImageUrl());
+        loadImageWithGlide(thumb.getLargeImageUrl());
 
         /* FIXME: handle configuration changes */
     }
@@ -71,41 +71,53 @@ public class ImageActivity extends AppCompatActivity {
 
     private void loadImageWithGlide(String url) {
         final ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        Glide.with(this)
-                .load(url)
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        Log.e("ImageActivity", "Failed to load the image with Glide", e);
-                        return false;
-                    }
+        if (url.endsWith(".gif")) {
+            Glide.with(this).load(url).diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .listener(new GlideRequestListener(imageView))
+                    .into(imageView);
+        } else {
+            Glide.with(this).load(url).diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .listener(new GlideRequestListener(imageView))
+                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                    .into(imageView);
+        }
+    }
 
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                                   boolean isFromMemoryCache, boolean isFirstResource) {
-                        ProgressBar pb = (ProgressBar) findViewById(R.id.progressImage);
-                        pb.setVisibility(View.GONE);
+    private class GlideRequestListener implements RequestListener<String, GlideDrawable> {
+        private ImageView mImageView;
 
-                        mImageViewZoomAttacher = new PhotoViewAttacher(imageView);
-                        mImageViewZoomAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                            @Override
-                            public void onViewTap(View view, float x, float y) {
-                                if (findViewById(R.id.toolbarLayout).getVisibility() == View.VISIBLE) {
-                                    findViewById(R.id.toolbarLayout).setVisibility(View.INVISIBLE);
-                                    findViewById(R.id.imageTopBar).setVisibility(View.INVISIBLE);
-                                    findViewById(R.id.imageBottomBar).setVisibility(View.INVISIBLE);
-                                } else {
-                                    findViewById(R.id.toolbarLayout).setVisibility(View.VISIBLE);
-                                    findViewById(R.id.imageTopBar).setVisibility(View.VISIBLE);
-                                    findViewById(R.id.imageBottomBar).setVisibility(View.VISIBLE);
-                                }
-                            }
-                        });
-                        return false;
+        public GlideRequestListener(ImageView glideTarget) {
+            mImageView = glideTarget;
+        }
+
+        @Override
+        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+            Log.e("ImageActivity", "Failed to load the image with Glide", e);
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
+        boolean isFromMemoryCache, boolean isFirstResource) {
+            ProgressBar pb = (ProgressBar) findViewById(R.id.progressImage);
+            pb.setVisibility(View.GONE);
+
+            mImageViewZoomAttacher = new PhotoViewAttacher(mImageView);
+            mImageViewZoomAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                @Override
+                public void onViewTap(View view, float x, float y) {
+                    if (findViewById(R.id.toolbarLayout).getVisibility() == View.VISIBLE) {
+                        findViewById(R.id.toolbarLayout).setVisibility(View.INVISIBLE);
+                        findViewById(R.id.imageTopBar).setVisibility(View.INVISIBLE);
+                        findViewById(R.id.imageBottomBar).setVisibility(View.INVISIBLE);
+                    } else {
+                        findViewById(R.id.toolbarLayout).setVisibility(View.VISIBLE);
+                        findViewById(R.id.imageTopBar).setVisibility(View.VISIBLE);
+                        findViewById(R.id.imageBottomBar).setVisibility(View.VISIBLE);
                     }
-                })
-                .crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(imageView);
+                }
+            });
+            return false;
+        }
     }
 }

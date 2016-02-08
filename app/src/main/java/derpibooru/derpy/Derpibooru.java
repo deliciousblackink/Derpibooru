@@ -35,8 +35,7 @@ public class Derpibooru extends Application {
 
                     @Override
                     public List<Cookie> loadForRequest(HttpUrl url) {
-                        List<Cookie> cookies = mCookieStorage.getCookies(url.host().toString());
-                        return cookies;
+                        return mCookieStorage.getCookies(url.host());
                     }
                 })
                 .build();

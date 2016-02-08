@@ -13,7 +13,6 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="?attr/actionBarSize"
         android:clickable="true"/>
     <!-- frame layout sets padding for the progressbar, so that it is
     centered vertically in relation to the view less the toolbar -->

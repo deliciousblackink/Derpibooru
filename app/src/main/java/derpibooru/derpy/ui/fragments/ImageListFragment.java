@@ -60,7 +60,6 @@ public abstract class ImageListFragment extends Fragment {
 
     protected abstract void fetchImageThumbs();
 
-
     private void refreshImages() {
         mImageListProvider.resetPageNumber().fetch();
     }

@@ -47,7 +47,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         int oldImageCount = mImages.size();
         mImages.addAll(newImages);
         int newImageCount = mImages.size() - 1;
-        super.notifyItemRangeChanged(oldImageCount, newImageCount);
+        super.notifyItemRangeInserted(oldImageCount, newImageCount);
     }
 
     @Override

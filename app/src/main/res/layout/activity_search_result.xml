@@ -6,7 +6,6 @@
               android:orientation="vertical"
               android:background="@color/colorTabBackground"
               tools:context="derpibooru.derpy.ui.SearchResultActivity">
-
     <derpibooru.derpy.ui.views.FragmentTabPagerView
         android:id="@+id/fragmentPagerView"
         android:layout_width="match_parent"

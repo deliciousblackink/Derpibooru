@@ -4,7 +4,6 @@
               android:layout_width="match_parent"
               android:orientation="vertical"
               android:layout_height="wrap_content">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +25,6 @@
             android:focusableInTouchMode="true">
             <!-- focusable and focusableInTouchMode
             to prevent EditText from receiving focus on startup -->
-
             <ImageView
                 android:id="@+id/buttonSearch"
                 android:layout_width="wrap_content"
@@ -35,7 +33,6 @@
                 android:clickable="true"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"/>
-
             <EditText
                 android:id="@+id/textSearch"
                 android:layout_width="match_parent"
@@ -51,12 +48,10 @@
                 android:paddingRight="10dp"/>
         </LinearLayout>
     </RelativeLayout>
-
     <View style="@style/Divider"
           android:id="@+id/viewRecentSearchDivider"
           android:layout_marginLeft="10dp"
           android:layout_marginRight="10dp"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/viewRecentSearch"
         android:layout_width="match_parent"

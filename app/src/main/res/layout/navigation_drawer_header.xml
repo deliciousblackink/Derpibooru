@@ -6,7 +6,6 @@
               android:orientation="vertical"
               android:theme="@style/ThemeOverlay.AppCompat.Dark"
               android:padding="10dp">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,7 +32,6 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="4dp"/>
     </LinearLayout>
-
     <TextView
         android:id="@+id/textHeaderUser"
         android:layout_width="match_parent"
@@ -41,10 +39,8 @@
         android:layout_marginTop="4dp"
         android:text="Not logged in"
         android:textColor="@color/colorTextLight"
-        android:textSize="16dp"
-        android:paddingLeft="4dp"
-        />
-
+        android:textSize="16sp"
+        android:paddingLeft="4dp"/>
     <TextView
         android:id="@+id/textHeaderFilter"
         android:layout_width="wrap_content"
@@ -52,6 +48,5 @@
         android:layout_marginTop="6dp"
         android:text="Loading..."
         android:paddingLeft="4dp"
-        android:textSize="14dp"/>
-
+        android:textSize="14sp"/>
 </LinearLayout>

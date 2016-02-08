@@ -8,14 +8,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/topLayout">
-
         <include layout="@layout/navigation_drawer_toolbar"/>
-
         <derpibooru.derpy.ui.views.FloatingSearchView
             android:id="@+id/floatingSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

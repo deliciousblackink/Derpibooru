@@ -8,9 +8,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/topLayout">
-
         <include layout="@layout/navigation_drawer_toolbar"/>
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/viewFilters"
             android:scrollbars="vertical"

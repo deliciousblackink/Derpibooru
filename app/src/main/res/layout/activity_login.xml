@@ -13,13 +13,14 @@
         android:layout_gravity="center"
         android:focusable="true"
         android:focusableInTouchMode="true">
-
-        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
-                                                       android:layout_height="wrap_content"
-                                                       android:layout_marginTop="8dp"
-                                                       android:layout_marginBottom="8dp"
-                                                       android:id="@+id/inputEmail"
-                                                       android:theme="@style/TextInput">
+        <!-- e-mail field -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/inputEmail"
+             android:theme="@style/TextInput">
             <EditText android:id="@+id/textEmail"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
@@ -28,12 +29,14 @@
                       android:hint="Email"
                       android:textSize="16dp"/>
         </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
-                                                       android:layout_height="wrap_content"
-                                                       android:layout_marginTop="8dp"
-                                                       android:layout_marginBottom="8dp"
-                                                       android:id="@+id/inputPassword"
-                                                       android:theme="@style/TextInput">
+        <!-- password field -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/inputPassword"
+            android:theme="@style/TextInput">
             <EditText android:id="@+id/textPassword"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
@@ -42,7 +45,7 @@
                       android:hint="Password"
                       android:textSize="16dp"/>
         </android.support.design.widget.TextInputLayout>
-
+        <!-- remember me checkbox -->
         <android.support.v7.widget.AppCompatCheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,7 +57,7 @@
             android:textSize="16sp"
             android:checked="false"
             android:layout_marginLeft="-4dp"/>
-
+        <!-- login button -->
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/buttonLogin"
             android:layout_width="fill_parent"
@@ -65,7 +68,6 @@
             android:textColor="@color/colorTextLight"
             android:text="Login"
             android:textSize="16dp"/>
-
         <derpibooru.derpy.ui.views.ProgressBarAccentColor
             android:id="@+id/progressLogin"
             android:layout_width="wrap_content"

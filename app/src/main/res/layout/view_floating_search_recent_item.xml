@@ -12,7 +12,6 @@
         android:src="@drawable/ic_history_white_24dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"/>
-
     <TextView
         android:id="@+id/textRecentSearch"
         android:layout_width="match_parent"

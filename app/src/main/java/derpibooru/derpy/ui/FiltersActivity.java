@@ -13,6 +13,7 @@ import derpibooru.derpy.ui.adapters.FiltersViewAdapter;
 
 public class FiltersActivity extends NavigationDrawerActivity {
     private ArrayList<DerpibooruFilter> mAvailableFilterList;
+    private RecyclerView mViewFilters;
     private Filters mFilterActions;
 
     @Override
@@ -22,13 +23,13 @@ public class FiltersActivity extends NavigationDrawerActivity {
         setTitle(R.string.activity_filters);
         super.initializeNavigationDrawer();
 
-        if (savedInstanceState != null) {
+        mViewFilters = (RecyclerView) findViewById(R.id.viewFilters);
+        mViewFilters.setLayoutManager(new LinearLayoutManager(this));
+
+        if (savedInstanceState != null
+                && savedInstanceState.getParcelableArrayList("filters") != null) {
             mAvailableFilterList = savedInstanceState.getParcelableArrayList("filters");
-            if (mAvailableFilterList != null) {
-                displayFilters();
-            } else {
-                fetchAvailableFilters();
-            }
+            displayFilters();
         } else {
             fetchAvailableFilters();
         }
@@ -36,7 +37,7 @@ public class FiltersActivity extends NavigationDrawerActivity {
 
     @Override
     protected void onUserDataRefreshed() {
-        /* TODO: handle user data refresh (swap the filter, etc.) */
+        fetchAvailableFilters();
     }
 
     @Override
@@ -69,7 +70,6 @@ public class FiltersActivity extends NavigationDrawerActivity {
 
             @Override
             public void onFilterChangedSuccessfully() {
-                fetchAvailableFilters();
                 FiltersActivity.super.refreshUserData();
             }
 
@@ -81,22 +81,19 @@ public class FiltersActivity extends NavigationDrawerActivity {
     }
 
     private void displayFilters() {
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        FiltersViewAdapter fva = new FiltersViewAdapter(mFilterActions.getCurrentFilter(), mAvailableFilterList,
-                                                        new FiltersViewAdapter.FiltersViewHandler() {
-            @Override
-            public void changeFilterTo(DerpibooruFilter newFilter) {
-                setCurrentFilter(newFilter);
-            }
-
-            @Override
-            public void refreshUserInformation() {
-                refreshUserData();
-            }
-        });
-
-        RecyclerView view = ((RecyclerView) findViewById(R.id.viewFilters));
-        view.setLayoutManager(llm);
-        view.setAdapter(fva);
+        if (mViewFilters.getAdapter() == null) {
+            FiltersViewAdapter fva =
+                    new FiltersViewAdapter(mFilterActions.getCurrentFilter(), mAvailableFilterList,
+                                           new FiltersViewAdapter.FiltersViewHandler() {
+                                               @Override
+                                               public void changeFilterTo(DerpibooruFilter newFilter) {
+                                                   setCurrentFilter(newFilter);
+                                               }
+                                           });
+            mViewFilters.setAdapter(fva);
+        } else {
+            ((FiltersViewAdapter) mViewFilters.getAdapter())
+                    .replaceFilters(mAvailableFilterList, mFilterActions.getCurrentFilter());
+        }
     }
 }

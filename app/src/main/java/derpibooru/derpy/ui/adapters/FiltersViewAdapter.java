@@ -2,43 +2,42 @@ package derpibooru.derpy.ui.adapters;
 
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruFilter;
 
 public class FiltersViewAdapter extends RecyclerView.Adapter<FiltersViewAdapter.ViewHolder> {
     private ArrayList<DerpibooruFilter> mFilters;
-    private DerpibooruFilter mCurrentFilter;
-    private int mNumberOfFilters;
-
     private FiltersViewHandler mHandler;
 
     public FiltersViewAdapter(DerpibooruFilter currentFilter,
                               ArrayList<DerpibooruFilter> filters,
                               FiltersViewHandler handler) {
-        mFilters = filters;
         mHandler = handler;
+        replaceFilters(filters, currentFilter);
+    }
 
+    public void replaceFilters(ArrayList<DerpibooruFilter> newFilters,
+                               DerpibooruFilter newCurrentFilter) {
+        mFilters = newFilters;
         /* the server, when requested for a list of available filters,
          * does not specify which one of them is currently used. */
-        int indexOfCurrentFilterInFilterList = mFilters.indexOf(currentFilter);
+        int indexOfCurrentFilterInFilterList = mFilters.indexOf(newCurrentFilter);
         if (indexOfCurrentFilterInFilterList == -1) {
-            /* the server has not provided a filter that matches the one used at the moment;
-             * 'tis probably caused by a logout or other change not synced with the device. */
-            mCurrentFilter = null;
-            mHandler.refreshUserInformation();
+            Log.e("FiltersViewAdapter", "filters specified do not contain the current filter");
         } else {
-            mCurrentFilter = mFilters.get(indexOfCurrentFilterInFilterList);
-            mFilters.remove(indexOfCurrentFilterInFilterList);
+            /* make current filter the first item in the filter list */
+            Collections.swap(mFilters, indexOfCurrentFilterInFilterList, 0);
         }
-        mNumberOfFilters = (mCurrentFilter != null) ? mFilters.size() + 1
-                                                    : mFilters.size();
+        super.notifyDataSetChanged();
     }
 
     @Override
@@ -51,20 +50,18 @@ public class FiltersViewAdapter extends RecyclerView.Adapter<FiltersViewAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        if (position == 0 && mCurrentFilter != null) {
-            /* show the current filter */
-            displayFilterInViewHolder(holder, mCurrentFilter);
+        displayFilterInViewHolder(holder, mFilters.get(position));
+        holder.buttonUse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHandler.changeFilterTo(mFilters.get(position));
+            }
+        });
+        /* hide the "use" button on the current filter */
+        if (position == 0) {
             holder.buttonUse.setVisibility(View.GONE);
         } else {
-            final int filterPositionInList = (mCurrentFilter != null) ? (position - 1)
-                                                                      : position;
-            displayFilterInViewHolder(holder, mFilters.get(filterPositionInList));
-            holder.buttonUse.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mHandler.changeFilterTo(mFilters.get(filterPositionInList));
-                }
-            });
+            holder.buttonUse.setVisibility(View.VISIBLE);
         }
     }
 
@@ -80,7 +77,7 @@ public class FiltersViewAdapter extends RecyclerView.Adapter<FiltersViewAdapter.
 
     @Override
     public int getItemCount() {
-        return (mFilters != null) ? mNumberOfFilters : 0;
+        return (mFilters != null) ? mFilters.size() : 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -105,8 +102,6 @@ public class FiltersViewAdapter extends RecyclerView.Adapter<FiltersViewAdapter.
     }
 
     public interface FiltersViewHandler {
-        void refreshUserInformation();
-
         void changeFilterTo(DerpibooruFilter newFilter);
         /* TODO: a separate activity for filter details/editing */
     }

@@ -3,21 +3,19 @@
     <color name="colorPrimary">#6eaede</color>
     <color name="colorPrimaryDark">#519ed7</color>
     <color name="colorAccent">#ff4081</color>
-
+    <!-- text -->
     <color name="colorTextLight">#fafafa</color>
     <color name="colorTextDark">#212121</color>
     <color name="colorTextGray">#8a000000</color>
-
-    <color name="colorTabBackground">#6eaede</color>
-    <color name="colorTabTextSelected">#ffffff</color>
-    <color name="colorTabTextUnselected">#96ffffff</color>
-
-    <color name="colorImageToolbar">#6eaede</color> <!-- used to be #cccccc and #d7e2ea -->
-
+    <!-- image tags -->
     <color name="colorImageArtistTag">#a2a6d4</color>
     <color name="colorImageArtistTagText">#4d4574</color>
     <color name="colorImageContentSafetyTag">#b1cee2</color>
     <color name="colorImageContentSafetyTagText">#4c90c0</color>
     <color name="colorImageGeneralTag">#cde69a</color>
     <color name="colorImageGeneralTagText">#82ad2b</color>
+    <!-- TODO: the colors below are redundant -->
+    <color name="colorTabBackground">#6eaede</color>
+    <color name="colorTabTextSelected">#ffffff</color>
+    <color name="colorTabTextUnselected">#96ffffff</color>
 </resources>

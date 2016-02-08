@@ -1,5 +1,4 @@
 <resources>
-
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -10,10 +9,8 @@
         for AppCompatCheckBox having this parameter do not change anything) -->
         <item name="android:textColorSecondary">@color/colorPrimaryDark</item>
     </style>
-
     <style name="Spinner" parent="Widget.AppCompat.Spinner.Underlined">
     </style>
-
     <style name="TextInput" parent="TextAppearance.AppCompat">
         <!-- http://stackoverflow.com/a/30914037/1726690 -->
         <item name="android:textColorHint">@color/colorTextLight</item>
@@ -24,47 +21,42 @@
         <item name="android:textColorHighlight">@color/colorTextLight</item>
         <item name="android:textColorLink">@color/colorTextLight</item>
     </style>
-
     <style name="TabLayout" parent="Widget.Design.TabLayout">
         <item name="tabTextAppearance">@style/TabTextAppearance</item>
         <item name="tabBackground">@color/colorTabBackground</item>
         <item name="tabSelectedTextColor">@color/colorTabTextSelected</item>
     </style>
-
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textColor">@color/colorTabTextUnselected</item>
     </style>
-
+    <!-- used in FloatingSearchView -->
     <style name="Divider">
         <!-- http://stackoverflow.com/a/14533085/1726690 -->
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">2dp</item>
         <item name="android:background">@color/colorPrimaryDark</item>
     </style>
-
+    <!-- image tags -->
     <style name="ImageTagArtist" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/colorImageArtistTagText</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
-
     <style name="ImageTagContentSafety" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/colorImageContentSafetyTagText</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
-
     <style name="ImageTagGeneral" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/colorImageGeneralTagText</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
-
     <style name="ImageTagNumberOfImages" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
     </style>
-
+    <!-- base theme extensions -->
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

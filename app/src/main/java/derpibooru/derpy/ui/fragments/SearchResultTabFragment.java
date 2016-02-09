@@ -9,6 +9,8 @@ import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 import derpibooru.derpy.server.SearchProvider;
 
 public class SearchResultTabFragment extends ImageListFragment {
+    private DerpibooruSearchOptions mCurrentOptions = new DerpibooruSearchOptions();
+
     public SearchResultTabFragment() {
         super();
     }
@@ -23,19 +25,18 @@ public class SearchResultTabFragment extends ImageListFragment {
 
     @Override
     protected void fetchImageThumbs() {
-        ((SearchProvider) getImageListProvider())
+        ((SearchProvider) super.getImageListProvider())
                 .searching(getArguments().getString("query"))
-                .with(new DerpibooruSearchOptions())
+                .with(mCurrentOptions)
                 .fetch();
     }
 
-    public void setSearchOptions(DerpibooruSearchOptions searchOptions) {
-        super.resetImageListAdapter();
-        /* TODO: there may still be downloads in progress for the previous search request, stop them */
-        ((SearchProvider) getImageListProvider())
-                .searching(getArguments().getString("query"))
-                .with(searchOptions)
-                .startingFromFirstPage()
-                .fetch();
+    public void setSearchOptions(DerpibooruSearchOptions newOptions) {
+        if (!mCurrentOptions.equals(newOptions)) {
+            mCurrentOptions = newOptions;
+            ((SearchProvider) super.getImageListProvider())
+                    .with(mCurrentOptions);
+            super.refreshImages();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package derpibooru.derpy.data.server;
 
+import android.support.annotation.Nullable;
+
 import com.google.common.base.Objects;
 
 public class DerpibooruSearchOptions {
@@ -18,20 +20,35 @@ public class DerpibooruSearchOptions {
     public DerpibooruSearchOptions() {
     }
 
-    public DerpibooruSearchOptions(SortBy sortBy,
-                                   SortDirection sortDirection,
-                                   UserPicksFilter favesFilter,
-                                   UserPicksFilter upvotesFilter,
-                                   UserPicksFilter uploadsFilter,
-                                   UserPicksFilter watchedTagsFilter,
-                                   Integer minScore, Integer maxScore) {
+    public void setSortBy(SortBy sortBy) {
         mSortBy = sortBy;
+    }
+
+    public void setSortDirection(SortDirection sortDirection) {
         mSortDirection = sortDirection;
+    }
+
+    public void setFavesFilter(UserPicksFilter favesFilter) {
         mFavesFilter = favesFilter;
+    }
+
+    public void setUpvotesFilter(UserPicksFilter upvotesFilter) {
         mUpvotesFilter = upvotesFilter;
+    }
+
+    public void setUploadsFilter(UserPicksFilter uploadsFilter) {
         mUploadsFilter = uploadsFilter;
+    }
+
+    public void setWatchedTagsFilter(UserPicksFilter watchedTagsFilter) {
         mWatchedTagsFilter = watchedTagsFilter;
+    }
+
+    public void setMinScore(Integer minScore) {
         mMinScore = minScore;
+    }
+
+    public void setMaxScore(Integer maxScore) {
         mMaxScore = maxScore;
     }
 
@@ -59,10 +76,12 @@ public class DerpibooruSearchOptions {
         return mWatchedTagsFilter;
     }
 
+    @Nullable
     public Integer getMinScore() {
         return mMinScore;
     }
 
+    @Nullable
     public Integer getMaxScore() {
         return mMaxScore;
     }
@@ -90,23 +109,68 @@ public class DerpibooruSearchOptions {
     }
 
     public enum SortBy {
-        CreatedAt,
-        Score,
-        Relevance,
-        Width,
-        Height,
-        Comments,
-        Random
+        CreatedAt(0),
+        Score(1),
+        Relevance(2),
+        Width(3),
+        Height(4),
+        Comments(5),
+        Random(6);
+
+        private int mValue;
+
+        SortBy(int value) {
+            mValue = value;
+        }
+
+        public static SortBy fromValue(int value) {
+            for (SortBy type : values()) {
+                if (type.mValue == value) {
+                    return type;
+                }
+            }
+            return CreatedAt;
+        }
     }
 
     public enum SortDirection {
-        Descending,
-        Ascending
+        Descending(0),
+        Ascending(1);
+
+        private int mValue;
+
+        SortDirection(int value) {
+            mValue = value;
+        }
+
+        public static SortDirection fromValue(int value) {
+            for (SortDirection type : values()) {
+                if (type.mValue == value) {
+                    return type;
+                }
+            }
+            return Descending;
+        }
     }
 
     public enum UserPicksFilter {
-        No,
-        UserPicksOnly,
-        NoUserPicks
+        No(0),
+        UserPicksOnly(1),
+        NoUserPicks(2);
+
+        private int mValue;
+
+        UserPicksFilter(int value) {
+            mValue = value;
+        }
+
+        public static UserPicksFilter fromValue(int value) {
+            for (UserPicksFilter type : values()) {
+                if (type.mValue == value) {
+                    return type;
+                }
+            }
+            return No;
+        }
     }
 }

@@ -16,43 +16,34 @@ import derpibooru.derpy.ui.fragments.SearchResultTabFragment;
 public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
     private ArrayList<FragmentAdapterItem> mTabs;
 
-    private DerpibooruSearchOptions mCurrentSearchOptions = new DerpibooruSearchOptions();
-
     public SearchResultActivityTabAdapter(FragmentManager fm, ViewPager pager, String query) {
         super(fm);
-
-        mTabs = new ArrayList<>();
 
         SearchResultTabFragment fragmentSearchResults = new SearchResultTabFragment();
         Bundle args = new Bundle();
         args.putString("query", query);
         fragmentSearchResults.setArguments(args);
 
+        mTabs = new ArrayList<>();
         mTabs.add(new FragmentAdapterItem(0, "Search Results", fragmentSearchResults));
         mTabs.add(new FragmentAdapterItem(1, "Options", new SearchOptionsTabFragment()));
 
         /* TODO: an adapter should not hold a reference to the viewpager */
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
             @Override
             public void onPageSelected(int position) {
                 if (position == 0) {
-                    DerpibooruSearchOptions newSearchOptions =
+                    DerpibooruSearchOptions newOptions =
                             ((SearchOptionsTabFragment) mTabs.get(1).getContent()).getSelectedOptions();
-                    if (!mCurrentSearchOptions.equals(newSearchOptions)) {
-                        ((SearchResultTabFragment) mTabs.get(0).getContent())
-                                .setSearchOptions(newSearchOptions);
-                        mCurrentSearchOptions = newSearchOptions;
-                    }
+                    ((SearchResultTabFragment) mTabs.get(0).getContent()).setSearchOptions(newOptions);
                 }
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-            }
+            public void onPageScrollStateChanged(int state) { }
         });
     }
 

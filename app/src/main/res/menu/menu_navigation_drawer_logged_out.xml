@@ -9,10 +9,6 @@
             android:id="@+id/navigationSearch"
             android:icon="@drawable/ic_search_black_24dp"
             android:title="Search"/>
-        <item
-            android:id="@+id/navigationFilters"
-            android:icon="@drawable/ic_block_black_24dp"
-            android:title="Filters"/>
     </group>
     <item android:title="Account">
         <menu>

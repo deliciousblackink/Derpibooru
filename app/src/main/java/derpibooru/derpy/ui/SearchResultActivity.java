@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.ui.adapters.SearchResultActivityTabAdapter;
@@ -41,7 +42,15 @@ public class SearchResultActivity extends AppCompatActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
             @Override
-            public void onPageScrollStateChanged(int state) { }
+            public void onPageScrollStateChanged(int state) {
+                /* hide the keyboard in case it's left after editing text fields in the Options tab
+                 * see http://stackoverflow.com/a/12422905/1726690 */
+                if (state == ViewPager.SCROLL_STATE_IDLE
+                        && tabView.getViewPager().getCurrentItem() == 0) {
+                    ((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE))
+                            .hideSoftInputFromWindow(tabView.getViewPager().getWindowToken(), 0);
+                }
+            }
         });
     }
 

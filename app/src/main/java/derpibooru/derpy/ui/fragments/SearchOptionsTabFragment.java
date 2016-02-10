@@ -2,15 +2,14 @@ package derpibooru.derpy.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
@@ -94,34 +93,34 @@ public class SearchOptionsTabFragment extends Fragment {
 
     private void setTextListeners(View parent) {
         ((EditText) parent.findViewById(R.id.textMinScore))
-                .setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                .addTextChangedListener(new TextWatcher() {
                     @Override
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (actionId == EditorInfo.IME_ACTION_DONE) {
-                            mSelectedOptions.setMinScore(getInt(v));
-                            return true;
-                        }
-                        return false;
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        mSelectedOptions.setMinScore(getInt(s.toString()));
                     }
+
+                    @Override
+                    public void afterTextChanged(Editable s) { }
                 });
         ((EditText) parent.findViewById(R.id.textMaxScore))
-                .setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                .addTextChangedListener(new TextWatcher() {
                     @Override
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (actionId == EditorInfo.IME_ACTION_DONE) {
-                            mSelectedOptions.setMaxScore(getInt(v));
-                            return true;
-                        }
-                        return false;
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        mSelectedOptions.setMaxScore(getInt(s.toString()));
                     }
+
+                    @Override
+                    public void afterTextChanged(Editable s) { }
                 });
     }
 
-    private Integer getInt(TextView text) {
-        String input = text.getText().toString();
-        if (!input.equals("")) {
-            return Integer.parseInt(input);
-        }
-        return null;
+    private Integer getInt(String text) {
+        return (!text.equals("")) ? Integer.parseInt(text) : null;
     }
 }

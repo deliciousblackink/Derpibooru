@@ -24,11 +24,6 @@ public class SearchProvider extends ImageListProvider {
         return this;
     }
 
-    public SearchProvider startingFromFirstPage() {
-        super.resetPageNumber();
-        return this;
-    }
-
     @Override
     protected String generateUrl() {
         try {
@@ -97,9 +92,6 @@ public class SearchProvider extends ImageListProvider {
     }
 
     private String scoreFilterParams(Integer option) {
-        if (option == null) {
-            return "";
-        }
-        return Integer.toString(option);
+        return (option != null) ? Integer.toString(option) : "";
     }
 }

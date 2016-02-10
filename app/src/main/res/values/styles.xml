@@ -22,8 +22,8 @@
         <item name="android:textColorLink">@color/colorTextLight</item>
     </style>
     <style name="TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabBackground">@color/colorPrimary</item>
         <item name="tabTextAppearance">@style/TabTextAppearance</item>
-        <item name="tabBackground">@color/colorTabBackground</item>
         <item name="tabSelectedTextColor">@color/colorTabTextSelected</item>
     </style>
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">

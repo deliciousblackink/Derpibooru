@@ -14,8 +14,7 @@
     <color name="colorImageContentSafetyTagText">#4c90c0</color>
     <color name="colorImageGeneralTag">#cde69a</color>
     <color name="colorImageGeneralTagText">#82ad2b</color>
-    <!-- TODO: the colors below are redundant -->
-    <color name="colorTabBackground">#6eaede</color>
+    <!-- tab headings -->
     <color name="colorTabTextSelected">#ffffff</color>
     <color name="colorTabTextUnselected">#96ffffff</color>
 </resources>

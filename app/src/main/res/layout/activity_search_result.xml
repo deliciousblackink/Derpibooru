@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:background="@color/colorTabBackground"
-              tools:context="derpibooru.derpy.ui.SearchResultActivity">
-    <derpibooru.derpy.ui.views.FragmentTabPagerView
-        android:id="@+id/fragmentPagerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+<derpibooru.derpy.ui.views.FragmentTabPagerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentPagerView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="derpibooru.derpy.ui.SearchResultActivity"/>

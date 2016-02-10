@@ -10,7 +10,7 @@ public enum DerpibooruRankingsListType {
         mValue = value;
     }
 
-    public static DerpibooruRankingsListType getFromValue(int value) {
+    public static DerpibooruRankingsListType fromValue(int value) {
         for (DerpibooruRankingsListType type : values()) {
             if (type.mValue == value) {
                 return type;
@@ -19,7 +19,7 @@ public enum DerpibooruRankingsListType {
         return TopScoring;
     }
 
-    public int convertToValue() {
+    public int toValue() {
         return mValue;
     }
 }

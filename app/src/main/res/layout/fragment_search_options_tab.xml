@@ -9,7 +9,9 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
             <!-- sort by -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -26,6 +28,7 @@
                     android:textSize="16dp"/>
                 <Spinner
                     android:id="@+id/spinnerSortBy"
+                    android:entries="@array/search_sort_by_options"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="48dp"
@@ -49,6 +52,7 @@
                     android:textSize="16dp"/>
                 <Spinner
                     android:id="@+id/spinnerSortDirection"
+                    android:entries="@array/search_sort_direction_options"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="48dp"
@@ -72,6 +76,7 @@
                     android:textSize="16dp"/>
                 <Spinner
                     android:id="@+id/spinnerFavesFilter"
+                    android:entries="@array/search_faves_options"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="48dp"
@@ -95,6 +100,7 @@
                     android:textSize="16dp"/>
                 <Spinner
                     android:id="@+id/spinnerUpvotesFilter"
+                    android:entries="@array/search_upvotes_options"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="48dp"
@@ -118,6 +124,7 @@
                     android:textSize="16dp"/>
                 <Spinner
                     android:id="@+id/spinnerUploadsFilter"
+                    android:entries="@array/search_uploads_options"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="48dp"
@@ -141,6 +148,7 @@
                     android:textSize="16dp"/>
                 <Spinner
                     android:id="@+id/spinnerWatchedTagsFilter"
+                    android:entries="@array/search_watched_tags_options"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="48dp"

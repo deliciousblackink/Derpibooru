@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -73,12 +74,12 @@ public class ImageCommentsAdapter extends RecyclerView.Adapter<ImageCommentsAdap
 
     private String getRelatveDate(String date) {
         /* TODO: decide whether this belongs here or should be moved to the parser class */
-        SimpleDateFormat f = new SimpleDateFormat("HH:mm, MMMM dd, yyyy");
+        SimpleDateFormat f = new SimpleDateFormat("HH:mm, MMMM dd, yyyy", Locale.ENGLISH);
         f.setTimeZone(TimeZone.getTimeZone("UTC")); /* the server returns date in UTC zone */
         try {
             long nowInMilliseconds = new Date().getTime();
             long commentInMilliseconds = f.parse(date).getTime();
-            /* SECOND_IN_MILLIS to display "x seconds ago , nowInMilliseconds, DateUtils.SECOND_IN_MILLIS */
+            /* SECOND_IN_MILLIS to display "x seconds ago" */
             return DateUtils.getRelativeTimeSpanString(commentInMilliseconds,
                                                        nowInMilliseconds, DateUtils.SECOND_IN_MILLIS).toString();
         } catch (ParseException e) {

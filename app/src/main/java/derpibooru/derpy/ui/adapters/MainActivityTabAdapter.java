@@ -55,14 +55,14 @@ public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
                 return new MainActivityNewImagesTabFragment();
             case TITLE_TOP_SCORING:
                 Bundle args = new Bundle();
-                args.putInt("type", DerpibooruRankingsListType.TopScoring.convertToValue());
+                args.putInt("type", DerpibooruRankingsListType.TopScoring.toValue());
                 MainActivityRankingsTabFragment fragmentTopScoring = new MainActivityRankingsTabFragment();
                 fragmentTopScoring.setArguments(args);
                 return fragmentTopScoring;
             case TITLE_MOST_COMMENTED:
                 MainActivityRankingsTabFragment fragmentMostCommented = new MainActivityRankingsTabFragment();
                 args = new Bundle();
-                args.putInt("type", DerpibooruRankingsListType.MostCommented.convertToValue());
+                args.putInt("type", DerpibooruRankingsListType.MostCommented.toValue());
                 fragmentMostCommented.setArguments(args);
                 return fragmentMostCommented;
             case TITLE_WATCHED:

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 
 import java.util.ArrayList;
 
@@ -14,46 +13,34 @@ import derpibooru.derpy.ui.fragments.SearchOptionsTabFragment;
 import derpibooru.derpy.ui.fragments.SearchResultTabFragment;
 
 public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
-    private ArrayList<FragmentAdapterItem> mTabs;
+    private static final String SEARCH_RESULTS_TAB_TITLE = "Search results";
+    private static final int SEARCH_RESULTS_TAB_POSITION = 0;
+    private static final String SEARCH_OPTIONS_TAB_TITLE = "Options";
+    private static final int SEARCH_OPTIONS_TAB_POSITION = 1;
 
-    private DerpibooruSearchOptions mCurrentSearchOptions = new DerpibooruSearchOptions();
+    private ArrayList<FragmentAdapterItem> mTabs = new ArrayList<>();
+    private FragmentManager mFragmentManager;
 
-    public SearchResultActivityTabAdapter(FragmentManager fm, ViewPager pager, String query) {
+    public SearchResultActivityTabAdapter(FragmentManager fm, String query) {
         super(fm);
+        mFragmentManager = fm;
 
-        mTabs = new ArrayList<>();
-
-        SearchResultTabFragment fragmentSearchResults = new SearchResultTabFragment();
+        SearchResultTabFragment results = new SearchResultTabFragment();
         Bundle args = new Bundle();
         args.putString("query", query);
-        fragmentSearchResults.setArguments(args);
+        results.setArguments(args);
+        mTabs.add(new FragmentAdapterItem(SEARCH_RESULTS_TAB_POSITION, SEARCH_RESULTS_TAB_TITLE, results));
+        mTabs.add(new FragmentAdapterItem(SEARCH_OPTIONS_TAB_POSITION, SEARCH_OPTIONS_TAB_TITLE,
+                                          new SearchOptionsTabFragment()));
+    }
 
-        mTabs.add(new FragmentAdapterItem(0, "Search Results", fragmentSearchResults));
-        mTabs.add(new FragmentAdapterItem(1, "Options", new SearchOptionsTabFragment()));
-
-        /* TODO: an adapter should not hold a reference to the viewpager */
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    DerpibooruSearchOptions newSearchOptions =
-                            ((SearchOptionsTabFragment) mTabs.get(1).getContent()).getSelectedOptions();
-                    if (!mCurrentSearchOptions.equals(newSearchOptions)) {
-                        ((SearchResultTabFragment) mTabs.get(0).getContent())
-                                .setSearchOptions(newSearchOptions);
-                        mCurrentSearchOptions = newSearchOptions;
-                    }
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
+    public void transferSearchOptionsToSearchResultsTab(int viewPagerId) {
+        String searchOptionsTabTag = getFragmentTag(viewPagerId, SEARCH_OPTIONS_TAB_POSITION);
+        String searchResultsTabTag = getFragmentTag(viewPagerId, SEARCH_RESULTS_TAB_POSITION);
+        
+        DerpibooruSearchOptions newOptions =
+                ((SearchOptionsTabFragment) mFragmentManager.findFragmentByTag(searchOptionsTabTag)).getSelectedOptions();
+        ((SearchResultTabFragment) mFragmentManager.findFragmentByTag(searchResultsTabTag)).setSearchOptions(newOptions);
     }
 
     @Override
@@ -69,5 +56,10 @@ public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return mTabs.get(position).getTitle();
+    }
+
+    private String getFragmentTag(int viewPagerId, int position) {
+        /* http://stackoverflow.com/a/11976663/1726690 */
+        return "android:switcher:" + viewPagerId + ":" + position;
     }
 }

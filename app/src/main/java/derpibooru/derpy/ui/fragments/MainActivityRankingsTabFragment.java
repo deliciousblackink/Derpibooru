@@ -24,7 +24,7 @@ public class MainActivityRankingsTabFragment extends ImageListFragment {
     @Override
     protected void fetchImageThumbs() {
         ((RankingsProvider) super.getImageListProvider())
-                .type(DerpibooruRankingsListType.getFromValue(getArguments().getInt("type")))
+                .type(DerpibooruRankingsListType.fromValue(getArguments().getInt("type")))
                 .inDays(3) /* TODO: pass the time limit as an argument */
                 .fetch();
     }

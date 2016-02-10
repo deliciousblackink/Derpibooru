@@ -12,21 +12,29 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.ui.ImageActivity;
+import derpibooru.derpy.ui.animations.ImageListItemAnimator;
 
 public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ViewHolder> {
+    private ImageListItemAnimator mAnimator;
     private Context mContext;
+
     private ArrayList<DerpibooruImageThumb> mImages;
 
     public ImageListAdapter(Context context, ArrayList<DerpibooruImageThumb> images) {
+        mAnimator = new ImageListItemAnimator();
         mContext = context;
         mImages = images;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mImages.size();
     }
 
     @Override
@@ -54,19 +62,12 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.data = mImages.get(position);
         if (holder.data.isSpoilered()) {
-            String spoilers = Joiner.on(", ").skipNulls()
-                    .join(holder.data.getSpoileredTagNames());
-            holder.textSpoiler.setVisibility(View.VISIBLE);
-            holder.textSpoiler.setText(spoilers);
-            displayImageWithGlide(holder.data.getSpoilerImageUrl(),
-                                  Priority.NORMAL, holder.imageView);
+            displaySpoiler(holder);
         } else {
-            holder.textSpoiler.setVisibility(View.GONE);
-            Priority loadingPriority =
-                    holder.data.getThumbUrl().endsWith(".gif") ? Priority.LOW : Priority.NORMAL;
-            displayImageWithGlide(holder.data.getThumbUrl(),
-                                  loadingPriority, holder.imageView);
+            displayImage(holder);
         }
+        holder.textUpvotes.setText(String.format("%d", holder.data.getUpvotes()));
+        holder.textFaves.setText(String.format("%d", holder.data.getFaves()));
         holder.textScore.setText(String.format("%d", holder.data.getScore()));
         holder.textComments.setText(String.format("%d", holder.data.getCommentCount()));
         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -78,9 +79,22 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
                 mContext.startActivity(intent);
             }
         });
+        setInteractionListeners(holder);
     }
 
-    private void displayImageWithGlide(String url, Priority priority, ImageView target) {
+    private void displaySpoiler(ViewHolder target) {
+        loadWithGlide(target.data.getSpoilerImageUrl(),
+                      Priority.NORMAL, target.imageView);
+    }
+
+    private void displayImage(ViewHolder target) {
+        Priority loadingPriority =
+                target.data.getThumbUrl().endsWith(".gif") ? Priority.LOW : Priority.NORMAL;
+        loadWithGlide(target.data.getThumbUrl(),
+                      loadingPriority, target.imageView);
+    }
+
+    private void loadWithGlide(String url, Priority priority, ImageView target) {
         Glide.with(mContext).load(url)
                 .centerCrop().crossFade()
                 .priority(priority)
@@ -89,24 +103,65 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
                 .into(target);
     }
 
-    @Override
-    public int getItemCount() {
-        return mImages.size();
+    private void setInteractionListeners(final ViewHolder target) {
+        mAnimator.clearView(target.layoutUnspoiler);
+        mAnimator.clearView(target.layoutImageInteractions);
+        target.layoutImageInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /* the target height of layoutUnspoiler and layoutImageInteractions is equal to that of layoutImageInfo */
+                final int panelHeight = target.layoutImageInfo.getMeasuredHeight();
+                if (target.data.isSpoilered()) {
+                    toggleView(target.layoutUnspoiler, panelHeight);
+                } else {
+                    toggleView(target.layoutImageInteractions, panelHeight);
+                }
+            }
+        });
+        target.buttonUnspoiler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                target.data.unspoiler();
+                mAnimator.collapseView(target.layoutUnspoiler);
+                displayImage(target);
+            }
+        });
+    }
+
+    private void toggleView(View v, int maximumHeight) {
+        if (v.getMeasuredHeight() == 0) {
+            mAnimator.expandView(v, maximumHeight);
+        } else {
+            mAnimator.collapseView(v);
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textScore;
         public TextView textComments;
-        public TextView textSpoiler;
         public ImageView imageView;
+        public View layoutImageInfo;
+        public View layoutUnspoiler;
+        public View buttonUnspoiler;
+
+        public View layoutImageInteractions;
+        public TextView textFaves;
+        public TextView textUpvotes;
+
         public DerpibooruImageThumb data;
 
         public ViewHolder(View v) {
             super(v);
             textScore = (TextView) v.findViewById(R.id.textScore);
             textComments = (TextView) v.findViewById(R.id.textComments);
-            textSpoiler = (TextView) v.findViewById(R.id.textSpoiler);
             imageView = (ImageView) v.findViewById(R.id.imageView);
+            layoutImageInfo = v.findViewById(R.id.layoutImageInfo);
+            layoutUnspoiler = v.findViewById(R.id.layoutUnspoiler);
+            buttonUnspoiler = v.findViewById(R.id.buttonUnspoiler);
+
+            layoutImageInteractions = v.findViewById(R.id.layoutImageInteractions);
+            textFaves = (TextView) v.findViewById(R.id.textFaves);
+            textUpvotes = (TextView) v.findViewById(R.id.textUpvotes);
         }
     }
 }

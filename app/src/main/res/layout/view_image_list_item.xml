@@ -1,6 +1,6 @@
 <derpibooru.derpy.ui.views.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                android:layout_width="160dp"
-                                                android:layout_height="160dp">
+                                                android:layout_width="170dp"
+                                                android:layout_height="170dp">
     <!-- the real size of the view is set in fragment_image_list_tab due to a measuring limitation for RecycleView grid layout -->
     <ImageView
         android:id="@+id/imageView"
@@ -9,12 +9,67 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:scaleType="fitXY"/>
+    <!-- unspoiler button -->
     <LinearLayout
+        android:id="@+id/layoutUnspoiler"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
+        android:clickable="true"
         android:gravity="center"
-        android:background="#5f000000">
+        android:background="#64000000">
+        <ImageView
+            android:id="@+id/buttonUnspoiler"
+            android:src="@drawable/ic_visibility_white_24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <!-- upvote & fave buttons -->
+    <LinearLayout
+        android:id="@+id/layoutImageInteractions"
+        android:layout_below="@id/layoutUnspoiler"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:clickable="true"
+        android:gravity="center"
+        android:background="#64000000">
+        <ImageView
+            android:src="@drawable/ic_star_white_24dp"
+            android:paddingRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/textFaves"
+            android:text="1922"
+            android:paddingTop="2dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextLight"/>
+        <ImageView
+            android:src="@drawable/ic_thumb_up_white_24dp"
+            android:paddingRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/textUpvotes"
+            android:text="2490"
+            android:paddingTop="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextLight"/>
+    </LinearLayout>
+    <!-- score and number of comments -->
+    <LinearLayout
+        android:id="@+id/layoutImageInfo"
+        android:layout_below="@id/layoutImageInteractions"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:clickable="true"
+        android:gravity="center"
+        android:background="#64000000">
         <ImageView
             android:src="@drawable/ic_poll_white_24dp"
             android:paddingRight="5dp"
@@ -24,7 +79,7 @@
             android:id="@+id/textScore"
             android:text="2133"
             android:paddingTop="2dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorTextLight"/>
@@ -42,15 +97,4 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorTextLight"/>
     </LinearLayout>
-    <TextView
-        android:id="@+id/textSpoiler"
-        android:text="suggestive, vulgar"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="@android:color/white"
-        android:background="#5f000000"
-        android:textAlignment="center"/>
 </derpibooru.derpy.ui.views.SquareRelativeLayout>

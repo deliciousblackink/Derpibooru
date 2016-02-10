@@ -19,6 +19,9 @@ public class DerpibooruImageThumb implements Parcelable {
     private List<String> mSpoileredTagNames = new ArrayList<>();
     private String mSpoilerImageUrl;
 
+    /* a non-persistent variable used by image lists to indicate if a user has unspoilered an image */
+    private boolean isSpoilered = true;
+
     public DerpibooruImageThumb(int id, int score, int upvotes, int downvotes, int faves,
                                 int comments, String thumbUrl, String largeUrl,
                                 List<String> spoileredTagNames, String spoilerImageUrl) {
@@ -33,6 +36,8 @@ public class DerpibooruImageThumb implements Parcelable {
 
         mSpoileredTagNames = spoileredTagNames;
         mSpoilerImageUrl = spoilerImageUrl;
+
+        isSpoilered = (mSpoileredTagNames.size() > 0);
     }
 
     public int getId() {
@@ -68,7 +73,11 @@ public class DerpibooruImageThumb implements Parcelable {
     }
 
     public boolean isSpoilered() {
-        return (mSpoileredTagNames.size() > 0);
+        return isSpoilered;
+    }
+
+    public void unspoiler() {
+        isSpoilered = false;
     }
 
     public List<String> getSpoileredTagNames() {

@@ -165,7 +165,15 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
                                   DrawerLayout drawer, NavigationView menu) {
         ActionBarDrawerToggle toggle =
                 new ActionBarDrawerToggle(parent, mDrawerLayout, toolbar,
-                                          R.string.open_drawer, R.string.close_drawer);
+                                          R.string.open_drawer, R.string.close_drawer) {
+                    @Override
+                    public void onDrawerSlide(View drawerView, float slideOffset)
+                    {
+                        /* Disable the hamburger icon animation (for more info refer to
+                         * https://medium.com/android-news/navigation-drawer-styling-according-material-design-5306190da08f#.9wrzhczd8 ) */
+                        super.onDrawerSlide(drawerView, 0);
+                    }
+                };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         menu.setNavigationItemSelectedListener(this);

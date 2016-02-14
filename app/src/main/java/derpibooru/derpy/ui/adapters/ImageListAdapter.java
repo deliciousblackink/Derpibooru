@@ -19,6 +19,7 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.animations.ImageListItemAnimator;
+import derpibooru.derpy.ui.views.AccentColorIconButton;
 
 public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ViewHolder> {
     private ImageListItemAnimator mAnimator;
@@ -66,8 +67,8 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         } else {
             displayImage(holder);
         }
-        holder.textUpvotes.setText(String.format("%d", holder.data.getUpvotes()));
-        holder.textFaves.setText(String.format("%d", holder.data.getFaves()));
+        holder.buttonUpvote.setButtonText(String.format("%d", holder.data.getUpvotes()));
+        holder.buttonFave.setButtonText(String.format("%d", holder.data.getFaves()));
         holder.textScore.setText(String.format("%d", holder.data.getScore()));
         holder.textComments.setText(String.format("%d", holder.data.getCommentCount()));
         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -137,31 +138,31 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textScore;
-        public TextView textComments;
         public ImageView imageView;
         public View layoutImageInfo;
+        public TextView textScore;
+        public TextView textComments;
+
         public View layoutUnspoiler;
-        public View buttonUnspoiler;
+        public AccentColorIconButton buttonUnspoiler;
 
         public View layoutImageInteractions;
-        public TextView textFaves;
-        public TextView textUpvotes;
+        private AccentColorIconButton buttonFave;
+        private AccentColorIconButton buttonUpvote;
 
         public DerpibooruImageThumb data;
 
         public ViewHolder(View v) {
             super(v);
-            textScore = (TextView) v.findViewById(R.id.textScore);
-            textComments = (TextView) v.findViewById(R.id.textComments);
             imageView = (ImageView) v.findViewById(R.id.imageView);
             layoutImageInfo = v.findViewById(R.id.layoutImageInfo);
+            textScore = (TextView) v.findViewById(R.id.textScore);
+            textComments = (TextView) v.findViewById(R.id.textComments);
             layoutUnspoiler = v.findViewById(R.id.layoutUnspoiler);
-            buttonUnspoiler = v.findViewById(R.id.buttonUnspoiler);
-
+            buttonUnspoiler = (AccentColorIconButton) v.findViewById(R.id.buttonUnspoiler);
             layoutImageInteractions = v.findViewById(R.id.layoutImageInteractions);
-            textFaves = (TextView) v.findViewById(R.id.textFaves);
-            textUpvotes = (TextView) v.findViewById(R.id.textUpvotes);
+            buttonFave = (AccentColorIconButton) v.findViewById(R.id.buttonFave);
+            buttonUpvote = (AccentColorIconButton) v.findViewById(R.id.buttonUpvote);
         }
     }
 }

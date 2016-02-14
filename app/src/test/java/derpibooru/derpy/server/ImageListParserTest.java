@@ -34,6 +34,7 @@ public class ImageListParserTest {
 
     private void compareImageThumb(DerpibooruImageThumb expected, DerpibooruImageThumb parsed) {
         assertThat("Id does not match", parsed.getId(), is(expected.getId()));
+        assertThat("Internal id does not match", parsed.getInternalId(), is(expected.getInternalId()));
         assertThat("Score does not match", parsed.getScore(), is(expected.getScore()));
         assertThat("Upvotes do not match", parsed.getUpvotes(), is(expected.getUpvotes()));
         assertThat("Downvotes do not match", parsed.getDownvotes(), is(expected.getDownvotes()));
@@ -46,7 +47,7 @@ public class ImageListParserTest {
     }
 
     private static final DerpibooruImageThumb firstImageThumb =
-            new DerpibooruImageThumb(960596, -20, 3, 23, 1, 4,
+            new DerpibooruImageThumb(960596, 960387, -20, 3, 23, 1, 4,
                                      "//derpicdn.net/img/2015/8/18/960596/thumb.png",
                                      "//derpicdn.net/img/2015/8/18/960596/large.png",
                                      Lists.newArrayList("artist:pikapetey"), "https://derpicdn.net/dummy_spoiler");

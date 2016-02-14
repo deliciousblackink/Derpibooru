@@ -1,5 +1,8 @@
 package derpibooru.derpy.server.parsers;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
+import derpibooru.derpy.data.server.DerpibooruImageInteractionType;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTagFull;
 
@@ -20,36 +24,68 @@ public class ImageListParser implements ServerResponseParser {
     }
 
     public Object parseResponse(String rawResponse) throws JSONException {
-        ArrayList<DerpibooruImageThumb> output = new ArrayList<>();
-
         JSONObject json = new JSONObject(rawResponse);
-        JSONArray images = getRootArray(json);
-
-        int imgCount = images.length();
-        for (int x = 0; x < imgCount; x++) {
-            JSONObject img = images.getJSONObject(x);
-            List<Integer> imgTags = intListFromArray(img.getJSONArray("tag_ids"));
-
-            DerpibooruImageThumb it =
-                    new DerpibooruImageThumb(img.getInt("id_number"), img.getInt("score"),
-                                             img.getInt("upvotes"), img.getInt("downvotes"),
-                                             img.getInt("faves"), img.getInt("comment_count"),
-                                             img.getJSONObject("representations").getString("thumb"),
-                                             img.getJSONObject("representations").getString("large"),
-                                             getSpoileredTagNames(imgTags), getSpoilerUrl(imgTags));
-            output.add(it);
-        }
-        return output;
+        JSONArray jsonImages = getRootArray(json);
+        List<DerpibooruImageThumb> imageThumbs = getImageThumbs(jsonImages);
+        JSONArray jsonInteractions = json.getJSONArray("interactions");
+        assignImageInteractionsToImageThumbs(imageThumbs, jsonInteractions);
+        return imageThumbs;
     }
 
     private JSONArray getRootArray(JSONObject json) throws JSONException {
         if (!json.isNull("images")) {
             return json.getJSONArray("images");
         } else {
-            /* image list parser is also used for search results,
-             * where the root tag is 'search' */
+            /* image list parser is also used for search results, where the root tag is 'search' */
             return json.getJSONArray("search");
         }
+    }
+
+    private List<DerpibooruImageThumb> getImageThumbs(JSONArray images) throws JSONException {
+        List<DerpibooruImageThumb> out = new ArrayList<>();
+        int imgCount = images.length();
+        for (int x = 0; x < imgCount; x++) {
+            JSONObject img = images.getJSONObject(x);
+            List<Integer> imgTags = intListFromArray(img.getJSONArray("tag_ids"));
+            DerpibooruImageThumb it =
+                    new DerpibooruImageThumb(img.getInt("id_number"), img.getInt("id"), img.getInt("score"),
+                                             img.getInt("upvotes"), img.getInt("downvotes"),
+                                             img.getInt("faves"), img.getInt("comment_count"),
+                                             img.getJSONObject("representations").getString("thumb"),
+                                             img.getJSONObject("representations").getString("large"),
+                                             getSpoileredTagNames(imgTags), getSpoilerUrl(imgTags));
+            out.add(it);
+        }
+        return out;
+    }
+
+    private void assignImageInteractionsToImageThumbs(List<DerpibooruImageThumb> thumbs,
+                                                      JSONArray interactions) throws JSONException {
+        int actionCount = interactions.length();
+        for (int x = 0; x < actionCount; x++) {
+            JSONObject action = interactions.getJSONObject(x);
+            DerpibooruImageInteractionType imageInteractionType = getImageInteractionType(action);
+            final int imageId = action.getInt("image_id");
+            DerpibooruImageThumb correspondingThumb = Iterables.find(thumbs, new Predicate<DerpibooruImageThumb>() {
+                public boolean apply(DerpibooruImageThumb it) {
+                    return it.getInternalId() == imageId;
+                }
+            });
+            correspondingThumb.addImageInteraction(imageInteractionType);
+        }
+    }
+
+    private DerpibooruImageInteractionType getImageInteractionType(JSONObject interaction) throws JSONException {
+        if (interaction.getString("interaction_type").equals("faved")) {
+            return DerpibooruImageInteractionType.Fave;
+        } else if (interaction.getString("interaction_type").equals("voted")) {
+            if (interaction.getString("value").equals("up")) {
+                return DerpibooruImageInteractionType.Upvote;
+            } else {
+                return DerpibooruImageInteractionType.Downvote;
+            }
+        }
+        return DerpibooruImageInteractionType.None;
     }
 
     private List<String> getSpoileredTagNames(List<Integer> imageTagIds) {

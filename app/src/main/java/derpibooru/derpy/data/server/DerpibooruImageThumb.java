@@ -8,6 +8,7 @@ import java.util.List;
 
 public class DerpibooruImageThumb implements Parcelable {
     private int mId;
+    private int mInternalId;
     private int mScore;
     private int mUpvotes;
     private int mDownvotes;
@@ -19,13 +20,16 @@ public class DerpibooruImageThumb implements Parcelable {
     private List<String> mSpoileredTagNames = new ArrayList<>();
     private String mSpoilerImageUrl;
 
+    private List<DerpibooruImageInteractionType> mImageInteractions = new ArrayList<>();
+
     /* a non-persistent variable used by image lists to indicate if a user has unspoilered an image */
     private boolean isSpoilered = true;
 
-    public DerpibooruImageThumb(int id, int score, int upvotes, int downvotes, int faves,
+    public DerpibooruImageThumb(int id, int internalId, int score, int upvotes, int downvotes, int faves,
                                 int comments, String thumbUrl, String largeUrl,
                                 List<String> spoileredTagNames, String spoilerImageUrl) {
         mId = id;
+        mInternalId = internalId;
         mScore = score;
         mUpvotes = upvotes;
         mDownvotes = downvotes;
@@ -42,6 +46,10 @@ public class DerpibooruImageThumb implements Parcelable {
 
     public int getId() {
         return mId;
+    }
+
+    public int getInternalId() {
+        return mInternalId;
     }
 
     public int getScore() {
@@ -72,14 +80,6 @@ public class DerpibooruImageThumb implements Parcelable {
         return mLargeUrl;
     }
 
-    public boolean isSpoilered() {
-        return isSpoilered;
-    }
-
-    public void unspoiler() {
-        isSpoilered = false;
-    }
-
     public List<String> getSpoileredTagNames() {
         return mSpoileredTagNames;
     }
@@ -88,8 +88,25 @@ public class DerpibooruImageThumb implements Parcelable {
         return mSpoilerImageUrl;
     }
 
+    public List<DerpibooruImageInteractionType> getImageInteractions() {
+        return mImageInteractions;
+    }
+
+    public void addImageInteraction(DerpibooruImageInteractionType interaction) {
+        mImageInteractions.add(interaction);
+    }
+
+    public boolean isSpoilered() {
+        return isSpoilered;
+    }
+
+    public void unspoiler() {
+        isSpoilered = false;
+    }
+
     protected DerpibooruImageThumb(Parcel in) {
         mId = in.readInt();
+        mInternalId = in.readInt();
         mScore = in.readInt();
         mUpvotes = in.readInt();
         mDownvotes = in.readInt();
@@ -99,6 +116,7 @@ public class DerpibooruImageThumb implements Parcelable {
         mLargeUrl = in.readString();
         in.readStringList(mSpoileredTagNames);
         mSpoilerImageUrl = in.readString();
+        in.readList(mImageInteractions, List.class.getClassLoader());
     }
 
     @Override
@@ -109,6 +127,7 @@ public class DerpibooruImageThumb implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mId);
+        dest.writeInt(mInternalId);
         dest.writeInt(mScore);
         dest.writeInt(mUpvotes);
         dest.writeInt(mDownvotes);
@@ -118,6 +137,7 @@ public class DerpibooruImageThumb implements Parcelable {
         dest.writeString(mLargeUrl);
         dest.writeStringList(mSpoileredTagNames);
         dest.writeString(mSpoilerImageUrl);
+        dest.writeList(mImageInteractions);
     }
 
     @SuppressWarnings("unused")

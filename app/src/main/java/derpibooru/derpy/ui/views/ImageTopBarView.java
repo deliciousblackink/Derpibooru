@@ -23,10 +23,12 @@ public class ImageTopBarView extends FrameLayout {
 
     public void setInfo(int upvotes, int downvotes, int score) {
         init();
-        TextView u = (TextView) this.findViewById(R.id.textUpvotes);
+        AccentColorIconButton u = (AccentColorIconButton) this.findViewById(R.id.buttonUpvote);
         u.setText(Integer.toString(upvotes));
-        TextView d = (TextView) this.findViewById(R.id.textDownvotes);
+        u.setToggleIconTintOnTouch(false);
+        AccentColorIconButton d = (AccentColorIconButton) this.findViewById(R.id.buttonDownvote);
         d.setText(Integer.toString(downvotes));
+        d.setToggleIconTintOnTouch(false);
         TextView s = (TextView) this.findViewById(R.id.textScore);
         s.setText(Integer.toString(score));
     }

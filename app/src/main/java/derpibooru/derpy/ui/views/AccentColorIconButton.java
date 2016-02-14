@@ -19,6 +19,8 @@ public class AccentColorIconButton extends RelativeLayout {
     private TextViewButton mTextViewWithIcon;
     private OnClickListener mButtonListener;
 
+    private boolean mToggleIconTintOnTouch = true;
+
     public AccentColorIconButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         mTextViewWithIcon = new TextViewButton(context, attrs);
@@ -42,6 +44,10 @@ public class AccentColorIconButton extends RelativeLayout {
         mTextViewWithIcon.setActive(active);
     }
 
+    public void setToggleIconTintOnTouch(boolean toggle) {
+        mToggleIconTintOnTouch = toggle;
+    }
+
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
@@ -56,6 +62,9 @@ public class AccentColorIconButton extends RelativeLayout {
     private class ButtonTouchListener implements OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+            if (!mToggleIconTintOnTouch) {
+                return false;
+            }
             if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 mTextViewWithIcon.setActive(true);
             } else if (event.getActionMasked() == MotionEvent.ACTION_UP

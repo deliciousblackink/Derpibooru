@@ -134,7 +134,7 @@ public class FloatingSearchView extends LinearLayout {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     Intent i = new Intent(v.getContext(), searchResultActivity);
-                    i.putExtra("query", v.getText().toString());
+                    i.putExtra("derpibooru.derpy.SearchQuery", v.getText().toString());
                     v.getContext().startActivity(i);
                     return true;
                 }

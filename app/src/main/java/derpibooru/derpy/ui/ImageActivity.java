@@ -42,7 +42,7 @@ public class ImageActivity extends AppCompatActivity {
         });
 
         mBottomBarView = ((ImageBottomBarView) findViewById(R.id.imageBottomBar));
-        DerpibooruImageThumb thumb = getIntent().getParcelableExtra("image_thumb");
+        DerpibooruImageThumb thumb = getIntent().getParcelableExtra("derpibooru.derpy.ImageThumb");
         setImageInfoFromThumb(thumb, toolbar);
         loadImageWithGlide(thumb.getLargeImageUrl());
 

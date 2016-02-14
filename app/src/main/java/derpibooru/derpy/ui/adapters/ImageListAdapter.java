@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -78,7 +77,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
             public void onClick(View v) {
                 Glide.get(mContext).clearMemory();
                 Intent intent = new Intent(mContext, ImageActivity.class);
-                intent.putExtra("image_thumb", holder.data);
+                intent.putExtra("derpibooru.derpy.ImageThumb", holder.data);
                 mContext.startActivity(intent);
             }
         });

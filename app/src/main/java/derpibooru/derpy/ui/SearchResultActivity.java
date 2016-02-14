@@ -21,7 +21,7 @@ public class SearchResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_result);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String searchQuery = getIntent().getStringExtra("query");
+        String searchQuery = getIntent().getStringExtra("derpibooru.derpy.SearchQuery");
         setTitle(searchQuery);
         initTabPager(searchQuery);
     }

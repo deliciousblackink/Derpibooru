@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.server.DerpibooruImageInteractionType;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.animations.ImageListItemAnimator;
@@ -67,7 +68,11 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
             displayImage(holder);
         }
         holder.buttonUpvote.setButtonText(String.format("%d", holder.data.getUpvotes()));
+        holder.buttonUpvote.setActive(
+                holder.data.getImageInteractions().contains(DerpibooruImageInteractionType.Upvote));
         holder.buttonFave.setButtonText(String.format("%d", holder.data.getFaves()));
+        holder.buttonFave.setActive(
+                holder.data.getImageInteractions().contains(DerpibooruImageInteractionType.Fave));
         holder.buttonScore.setButtonText(String.format("%d", holder.data.getScore()));
         holder.buttonScore.setActive(
                 holder.data.getImageInteractions().size() > 0);

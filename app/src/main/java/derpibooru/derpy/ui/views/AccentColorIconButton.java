@@ -16,9 +16,11 @@ import derpibooru.derpy.R;
 
 public class AccentColorIconButton extends TextView {
     private static final int ICON_PADDING_IN_DIP = 5;
+    private int mActiveColorDarkResId;
+    private int mActiveColorResId;
 
     private OnClickListener mButtonListener;
-    private int mActiveColorResId;
+    private Integer mCurrentButtonColor;
 
     public AccentColorIconButton(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -37,6 +39,7 @@ public class AccentColorIconButton extends TextView {
         super.setOnTouchListener(new ButtonTouchListener());
         super.setOnClickListener(new ButtonClickListener());
 
+        mActiveColorDarkResId = ContextCompat.getColor(context, R.color.colorAccentDark);
         mActiveColorResId = ContextCompat.getColor(context, R.color.colorAccent);
     }
 
@@ -54,11 +57,23 @@ public class AccentColorIconButton extends TextView {
         mButtonListener = listener;
     }
 
-    public void setActive(boolean active) {
-        if (active) {
-            getIcon().setColorFilter(mActiveColorResId, PorterDuff.Mode.SRC_IN);
+    public void setActive(boolean makeActive) {
+        if (makeActive) {
+            if (mCurrentButtonColor == null) {
+                mCurrentButtonColor = mActiveColorResId;
+                getIcon().setColorFilter(mCurrentButtonColor, PorterDuff.Mode.SRC_IN);
+            } else {
+                mCurrentButtonColor = mActiveColorDarkResId;
+                getIcon().setColorFilter(mActiveColorDarkResId, PorterDuff.Mode.SRC_IN);
+            }
         } else {
-            getIcon().clearColorFilter();
+            if (mCurrentButtonColor == null || mCurrentButtonColor == mActiveColorResId) {
+                mCurrentButtonColor = null;
+                getIcon().clearColorFilter();
+            } else {
+                mCurrentButtonColor = mActiveColorResId;
+                getIcon().setColorFilter(mCurrentButtonColor, PorterDuff.Mode.SRC_IN);
+            }
         }
     }
 

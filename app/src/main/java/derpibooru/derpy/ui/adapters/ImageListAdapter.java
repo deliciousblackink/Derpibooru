@@ -67,16 +67,18 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         } else {
             displayImage(holder);
         }
-        holder.buttonUpvote.setButtonText(String.format("%d", holder.data.getUpvotes()));
+        holder.buttonUpvote.setText(String.format("%d", holder.data.getUpvotes()));
         holder.buttonUpvote.setActive(
                 holder.data.getImageInteractions().contains(DerpibooruImageInteractionType.Upvote));
-        holder.buttonFave.setButtonText(String.format("%d", holder.data.getFaves()));
+        holder.buttonFave.setText(String.format("%d", holder.data.getFaves()));
         holder.buttonFave.setActive(
                 holder.data.getImageInteractions().contains(DerpibooruImageInteractionType.Fave));
-        holder.buttonScore.setButtonText(String.format("%d", holder.data.getScore()));
+        holder.buttonScore.setText(String.format("%d", holder.data.getScore()));
         holder.buttonScore.setActive(
                 holder.data.getImageInteractions().size() > 0);
-        holder.buttonComments.setButtonText(String.format("%d", holder.data.getCommentCount()));
+        holder.buttonScore.setEnabled(false);
+        holder.buttonComments.setText(String.format("%d", holder.data.getCommentCount()));
+        holder.buttonComments.setEnabled(false);
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

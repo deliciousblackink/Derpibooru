@@ -64,31 +64,22 @@
         android:clickable="true"
         android:gravity="center"
         android:background="#64000000">
-        <ImageView
-            android:src="@drawable/ic_poll_white_24dp"
-            android:paddingRight="5dp"
+        <derpibooru.derpy.ui.views.AccentColorIconButton
+            android:id="@+id/buttonScore"
+            android:enabled="false"
+            app:buttonIcon="@drawable/ic_poll_white_24dp"
+            app:buttonText="2133"
+            android:textColor="@color/colorTextLight"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/textScore"
-            android:text="2133"
-            android:paddingTop="2dp"
-            android:layout_marginRight="10dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="10dp"/>
+        <derpibooru.derpy.ui.views.AccentColorIconButton
+            android:id="@+id/buttonComments"
+            android:enabled="false"
+            app:buttonIcon="@drawable/ic_comment_white_24dp"
+            app:buttonText="1092"
+            android:textColor="@color/colorTextLight"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorTextLight"/>
-        <ImageView
-            android:src="@drawable/ic_comment_white_24dp"
-            android:paddingTop="3dp"
-            android:paddingRight="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/textComments"
-            android:text="1092"
-            android:paddingTop="2dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorTextLight"/>
+            android:layout_height="48dp"/>
     </LinearLayout>
 </derpibooru.derpy.ui.views.SquareRelativeLayout>

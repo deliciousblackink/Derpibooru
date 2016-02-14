@@ -69,8 +69,10 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         }
         holder.buttonUpvote.setButtonText(String.format("%d", holder.data.getUpvotes()));
         holder.buttonFave.setButtonText(String.format("%d", holder.data.getFaves()));
-        holder.textScore.setText(String.format("%d", holder.data.getScore()));
-        holder.textComments.setText(String.format("%d", holder.data.getCommentCount()));
+        holder.buttonScore.setButtonText(String.format("%d", holder.data.getScore()));
+        holder.buttonScore.setActive(
+                holder.data.getImageInteractions().size() > 0);
+        holder.buttonComments.setButtonText(String.format("%d", holder.data.getCommentCount()));
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,15 +142,15 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
         public View layoutImageInfo;
-        public TextView textScore;
-        public TextView textComments;
+        public AccentColorIconButton buttonScore;
+        public AccentColorIconButton buttonComments;
 
         public View layoutUnspoiler;
         public AccentColorIconButton buttonUnspoiler;
 
         public View layoutImageInteractions;
-        private AccentColorIconButton buttonFave;
-        private AccentColorIconButton buttonUpvote;
+        public AccentColorIconButton buttonFave;
+        public AccentColorIconButton buttonUpvote;
 
         public DerpibooruImageThumb data;
 
@@ -156,8 +158,8 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
             super(v);
             imageView = (ImageView) v.findViewById(R.id.imageView);
             layoutImageInfo = v.findViewById(R.id.layoutImageInfo);
-            textScore = (TextView) v.findViewById(R.id.textScore);
-            textComments = (TextView) v.findViewById(R.id.textComments);
+            buttonScore = (AccentColorIconButton) v.findViewById(R.id.buttonScore);
+            buttonComments = (AccentColorIconButton) v.findViewById(R.id.buttonComments);
             layoutUnspoiler = v.findViewById(R.id.layoutUnspoiler);
             buttonUnspoiler = (AccentColorIconButton) v.findViewById(R.id.buttonUnspoiler);
             layoutImageInteractions = v.findViewById(R.id.layoutImageInteractions);

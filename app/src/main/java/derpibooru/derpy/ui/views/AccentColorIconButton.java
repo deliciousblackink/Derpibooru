@@ -62,13 +62,19 @@ public class AccentColorIconButton extends TextView {
         }
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return (isEnabled() && super.onTouchEvent(event));
+    }
+
     private Drawable getIcon() {
         return super.getCompoundDrawables()[0];
     }
 
     private void setIcon(Drawable icon) {
-        icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
-        setCompoundDrawables(icon, null, null, null);
+        Drawable mutableIcon = icon.mutate();
+        mutableIcon.setBounds(0, 0, mutableIcon.getIntrinsicWidth(), mutableIcon.getIntrinsicHeight());
+        setCompoundDrawables(mutableIcon, null, null, null);
     }
 
     private class ButtonTouchListener implements OnTouchListener {
@@ -81,7 +87,7 @@ public class AccentColorIconButton extends TextView {
                     || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 setActive(false);
             }
-            return onTouchEvent(event);
+            return false;
         }
     }
 

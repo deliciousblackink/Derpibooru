@@ -41,6 +41,7 @@ public class AccentColorIconButton extends RelativeLayout {
     }
 
     public void setActive(boolean active) {
+        mTextViewWithIcon.setKeepActive(active);
         mTextViewWithIcon.setActive(active);
     }
 
@@ -88,10 +89,9 @@ public class AccentColorIconButton extends RelativeLayout {
     private static class TextViewButton extends TextView {
         private static final int ICON_PADDING_IN_DIP = 5;
 
-        private int mActiveColorDarkResId;
         private int mActiveColorResId;
-
-        private Integer mCurrentButtonColor;
+        private boolean mKeepColorFilter = false;
+        private boolean mColorFilterSet = false;
 
         public TextViewButton(Context context, AttributeSet attrs) {
             super(context, attrs);
@@ -106,27 +106,16 @@ public class AccentColorIconButton extends RelativeLayout {
             } finally {
                 a.recycle();
             }
-            mActiveColorDarkResId = ContextCompat.getColor(context, R.color.colorAccentDark);
             mActiveColorResId = ContextCompat.getColor(context, R.color.colorAccent);
         }
 
         public void setActive(boolean makeActive) {
-            if (makeActive) {
-                if (mCurrentButtonColor == null) {
-                    mCurrentButtonColor = mActiveColorResId;
-                    getIcon().setColorFilter(mCurrentButtonColor, PorterDuff.Mode.SRC_IN);
-                } else {
-                    mCurrentButtonColor = mActiveColorDarkResId;
-                    getIcon().setColorFilter(mActiveColorDarkResId, PorterDuff.Mode.SRC_IN);
-                }
+            if ((makeActive && !mColorFilterSet) || (!makeActive && mKeepColorFilter)) {
+                mColorFilterSet = true;
+                getIcon().setColorFilter(mActiveColorResId, PorterDuff.Mode.SRC_IN);
             } else {
-                if (mCurrentButtonColor == null || mCurrentButtonColor == mActiveColorResId) {
-                    mCurrentButtonColor = null;
-                    getIcon().clearColorFilter();
-                } else {
-                    mCurrentButtonColor = mActiveColorResId;
-                    getIcon().setColorFilter(mCurrentButtonColor, PorterDuff.Mode.SRC_IN);
-                }
+                mColorFilterSet = false;
+                getIcon().clearColorFilter();
             }
         }
 
@@ -137,6 +126,10 @@ public class AccentColorIconButton extends RelativeLayout {
                 super.setCompoundDrawablePadding((int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, ICON_PADDING_IN_DIP, getResources().getDisplayMetrics()));
             }
+        }
+
+        public void setKeepActive(boolean keepActive) {
+            mKeepColorFilter = keepActive;
         }
 
         private Drawable getIcon() {

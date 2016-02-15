@@ -53,7 +53,7 @@ public class ImageActivity extends AppCompatActivity {
         toolbar.setTitle("#" + Integer.toString(thumb.getId()));
 
         ((ImageTopBarView) findViewById(R.id.imageTopBar))
-                .setInfo(thumb.getUpvotes(), thumb.getDownvotes(), thumb.getScore());
+                .setInfo(thumb.getUpvotes(), thumb.getDownvotes(), thumb.getScore(), thumb.getImageInteractions());
 
         mBottomBarView.setFragmentManager(getSupportFragmentManager());
         mBottomBarView.setBasicInfo(thumb.getId(), thumb.getFaves(), thumb.getCommentCount());

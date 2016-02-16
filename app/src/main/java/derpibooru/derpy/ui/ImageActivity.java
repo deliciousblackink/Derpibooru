@@ -21,7 +21,6 @@ import derpibooru.derpy.ui.views.ImageTopBarView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageActivity extends AppCompatActivity {
-    private PhotoViewAttacher mImageViewZoomAttacher;
     private ImageBottomBarView mBottomBarView;
 
     /* TODO: should be a singleTop activity
@@ -102,8 +101,7 @@ public class ImageActivity extends AppCompatActivity {
             ProgressBar pb = (ProgressBar) findViewById(R.id.progressImage);
             pb.setVisibility(View.GONE);
 
-            mImageViewZoomAttacher = new PhotoViewAttacher(mImageView);
-            mImageViewZoomAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            new PhotoViewAttacher(mImageView).setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
                 @Override
                 public void onViewTap(View view, float x, float y) {
                     if (findViewById(R.id.toolbarLayout).getVisibility() == View.VISIBLE) {

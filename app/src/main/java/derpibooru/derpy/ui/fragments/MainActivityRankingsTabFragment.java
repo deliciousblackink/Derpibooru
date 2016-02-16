@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import derpibooru.derpy.data.server.DerpibooruRankingsListType;
-import derpibooru.derpy.server.RankingsProvider;
+import derpibooru.derpy.server.providers.RankingsProvider;
 
 public class MainActivityRankingsTabFragment extends ImageListFragment {
     public MainActivityRankingsTabFragment() {

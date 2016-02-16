@@ -12,17 +12,18 @@ public class SpoileredTagsProvider extends TagProvider {
 
     @Override
     public void fetch() {
-        new User(mContext, new User.UserRequestHandler() {
+        new UserDataProvider(mContext, new QueryHandler() {
             @Override
-            public void onUserDataObtained(DerpibooruUser userData) {
+            public void onQueryExecuted(Object result) {
                 SpoileredTagsProvider.super
-                        .tags(userData.getCurrentFilter().getSpoileredTags()).fetch();
+                        .tags(((DerpibooruUser) result).getCurrentFilter().getSpoileredTags())
+                        .fetch();
             }
 
             @Override
-            public void onNetworkError() {
-                mHandler.onQueryFailed();
+            public void onQueryFailed() {
+
             }
-        }).fetchUserData();
+        }).fetch();
     }
 }

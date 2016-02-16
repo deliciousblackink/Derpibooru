@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.server.ImageListProvider;
-import derpibooru.derpy.server.ProviderRequestHandler;
+import derpibooru.derpy.server.providers.ImageListProvider;
+import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.ui.adapters.ImageListAdapter;
 import derpibooru.derpy.ui.views.ImageListRecyclerView;
 import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
@@ -84,14 +84,14 @@ public abstract class ImageListFragment extends Fragment {
         }
     }
 
-    protected class ImageListRequestHandler implements ProviderRequestHandler {
+    protected class ImageListRequestHandler implements QueryHandler {
         @Override
-        public void onRequestCompleted(Object result) {
+        public void onQueryExecuted(Object result) {
             displayImagesFromProvider((ArrayList<DerpibooruImageThumb>) result);
         }
 
         @Override
-        public void onRequestFailed() {
+        public void onQueryFailed() {
             /* TODO: display error message */
         }
     }

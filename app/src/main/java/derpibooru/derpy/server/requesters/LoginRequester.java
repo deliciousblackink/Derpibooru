@@ -11,11 +11,9 @@ public class LoginRequester extends AuthenticatedRequester {
     private DerpibooruLoginForm mCredentials;
     private String mAuthenticityToken;
 
-    public LoginRequester(Context context, String authenticityToken,
-                          DerpibooruLoginForm credentials, QueryHandler handler) {
+    public LoginRequester(Context context, DerpibooruLoginForm credentials, QueryHandler handler) {
         super(context, handler);
         mCredentials = credentials;
-        mAuthenticityToken = authenticityToken;
     }
 
     @Override

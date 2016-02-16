@@ -17,19 +17,22 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruUser;
-import derpibooru.derpy.server.User;
+import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.providers.UserDataProvider;
+import derpibooru.derpy.server.requesters.LogoutRequester;
 
 class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListener {
     private static final int ACTIVITY_LOGIN_REQUEST_CODE = 1;
+
     private Activity mParent;
-    private UserDataObtainedHandler mUserDataObtainedHandler;
     private int mParentNavigationId;
+    private UserDataObtainedHandler mUserDataObtainedHandler;
 
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
     private View mDrawerHeader;
 
-    private User mUser;
+    private UserDataProvider mUserProvider;
 
     public NavigationDrawer(Activity parent, DrawerLayout drawer, Toolbar toolbar,
                             NavigationView menu, UserDataObtainedHandler refreshHandler) {
@@ -38,8 +41,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         setActivityMenuItemId();
 
         mDrawerLayout = drawer;
-        mNavigationView = ((NavigationView)
-                mDrawerLayout.findViewById(R.id.navigationView));
+        mNavigationView = ((NavigationView) mDrawerLayout.findViewById(R.id.navigationView));
         mDrawerHeader = mNavigationView.getHeaderView(0);
 
         mDrawerHeader.findViewById(R.id.buttonRefreshUserData)
@@ -52,8 +54,8 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
 
         initDrawerToggle(parent, toolbar, drawer, menu);
 
-        mUser = new User(parent, new UserHandler(), new AuthenticationHandler());
-        mUser.fetchUserData();
+        mUserProvider = new UserDataProvider(parent, new UserQueryHandler());
+        mUserProvider.fetch();
     }
 
     private void setActivityMenuItemId() {
@@ -71,7 +73,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
                 .setVisibility(View.INVISIBLE);
         ((TextView) mDrawerHeader.findViewById(R.id.textHeaderFilter))
                 .setText("Loading...");
-        mUser.refreshUserData();
+        mUserProvider.refreshUserData();
     }
 
     @Override
@@ -101,19 +103,30 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
                         .findItem(mParentNavigationId).setChecked(false);
                 break;
             case (R.id.navigationLogout):
-                mUser.logout();
+                logout();
                 return true; /* do not hide the drawer */
         }
-
         closeDrawer();
         return true;
+    }
+
+    private void logout() {
+        new LogoutRequester(mParent, new QueryHandler() {
+            @Override
+            public void onQueryExecuted(Object result) {
+                mUserProvider.refreshUserData();
+            }
+
+            @Override
+            public void onQueryFailed() { }
+        }).fetch();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case (ACTIVITY_LOGIN_REQUEST_CODE):
                 if (resultCode == Activity.RESULT_OK) {
-                    mUser.refreshUserData();
+                    mUserProvider.refreshUserData();
                 }
                 mNavigationView.getMenu().findItem(R.id.navigationLogin).setChecked(false);
 
@@ -191,22 +204,16 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         void onUserDataObtained();
     }
 
-    private class UserHandler implements User.UserRequestHandler {
+    private class UserQueryHandler implements QueryHandler {
         @Override
-        public void onUserDataObtained(DerpibooruUser userData) {
+        public void onQueryExecuted(Object result) {
             mUserDataObtainedHandler.onUserDataObtained();
-            displayUserData(userData);
+            displayUserData((DerpibooruUser) result);
         }
 
         @Override
-        public void onNetworkError() { }
-    }
+        public void onQueryFailed() {
 
-    private static class AuthenticationHandler implements User.AuthenticationRequestHandler {
-        @Override
-        public void onFailedLogin() { }
-
-        @Override
-        public void onFailedLogout() { }
+        }
     }
 }

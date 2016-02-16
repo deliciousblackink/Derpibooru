@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
-import derpibooru.derpy.server.ImageInfoProvider;
-import derpibooru.derpy.server.ProviderRequestHandler;
+import derpibooru.derpy.server.providers.ImageInfoProvider;
+import derpibooru.derpy.server.QueryHandler;
 
 public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {
     public ImageBottomBarView(Context context) {
@@ -33,14 +33,14 @@ public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {
 
     private void loadDetailedInfo(int imageId) {
          /* get image uploader, description, tags */
-        ImageInfoProvider provider = new ImageInfoProvider(getContext(), new ProviderRequestHandler() {
+        ImageInfoProvider provider = new ImageInfoProvider(getContext(), new QueryHandler() {
             @Override
-            public void onRequestCompleted(Object result) {
+            public void onQueryExecuted(Object result) {
                 populateViewPagerTabsWithImageInfo((DerpibooruImageInfo) result);
             }
 
             @Override
-            public void onRequestFailed() {
+            public void onQueryFailed() {
                 /* TODO: handle failed request */
             }
         });

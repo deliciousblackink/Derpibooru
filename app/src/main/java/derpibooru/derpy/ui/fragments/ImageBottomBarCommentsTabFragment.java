@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageComment;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
-import derpibooru.derpy.server.ImageCommentsProvider;
-import derpibooru.derpy.server.ProviderRequestHandler;
+import derpibooru.derpy.server.providers.ImageCommentsProvider;
+import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.ui.adapters.ImageCommentsAdapter;
 import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
@@ -93,14 +93,14 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
         }
     }
 
-    private class ImageCommentsRequestHandler implements ProviderRequestHandler {
+    private class ImageCommentsRequestHandler implements QueryHandler {
         @Override
-        public void onRequestCompleted(Object result) {
+        public void onQueryExecuted(Object result) {
             displayCommentsFromProvider((ArrayList<DerpibooruImageComment>) result);
         }
 
         @Override
-        public void onRequestFailed() {
+        public void onQueryFailed() {
             /* TODO: handle request failure */
         }
     }

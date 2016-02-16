@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
-import derpibooru.derpy.server.SearchProvider;
+import derpibooru.derpy.server.providers.SearchProvider;
 
 public class SearchResultTabFragment extends ImageListFragment {
     private DerpibooruSearchOptions mCurrentOptions;

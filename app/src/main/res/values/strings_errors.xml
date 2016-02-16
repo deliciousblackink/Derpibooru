@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="activity_login_invalid_email">Incorrect e-mail</string>
+    <string name="activity_login_invalid_password">The password is too short</string>
+    <string name="activity_login_failed_request">Incorrect e-mail and/or password</string>
     <string name="activity_filters_failed_to_fetch_list">Failed to load available filters</string>
     <string name="activity_filters_failed_to_change_filter">Failed to set the filter. Try tapping refresh in navigation menu</string>
 </resources>

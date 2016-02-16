@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import derpibooru.derpy.server.ImageListProvider;
+import derpibooru.derpy.server.providers.ImageListProvider;
 
 public class MainActivityNewImagesTabFragment extends ImageListFragment {
     public MainActivityNewImagesTabFragment() {

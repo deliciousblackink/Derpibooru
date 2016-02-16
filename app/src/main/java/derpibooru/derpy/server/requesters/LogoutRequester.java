@@ -10,9 +10,8 @@ import derpibooru.derpy.server.QueryHandler;
 public class LogoutRequester extends AuthenticatedRequester {
     private String mAuthenticityToken;
 
-    public LogoutRequester(Context context, String authenticityToken, QueryHandler handler) {
+    public LogoutRequester(Context context, QueryHandler handler) {
         super(context, handler);
-        mAuthenticityToken = authenticityToken;
     }
 
     @Override

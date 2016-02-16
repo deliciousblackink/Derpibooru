@@ -2,8 +2,10 @@ package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
+import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.FilterListParser;
+import derpibooru.derpy.storage.UserDataStorage;
 
 public class FilterListProvider extends Provider {
     public FilterListProvider(Context context, QueryHandler handler) {
@@ -16,6 +18,10 @@ public class FilterListProvider extends Provider {
         sb.append(DERPIBOORU_DOMAIN);
         sb.append("filters.json");
         return sb.toString();
+    }
+
+    public DerpibooruFilter getCurrentFilter() {
+        return new UserDataStorage(mContext).getUserData().getCurrentFilter();
     }
 
     @Override

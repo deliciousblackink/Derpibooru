@@ -1,14 +1,15 @@
-package derpibooru.derpy.server;
+package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
+import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.ImageCommentsParser;
 
 public class ImageCommentsProvider extends Provider {
     private int mCurrentPage = 1;
     private int mImageId;
 
-    public ImageCommentsProvider(Context context, ProviderRequestHandler handler) {
+    public ImageCommentsProvider(Context context, QueryHandler handler) {
         super(context, handler);
     }
 

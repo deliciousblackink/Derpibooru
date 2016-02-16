@@ -1,16 +1,17 @@
-package derpibooru.derpy.server;
+package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
 import java.net.URLEncoder;
 
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
+import derpibooru.derpy.server.QueryHandler;
 
 public class SearchProvider extends ImageListProvider {
     private String mSearchQuery;
     private DerpibooruSearchOptions mSearchOptions;
 
-    public SearchProvider(Context context, ProviderRequestHandler handler) {
+    public SearchProvider(Context context, QueryHandler handler) {
         super(context, handler);
     }
 

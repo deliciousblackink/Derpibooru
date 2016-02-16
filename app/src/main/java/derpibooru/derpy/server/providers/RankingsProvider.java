@@ -1,8 +1,9 @@
-package derpibooru.derpy.server;
+package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
 import derpibooru.derpy.data.server.DerpibooruRankingsListType;
+import derpibooru.derpy.server.QueryHandler;
 
 public class RankingsProvider extends ImageListProvider {
     private static final String ALL_TIME = "520w";
@@ -11,7 +12,7 @@ public class RankingsProvider extends ImageListProvider {
     private DerpibooruRankingsListType mListType;
     private String mTime = ALL_TIME;
 
-    public RankingsProvider(Context context, ProviderRequestHandler handler) {
+    public RankingsProvider(Context context, QueryHandler handler) {
         super(context, handler);
     }
 

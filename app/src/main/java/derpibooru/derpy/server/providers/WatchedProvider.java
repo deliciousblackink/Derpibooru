@@ -1,9 +1,11 @@
-package derpibooru.derpy.server;
+package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
+import derpibooru.derpy.server.QueryHandler;
+
 public class WatchedProvider extends ImageListProvider {
-    public WatchedProvider(Context context, ProviderRequestHandler handler) {
+    public WatchedProvider(Context context, QueryHandler handler) {
         super(context, handler);
     }
 

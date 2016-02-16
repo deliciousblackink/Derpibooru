@@ -12,8 +12,6 @@ import derpibooru.derpy.data.server.DerpibooruTagFull;
 public class TagListParser implements ServerResponseParser {
     private List<DerpibooruTagFull> mTagsToAppend;
 
-    public TagListParser() { }
-
     public TagListParser(List<DerpibooruTagFull> tagsToAppend) {
         mTagsToAppend = tagsToAppend;
     }
@@ -37,10 +35,7 @@ public class TagListParser implements ServerResponseParser {
             output.add(tf);
         }
 
-        if (mTagsToAppend != null) {
-            output.addAll(mTagsToAppend);
-        }
-
+        output.addAll(mTagsToAppend);
         return output;
     }
 }

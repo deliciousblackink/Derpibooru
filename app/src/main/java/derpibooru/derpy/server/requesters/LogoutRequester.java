@@ -1,18 +1,22 @@
-package derpibooru.derpy.server;
+package derpibooru.derpy.server.requesters;
 
 import android.content.Context;
 
 import java.util.HashMap;
+import java.util.Map;
 
-public class LogoutProvider extends Provider {
+import derpibooru.derpy.server.QueryHandler;
+
+public class LogoutRequester extends AuthenticatedRequester {
     private String mAuthenticityToken;
 
-    public LogoutProvider(Context context, String authenticityToken, ProviderRequestHandler handler) {
+    public LogoutRequester(Context context, String authenticityToken, QueryHandler handler) {
         super(context, handler);
         mAuthenticityToken = authenticityToken;
     }
 
-    private HashMap<String, String> generateLogoutForm() {
+    @Override
+    protected Map<String, String> generateForm() {
         HashMap<String, String> form = new HashMap<>();
         form.put("_method", "delete");
         form.put("authenticity_token", mAuthenticityToken);
@@ -28,6 +32,12 @@ public class LogoutProvider extends Provider {
 
     @Override
     public void fetch() {
-        executeQueryWithForm(null, generateLogoutForm());
+        fetchToken();
+    }
+
+    @Override
+    protected void onTokenFetched(String token) {
+        mAuthenticityToken = token;
+        executeQuery(null);
     }
 }

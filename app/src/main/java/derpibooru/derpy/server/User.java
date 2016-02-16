@@ -151,7 +151,7 @@ public class User {
 
         @Override
         public void fetch() {
-            super.executeQuery(generateUrl(), new UserDataParser());
+            super.executeQuery(new UserDataParser());
         }
     }
 }

@@ -119,9 +119,9 @@ public class Tags {
         @Override
         public void fetch() {
             if (mExistingTags == null) {
-                super.executeQuery(generateUrl(), new TagListParser());
+                super.executeQuery(new TagListParser());
             } else {
-                super.executeQuery(generateUrl(), new TagListParser(mExistingTags));
+                super.executeQuery(new TagListParser(mExistingTags));
             }
         }
     }

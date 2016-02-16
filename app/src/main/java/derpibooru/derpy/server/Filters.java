@@ -109,7 +109,7 @@ public class Filters {
 
         @Override
         public void fetch() {
-            super.executeQuery(generateUrl(), new FilterListParser());
+            super.executeQuery(new FilterListParser());
         }
     }
 
@@ -136,28 +136,7 @@ public class Filters {
 
         @Override
         public void fetch() {
-            executeQuery(generateUrl(), null);
-        }
-
-        @Override
-        protected void executeQuery(String url, ServerResponseParser parser) {
-            Handler threadHandler = new Handler();
-            AsynchronousPostRequest requestThread =
-                    new AsynchronousPostRequest(mContext, url, mForm,
-                                                new AsynchronousRequest.RequestHandler() {
-                                                    Handler uiThread = new Handler(Looper.getMainLooper());
-
-                                                    @Override
-                                                    public void onRequestCompleted(Object parsedResponse) {
-                                                        uiThread.post(new UiThreadMessageSender(parsedResponse, false));
-                                                    }
-
-                                                    @Override
-                                                    public void onRequestFailed() {
-                                                        uiThread.post(new UiThreadMessageSender(null, true));
-                                                    }
-                                                });
-            threadHandler.post(requestThread);
+            executeQueryWithForm(null, mForm);
         }
     }
 }

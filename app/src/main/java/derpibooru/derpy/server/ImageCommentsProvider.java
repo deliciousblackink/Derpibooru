@@ -50,6 +50,6 @@ public class ImageCommentsProvider extends Provider {
 
     @Override
     public void fetch() {
-        super.executeQuery(generateUrl(), new ImageCommentsParser());
+        super.executeQuery(new ImageCommentsParser());
     }
 }

@@ -32,6 +32,6 @@ public class ImageInfoProvider extends Provider {
 
     @Override
     public void fetch() {
-        super.executeQuery(generateUrl(), new ImageInfoParser());
+        super.executeQuery(new ImageInfoParser());
     }
 }

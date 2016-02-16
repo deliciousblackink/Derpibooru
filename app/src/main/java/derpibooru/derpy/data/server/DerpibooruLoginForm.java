@@ -20,7 +20,7 @@ public class DerpibooruLoginForm {
         return mPassword;
     }
 
-    public boolean isRememberUser() {
+    public boolean isUserToBeRemembered() {
         return mRememberUser;
     }
 }

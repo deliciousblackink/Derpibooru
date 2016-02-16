@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.util.Map;
+
 import derpibooru.derpy.server.parsers.ServerResponseParser;
 
 abstract class Provider {
@@ -23,10 +25,10 @@ abstract class Provider {
 
     protected abstract String generateUrl();
 
-    protected void executeQuery(String url, ServerResponseParser parser) {
+    protected void executeQuery(ServerResponseParser parser) {
         Handler threadHandler = new Handler();
         AsynchronousRequest requestThread =
-                new AsynchronousRequest(mContext, parser, url,
+                new AsynchronousRequest(mContext, parser, generateUrl(),
                                         new AsynchronousRequest.RequestHandler() {
                                             Handler uiThread = new Handler(Looper.getMainLooper());
 
@@ -40,6 +42,26 @@ abstract class Provider {
                                                 uiThread.post(new UiThreadMessageSender(null, true));
                                             }
                                         });
+        threadHandler.post(requestThread);
+    }
+
+    protected void executeQueryWithForm(ServerResponseParser parser, Map<String, String> form) {
+        Handler threadHandler = new Handler();
+        AsynchronousFormRequest requestThread =
+                new AsynchronousFormRequest(mContext, generateUrl(), form,
+                                            new AsynchronousRequest.RequestHandler() {
+                                                Handler uiThread = new Handler(Looper.getMainLooper());
+
+                                                @Override
+                                                public void onRequestCompleted(Object parsedResponse) {
+                                                    uiThread.post(new UiThreadMessageSender(parsedResponse, false));
+                                                }
+
+                                                @Override
+                                                public void onRequestFailed() {
+                                                    uiThread.post(new UiThreadMessageSender(null, true));
+                                                }
+                                            });
         threadHandler.post(requestThread);
     }
 

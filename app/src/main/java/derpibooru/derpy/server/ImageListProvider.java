@@ -54,6 +54,6 @@ public class ImageListProvider extends Provider {
     }
 
     private void fetchImages(List<DerpibooruTagFull> spoileredTags) {
-        super.executeQuery(generateUrl(), new ImageListParser(spoileredTags));
+        super.executeQuery(new ImageListParser(spoileredTags));
     }
 }

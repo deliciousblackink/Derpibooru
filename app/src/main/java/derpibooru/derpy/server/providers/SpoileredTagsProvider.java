@@ -15,9 +15,8 @@ public class SpoileredTagsProvider extends TagProvider {
         new UserDataProvider(mContext, new QueryHandler() {
             @Override
             public void onQueryExecuted(Object result) {
-                SpoileredTagsProvider.super
-                        .tags(((DerpibooruUser) result).getCurrentFilter().getSpoileredTags())
-                        .fetch();
+                SpoileredTagsProvider.super.tags(((DerpibooruUser) result).getCurrentFilter().getSpoileredTags());
+                SpoileredTagsProvider.super.fetch();
             }
 
             @Override

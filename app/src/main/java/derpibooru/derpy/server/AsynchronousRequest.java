@@ -51,10 +51,6 @@ public abstract class AsynchronousRequest implements Runnable {
 
             @Override
             public void onResponse(Call request, Response response) throws IOException {
-                if (!response.isSuccessful() && response.code() != mSuccessCode) {
-                    Log.e("AsynchronousRequest", "run(): Callback() onResponse");
-                    onRequestFailed();
-                }
                 if (response.code() == mSuccessCode) {
                     onRequestCompleted(parseResponse(response));
                 } else {

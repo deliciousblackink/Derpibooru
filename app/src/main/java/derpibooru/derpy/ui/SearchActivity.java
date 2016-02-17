@@ -29,6 +29,5 @@ public class SearchActivity extends NavigationDrawerActivity {
     }
 
     @Override
-    protected void onUserDataRefreshed() {
-    }
+    public void onUserDataRefreshed() { }
 }

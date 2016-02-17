@@ -42,7 +42,7 @@ public class FiltersActivity extends NavigationDrawerActivity {
     }
 
     @Override
-    protected void onUserDataRefreshed() {
+    public void onUserDataRefreshed() {
         fetchAvailableFilters();
     }
 
@@ -63,7 +63,7 @@ public class FiltersActivity extends NavigationDrawerActivity {
         new FilterChangeRequester(this, new QueryHandler() {
             @Override
             public void onQueryExecuted(Object result) {
-                fetchAvailableFilters();
+                FiltersActivity.super.refreshUserData();
             }
 
             @Override

@@ -32,10 +32,12 @@ public class FiltersViewAdapter extends RecyclerView.Adapter<FiltersViewAdapter.
          * does not specify which one of them is currently used. */
         int indexOfCurrentFilterInFilterList = mFilters.indexOf(newCurrentFilter);
         if (indexOfCurrentFilterInFilterList == -1) {
-            Log.e("FiltersViewAdapter", "filters specified do not contain the current filter");
+            Log.e("FiltersViewAdapter", "the current filter hasn't been found in the filter list");
         } else {
             /* make current filter the first item in the filter list */
-            Collections.swap(mFilters, indexOfCurrentFilterInFilterList, 0);
+            newCurrentFilter = mFilters.get(indexOfCurrentFilterInFilterList);
+            mFilters.remove(indexOfCurrentFilterInFilterList);
+            mFilters.add(0, newCurrentFilter);
         }
         super.notifyDataSetChanged();
     }

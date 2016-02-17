@@ -24,9 +24,8 @@ import derpibooru.derpy.server.requesters.LogoutRequester;
 class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListener {
     private static final int ACTIVITY_LOGIN_REQUEST_CODE = 1;
 
-    private Activity mParent;
+    private NavigationDrawerActivity mParent;
     private int mParentNavigationId;
-    private UserDataObtainedHandler mUserDataObtainedHandler;
 
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
@@ -34,10 +33,9 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
 
     private UserDataProvider mUserProvider;
 
-    public NavigationDrawer(Activity parent, DrawerLayout drawer, Toolbar toolbar,
-                            NavigationView menu, UserDataObtainedHandler refreshHandler) {
+    public NavigationDrawer(NavigationDrawerActivity parent,
+                            DrawerLayout drawer, Toolbar toolbar, NavigationView menu) {
         mParent = parent;
-        mUserDataObtainedHandler = refreshHandler;
         setActivityMenuItemId();
 
         mDrawerLayout = drawer;
@@ -200,20 +198,14 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    public interface UserDataObtainedHandler {
-        void onUserDataObtained();
-    }
-
     private class UserQueryHandler implements QueryHandler {
         @Override
         public void onQueryExecuted(Object result) {
-            mUserDataObtainedHandler.onUserDataObtained();
+            mParent.onUserDataRefreshed();
             displayUserData((DerpibooruUser) result);
         }
 
         @Override
-        public void onQueryFailed() {
-
-        }
+        public void onQueryFailed() { }
     }
 }

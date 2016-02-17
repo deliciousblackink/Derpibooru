@@ -45,6 +45,14 @@ public class FilterChangeRequester extends AuthenticatedRequester {
         new UserDataStorage(mContext).setCurrentFilter(mNewFilter);
     }
 
+    /**
+     * For filter change requests, the response code returned by server on success is 302.
+     */
+    @Override
+    public int getSuccessResponseCode() {
+        return 302;
+    }
+
     @Override
     protected void onTokenFetched(String token) {
         mAuthenticityToken = token;

@@ -29,6 +29,14 @@ public class LogoutRequester extends AuthenticatedRequester {
         return sb.toString();
     }
 
+    /**
+     * For authentication requests, the response code returned by server on success is 302.
+     */
+    @Override
+    public int getSuccessResponseCode() {
+        return 302;
+    }
+
     @Override
     public void fetch() {
         fetchToken();

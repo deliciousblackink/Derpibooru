@@ -41,6 +41,11 @@ public class UserDataProvider extends Provider {
         }
     }
 
+    @Override
+    protected void cacheResponse(Object parsedResponse) {
+        mUserDataStorage.setUserData((DerpibooruUser) parsedResponse);
+    }
+
     private boolean isUserDataCached() {
         DerpibooruUser cached = mUserDataStorage.getUserData();
         if (cached != null) {

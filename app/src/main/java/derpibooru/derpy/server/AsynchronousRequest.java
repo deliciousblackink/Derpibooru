@@ -19,11 +19,21 @@ public abstract class AsynchronousRequest implements Runnable {
 
     protected ServerResponseParser mResponseParser;
     protected String mUrl;
+    protected int mSuccessCode;
 
     public AsynchronousRequest(Context context, @Nullable ServerResponseParser parser, String url) {
         mHttpClient = ((Derpibooru) context.getApplicationContext()).getHttpClient();
         mResponseParser = parser;
         mUrl = url;
+        mSuccessCode = 200;
+    }
+
+    public AsynchronousRequest(Context context, @Nullable ServerResponseParser parser,
+                               String url, int successResponseCode) {
+        mHttpClient = ((Derpibooru) context.getApplicationContext()).getHttpClient();
+        mResponseParser = parser;
+        mUrl = url;
+        mSuccessCode = successResponseCode;
     }
 
     protected abstract void onRequestCompleted(Object parsedResponse);
@@ -41,11 +51,16 @@ public abstract class AsynchronousRequest implements Runnable {
 
             @Override
             public void onResponse(Call request, Response response) throws IOException {
-                if (!response.isSuccessful() && response.code() != 302) {
+                if (!response.isSuccessful() && response.code() != mSuccessCode) {
                     Log.e("AsynchronousRequest", "run(): Callback() onResponse");
                     onRequestFailed();
                 }
-                onRequestCompleted(parseResponse(response));
+                if (response.code() == mSuccessCode) {
+                    onRequestCompleted(parseResponse(response));
+                } else {
+                    Log.e("AsynchronousRequest", String.format("run(): Response code doesn't match the required value (expected %d, got %d)", mSuccessCode, response.code()));
+                    onRequestFailed();
+                }
             }
         });
     }

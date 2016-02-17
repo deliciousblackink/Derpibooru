@@ -21,10 +21,14 @@ public abstract class Requester extends Provider {
 
     protected abstract Map<String, String> generateForm();
 
+    public int getSuccessResponseCode() {
+        return 200;
+    }
+
     @Override
     protected void executeQuery(ServerResponseParser parser) {
         Handler thread = new Handler();
-        thread.post(new AsynchronousFormRequest(mContext, generateUrl(), generateForm()) {
+        thread.post(new AsynchronousFormRequest(mContext, generateUrl(), generateForm(), getSuccessResponseCode()) {
             Handler uiThread = new Handler(Looper.getMainLooper());
 
             @Override

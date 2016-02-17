@@ -49,18 +49,16 @@ public abstract class Provider {
 
     protected class UiThreadMessageSender implements Runnable {
         private Object mMessage;
+        private boolean mIsError;
 
         public UiThreadMessageSender(Object message, boolean isError) {
-            if (!isError) {
-                mMessage = message;
-            } else {
-                mMessage = null;
-            }
+            mMessage = message;
+            mIsError = isError;
         }
 
         @Override
         public void run() {
-            if (mMessage != null) {
+            if (!mIsError) {
                 mHandler.onQueryExecuted(mMessage);
             } else {
                 mHandler.onQueryFailed();

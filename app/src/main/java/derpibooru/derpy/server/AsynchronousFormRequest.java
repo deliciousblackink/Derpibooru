@@ -11,8 +11,8 @@ import okhttp3.Response;
 public abstract class AsynchronousFormRequest extends AsynchronousRequest {
     private Map<String, String> mForm;
 
-    public AsynchronousFormRequest(Context context, String url, Map<String, String> form) {
-        super(context, null, url);
+    public AsynchronousFormRequest(Context context, String url, Map<String, String> form, int successResponseCode) {
+        super(context, null, url, successResponseCode);
         mForm = form;
     }
 
@@ -23,10 +23,5 @@ public abstract class AsynchronousFormRequest extends AsynchronousRequest {
             formBody.add(formItem.getKey(), formItem.getValue());
         }
         return new Request.Builder().url(mUrl).method("POST", formBody.build()).build();
-    }
-
-    protected Object parseResponse(Response response) {
-        /* HTTP 302 indicates successful authentication */
-        return (response.code() == 302); /* TODO: 200 in vote */
     }
 }

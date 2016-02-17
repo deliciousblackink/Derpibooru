@@ -30,7 +30,7 @@ public abstract class AuthenticatedRequester extends Requester {
         }).fetch();
     }
 
-    private class AuthenticityTokenProvider extends Provider {
+    private static class AuthenticityTokenProvider extends Provider {
         public AuthenticityTokenProvider(Context context, QueryHandler handler) {
             super(context, handler);
         }

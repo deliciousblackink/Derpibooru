@@ -14,21 +14,21 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public abstract class AsynchronousRequest implements Runnable {
+public abstract class AsynchronousRequest<T> implements Runnable {
     private OkHttpClient mHttpClient;
 
-    protected ServerResponseParser mResponseParser;
+    protected ServerResponseParser<T> mResponseParser;
     protected String mUrl;
     protected int mSuccessCode;
 
-    public AsynchronousRequest(Context context, @Nullable ServerResponseParser parser, String url) {
+    public AsynchronousRequest(Context context, ServerResponseParser<T> parser, String url) {
         mHttpClient = ((Derpibooru) context.getApplicationContext()).getHttpClient();
         mResponseParser = parser;
         mUrl = url;
         mSuccessCode = 200;
     }
 
-    public AsynchronousRequest(Context context, @Nullable ServerResponseParser parser,
+    public AsynchronousRequest(Context context, ServerResponseParser<T> parser,
                                String url, int successResponseCode) {
         mHttpClient = ((Derpibooru) context.getApplicationContext()).getHttpClient();
         mResponseParser = parser;
@@ -36,7 +36,7 @@ public abstract class AsynchronousRequest implements Runnable {
         mSuccessCode = successResponseCode;
     }
 
-    protected abstract void onRequestCompleted(Object parsedResponse);
+    protected abstract void onRequestCompleted(T parsedResponse);
 
     protected abstract void onRequestFailed();
 
@@ -67,7 +67,7 @@ public abstract class AsynchronousRequest implements Runnable {
                 .build();
     }
 
-    protected Object parseResponse(Response response) {
+    protected T parseResponse(Response response) {
         if (mResponseParser != null) {
             try {
                 return mResponseParser.parseResponse(response.body().string());

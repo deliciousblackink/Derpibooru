@@ -12,13 +12,13 @@ import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.TagListParser;
 import derpibooru.derpy.storage.TagStorage;
 
-public class TagProvider extends Provider {
+public class TagProvider extends Provider<List<DerpibooruTagFull>> {
     private List<DerpibooruTagFull> mCachedTags = new ArrayList<>();
     private TagStorage mTagStorage;
 
     private List<Integer> mRequestedTagIds;
 
-    public TagProvider(Context context, QueryHandler handler) {
+    public TagProvider(Context context, QueryHandler<List<DerpibooruTagFull>> handler) {
         super(context, handler);
         mTagStorage = new TagStorage(context);
     }
@@ -55,9 +55,8 @@ public class TagProvider extends Provider {
     }
 
     @Override
-    protected void cacheResponse(Object parsedResponse) {
-        List<DerpibooruTagFull> tagsFetchedFromServer = (List<DerpibooruTagFull>) parsedResponse;
-        for (DerpibooruTagFull tag : tagsFetchedFromServer) {
+    protected void cacheResponse(List<DerpibooruTagFull> tagsFromServer) {
+        for (DerpibooruTagFull tag : tagsFromServer) {
             mTagStorage.setTag(tag);
         }
     }

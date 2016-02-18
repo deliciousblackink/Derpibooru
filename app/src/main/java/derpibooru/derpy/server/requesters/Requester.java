@@ -14,8 +14,8 @@ import derpibooru.derpy.server.providers.Provider;
 /**
  * Asynchronous performer of unsafe (both idempotent and non-idempotent) HTTP requests with form submission.
  */
-public abstract class Requester extends Provider {
-    public Requester(Context context, QueryHandler handler) {
+public abstract class Requester<T> extends Provider<T> {
+    public Requester(Context context, QueryHandler<T> handler) {
         super(context, handler);
     }
 
@@ -30,13 +30,13 @@ public abstract class Requester extends Provider {
     }
 
     @Override
-    protected void executeQuery(ServerResponseParser parser) {
+    protected void executeQuery(ServerResponseParser<T> parser) {
         Handler thread = new Handler();
-        thread.post(new AsynchronousFormRequest(mContext, generateUrl(), generateForm(), getSuccessResponseCode(), getHttpMethod()) {
+        thread.post(new AsynchronousFormRequest<T>(mContext, generateUrl(), generateForm(), getSuccessResponseCode(), getHttpMethod()) {
             Handler uiThread = new Handler(Looper.getMainLooper());
 
             @Override
-            public void onRequestCompleted(Object parsedResponse) {
+            public void onRequestCompleted(T parsedResponse) {
                 uiThread.post(new UiThreadMessageSender(parsedResponse, false));
             }
 

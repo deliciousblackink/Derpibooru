@@ -6,12 +6,13 @@ import java.util.Map;
 
 import derpibooru.derpy.data.server.DerpibooruLoginForm;
 import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.parsers.ServerResponseParser;
 
-public class LoginRequester extends AuthenticatedRequester {
+public class LoginRequester extends AuthenticatedRequester<Boolean> {
     private DerpibooruLoginForm mCredentials;
     private String mAuthenticityToken;
 
-    public LoginRequester(Context context, DerpibooruLoginForm credentials, QueryHandler handler) {
+    public LoginRequester(Context context, DerpibooruLoginForm credentials, QueryHandler<Boolean> handler) {
         super(context, handler);
         mCredentials = credentials;
     }
@@ -55,6 +56,11 @@ public class LoginRequester extends AuthenticatedRequester {
     @Override
     protected void onTokenFetched(String token) {
         mAuthenticityToken = token;
-        executeQuery(null);
+        executeQuery(new ServerResponseParser<Boolean>() {
+            @Override
+            public Boolean parseResponse(String rawResponse) throws Exception {
+                return true;
+            }
+        });
     }
 }

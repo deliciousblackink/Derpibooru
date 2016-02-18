@@ -8,12 +8,12 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public abstract class AsynchronousFormRequest extends AsynchronousRequest {
+public abstract class AsynchronousFormRequest<T> extends AsynchronousRequest<T> {
     private Map<String, String> mForm;
     private String mHttpMethod;
 
-    public AsynchronousFormRequest(Context context, String url, Map<String, String> form, int successResponseCode,
-                                   String httpMethod) {
+    public AsynchronousFormRequest(Context context, String url, Map<String, String> form,
+                                   int successResponseCode, String httpMethod) {
         super(context, null, url, successResponseCode);
         mForm = form;
         mHttpMethod = httpMethod;

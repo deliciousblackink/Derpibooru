@@ -2,13 +2,15 @@ package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
+import java.util.List;
+
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.FilterListParser;
 import derpibooru.derpy.storage.UserDataStorage;
 
-public class FilterListProvider extends Provider {
-    public FilterListProvider(Context context, QueryHandler handler) {
+public class FilterListProvider extends Provider<List<DerpibooruFilter>> {
+    public FilterListProvider(Context context, QueryHandler<List<DerpibooruFilter>> handler) {
         super(context, handler);
     }
 

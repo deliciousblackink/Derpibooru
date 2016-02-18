@@ -2,13 +2,14 @@ package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
+import derpibooru.derpy.data.server.DerpibooruImageInfo;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.ImageInfoParser;
 
-public class ImageInfoProvider extends Provider {
+public class ImageInfoProvider extends Provider<DerpibooruImageInfo> {
     private int mId;
 
-    public ImageInfoProvider(Context context, QueryHandler handler) {
+    public ImageInfoProvider(Context context, QueryHandler<DerpibooruImageInfo> handler) {
         super(context, handler);
     }
 

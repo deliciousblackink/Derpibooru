@@ -6,15 +6,16 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
+import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.ImageInteractionResultParser;
 
-public class ImageInteractionRequester extends AuthenticatedApiRequester {
+public class ImageInteractionRequester extends AuthenticatedApiRequester<DerpibooruImageInteraction> {
     private InteractionType mType;
     private String mApiKey;
     private int mImageId;
 
-    public ImageInteractionRequester(Context context, QueryHandler handler) {
+    public ImageInteractionRequester(Context context, QueryHandler<DerpibooruImageInteraction> handler) {
         super(context, handler);
     }
 

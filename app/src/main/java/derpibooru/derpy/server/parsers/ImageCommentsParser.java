@@ -6,17 +6,18 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import derpibooru.derpy.data.server.DerpibooruImageComment;
 
-public class ImageCommentsParser implements ServerResponseParser {
+public class ImageCommentsParser implements ServerResponseParser<List<DerpibooruImageComment>> {
     @Override
-    public Object parseResponse(String rawResponse) throws Exception {
+    public List<DerpibooruImageComment> parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
         if (doc.select("div.metabar").first() == null) {
-            return new ArrayList<DerpibooruImageComment>();
+            return new ArrayList<>();
         }
         ArrayList<DerpibooruImageComment> commentList = new ArrayList<>();
         /* TODO: parse comment author's badges */

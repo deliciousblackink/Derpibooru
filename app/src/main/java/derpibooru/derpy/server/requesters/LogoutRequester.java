@@ -6,11 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.parsers.ServerResponseParser;
 
-public class LogoutRequester extends AuthenticatedRequester {
+public class LogoutRequester extends AuthenticatedRequester<Boolean> {
     private String mAuthenticityToken;
 
-    public LogoutRequester(Context context, QueryHandler handler) {
+    public LogoutRequester(Context context, QueryHandler<Boolean> handler) {
         super(context, handler);
     }
 
@@ -45,6 +46,11 @@ public class LogoutRequester extends AuthenticatedRequester {
     @Override
     protected void onTokenFetched(String token) {
         mAuthenticityToken = token;
-        executeQuery(null);
+        executeQuery(new ServerResponseParser<Boolean>() {
+            @Override
+            public Boolean parseResponse(String rawResponse) throws Exception {
+                return true;
+            }
+        });
     }
 }

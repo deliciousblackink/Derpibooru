@@ -2,9 +2,11 @@ package derpibooru.derpy.server.parsers;
 
 import android.util.Log;
 
-public class ImageInteractionResultParser implements ServerResponseParser {
+import derpibooru.derpy.data.server.DerpibooruImageInteraction;
+
+public class ImageInteractionResultParser implements ServerResponseParser<DerpibooruImageInteraction> {
     @Override
-    public Object parseResponse(String rawResponse) throws Exception {
+    public DerpibooruImageInteraction parseResponse(String rawResponse) throws Exception {
         Log.e("interaction", rawResponse);
         return null;
     }

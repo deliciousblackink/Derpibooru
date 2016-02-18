@@ -9,18 +9,18 @@ import derpibooru.derpy.server.providers.Provider;
 /**
  * A subclass of Requester that fetches a Rails authentication token before performing the request.
  */
-public abstract class AuthenticatedRequester extends Requester {
-    public AuthenticatedRequester(Context context, QueryHandler handler) {
+public abstract class AuthenticatedRequester<T> extends Requester<T> {
+    public AuthenticatedRequester(Context context, QueryHandler<T> handler) {
         super(context, handler);
     }
 
     protected abstract void onTokenFetched(String token);
 
     protected void fetchToken() {
-        new AuthenticityTokenProvider(mContext, new QueryHandler() {
+        new AuthenticityTokenProvider(mContext, new QueryHandler<String>() {
             @Override
-            public void onQueryExecuted(Object result) {
-                onTokenFetched((String) result);
+            public void onQueryExecuted(String token) {
+                onTokenFetched(token);
             }
 
             @Override
@@ -30,8 +30,8 @@ public abstract class AuthenticatedRequester extends Requester {
         }).fetch();
     }
 
-    private static class AuthenticityTokenProvider extends Provider {
-        public AuthenticityTokenProvider(Context context, QueryHandler handler) {
+    private static class AuthenticityTokenProvider extends Provider<String> {
+        public AuthenticityTokenProvider(Context context, QueryHandler<String> handler) {
             super(context, handler);
         }
 

@@ -11,14 +11,14 @@ import derpibooru.derpy.server.parsers.ServerResponseParser;
 /**
  * Asynchronous performer of safe (nullipotent) HTTP requests.
  */
-public abstract class Provider {
+public abstract class Provider<T> {
     protected static final String DERPIBOORU_DOMAIN = "https://trixiebooru.org/";
     protected static final String DERPIBOORU_API_ENDPOINT = "api/v2/";
 
-    protected QueryHandler mHandler;
+    protected QueryHandler<T> mHandler;
     protected Context mContext;
 
-    public Provider(Context context, QueryHandler handler) {
+    public Provider(Context context, QueryHandler<T> handler) {
         mContext = context;
         mHandler = handler;
     }
@@ -27,15 +27,15 @@ public abstract class Provider {
 
     protected abstract String generateUrl();
 
-    protected void cacheResponse(Object parsedResponse) { }
+    protected void cacheResponse(T parsedResponse) { }
 
-    protected void executeQuery(ServerResponseParser parser) {
+    protected void executeQuery(ServerResponseParser<T> parser) {
         Handler thread = new Handler();
-        thread.post(new AsynchronousRequest(mContext, parser, generateUrl()) {
+        thread.post(new AsynchronousRequest<T>(mContext, parser, generateUrl()) {
             Handler uiThread = new Handler(Looper.getMainLooper());
 
             @Override
-            protected void onRequestCompleted(Object parsedResponse) {
+            protected void onRequestCompleted(T parsedResponse) {
                 cacheResponse(parsedResponse);
                 uiThread.post(new UiThreadMessageSender(parsedResponse, false));
             }
@@ -48,10 +48,10 @@ public abstract class Provider {
     }
 
     protected class UiThreadMessageSender implements Runnable {
-        private Object mMessage;
+        private T mMessage;
         private boolean mIsError;
 
-        public UiThreadMessageSender(Object message, boolean isError) {
+        public UiThreadMessageSender(T message, boolean isError) {
             mMessage = message;
             mIsError = isError;
         }

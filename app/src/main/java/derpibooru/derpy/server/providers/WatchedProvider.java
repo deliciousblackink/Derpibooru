@@ -2,10 +2,13 @@ package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
+import java.util.List;
+
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.server.QueryHandler;
 
 public class WatchedProvider extends ImageListProvider {
-    public WatchedProvider(Context context, QueryHandler handler) {
+    public WatchedProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler) {
         super(context, handler);
     }
 

@@ -7,13 +7,14 @@ import java.util.Map;
 
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.parsers.ServerResponseParser;
 import derpibooru.derpy.storage.UserDataStorage;
 
-public class FilterChangeRequester extends AuthenticatedRequester {
+public class FilterChangeRequester extends AuthenticatedRequester<Boolean> {
     private String mAuthenticityToken;
     private DerpibooruFilter mNewFilter;
 
-    public FilterChangeRequester(Context context, final QueryHandler handler,
+    public FilterChangeRequester(Context context, final QueryHandler<Boolean> handler,
                                  DerpibooruFilter newFilter) {
         super(context, handler);
         mNewFilter = newFilter;
@@ -41,7 +42,7 @@ public class FilterChangeRequester extends AuthenticatedRequester {
     }
 
     @Override
-    protected void cacheResponse(Object parsedResponse) {
+    protected void cacheResponse(Boolean parsedResponse) {
         new UserDataStorage(mContext).setCurrentFilter(mNewFilter);
     }
 
@@ -56,6 +57,11 @@ public class FilterChangeRequester extends AuthenticatedRequester {
     @Override
     protected void onTokenFetched(String token) {
         mAuthenticityToken = token;
-        executeQuery(null);
+        executeQuery(new ServerResponseParser<Boolean>() {
+            @Override
+            public Boolean parseResponse(String rawResponse) throws Exception {
+                return true;
+            }
+        });
     }
 }

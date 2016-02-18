@@ -2,6 +2,9 @@ package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
+import java.util.List;
+
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruRankingsListType;
 import derpibooru.derpy.server.QueryHandler;
 
@@ -12,7 +15,7 @@ public class RankingsProvider extends ImageListProvider {
     private DerpibooruRankingsListType mListType;
     private String mTime = ALL_TIME;
 
-    public RankingsProvider(Context context, QueryHandler handler) {
+    public RankingsProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler) {
         super(context, handler);
     }
 

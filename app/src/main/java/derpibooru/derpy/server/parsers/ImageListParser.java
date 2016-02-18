@@ -16,14 +16,14 @@ import derpibooru.derpy.data.server.DerpibooruImageInteractionType;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTagFull;
 
-public class ImageListParser implements ServerResponseParser {
+public class ImageListParser implements ServerResponseParser<List<DerpibooruImageThumb>> {
     private List<DerpibooruTagFull> mSpoileredTags;
 
     public ImageListParser(List<DerpibooruTagFull> spoileredTags) {
         mSpoileredTags = spoileredTags;
     }
 
-    public Object parseResponse(String rawResponse) throws JSONException {
+    public List<DerpibooruImageThumb> parseResponse(String rawResponse) throws JSONException {
         JSONObject json = new JSONObject(rawResponse);
         JSONArray jsonImages = getRootArray(json);
         List<DerpibooruImageThumb> imageThumbs = getImageThumbs(jsonImages);

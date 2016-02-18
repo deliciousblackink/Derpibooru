@@ -1,12 +1,12 @@
 package derpibooru.derpy.server;
 
-public interface QueryHandler {
+public interface QueryHandler<T> {
     /**
      * Successfully executed Derpibooru query.
      *
      * @param result requested object
      */
-    void onQueryExecuted(Object result);
+    void onQueryExecuted(T result);
 
     /**
      * Failed Derpibooru query.

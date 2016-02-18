@@ -5,9 +5,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class AuthenticityTokenParser implements ServerResponseParser {
+public class AuthenticityTokenParser implements ServerResponseParser<String> {
     @Override
-    public Object parseResponse(String rawResponse) throws Exception {
+    public String parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
         Elements metaHeaders = doc.select("head").first().select("meta");
         for (Element header : metaHeaders) {

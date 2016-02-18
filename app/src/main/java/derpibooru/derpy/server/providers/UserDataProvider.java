@@ -7,10 +7,10 @@ import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.UserDataParser;
 import derpibooru.derpy.storage.UserDataStorage;
 
-public class UserDataProvider extends Provider {
+public class UserDataProvider extends Provider<DerpibooruUser> {
     private UserDataStorage mUserDataStorage;
 
-    public UserDataProvider(Context context, QueryHandler handler) {
+    public UserDataProvider(Context context, QueryHandler<DerpibooruUser> handler) {
         super(context, handler);
         mUserDataStorage = new UserDataStorage(context);
     }
@@ -42,8 +42,8 @@ public class UserDataProvider extends Provider {
     }
 
     @Override
-    protected void cacheResponse(Object parsedResponse) {
-        mUserDataStorage.setUserData((DerpibooruUser) parsedResponse);
+    protected void cacheResponse(DerpibooruUser parsedResponse) {
+        mUserDataStorage.setUserData(parsedResponse);
     }
 
     private boolean isUserDataCached() {

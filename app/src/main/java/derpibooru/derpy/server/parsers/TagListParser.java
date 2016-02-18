@@ -9,7 +9,7 @@ import java.util.List;
 
 import derpibooru.derpy.data.server.DerpibooruTagFull;
 
-public class TagListParser implements ServerResponseParser {
+public class TagListParser implements ServerResponseParser<List<DerpibooruTagFull>> {
     private List<DerpibooruTagFull> mTagsToAppend;
 
     public TagListParser(List<DerpibooruTagFull> tagsToAppend) {
@@ -17,7 +17,7 @@ public class TagListParser implements ServerResponseParser {
     }
 
     @Override
-    public Object parseResponse(String rawResponse) throws JSONException {
+    public List<DerpibooruTagFull> parseResponse(String rawResponse) throws JSONException {
         ArrayList<DerpibooruTagFull> output = new ArrayList<>();
 
         JSONObject json = new JSONObject(rawResponse);

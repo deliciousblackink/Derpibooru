@@ -4,16 +4,17 @@ import android.content.Context;
 
 import java.util.List;
 
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTagFull;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.ImageListParser;
 
-public class ImageListProvider extends Provider {
+public class ImageListProvider extends Provider<List<DerpibooruImageThumb>> {
     protected static final int IMAGES_PER_PAGE = 16;
 
     private int mCurrentPage = 1;
 
-    public ImageListProvider(Context context, QueryHandler handler) {
+    public ImageListProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler) {
         super(context, handler);
     }
 
@@ -45,10 +46,10 @@ public class ImageListProvider extends Provider {
 
     @Override
     public void fetch() {
-        new SpoileredTagsProvider(mContext, new QueryHandler() {
+        new SpoileredTagsProvider(mContext, new QueryHandler<List<DerpibooruTagFull>>() {
             @Override
-            public void onQueryExecuted(Object result) {
-                fetchImages((List<DerpibooruTagFull>) result);
+            public void onQueryExecuted(List<DerpibooruTagFull> spoileredTags) {
+                fetchImages(spoileredTags);
             }
 
             @Override

@@ -25,10 +25,14 @@ public abstract class Requester extends Provider {
         return 200;
     }
 
+    protected String getHttpMethod() {
+        return "POST";
+    }
+
     @Override
     protected void executeQuery(ServerResponseParser parser) {
         Handler thread = new Handler();
-        thread.post(new AsynchronousFormRequest(mContext, generateUrl(), generateForm(), getSuccessResponseCode()) {
+        thread.post(new AsynchronousFormRequest(mContext, generateUrl(), generateForm(), getSuccessResponseCode(), getHttpMethod()) {
             Handler uiThread = new Handler(Looper.getMainLooper());
 
             @Override

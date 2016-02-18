@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteractionType;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
+import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.requesters.ImageInteractionRequester;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.animations.ImageListItemAnimator;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
@@ -26,11 +28,13 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     private Context mContext;
 
     private ArrayList<DerpibooruImageThumb> mImages;
+    private ImageInteractionRequester mInteractions;
 
     public ImageListAdapter(Context context, ArrayList<DerpibooruImageThumb> images) {
         mAnimator = new ImageListItemAnimator();
         mContext = context;
         mImages = images;
+        mInteractions = new ImageInteractionRequester(context, new ImageInteractionHandler());
     }
 
     @Override
@@ -135,6 +139,13 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
                 displayImage(target);
             }
         });
+        target.buttonUpvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mInteractions.interaction(ImageInteractionRequester.InteractionType.Upvote)
+                        .onImage(target.data.getInternalId()).fetch();
+            }
+        });
     }
 
     private void toggleView(View v, int maximumHeight) {
@@ -171,6 +182,18 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
             layoutImageInteractions = v.findViewById(R.id.layoutImageInteractions);
             buttonFave = (AccentColorIconButton) v.findViewById(R.id.buttonFave);
             buttonUpvote = (AccentColorIconButton) v.findViewById(R.id.buttonUpvote);
+        }
+    }
+
+    public class ImageInteractionHandler implements QueryHandler {
+        @Override
+        public void onQueryExecuted(Object result) {
+
+        }
+
+        @Override
+        public void onQueryFailed() {
+
         }
     }
 }

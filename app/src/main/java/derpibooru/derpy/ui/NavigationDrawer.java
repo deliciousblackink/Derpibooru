@@ -109,9 +109,9 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
     }
 
     private void logout() {
-        new LogoutRequester(mParent, new QueryHandler() {
+        new LogoutRequester(mParent, new QueryHandler<Boolean>() {
             @Override
-            public void onQueryExecuted(Object result) {
+            public void onQueryExecuted(Boolean result) {
                 mUserProvider.refreshUserData();
             }
 
@@ -198,11 +198,11 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    private class UserQueryHandler implements QueryHandler {
+    private class UserQueryHandler implements QueryHandler<DerpibooruUser> {
         @Override
-        public void onQueryExecuted(Object result) {
+        public void onQueryExecuted(DerpibooruUser result) {
             mParent.onUserDataRefreshed();
-            displayUserData((DerpibooruUser) result);
+            displayUserData(result);
         }
 
         @Override

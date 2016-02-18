@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageComment;
@@ -93,9 +94,9 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
         }
     }
 
-    private class ImageCommentsRequestHandler implements QueryHandler {
+    private class ImageCommentsRequestHandler implements QueryHandler<List<DerpibooruImageComment>> {
         @Override
-        public void onQueryExecuted(Object result) {
+        public void onQueryExecuted(List<DerpibooruImageComment> result) {
             displayCommentsFromProvider((ArrayList<DerpibooruImageComment>) result);
         }
 

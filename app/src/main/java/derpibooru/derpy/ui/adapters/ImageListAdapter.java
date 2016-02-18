@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
 
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageInteractionType;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.server.QueryHandler;
@@ -185,9 +186,9 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         }
     }
 
-    public class ImageInteractionHandler implements QueryHandler {
+    public class ImageInteractionHandler implements QueryHandler<DerpibooruImageInteraction> {
         @Override
-        public void onQueryExecuted(Object result) {
+        public void onQueryExecuted(DerpibooruImageInteraction result) {
 
         }
 

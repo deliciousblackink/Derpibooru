@@ -18,8 +18,7 @@ import derpibooru.derpy.R;
  * @see <a href="http://developer.android.com/training/material/lists-cards.html">
  * implementation details</a>
  */
-public class RecentSearchListAdapter extends RecyclerView
-                                                     .Adapter<RecentSearchListAdapter.ViewHolder> {
+public class RecentSearchListAdapter extends RecyclerView.Adapter<RecentSearchListAdapter.ViewHolder> {
     private String[] mDataset;
 
     /* Used by item animation (see 'setAnimation' method) */

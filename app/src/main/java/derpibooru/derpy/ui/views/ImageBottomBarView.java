@@ -33,10 +33,10 @@ public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {
 
     private void loadDetailedInfo(int imageId) {
          /* get image uploader, description, tags */
-        ImageInfoProvider provider = new ImageInfoProvider(getContext(), new QueryHandler() {
+        ImageInfoProvider provider = new ImageInfoProvider(getContext(), new QueryHandler<DerpibooruImageInfo>() {
             @Override
-            public void onQueryExecuted(Object result) {
-                populateViewPagerTabsWithImageInfo((DerpibooruImageInfo) result);
+            public void onQueryExecuted(DerpibooruImageInfo info) {
+                populateViewPagerTabsWithImageInfo(info);
             }
 
             @Override

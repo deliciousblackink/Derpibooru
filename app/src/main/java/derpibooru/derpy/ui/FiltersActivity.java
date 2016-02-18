@@ -60,9 +60,9 @@ public class FiltersActivity extends NavigationDrawerActivity {
     }
 
     private void setCurrentFilter(DerpibooruFilter newFilter) {
-        new FilterChangeRequester(this, new QueryHandler() {
+        new FilterChangeRequester(this, new QueryHandler<Boolean>() {
             @Override
-            public void onQueryExecuted(Object result) {
+            public void onQueryExecuted(Boolean result) {
                 FiltersActivity.super.refreshUserData();
             }
 
@@ -74,10 +74,10 @@ public class FiltersActivity extends NavigationDrawerActivity {
     }
 
     private void initFilterListProvider() {
-        mFilterListProvider = new FilterListProvider(this, new QueryHandler() {
+        mFilterListProvider = new FilterListProvider(this, new QueryHandler<List<DerpibooruFilter>>() {
             @Override
-            public void onQueryExecuted(Object result) {
-                mAvailableFilterList = (ArrayList<DerpibooruFilter>) result;
+            public void onQueryExecuted(List<DerpibooruFilter> filters) {
+                mAvailableFilterList = (ArrayList<DerpibooruFilter>) filters;
                 displayFilters();
             }
 

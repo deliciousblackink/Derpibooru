@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
@@ -84,9 +85,9 @@ public abstract class ImageListFragment extends Fragment {
         }
     }
 
-    protected class ImageListRequestHandler implements QueryHandler {
+    protected class ImageListRequestHandler implements QueryHandler<List<DerpibooruImageThumb>> {
         @Override
-        public void onQueryExecuted(Object result) {
+        public void onQueryExecuted(List<DerpibooruImageThumb> result) {
             displayImagesFromProvider((ArrayList<DerpibooruImageThumb>) result);
         }
 

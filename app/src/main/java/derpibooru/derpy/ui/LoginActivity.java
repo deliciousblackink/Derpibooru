@@ -82,9 +82,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginWithCredentials(DerpibooruLoginForm credentials) {
-        new LoginRequester(this, credentials, new QueryHandler() {
+        new LoginRequester(this, credentials, new QueryHandler<Boolean>() {
             @Override
-            public void onQueryExecuted(Object result) {
+            public void onQueryExecuted(Boolean result) {
                 setResult(Activity.RESULT_OK);
                 finish();
             }

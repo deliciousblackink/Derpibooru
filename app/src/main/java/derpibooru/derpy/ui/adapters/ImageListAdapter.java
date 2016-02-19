@@ -24,23 +24,14 @@ import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.animations.ImageListItemAnimator;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
-public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ViewHolder> {
+public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImageThumb, ImageListAdapter.ViewHolder> {
     private ImageListItemAnimator mAnimator;
-    private Context mContext;
-
-    private ArrayList<DerpibooruImageThumb> mImages;
     private ImageInteractionRequester mInteractions;
 
-    public ImageListAdapter(Context context, ArrayList<DerpibooruImageThumb> images) {
+    public ImageListAdapter(Context context, ArrayList<DerpibooruImageThumb> items) {
+        super(context, items);
         mAnimator = new ImageListItemAnimator();
-        mContext = context;
-        mImages = images;
         mInteractions = new ImageInteractionRequester(context, new ImageInteractionHandler());
-    }
-
-    @Override
-    public int getItemCount() {
-        return mImages.size();
     }
 
     @Override
@@ -51,22 +42,9 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         return new ViewHolder(v);
     }
 
-    public void resetImageThumbs(ArrayList<DerpibooruImageThumb> newImages) {
-        super.notifyItemRangeRemoved(0, mImages.size());
-        mImages = newImages;
-        super.notifyItemRangeInserted(0, mImages.size() - 1);
-    }
-
-    public void appendImageThumbs(ArrayList<DerpibooruImageThumb> newImages) {
-        int oldImageCount = mImages.size();
-        mImages.addAll(newImages);
-        int newImageCount = mImages.size() - 1;
-        super.notifyItemRangeInserted(oldImageCount, newImageCount);
-    }
-
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.data = mImages.get(position);
+        holder.data = getItems().get(position);
         if (holder.data.isSpoilered()) {
             displaySpoiler(holder);
         } else {
@@ -87,10 +65,10 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Glide.get(mContext).clearMemory();
-                Intent intent = new Intent(mContext, ImageActivity.class);
+                Glide.get(getContext()).clearMemory();
+                Intent intent = new Intent(getContext(), ImageActivity.class);
                 intent.putExtra("derpibooru.derpy.ImageThumb", holder.data);
-                mContext.startActivity(intent);
+                getContext().startActivity(intent);
             }
         });
         setInteractionListeners(holder);
@@ -109,7 +87,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     }
 
     private void loadWithGlide(String url, Priority priority, ImageView target) {
-        Glide.with(mContext).load(url)
+        Glide.with(getContext()).load(url)
                 .centerCrop().crossFade()
                 .priority(priority)
                 /* the image is going to be resized due to orientation changes */

@@ -23,13 +23,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageComment;
 
-public class ImageCommentsAdapter extends RecyclerView.Adapter<ImageCommentsAdapter.ViewHolder> {
-    private Context mContext;
-    private ArrayList<DerpibooruImageComment> mComments;
-
-    public ImageCommentsAdapter(Context context, ArrayList<DerpibooruImageComment> comments) {
-        mContext = context;
-        mComments = comments;
+public class ImageCommentsAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImageComment, ImageCommentsAdapter.ViewHolder> {
+    public ImageCommentsAdapter(Context context, ArrayList<DerpibooruImageComment> items) {
+        super(context, items);
     }
 
     @Override
@@ -40,31 +36,18 @@ public class ImageCommentsAdapter extends RecyclerView.Adapter<ImageCommentsAdap
         return new ViewHolder(v);
     }
 
-    public void resetImageComments(ArrayList<DerpibooruImageComment> newComments) {
-        super.notifyItemRangeRemoved(0, mComments.size());
-        mComments = newComments;
-        super.notifyItemRangeInserted(0, mComments.size() - 1);
-    }
-
-    public void appendImageComments(ArrayList<DerpibooruImageComment> newComments) {
-        int oldImageCount = mComments.size();
-        mComments.addAll(newComments);
-        int newImageCount = mComments.size() - 1;
-        super.notifyItemRangeInserted(oldImageCount, newImageCount);
-    }
-
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.data = mComments.get(position);
+        holder.data = getItems().get(position);
 
         /* FIXME: Support library has some SVG compatibility solutions, dig that up */
         if (!holder.data.getAuthorAvatarUrl().endsWith(".svg")) {
-            Glide.with(mContext)
+            Glide.with(getContext())
                     .load(holder.data.getAuthorAvatarUrl())
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .dontAnimate().into(holder.imageAvatar);
         } else {
-            Glide.with(mContext).load(R.drawable.no_avatar).dontAnimate().into(holder.imageAvatar);
+            Glide.with(getContext()).load(R.drawable.no_avatar).dontAnimate().into(holder.imageAvatar);
         }
 
         holder.textAuthor.setText(holder.data.getAuthor());
@@ -86,11 +69,6 @@ public class ImageCommentsAdapter extends RecyclerView.Adapter<ImageCommentsAdap
             Log.e("ImageCommentsAdapter", "error parsing date string", e);
         }
         return "";
-    }
-
-    @Override
-    public int getItemCount() {
-        return mComments.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

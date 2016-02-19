@@ -78,10 +78,10 @@ public abstract class ImageListFragment extends Fragment {
                 }
             });
         } else if (mImageRefreshLayout.isRefreshing()) {
-            mImageListAdapter.resetImageThumbs(imageThumbs);
+            mImageListAdapter.resetItems(imageThumbs);
             mImageRefreshLayout.setRefreshing(false);
         } else {
-            mImageListAdapter.appendImageThumbs(imageThumbs);
+            mImageListAdapter.appendItems(imageThumbs);
         }
     }
 

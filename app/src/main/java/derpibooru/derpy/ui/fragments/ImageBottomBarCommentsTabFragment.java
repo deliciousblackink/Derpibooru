@@ -78,10 +78,10 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
                 }
             });
         } else if (mCommentsRefreshLayout.isRefreshing()) {
-            mCommentsAdapter.resetImageComments(comments);
+            mCommentsAdapter.resetItems(comments);
             mCommentsRefreshLayout.setRefreshing(false);
         } else {
-            mCommentsAdapter.appendImageComments(comments);
+            mCommentsAdapter.appendItems(comments);
         }
         showCommentsIfNotVisible();
     }

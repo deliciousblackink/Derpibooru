@@ -1,9 +1,11 @@
 package derpibooru.derpy.server;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import java.util.Map;
 
+import derpibooru.derpy.server.parsers.ServerResponseParser;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -12,9 +14,10 @@ public abstract class AsynchronousFormRequest<T> extends AsynchronousRequest<T> 
     private Map<String, String> mForm;
     private String mHttpMethod;
 
-    public AsynchronousFormRequest(Context context, String url, Map<String, String> form,
+    public AsynchronousFormRequest(Context context, @Nullable ServerResponseParser<T> parser,
+                                   String url, Map<String, String> form,
                                    int successResponseCode, String httpMethod) {
-        super(context, null, url, successResponseCode);
+        super(context, parser, url, successResponseCode);
         mForm = form;
         mHttpMethod = httpMethod;
     }

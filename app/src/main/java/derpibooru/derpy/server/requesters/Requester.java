@@ -3,6 +3,7 @@ package derpibooru.derpy.server.requesters;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 
 import java.util.Map;
 
@@ -30,9 +31,10 @@ public abstract class Requester<T> extends Provider<T> {
     }
 
     @Override
-    protected void executeQuery(ServerResponseParser<T> parser) {
+    protected void executeQuery(@Nullable ServerResponseParser<T> parser) {
         Handler thread = new Handler();
-        thread.post(new AsynchronousFormRequest<T>(mContext, generateUrl(), generateForm(), getSuccessResponseCode(), getHttpMethod()) {
+        thread.post(new AsynchronousFormRequest<T>(mContext, parser, generateUrl(), generateForm(),
+                                                   getSuccessResponseCode(), getHttpMethod()) {
             Handler uiThread = new Handler(Looper.getMainLooper());
 
             @Override

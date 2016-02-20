@@ -57,11 +57,6 @@ public class FilterChangeRequester extends AuthenticatedRequester<Boolean> {
     @Override
     protected void onTokenFetched(String token) {
         mAuthenticityToken = token;
-        executeQuery(new ServerResponseParser<Boolean>() {
-            @Override
-            public Boolean parseResponse(String rawResponse) throws Exception {
-                return true;
-            }
-        });
+        executeQuery(null);
     }
 }

@@ -32,7 +32,6 @@ public class ImageInteractionRequester extends AuthenticatedApiRequester<Derpibo
     @Override
     protected Map<String, String> generateForm() {
         HashMap<String, String> form = new HashMap<>();
-        form.put("_method", "PUT");
         form.put("id", Integer.toString(mImageId));
         switch (mType) {
             case Fave:
@@ -51,7 +50,7 @@ public class ImageInteractionRequester extends AuthenticatedApiRequester<Derpibo
                 form.put("value", "false");
                 break;
         }
-        form.put("class", "Image");
+        form.put("key", mApiKey);
         return form;
     }
 
@@ -60,11 +59,10 @@ public class ImageInteractionRequester extends AuthenticatedApiRequester<Derpibo
         StringBuilder sb = new StringBuilder();
         sb.append(DERPIBOORU_DOMAIN).append(DERPIBOORU_API_ENDPOINT);
         if (mType == InteractionType.Fave || mType == InteractionType.ClearFave) {
-            sb.append("interactions/fave");
+            sb.append("interactions/fave.json");
         } else {
-            sb.append("interactions/vote");
+            sb.append("interactions/vote.json");
         }
-        sb.append("?key=").append(mApiKey);
         return sb.toString();
     }
 

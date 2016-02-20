@@ -3,7 +3,9 @@ package derpibooru.derpy.server.requesters;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
@@ -11,7 +13,7 @@ import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.ImageInteractionResultParser;
 
 public class ImageInteractionRequester extends AuthenticatedApiRequester<DerpibooruImageInteraction> {
-    private InteractionType mType;
+    private DerpibooruImageInteraction.InteractionType mType;
     private String mApiKey;
     private int mImageId;
 
@@ -19,7 +21,7 @@ public class ImageInteractionRequester extends AuthenticatedApiRequester<Derpibo
         super(context, handler);
     }
 
-    public ImageInteractionRequester interaction(InteractionType type) {
+    public ImageInteractionRequester interaction(DerpibooruImageInteraction.InteractionType type) {
         mType = type;
         return this;
     }
@@ -58,7 +60,8 @@ public class ImageInteractionRequester extends AuthenticatedApiRequester<Derpibo
     protected String generateUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append(DERPIBOORU_DOMAIN).append(DERPIBOORU_API_ENDPOINT);
-        if (mType == InteractionType.Fave || mType == InteractionType.ClearFave) {
+        if (mType == DerpibooruImageInteraction.InteractionType.Fave
+            || mType == DerpibooruImageInteraction.InteractionType.ClearFave) {
             sb.append("interactions/fave.json");
         } else {
             sb.append("interactions/vote.json");
@@ -79,14 +82,12 @@ public class ImageInteractionRequester extends AuthenticatedApiRequester<Derpibo
     @Override
     protected void onApiKeyFetched(String apiKey) {
         mApiKey = apiKey;
-        executeQuery(new ImageInteractionResultParser());
-    }
 
-    public enum InteractionType {
-        Fave,
-        Upvote,
-        Downvote,
-        ClearVote,
-        ClearFave
+        List<DerpibooruImageInteraction.InteractionType> interactions = new ArrayList<>();
+        interactions.add(mType);
+        if (mType == DerpibooruImageInteraction.InteractionType.Fave) {
+            interactions.add(DerpibooruImageInteraction.InteractionType.Upvote);
+        }
+        executeQuery(new ImageInteractionResultParser(mImageId, interactions));
     }
 }

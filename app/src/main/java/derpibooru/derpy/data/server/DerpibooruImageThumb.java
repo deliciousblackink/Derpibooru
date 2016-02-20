@@ -20,7 +20,7 @@ public class DerpibooruImageThumb implements Parcelable {
     private List<String> mSpoileredTagNames = new ArrayList<>();
     private String mSpoilerImageUrl;
 
-    private List<DerpibooruImageInteractionType> mImageInteractions = new ArrayList<>();
+    private List<DerpibooruImageInteraction.InteractionType> mImageInteractions = new ArrayList<>();
 
     /* a non-persistent variable used by image lists to indicate if a user has unspoilered an image */
     private boolean isSpoilered = true;
@@ -56,16 +56,31 @@ public class DerpibooruImageThumb implements Parcelable {
         return mScore;
     }
 
+    public void setScore(int score) {
+        mScore = score;
+    }
     public int getUpvotes() {
         return mUpvotes;
+    }
+
+    public void setUpvotes(int upvotes) {
+        mUpvotes = upvotes;
     }
 
     public int getDownvotes() {
         return mDownvotes;
     }
 
+    public void setDownvotes(int downvotes) {
+        mDownvotes = downvotes;
+    }
+
     public int getFaves() {
         return mFaves;
+    }
+
+    public void setFaves(int faves) {
+        mFaves = faves;
     }
 
     public int getCommentCount() {
@@ -88,12 +103,16 @@ public class DerpibooruImageThumb implements Parcelable {
         return mSpoilerImageUrl;
     }
 
-    public List<DerpibooruImageInteractionType> getImageInteractions() {
+    public List<DerpibooruImageInteraction.InteractionType> getImageInteractions() {
         return mImageInteractions;
     }
 
-    public void addImageInteraction(DerpibooruImageInteractionType interaction) {
+    public void addImageInteraction(DerpibooruImageInteraction.InteractionType interaction) {
         mImageInteractions.add(interaction);
+    }
+
+    public void removeImageInteraction(DerpibooruImageInteraction.InteractionType interaction) {
+        mImageInteractions.remove(interaction);
     }
 
     public boolean isSpoilered() {

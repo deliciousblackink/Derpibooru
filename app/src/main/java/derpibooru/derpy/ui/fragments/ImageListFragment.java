@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,8 @@ public abstract class ImageListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_image_list_tab, container, false);
         mImageView = (ImageListRecyclerView) v.findViewById(R.id.viewImages);
+        /* disable item change animations for image interactions */
+        ((SimpleItemAnimator) mImageView.getItemAnimator()).setSupportsChangeAnimations(false);
         mImageRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.layoutImageRefresh);
         mImageRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
         mImageRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
-import derpibooru.derpy.data.server.DerpibooruImageInteractionType;
+import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTagFull;
 
@@ -64,7 +64,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
         int actionCount = interactions.length();
         for (int x = 0; x < actionCount; x++) {
             JSONObject action = interactions.getJSONObject(x);
-            DerpibooruImageInteractionType imageInteractionType = getImageInteractionType(action);
+            DerpibooruImageInteraction.InteractionType imageInteractionType = getImageInteractionType(action);
             final int imageId = action.getInt("image_id");
             DerpibooruImageThumb correspondingThumb = Iterables.find(thumbs, new Predicate<DerpibooruImageThumb>() {
                 public boolean apply(DerpibooruImageThumb it) {
@@ -75,17 +75,17 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
         }
     }
 
-    private DerpibooruImageInteractionType getImageInteractionType(JSONObject interaction) throws JSONException {
+    private DerpibooruImageInteraction.InteractionType getImageInteractionType(JSONObject interaction) throws JSONException {
         if (interaction.getString("interaction_type").equals("faved")) {
-            return DerpibooruImageInteractionType.Fave;
+            return DerpibooruImageInteraction.InteractionType.Fave;
         } else if (interaction.getString("interaction_type").equals("voted")) {
             if (interaction.getString("value").equals("up")) {
-                return DerpibooruImageInteractionType.Upvote;
+                return DerpibooruImageInteraction.InteractionType.Upvote;
             } else {
-                return DerpibooruImageInteractionType.Downvote;
+                return DerpibooruImageInteraction.InteractionType.Downvote;
             }
         }
-        return DerpibooruImageInteractionType.None;
+        return DerpibooruImageInteraction.InteractionType.None;
     }
 
     private List<String> getSpoileredTagNames(List<Integer> imageTagIds) {

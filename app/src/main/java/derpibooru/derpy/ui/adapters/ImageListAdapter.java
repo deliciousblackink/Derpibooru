@@ -11,12 +11,13 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 import java.util.ArrayList;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
-import derpibooru.derpy.data.server.DerpibooruImageInteractionType;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.requesters.ImageInteractionRequester;
@@ -44,34 +45,41 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        int oldImageId = (holder.data != null) ? holder.data.getId() : -1;
         holder.data = getItems().get(position);
-        if (holder.data.isSpoilered()) {
-            displaySpoiler(holder);
-        } else {
-            displayImage(holder);
+        if (oldImageId != holder.data.getId()) {
+            initializeViewHolder(holder);
         }
         holder.buttonUpvote.setText(String.format("%d", holder.data.getUpvotes()));
         holder.buttonUpvote.setActive(
-                holder.data.getImageInteractions().contains(DerpibooruImageInteractionType.Upvote));
+                holder.data.getImageInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote));
         holder.buttonFave.setText(String.format("%d", holder.data.getFaves()));
         holder.buttonFave.setActive(
-                holder.data.getImageInteractions().contains(DerpibooruImageInteractionType.Fave));
+                holder.data.getImageInteractions().contains(DerpibooruImageInteraction.InteractionType.Fave));
         holder.buttonScore.setText(String.format("%d", holder.data.getScore()));
         holder.buttonScore.setActive(
                 holder.data.getImageInteractions().size() > 0);
         holder.buttonScore.setEnabled(false);
         holder.buttonComments.setText(String.format("%d", holder.data.getCommentCount()));
         holder.buttonComments.setEnabled(false);
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
+    }
+
+    private void initializeViewHolder(final ViewHolder target) {
+        if (target.data.isSpoilered()) {
+            displaySpoiler(target);
+        } else {
+            displayImage(target);
+        }
+        target.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Glide.get(getContext()).clearMemory();
                 Intent intent = new Intent(getContext(), ImageActivity.class);
-                intent.putExtra("derpibooru.derpy.ImageThumb", holder.data);
+                intent.putExtra("derpibooru.derpy.ImageThumb", target.data);
                 getContext().startActivity(intent);
             }
         });
-        setInteractionListeners(holder);
+        setInteractionListeners(target);
     }
 
     private void displaySpoiler(ViewHolder target) {
@@ -121,8 +129,27 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
         target.buttonUpvote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mInteractions.interaction(ImageInteractionRequester.InteractionType.Upvote)
-                        .onImage(target.data.getInternalId()).fetch();
+                if (!target.data.getImageInteractions()
+                        .contains(DerpibooruImageInteraction.InteractionType.Upvote)) {
+                    mInteractions.interaction(DerpibooruImageInteraction.InteractionType.Upvote)
+                            .onImage(target.data.getInternalId()).fetch();
+                } else {
+                    mInteractions.interaction(DerpibooruImageInteraction.InteractionType.ClearVote)
+                            .onImage(target.data.getInternalId()).fetch();
+                }
+            }
+        });
+        target.buttonFave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!target.data.getImageInteractions()
+                        .contains(DerpibooruImageInteraction.InteractionType.Fave)) {
+                    mInteractions.interaction(DerpibooruImageInteraction.InteractionType.Fave)
+                            .onImage(target.data.getInternalId()).fetch();
+                } else {
+                    mInteractions.interaction(DerpibooruImageInteraction.InteractionType.ClearFave)
+                            .onImage(target.data.getInternalId()).fetch();
+                }
             }
         });
     }
@@ -166,8 +193,30 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
 
     public class ImageInteractionHandler implements QueryHandler<DerpibooruImageInteraction> {
         @Override
-        public void onQueryExecuted(DerpibooruImageInteraction result) {
-
+        public void onQueryExecuted(final DerpibooruImageInteraction result) {
+            int thumbPosition = getItems().indexOf(
+                    Iterables.find(getItems(), new Predicate<DerpibooruImageThumb>() {
+                        public boolean apply(DerpibooruImageThumb it) {
+                            return it.getInternalId() == result.getInternalImageId();
+                        }
+                    }));
+            getItems().get(thumbPosition).setScore(result.getScore());
+            getItems().get(thumbPosition).setFaves(result.getFavorites());
+            getItems().get(thumbPosition).setUpvotes(result.getUpvotes());
+            getItems().get(thumbPosition).setDownvotes(result.getDownvotes());
+            for (DerpibooruImageInteraction.InteractionType interaction : result.getInteractions()) {
+                if (interaction == DerpibooruImageInteraction.InteractionType.ClearFave) {
+                    getItems().get(thumbPosition).removeImageInteraction(DerpibooruImageInteraction.InteractionType.Fave);
+                } else if (interaction == DerpibooruImageInteraction.InteractionType.ClearVote) {
+                    getItems().get(thumbPosition).removeImageInteraction(
+                            getItems().get(thumbPosition).getImageInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote)
+                            ? DerpibooruImageInteraction.InteractionType.Upvote
+                            : DerpibooruImageInteraction.InteractionType.Downvote);
+                } else {
+                    getItems().get(thumbPosition).addImageInteraction(interaction);
+                }
+            }
+            notifyItemChanged(thumbPosition);
         }
 
         @Override

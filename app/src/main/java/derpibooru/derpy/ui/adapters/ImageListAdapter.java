@@ -2,6 +2,8 @@ package derpibooru.derpy.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,33 +13,28 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.server.QueryHandler;
-import derpibooru.derpy.server.requesters.ImageInteractionRequester;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.animations.ImageListItemAnimator;
+import derpibooru.derpy.ui.utils.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
 public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImageThumb, ImageListAdapter.ViewHolder> {
     private ImageListItemAnimator mAnimator;
-    private ImageInteractionRequester mInteractions;
 
     public ImageListAdapter(Context context, ArrayList<DerpibooruImageThumb> items) {
         super(context, items);
         mAnimator = new ImageListItemAnimator();
-        mInteractions = new ImageInteractionRequester(context, new ImageInteractionHandler());
     }
 
     @Override
-    public ImageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                          int viewType) {
+    public ImageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_image_list_item, parent, false);
         return new ViewHolder(v);
@@ -45,52 +42,39 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        int oldImageId = (holder.data != null) ? holder.data.getId() : -1;
-        holder.data = getItems().get(position);
-        if (oldImageId != holder.data.getId()) {
-            initializeViewHolder(holder);
-        }
-        holder.buttonUpvote.setText(String.format("%d", holder.data.getUpvotes()));
-        holder.buttonUpvote.setActive(
-                holder.data.getImageInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote));
-        holder.buttonFave.setText(String.format("%d", holder.data.getFaves()));
-        holder.buttonFave.setActive(
-                holder.data.getImageInteractions().contains(DerpibooruImageInteraction.InteractionType.Fave));
-        holder.buttonScore.setText(String.format("%d", holder.data.getScore()));
-        holder.buttonScore.setActive(
-                holder.data.getImageInteractions().size() > 0);
-        holder.buttonScore.setEnabled(false);
-        holder.buttonComments.setText(String.format("%d", holder.data.getCommentCount()));
+        initializeImageView(holder, position);
+        initializeImageInteractions(holder, position);
+        setInteractionListeners(holder, position);
+        holder.buttonComments.setText(String.format("%d", getItems().get(position).getCommentCount()));
         holder.buttonComments.setEnabled(false);
     }
 
-    private void initializeViewHolder(final ViewHolder target) {
-        if (target.data.isSpoilered()) {
-            displaySpoiler(target);
+    private void initializeImageView(final ViewHolder target, final int position) {
+        if (getItems().get(position).isSpoilered()) {
+            displaySpoiler(target, position);
         } else {
-            displayImage(target);
+            displayImage(target, position);
         }
         target.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Glide.get(getContext()).clearMemory();
                 Intent intent = new Intent(getContext(), ImageActivity.class);
-                intent.putExtra("derpibooru.derpy.ImageThumb", target.data);
+                intent.putExtra("derpibooru.derpy.ImageThumb", getItems().get(position));
                 getContext().startActivity(intent);
             }
         });
-        setInteractionListeners(target);
     }
 
-    private void displaySpoiler(ViewHolder target) {
-        loadWithGlide(target.data.getSpoilerImageUrl(),
+    private void displaySpoiler(ViewHolder target, int position) {
+        loadWithGlide(getItems().get(position).getSpoilerImageUrl(),
                       Priority.NORMAL, target.imageView);
     }
 
-    private void displayImage(ViewHolder target) {
+    private void displayImage(ViewHolder target, int position) {
         Priority loadingPriority =
-                target.data.getThumbUrl().endsWith(".gif") ? Priority.LOW : Priority.NORMAL;
-        loadWithGlide(target.data.getThumbUrl(),
+                getItems().get(position).getThumbUrl().endsWith(".gif") ? Priority.LOW : Priority.NORMAL;
+        loadWithGlide(getItems().get(position).getThumbUrl(),
                       loadingPriority, target.imageView);
     }
 
@@ -103,7 +87,7 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
                 .into(target);
     }
 
-    private void setInteractionListeners(final ViewHolder target) {
+    private void setInteractionListeners(final ViewHolder target, final int position) {
         mAnimator.clearView(target.layoutUnspoiler);
         mAnimator.clearView(target.layoutImageInteractions);
         target.layoutImageInfo.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +95,7 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
             public void onClick(View v) {
                 /* the target height of layoutUnspoiler and layoutImageInteractions is equal to that of layoutImageInfo */
                 final int panelHeight = target.layoutImageInfo.getMeasuredHeight();
-                if (target.data.isSpoilered()) {
+                if (getItems().get(position).isSpoilered()) {
                     toggleView(target.layoutUnspoiler, panelHeight);
                 } else {
                     toggleView(target.layoutImageInteractions, panelHeight);
@@ -121,35 +105,9 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
         target.buttonUnspoiler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                target.data.unspoiler();
+                getItems().get(position).unspoiler();
                 mAnimator.collapseView(target.layoutUnspoiler);
-                displayImage(target);
-            }
-        });
-        target.buttonUpvote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!target.data.getImageInteractions()
-                        .contains(DerpibooruImageInteraction.InteractionType.Upvote)) {
-                    mInteractions.interaction(DerpibooruImageInteraction.InteractionType.Upvote)
-                            .onImage(target.data.getInternalId()).fetch();
-                } else {
-                    mInteractions.interaction(DerpibooruImageInteraction.InteractionType.ClearVote)
-                            .onImage(target.data.getInternalId()).fetch();
-                }
-            }
-        });
-        target.buttonFave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!target.data.getImageInteractions()
-                        .contains(DerpibooruImageInteraction.InteractionType.Fave)) {
-                    mInteractions.interaction(DerpibooruImageInteraction.InteractionType.Fave)
-                            .onImage(target.data.getInternalId()).fetch();
-                } else {
-                    mInteractions.interaction(DerpibooruImageInteraction.InteractionType.ClearFave)
-                            .onImage(target.data.getInternalId()).fetch();
-                }
+                displayImage(target, position);
             }
         });
     }
@@ -175,7 +133,7 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
         public AccentColorIconButton buttonFave;
         public AccentColorIconButton buttonUpvote;
 
-        public DerpibooruImageThumb data;
+        public ImageInteractionPresenter interactions;
 
         public ViewHolder(View v) {
             super(v);
@@ -191,37 +149,66 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
         }
     }
 
-    public class ImageInteractionHandler implements QueryHandler<DerpibooruImageInteraction> {
-        @Override
-        public void onQueryExecuted(final DerpibooruImageInteraction result) {
-            int thumbPosition = getItems().indexOf(
-                    Iterables.find(getItems(), new Predicate<DerpibooruImageThumb>() {
-                        public boolean apply(DerpibooruImageThumb it) {
-                            return it.getInternalId() == result.getInternalImageId();
-                        }
-                    }));
-            getItems().get(thumbPosition).setScore(result.getScore());
-            getItems().get(thumbPosition).setFaves(result.getFavorites());
-            getItems().get(thumbPosition).setUpvotes(result.getUpvotes());
-            getItems().get(thumbPosition).setDownvotes(result.getDownvotes());
-            for (DerpibooruImageInteraction.InteractionType interaction : result.getInteractions()) {
-                if (interaction == DerpibooruImageInteraction.InteractionType.ClearFave) {
-                    getItems().get(thumbPosition).removeImageInteraction(DerpibooruImageInteraction.InteractionType.Fave);
-                } else if (interaction == DerpibooruImageInteraction.InteractionType.ClearVote) {
-                    getItems().get(thumbPosition).removeImageInteraction(
-                            getItems().get(thumbPosition).getImageInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote)
-                            ? DerpibooruImageInteraction.InteractionType.Upvote
-                            : DerpibooruImageInteraction.InteractionType.Downvote);
-                } else {
-                    getItems().get(thumbPosition).addImageInteraction(interaction);
-                }
+    private void initializeImageInteractions(final ViewHolder target, final int position) {
+        target.interactions = new ImageInteractionPresenter(getContext()) {
+            @Nullable
+            @Override
+            protected AccentColorIconButton getButtonScore() {
+                return target.buttonScore;
             }
-            notifyItemChanged(thumbPosition);
-        }
 
-        @Override
-        public void onQueryFailed() {
+            @Nullable
+            @Override
+            protected AccentColorIconButton getButtonFave() {
+                return target.buttonFave;
+            }
 
-        }
+            @Nullable
+            @Override
+            protected AccentColorIconButton getButtonUpvote() {
+                return target.buttonUpvote;
+            }
+
+            @Nullable
+            @Override
+            protected AccentColorIconButton getButtonDownvote() {
+                return null;
+            }
+
+            @Override
+            protected int getInternalImageId() {
+                return getItems().get(position).getInternalId();
+            }
+
+            @NonNull
+            @Override
+            protected List<DerpibooruImageInteraction.InteractionType> getInteractions() {
+                return getItems().get(position).getImageInteractions();
+            }
+
+            @Override
+            protected void addInteraction(DerpibooruImageInteraction.InteractionType interaction) {
+                getItems().get(position).getImageInteractions().add(interaction);
+            }
+
+            @Override
+            protected void removeInteraction(DerpibooruImageInteraction.InteractionType interaction) {
+                getItems().get(position).getImageInteractions().remove(interaction);
+            }
+
+            @Override
+            protected void onInteractionCompleted(DerpibooruImageInteraction result) {
+                getItems().get(position).setFaves(result.getFavorites());
+                getItems().get(position).setUpvotes(result.getUpvotes());
+                getItems().get(position).setDownvotes(result.getDownvotes());
+                super.onInteractionCompleted(result);
+            }
+
+            @Override
+            protected void onInteractionFailed() { }
+        };
+        target.buttonScore.setEnabled(false); /* the score button is not a touchable view */
+        target.interactions.refreshInfo(
+                getItems().get(position).getFaves(), getItems().get(position).getUpvotes(), getItems().get(position).getDownvotes());
     }
 }

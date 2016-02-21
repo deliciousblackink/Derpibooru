@@ -67,11 +67,11 @@ public class AccentColorIconButton extends RelativeLayout {
                 return false;
             }
             if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                mTextViewWithIcon.setActive(true);
+                mTextViewWithIcon.toggleActive(true);
             } else if (event.getActionMasked() == MotionEvent.ACTION_UP
                     || event.getActionMasked() == MotionEvent.ACTION_POINTER_UP
                     || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
-                mTextViewWithIcon.setActive(false);
+                mTextViewWithIcon.toggleActive(false);
             }
             return false;
         }
@@ -109,8 +109,13 @@ public class AccentColorIconButton extends RelativeLayout {
             mActiveColorResId = ContextCompat.getColor(context, R.color.colorAccent);
         }
 
-        public void setActive(boolean makeActive) {
-            if ((makeActive && !mColorFilterSet) || (!makeActive && mKeepColorFilter)) {
+        public void toggleActive(boolean makeActive) {
+            setActive((makeActive && !mColorFilterSet)
+                      || (!makeActive && mKeepColorFilter));
+        }
+
+        public void setActive(boolean active) {
+            if (active) {
                 mColorFilterSet = true;
                 getIcon().setColorFilter(mActiveColorResId, PorterDuff.Mode.SRC_IN);
             } else {

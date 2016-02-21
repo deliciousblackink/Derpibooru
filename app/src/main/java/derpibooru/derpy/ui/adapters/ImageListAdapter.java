@@ -201,12 +201,14 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
                 getItems().get(position).setFaves(result.getFavorites());
                 getItems().get(position).setUpvotes(result.getUpvotes());
                 getItems().get(position).setDownvotes(result.getDownvotes());
+                target.buttonScore.setActive(getInteractions().size() > 0);
                 super.onInteractionCompleted(result);
             }
 
             @Override
             protected void onInteractionFailed() { }
         };
+        target.buttonScore.setActive(getItems().get(position).getImageInteractions().size() > 0);
         target.buttonScore.setEnabled(false); /* the score button is not a touchable view */
         target.interactions.refreshInfo(
                 getItems().get(position).getFaves(), getItems().get(position).getUpvotes(), getItems().get(position).getDownvotes());

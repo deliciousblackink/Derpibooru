@@ -9,7 +9,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
@@ -24,7 +23,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
     private static final BiMap<Integer, ImageBottomBarTabAdapter.ImageBottomBarTab> TABS =
             ImmutableBiMap.<Integer, ImageBottomBarTabAdapter.ImageBottomBarTab>builder()
                     .put(R.id.buttonInfo, ImageBottomBarTabAdapter.ImageBottomBarTab.ImageInfo)
-                    .put(R.id.buttonFaves, ImageBottomBarTabAdapter.ImageBottomBarTab.Faves)
+                    .put(R.id.buttonFave, ImageBottomBarTabAdapter.ImageBottomBarTab.Faves)
                     .put(R.id.buttonComments, ImageBottomBarTabAdapter.ImageBottomBarTab.Comments).build();
 
     private FragmentManager mFragmentManager;
@@ -116,7 +115,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
 
     private void deselectButtonsOtherThan(@Nullable View view) {
         for (int layoutId : TABS.keySet()) {
-            LinearLayout button = (LinearLayout) findViewById(layoutId);
+            AccentColorIconButton button = (AccentColorIconButton) findViewById(layoutId);
             if (view == null || !button.equals(view)) {
                 button.setSelected(false);
             }
@@ -132,15 +131,15 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
         mTransparentOverlay = findViewById(R.id.transparentOverlay);
 
         for (int layoutId : TABS.keySet()) {
-            LinearLayout ll = (LinearLayout) findViewById(layoutId);
-            ll.setOnTouchListener(new OnTouchListener() {
+            AccentColorIconButton button = (AccentColorIconButton) findViewById(layoutId);
+            button.setOnTouchListener(new OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     deselectButtonsOtherThan(v);
                     return false;
                 }
             });
-            ll.setOnClickListener(new OnClickListener() {
+            button.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     toggleButton(v);
@@ -160,9 +159,10 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
             @Override
             public void onPageSelected(int position) {
                 if (mPager.getVisibility() == View.VISIBLE) {
-                    LinearLayout ll = (LinearLayout) findViewById(TABS.inverse().get(ImageBottomBarTabAdapter.ImageBottomBarTab.fromId(position)));
-                    ll.setSelected(true);
-                    deselectButtonsOtherThan(ll);
+                    AccentColorIconButton button = (AccentColorIconButton) findViewById(
+                            TABS.inverse().get(ImageBottomBarTabAdapter.ImageBottomBarTab.fromId(position)));
+                    button.setSelected(true);
+                    deselectButtonsOtherThan(button);
                 }
             }
 

@@ -24,10 +24,10 @@ public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {
 
     public void setBasicInfo(int imageId, int faves, int comments) {
         super.inflateLayout();
-        TextView d = (TextView) this.findViewById(R.id.textFaves);
-        d.setText(Integer.toString(faves));
-        TextView u = (TextView) this.findViewById(R.id.textComments);
-        u.setText(Integer.toString(comments));
+        ((AccentColorIconButton) this.findViewById(R.id.buttonFave))
+                .setText(Integer.toString(faves));
+        ((AccentColorIconButton) this.findViewById(R.id.buttonComments))
+                .setText(Integer.toString(comments));
         loadDetailedInfo(imageId);
     }
 

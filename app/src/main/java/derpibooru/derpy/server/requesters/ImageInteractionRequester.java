@@ -82,12 +82,6 @@ public class ImageInteractionRequester extends AuthenticatedApiRequester<Derpibo
     @Override
     protected void onApiKeyFetched(String apiKey) {
         mApiKey = apiKey;
-
-        List<DerpibooruImageInteraction.InteractionType> interactions = new ArrayList<>();
-        interactions.add(mType);
-        if (mType == DerpibooruImageInteraction.InteractionType.Fave) {
-            interactions.add(DerpibooruImageInteraction.InteractionType.Upvote);
-        }
-        executeQuery(new ImageInteractionResultParser(mImageId, interactions));
+        executeQuery(new ImageInteractionResultParser(mImageId, mType));
     }
 }

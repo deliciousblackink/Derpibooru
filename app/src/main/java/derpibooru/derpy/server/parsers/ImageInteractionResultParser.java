@@ -9,12 +9,11 @@ import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 
 public class ImageInteractionResultParser implements ServerResponseParser<DerpibooruImageInteraction> {
     private int mInternalImageId;
-    private List<DerpibooruImageInteraction.InteractionType> mInteractions;
+    private DerpibooruImageInteraction.InteractionType mType;
 
-    public ImageInteractionResultParser(int internalImageId,
-                                        List<DerpibooruImageInteraction.InteractionType> interactions) {
+    public ImageInteractionResultParser(int internalImageId, DerpibooruImageInteraction.InteractionType interaction) {
         mInternalImageId = internalImageId;
-        mInteractions = interactions;
+        mType = interaction;
     }
 
     @Override
@@ -22,6 +21,6 @@ public class ImageInteractionResultParser implements ServerResponseParser<Derpib
         JSONObject json = new JSONObject(rawResponse);
         return new DerpibooruImageInteraction(json.getInt("score"), json.getInt("favourites"),
                                               json.getInt("up_vote_count"), json.getInt("down_vote_count"),
-                                              mInternalImageId, mInteractions);
+                                              mInternalImageId, mType);
     }
 }

@@ -102,16 +102,30 @@ public abstract class ImageInteractionPresenter {
     private class InteractionRequestHandler implements QueryHandler<DerpibooruImageInteraction> {
         @Override
         public void onQueryExecuted(DerpibooruImageInteraction result) {
-            if (result.getInteractions().get(0) == DerpibooruImageInteraction.InteractionType.ClearFave) {
-                removeInteraction(DerpibooruImageInteraction.InteractionType.Fave);
-            } else if (result.getInteractions().get(0) == DerpibooruImageInteraction.InteractionType.ClearVote) {
-                removeInteraction(getInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote)
-                                  ? DerpibooruImageInteraction.InteractionType.Upvote
-                                  : DerpibooruImageInteraction.InteractionType.Downvote);
-            } else {
-                for (DerpibooruImageInteraction.InteractionType interaction : result.getInteractions()) {
-                    addInteraction(interaction);
-                }
+            switch (result.getInteractionType()) {
+                case ClearFave:
+                    removeInteraction(DerpibooruImageInteraction.InteractionType.Fave);
+                    break;
+                case ClearVote:
+                    removeInteraction(getInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote)
+                                      ? DerpibooruImageInteraction.InteractionType.Upvote
+                                      : DerpibooruImageInteraction.InteractionType.Downvote);
+                    break;
+                case Downvote:
+                    if (getInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote)) {
+                        removeInteraction(DerpibooruImageInteraction.InteractionType.Upvote);
+                    }
+                    addInteraction(DerpibooruImageInteraction.InteractionType.Downvote);
+                    break;
+                case Fave:
+                    addInteraction(DerpibooruImageInteraction.InteractionType.Fave);
+                    /* intentional fall-through (fave = add to favorites _and_ upvote) */
+                case Upvote:
+                    if (getInteractions().contains(DerpibooruImageInteraction.InteractionType.Downvote)) {
+                        removeInteraction(DerpibooruImageInteraction.InteractionType.Downvote);
+                    }
+                    addInteraction(DerpibooruImageInteraction.InteractionType.Upvote);
+                    break;
             }
             onInteractionCompleted(result);
         }

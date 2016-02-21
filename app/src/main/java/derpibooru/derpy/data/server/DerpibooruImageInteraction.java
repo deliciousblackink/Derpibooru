@@ -8,16 +8,16 @@ public class DerpibooruImageInteraction {
     private int mUpvotes;
     private int mDownvotes;
     private int mInternalImageId;
-    private List<InteractionType> mInteractions;
+    private InteractionType mInteractionType;
 
     public DerpibooruImageInteraction(int score, int faves, int upvotes, int downvotes,
-                                      int internalImageId, List<InteractionType> interactionType) {
+                                      int internalImageId, InteractionType interactionType) {
         mScore = score;
         mFavorites = faves;
         mUpvotes = upvotes;
         mDownvotes = downvotes;
         mInternalImageId = internalImageId;
-        mInteractions = interactionType;
+        mInteractionType = interactionType;
     }
 
     public int getScore() {
@@ -36,8 +36,8 @@ public class DerpibooruImageInteraction {
         return mDownvotes;
     }
 
-    public List<InteractionType> getInteractions() {
-        return mInteractions;
+    public InteractionType getInteractionType() {
+        return mInteractionType;
     }
 
     public int getInternalImageId() {

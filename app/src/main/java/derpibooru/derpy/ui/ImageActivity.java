@@ -27,15 +27,13 @@ import derpibooru.derpy.ui.views.ImageTopBarView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageActivity extends AppCompatActivity {
-    private ImageInteractionPresenter mInteractionPresenter;
-    private List<DerpibooruImageInteraction.InteractionType> mInteractions;
-
     private ImageTopBarView mTopBar;
     private ImageBottomBarView mBottomBar;
 
+    private DerpibooruImageThumb mImageData;
+
     /* TODO: should be a singleTop activity
-     * http://developer.android.com/reference/android/app/Activity.html#onNewIntent(android.content.Intent)
-     */
+     * http://developer.android.com/reference/android/app/Activity.html#onNewIntent(android.content.Intent) */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,19 +50,27 @@ public class ImageActivity extends AppCompatActivity {
 
         mTopBar = ((ImageTopBarView) findViewById(R.id.imageTopBar));
         mBottomBar = ((ImageBottomBarView) findViewById(R.id.imageBottomBar));
-        DerpibooruImageThumb thumb = getIntent().getParcelableExtra("derpibooru.derpy.ImageThumb");
-        setImageInfoFromThumb(thumb, toolbar);
-        loadImageWithGlide(thumb.getLargeImageUrl());
-        initializeImageInteractions(thumb);
+        mImageData = (DerpibooruImageThumb)
+                ((savedInstanceState == null) ? getIntent().getParcelableExtra("derpibooru.derpy.ImageThumb")
+                                              : savedInstanceState.getParcelable("image_data"));
+        setImageInfoFromThumb(toolbar);
+        loadImageWithGlide(mImageData.getLargeImageUrl());
+        initializeImageInteractions();
 
         /* TODO: handle configuration changes */
     }
 
-    private void setImageInfoFromThumb(DerpibooruImageThumb thumb, Toolbar toolbar) {
-        toolbar.setTitle("#" + Integer.toString(thumb.getId()));
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelable("image_data", mImageData);
+    }
+
+    private void setImageInfoFromThumb(Toolbar toolbar) {
+        toolbar.setTitle("#" + Integer.toString(mImageData.getId()));
 
         mBottomBar.setFragmentManager(getSupportFragmentManager());
-        mBottomBar.setBasicInfo(thumb.getId(), thumb.getCommentCount());
+        mBottomBar.setBasicInfo(mImageData.getId(), mImageData.getCommentCount());
         mBottomBar.post(new Runnable() {
             @Override
             public void run() {
@@ -91,9 +97,8 @@ public class ImageActivity extends AppCompatActivity {
         }
     }
 
-    private void initializeImageInteractions(final DerpibooruImageThumb image) {
-        mInteractions = image.getImageInteractions();
-        mInteractionPresenter = new ImageInteractionPresenter(this) {
+    private void initializeImageInteractions() {
+        ImageInteractionPresenter interactionPresenter = new ImageInteractionPresenter(this) {
             @Nullable
             @Override
             protected AccentColorIconButton getScoreButton() {
@@ -120,28 +125,36 @@ public class ImageActivity extends AppCompatActivity {
 
             @Override
             protected int getInternalImageId() {
-                return image.getInternalId();
+                return mImageData.getInternalId();
             }
 
             @NonNull
             @Override
             protected List<DerpibooruImageInteraction.InteractionType> getInteractions() {
-                return mInteractions;
+                return mImageData.getImageInteractions();
             }
 
             @Override
             protected void addInteraction(DerpibooruImageInteraction.InteractionType interaction) {
-                mInteractions.add(interaction);
+                mImageData.getImageInteractions().add(interaction);
             }
 
             @Override
             protected void removeInteraction(DerpibooruImageInteraction.InteractionType interaction) {
-                mInteractions.remove(interaction);
+                mImageData.getImageInteractions().remove(interaction);
             }
 
             @Override
             protected void onInteractionFailed() {
 
+            }
+
+            @Override
+            protected void onInteractionCompleted(DerpibooruImageInteraction result) {
+                mImageData.setFaves(result.getFavorites());
+                mImageData.setUpvotes(result.getUpvotes());
+                mImageData.setDownvotes(result.getDownvotes());
+                super.onInteractionCompleted(result);
             }
 
             @SuppressWarnings("ConstantConditions")
@@ -150,15 +163,15 @@ public class ImageActivity extends AppCompatActivity {
                 /* prevent icons from blending into the background by disabling tint toggle on touch
                  * (only in case there was no user interaction) */
                 getFaveButton().setToggleIconTintOnTouch(
-                        mInteractions.contains(DerpibooruImageInteraction.InteractionType.Fave));
+                        getInteractions().contains(DerpibooruImageInteraction.InteractionType.Fave));
                 getUpvoteButton().setToggleIconTintOnTouch(
-                        mInteractions.contains(DerpibooruImageInteraction.InteractionType.Upvote));
+                        getInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote));
                 getDownvoteButton().setToggleIconTintOnTouch(
-                        mInteractions.contains(DerpibooruImageInteraction.InteractionType.Downvote));
+                        getInteractions().contains(DerpibooruImageInteraction.InteractionType.Downvote));
                 super.refreshInfo(faves, upvotes, downvotes);
             }
         };
-        mInteractionPresenter.refreshInfo(image.getFaves(), image.getUpvotes(), image.getDownvotes());
+        interactionPresenter.refreshInfo(mImageData.getFaves(), mImageData.getUpvotes(), mImageData.getDownvotes());
     }
 
     private class GlideRequestListener implements RequestListener<String, GlideDrawable> {

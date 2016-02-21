@@ -24,16 +24,16 @@ public abstract class ImageInteractionPresenter {
     }
 
     @Nullable
-    protected abstract AccentColorIconButton getButtonScore();
+    protected abstract AccentColorIconButton getScoreButton();
 
     @Nullable
-    protected abstract AccentColorIconButton getButtonFave();
+    protected abstract AccentColorIconButton getFaveButton();
 
     @Nullable
-    protected abstract AccentColorIconButton getButtonUpvote();
+    protected abstract AccentColorIconButton getUpvoteButton();
 
     @Nullable
-    protected abstract AccentColorIconButton getButtonDownvote();
+    protected abstract AccentColorIconButton getDownvoteButton();
 
     protected abstract int getInternalImageId();
 
@@ -51,13 +51,13 @@ public abstract class ImageInteractionPresenter {
     }
 
     public void refreshInfo(int faves, int upvotes, int downvotes) {
-        refreshInteractionButton(getButtonFave(), faves,
+        refreshInteractionButton(getFaveButton(), faves,
                                  getInteractions().contains(DerpibooruImageInteraction.InteractionType.Fave));
-        refreshInteractionButton(getButtonUpvote(), upvotes,
+        refreshInteractionButton(getUpvoteButton(), upvotes,
                                  getInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote));
-        refreshInteractionButton(getButtonDownvote(), downvotes,
+        refreshInteractionButton(getDownvoteButton(), downvotes,
                                  getInteractions().contains(DerpibooruImageInteraction.InteractionType.Downvote));
-        if (getButtonScore() != null) getButtonScore().setText(String.format("%d", (upvotes - downvotes)));
+        refreshInteractionButton(getScoreButton(), (upvotes - downvotes), getInteractions().size() > 0);
     }
 
     private void refreshInteractionButton(AccentColorIconButton button, int buttonValue, boolean active) {
@@ -68,11 +68,11 @@ public abstract class ImageInteractionPresenter {
     }
 
     private void initializeInteractionListeners() {
-        if (getButtonFave() != null) getButtonFave()
+        if (getFaveButton() != null) getFaveButton()
                 .setOnClickListener(new OnButtonClickListener(DerpibooruImageInteraction.InteractionType.Fave));
-        if (getButtonUpvote() != null) getButtonUpvote()
+        if (getUpvoteButton() != null) getUpvoteButton()
                 .setOnClickListener(new OnButtonClickListener(DerpibooruImageInteraction.InteractionType.Upvote));
-        if (getButtonDownvote() != null) getButtonDownvote()
+        if (getDownvoteButton() != null) getDownvoteButton()
                 .setOnClickListener(new OnButtonClickListener(DerpibooruImageInteraction.InteractionType.Downvote));
     }
 

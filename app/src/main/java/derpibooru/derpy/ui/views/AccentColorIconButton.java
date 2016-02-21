@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -102,7 +103,9 @@ public class AccentColorIconButton extends RelativeLayout {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AccentColorIconButton);
             try {
                 setButtonText(a.getString(R.styleable.AccentColorIconButton_buttonText));
-                setIcon(a.getDrawable(R.styleable.AccentColorIconButton_buttonIcon));
+                if (a.getDrawable(R.styleable.AccentColorIconButton_buttonIcon) != null) {
+                    setIcon(a.getDrawable(R.styleable.AccentColorIconButton_buttonIcon));
+                }
             } finally {
                 a.recycle();
             }
@@ -115,6 +118,7 @@ public class AccentColorIconButton extends RelativeLayout {
         }
 
         public void setActive(boolean active) {
+            if (getIcon() == null) return;
             if (active) {
                 mColorFilterSet = true;
                 getIcon().setColorFilter(mActiveColorResId, PorterDuff.Mode.SRC_IN);
@@ -137,6 +141,7 @@ public class AccentColorIconButton extends RelativeLayout {
             mKeepColorFilter = keepActive;
         }
 
+        @Nullable
         private Drawable getIcon() {
             return super.getCompoundDrawables()[0];
         }

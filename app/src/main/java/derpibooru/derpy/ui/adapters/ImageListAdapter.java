@@ -153,25 +153,25 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
         target.interactions = new ImageInteractionPresenter(getContext()) {
             @Nullable
             @Override
-            protected AccentColorIconButton getButtonScore() {
+            protected AccentColorIconButton getScoreButton() {
                 return target.buttonScore;
             }
 
             @Nullable
             @Override
-            protected AccentColorIconButton getButtonFave() {
+            protected AccentColorIconButton getFaveButton() {
                 return target.buttonFave;
             }
 
             @Nullable
             @Override
-            protected AccentColorIconButton getButtonUpvote() {
+            protected AccentColorIconButton getUpvoteButton() {
                 return target.buttonUpvote;
             }
 
             @Nullable
             @Override
-            protected AccentColorIconButton getButtonDownvote() {
+            protected AccentColorIconButton getDownvoteButton() {
                 return null;
             }
 
@@ -201,14 +201,12 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
                 getItems().get(position).setFaves(result.getFavorites());
                 getItems().get(position).setUpvotes(result.getUpvotes());
                 getItems().get(position).setDownvotes(result.getDownvotes());
-                target.buttonScore.setActive(getInteractions().size() > 0);
                 super.onInteractionCompleted(result);
             }
 
             @Override
             protected void onInteractionFailed() { }
         };
-        target.buttonScore.setActive(getItems().get(position).getImageInteractions().size() > 0);
         target.buttonScore.setEnabled(false); /* the score button is not a touchable view */
         target.interactions.refreshInfo(
                 getItems().get(position).getFaves(), getItems().get(position).getUpvotes(), getItems().get(position).getDownvotes());

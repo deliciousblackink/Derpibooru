@@ -131,6 +131,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
         mTransparentOverlay = findViewById(R.id.transparentOverlay);
 
         for (int layoutId : TABS.keySet()) {
+            if (layoutId == R.id.buttonFave) continue; /* buttonFave has custom listeners defined outside this class */
             AccentColorIconButton button = (AccentColorIconButton) findViewById(layoutId);
             button.setOnTouchListener(new OnTouchListener() {
                 @Override

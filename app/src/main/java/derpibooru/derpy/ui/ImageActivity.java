@@ -64,7 +64,7 @@ public class ImageActivity extends AppCompatActivity {
         toolbar.setTitle("#" + Integer.toString(thumb.getId()));
 
         mBottomBar.setFragmentManager(getSupportFragmentManager());
-        mBottomBar.setBasicInfo(thumb.getId(), thumb.getFaves(), thumb.getCommentCount());
+        mBottomBar.setBasicInfo(thumb.getId(), thumb.getCommentCount());
         mBottomBar.post(new Runnable() {
             @Override
             public void run() {
@@ -103,7 +103,7 @@ public class ImageActivity extends AppCompatActivity {
             @Nullable
             @Override
             protected AccentColorIconButton getFaveButton() {
-                return null;
+                return mBottomBar.getFaveButton();
             }
 
             @Nullable
@@ -149,10 +149,12 @@ public class ImageActivity extends AppCompatActivity {
             public void refreshInfo(int faves, int upvotes, int downvotes) {
                 /* prevent icons from blending into the background by disabling tint toggle on touch
                  * (only in case there was no user interaction) */
+                getFaveButton().setToggleIconTintOnTouch(
+                        mInteractions.contains(DerpibooruImageInteraction.InteractionType.Fave));
                 getUpvoteButton().setToggleIconTintOnTouch(
                         mInteractions.contains(DerpibooruImageInteraction.InteractionType.Upvote));
                 getDownvoteButton().setToggleIconTintOnTouch(
-                        mInteractions.contains(DerpibooruImageInteraction.InteractionType.Upvote));
+                        mInteractions.contains(DerpibooruImageInteraction.InteractionType.Downvote));
                 super.refreshInfo(faves, upvotes, downvotes);
             }
         };

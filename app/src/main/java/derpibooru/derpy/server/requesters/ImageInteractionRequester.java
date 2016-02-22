@@ -76,7 +76,11 @@ public class ImageInteractionRequester extends AuthenticatedApiRequester<Derpibo
 
     @Override
     protected void onApiKeyFetched(String apiKey) {
-        mApiKey = apiKey;
-        executeQuery(new ImageInteractionResultParser(mImageId, mType));
+        if (apiKey.equals("")) {
+            mHandler.onQueryFailed();
+        } else {
+            mApiKey = apiKey;
+            executeQuery(new ImageInteractionResultParser(mImageId, mType));
+        }
     }
 }

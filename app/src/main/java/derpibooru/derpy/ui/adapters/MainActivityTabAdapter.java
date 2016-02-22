@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 
-import derpibooru.derpy.data.server.DerpibooruRankingsListType;
+import derpibooru.derpy.server.providers.RankingsProvider;
 import derpibooru.derpy.server.providers.UserDataProvider;
 import derpibooru.derpy.ui.fragments.MainActivityNewImagesTabFragment;
 import derpibooru.derpy.ui.fragments.MainActivityRankingsTabFragment;
@@ -55,14 +55,14 @@ public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
                 return new MainActivityNewImagesTabFragment();
             case TITLE_TOP_SCORING:
                 Bundle args = new Bundle();
-                args.putInt("type", DerpibooruRankingsListType.TopScoring.toValue());
+                args.putInt("type", RankingsProvider.RankingsType.TopScoring.toValue());
                 MainActivityRankingsTabFragment fragmentTopScoring = new MainActivityRankingsTabFragment();
                 fragmentTopScoring.setArguments(args);
                 return fragmentTopScoring;
             case TITLE_MOST_COMMENTED:
                 MainActivityRankingsTabFragment fragmentMostCommented = new MainActivityRankingsTabFragment();
                 args = new Bundle();
-                args.putInt("type", DerpibooruRankingsListType.MostCommented.toValue());
+                args.putInt("type", RankingsProvider.RankingsType.MostCommented.toValue());
                 fragmentMostCommented.setArguments(args);
                 return fragmentMostCommented;
             case TITLE_WATCHED:

@@ -4,18 +4,17 @@ import android.content.Context;
 
 import java.util.List;
 
-import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.data.server.DerpibooruRankingsListType;
+import derpibooru.derpy.data.server.DerpibooruImage;
 import derpibooru.derpy.server.QueryHandler;
 
 public class RankingsProvider extends ImageListProvider {
     private static final String ALL_TIME = "520w";
     /* 520 weeks (10 years) effectively equals to 'All Time' */
 
-    private DerpibooruRankingsListType mListType;
+    private RankingsType mListType;
     private String mTime = ALL_TIME;
 
-    public RankingsProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler) {
+    public RankingsProvider(Context context, QueryHandler<List<DerpibooruImage>> handler) {
         super(context, handler);
     }
 
@@ -24,7 +23,7 @@ public class RankingsProvider extends ImageListProvider {
      *
      * @param listType the type of the image list
      */
-    public RankingsProvider type(DerpibooruRankingsListType listType) {
+    public RankingsProvider type(RankingsType listType) {
         mListType = listType;
         return this;
     }
@@ -81,5 +80,30 @@ public class RankingsProvider extends ImageListProvider {
         sb.append("&page=");
         sb.append(super.getCurrentPage());
         return sb.toString();
+    }
+
+
+    public enum RankingsType {
+        TopScoring(1),
+        MostCommented(2);
+
+        private int mValue;
+
+        RankingsType(int value) {
+            mValue = value;
+        }
+
+        public static RankingsType fromValue(int value) {
+            for (RankingsType type : values()) {
+                if (type.mValue == value) {
+                    return type;
+                }
+            }
+            return TopScoring;
+        }
+
+        public int toValue() {
+            return mValue;
+        }
     }
 }

@@ -16,7 +16,7 @@ public class LogoutRequester extends AuthenticatedRequester<Boolean> {
 
     @Override
     protected Map<String, String> generateForm() {
-        HashMap<String, String> form = new HashMap<>();
+        Map<String, String> form = new HashMap<>(2);
         form.put("_method", "delete");
         form.put("authenticity_token", mAuthenticityToken);
         return form;

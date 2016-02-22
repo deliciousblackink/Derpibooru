@@ -13,14 +13,14 @@ import java.util.List;
 
 import okhttp3.Cookie;
 
-public class CookieStrorage {
+public class CookieStorage {
     /* TODO: memory caching */
     private static final String PREFERENCES_NAME = "Cookies";
 
     private SharedPreferences mPreferences;
     private Gson mGson;
 
-    public CookieStrorage(Context context) {
+    public CookieStorage(Context context) {
         mPreferences = context.getSharedPreferences(PREFERENCES_NAME, 0);
         mGson = new Gson();
     }

@@ -51,11 +51,11 @@ public class ImageCommentsAdapter extends RecyclerViewEndlessScrollAdapter<Derpi
         }
 
         holder.textAuthor.setText(holder.data.getAuthor());
-        holder.textPostedAt.setText(getRelatveDate(holder.data.getPostedAt()));
+        holder.textPostedAt.setText(getRelativeDate(holder.data.getPostedAt()));
         holder.textComment.setText(holder.data.getText());
     }
 
-    private String getRelatveDate(String date) {
+    private String getRelativeDate(String date) {
         /* TODO: decide whether this belongs here or should be moved to the parser class */
         SimpleDateFormat f = new SimpleDateFormat("HH:mm, MMMM dd, yyyy", Locale.ENGLISH);
         f.setTimeZone(TimeZone.getTimeZone("UTC")); /* the server returns date in UTC zone */

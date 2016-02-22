@@ -4,7 +4,7 @@ import android.app.Application;
 
 import java.util.List;
 
-import derpibooru.derpy.storage.CookieStrorage;
+import derpibooru.derpy.storage.CookieStorage;
 import derpibooru.derpy.storage.UserDataStorage;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
@@ -18,7 +18,7 @@ public class Derpibooru extends Application {
      *
      * @see <a href="https://plus.google.com/118239425803358296962/posts/5nzAvPaitHu">OkHttpClient is designed to be treated as a singleton</a> */
     private OkHttpClient mHttpClient;
-    private CookieStrorage mCookieStorage;
+    private CookieStorage mCookieStorage;
 
     /**
      * Contains the API key for data manipulation requests. It is retrieved on the
@@ -28,7 +28,7 @@ public class Derpibooru extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mCookieStorage = new CookieStrorage(getApplicationContext());
+        mCookieStorage = new CookieStorage(getApplicationContext());
         initializeHttpClient();
     }
 

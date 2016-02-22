@@ -19,7 +19,7 @@ public class ImageCommentsParser implements ServerResponseParser<List<Derpibooru
         if (doc.select("div.metabar").first() == null) {
             return new ArrayList<>();
         }
-        ArrayList<DerpibooruImageComment> commentList = new ArrayList<>();
+        List<DerpibooruImageComment> commentList = new ArrayList<>();
         /* TODO: parse comment author's badges */
         Elements comments = doc.select("div.post-content");
         Elements commentOptions = doc.select("div.post-options");

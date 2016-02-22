@@ -19,7 +19,7 @@ public class LoginRequester extends AuthenticatedRequester<Boolean> {
 
     @Override
     protected Map<String, String> generateForm() {
-        HashMap<String, String> form = new HashMap<>();
+        Map<String, String> form = new HashMap<>(6);
         form.put("utf8", "✓");
         form.put("authenticity_token", mAuthenticityToken);
         form.put("user[email]", mCredentials.getEmail());

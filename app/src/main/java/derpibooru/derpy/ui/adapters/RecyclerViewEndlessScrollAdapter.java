@@ -3,25 +3,25 @@ package derpibooru.derpy.ui.adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public abstract class RecyclerViewEndlessScrollAdapter<TItem, TViewHolder extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<TViewHolder> {
     private Context mContext;
-    private ArrayList<TItem> mItems;
+    private List<TItem> mItems;
 
-    protected RecyclerViewEndlessScrollAdapter(Context context, ArrayList<TItem> items) {
+    protected RecyclerViewEndlessScrollAdapter(Context context, List<TItem> items) {
         mContext = context;
         mItems = items;
     }
 
-    public void resetItems(ArrayList<TItem> newComments) {
+    public void resetItems(List<TItem> newComments) {
         super.notifyItemRangeRemoved(0, mItems.size());
         mItems = newComments;
         super.notifyItemRangeInserted(0, mItems.size() - 1);
     }
 
-    public void appendItems(ArrayList<TItem> newComments) {
+    public void appendItems(List<TItem> newComments) {
         int oldItemCount = mItems.size();
         mItems.addAll(newComments);
         int newItemCount = mItems.size() - 1;
@@ -32,7 +32,7 @@ public abstract class RecyclerViewEndlessScrollAdapter<TItem, TViewHolder extend
         return mContext;
     }
 
-    protected ArrayList<TItem> getItems() {
+    protected List<TItem> getItems() {
         return mItems;
     }
 

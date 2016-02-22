@@ -14,11 +14,11 @@ import derpibooru.derpy.R;
  * @see <a href="http://blog.sqisland.com/2014/12/recyclerview-autofit-grid.html">Based on this AutoFit solution</a>
  */
 public class ImageListRecyclerView extends RecyclerView {
-    private static final int SPACING_BETWEEN_IMAGE_THUMBS = 10;
+    private static final int SPACING_BETWEEN_IMAGES = 10;
 
     private GridLayoutManager mLayoutManager;
 
-    private int mImageThumbSize;
+    private int mImageSize;
     private int mLastMeasuredWidth;
     private int mLastMeasuredNumberOfColumns;
 
@@ -48,8 +48,8 @@ public class ImageListRecyclerView extends RecyclerView {
     private void setAttrs(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImageListRecyclerView);
         try {
-            mImageThumbSize =
-                    a.getDimensionPixelSize(R.styleable.ImageListRecyclerView_imageThumbSize, 1);
+            mImageSize =
+                    a.getDimensionPixelSize(R.styleable.ImageListRecyclerView_imageSize, 1);
         } finally {
             a.recycle();
         }
@@ -67,7 +67,7 @@ public class ImageListRecyclerView extends RecyclerView {
     }
 
     private int calculateNumberOfColumns(int width) {
-        return Math.max(1, (width / mImageThumbSize));
+        return Math.max(1, (width / mImageSize));
     }
 
     /**
@@ -80,13 +80,13 @@ public class ImageListRecyclerView extends RecyclerView {
             int position = parent.getChildAdapterPosition(view);
             int column = position % mLastMeasuredNumberOfColumns;
 
-            outRect.left = SPACING_BETWEEN_IMAGE_THUMBS - column * SPACING_BETWEEN_IMAGE_THUMBS / mLastMeasuredNumberOfColumns;
-            outRect.right = (column + 1) * SPACING_BETWEEN_IMAGE_THUMBS / mLastMeasuredNumberOfColumns;
+            outRect.left = SPACING_BETWEEN_IMAGES - column * SPACING_BETWEEN_IMAGES / mLastMeasuredNumberOfColumns;
+            outRect.right = (column + 1) * SPACING_BETWEEN_IMAGES / mLastMeasuredNumberOfColumns;
 
             if (position < mLastMeasuredNumberOfColumns) {
-                outRect.top = SPACING_BETWEEN_IMAGE_THUMBS;
+                outRect.top = SPACING_BETWEEN_IMAGES;
             }
-            outRect.bottom = SPACING_BETWEEN_IMAGE_THUMBS;
+            outRect.bottom = SPACING_BETWEEN_IMAGES;
         }
     }
 }

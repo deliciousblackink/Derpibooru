@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class DerpibooruImageThumb implements Parcelable {
+public class DerpibooruImage implements Parcelable {
     private int mId;
     private int mInternalId;
     private int mUpvotes;
@@ -18,30 +18,22 @@ public class DerpibooruImageThumb implements Parcelable {
     private String mThumbUrl;
     private String mLargeUrl;
 
-    private List<String> mSpoileredTagNames = new ArrayList<>();
     private String mSpoilerImageUrl;
 
     private Set<DerpibooruImageInteraction.InteractionType> mImageInteractions = new HashSet<>();
 
-    /* a non-persistent variable used by image lists to indicate if a user has unspoilered an image */
-    private boolean isSpoilered = false;
-
-    public DerpibooruImageThumb(int id, int internalId, int upvotes, int downvotes, int faves,
-                                int comments, String thumbUrl, String largeUrl,
-                                List<String> spoileredTagNames, String spoilerImageUrl) {
+    public DerpibooruImage(int id, int internalId, int upvotes, int downvotes, int faves,
+                           int comments, String thumbUrl, String largeUrl, String spoilerImageUrl) {
         mId = id;
         mInternalId = internalId;
         mUpvotes = upvotes;
         mDownvotes = downvotes;
         mFaves = faves;
         mCommentCount = comments;
-        mThumbUrl = "https:" + thumbUrl;
-        mLargeUrl = "https:" + largeUrl;
+        mThumbUrl = thumbUrl;
+        mLargeUrl = largeUrl;
 
-        mSpoileredTagNames = spoileredTagNames;
         mSpoilerImageUrl = spoilerImageUrl;
-
-        isSpoilered = !mSpoileredTagNames.isEmpty();
     }
 
     public int getId() {
@@ -92,10 +84,6 @@ public class DerpibooruImageThumb implements Parcelable {
         return mLargeUrl;
     }
 
-    public List<String> getSpoileredTagNames() {
-        return mSpoileredTagNames;
-    }
-
     public String getSpoilerImageUrl() {
         return mSpoilerImageUrl;
     }
@@ -105,14 +93,14 @@ public class DerpibooruImageThumb implements Parcelable {
     }
 
     public boolean isSpoilered() {
-        return isSpoilered;
+        return !mSpoilerImageUrl.isEmpty();
     }
 
     public void unspoiler() {
-        isSpoilered = false;
+        mSpoilerImageUrl = "";
     }
 
-    protected DerpibooruImageThumb(Parcel in) {
+    protected DerpibooruImage(Parcel in) {
         mId = in.readInt();
         mInternalId = in.readInt();
         mUpvotes = in.readInt();
@@ -121,7 +109,6 @@ public class DerpibooruImageThumb implements Parcelable {
         mCommentCount = in.readInt();
         mThumbUrl = in.readString();
         mLargeUrl = in.readString();
-        in.readStringList(mSpoileredTagNames);
         mSpoilerImageUrl = in.readString();
 
         int[] interactionValues = in.createIntArray();
@@ -145,7 +132,6 @@ public class DerpibooruImageThumb implements Parcelable {
         dest.writeInt(mCommentCount);
         dest.writeString(mThumbUrl);
         dest.writeString(mLargeUrl);
-        dest.writeStringList(mSpoileredTagNames);
         dest.writeString(mSpoilerImageUrl);
 
         /* TODO: redo transition of Set<enum> to parcel */
@@ -159,15 +145,15 @@ public class DerpibooruImageThumb implements Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<DerpibooruImageThumb> CREATOR = new Parcelable.Creator<DerpibooruImageThumb>() {
+    public static final Parcelable.Creator<DerpibooruImage> CREATOR = new Parcelable.Creator<DerpibooruImage>() {
         @Override
-        public DerpibooruImageThumb createFromParcel(Parcel in) {
-            return new DerpibooruImageThumb(in);
+        public DerpibooruImage createFromParcel(Parcel in) {
+            return new DerpibooruImage(in);
         }
 
         @Override
-        public DerpibooruImageThumb[] newArray(int size) {
-            return new DerpibooruImageThumb[size];
+        public DerpibooruImage[] newArray(int size) {
+            return new DerpibooruImage[size];
         }
     };
 }

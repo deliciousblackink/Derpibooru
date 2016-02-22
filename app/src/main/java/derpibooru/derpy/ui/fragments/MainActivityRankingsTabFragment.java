@@ -17,7 +17,7 @@ public class MainActivityRankingsTabFragment extends ImageListFragment {
     }
 
     @Override
-    protected void fetchImageThumbs() {
+    protected void fetchImages() {
         ((RankingsProvider) super.getImageListProvider())
                 .type(RankingsProvider.RankingsType.fromValue(getArguments().getInt("type")))
                 .inDays(3) /* TODO: pass the time limit as an argument */

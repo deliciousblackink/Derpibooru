@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruImageThumb;
+import derpibooru.derpy.data.server.DerpibooruImage;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.providers.ImageListProvider;
 import derpibooru.derpy.ui.ImageActivity;
@@ -48,7 +48,7 @@ public abstract class ImageListFragment extends Fragment {
             }
         });
         if (mImageListProvider != null) {
-            fetchImageThumbs();
+            fetchImages();
         } else {
             Log.e("ImageListFragment", "call setImageListProvider before super.onCreateView");
         }
@@ -63,30 +63,30 @@ public abstract class ImageListFragment extends Fragment {
         mImageListProvider = provider;
     }
 
-    protected abstract void fetchImageThumbs();
+    protected abstract void fetchImages();
 
     protected void refreshImages() {
         mImageRefreshLayout.setRefreshing(true); /* in case the method was called by a subclass */
         mImageListProvider.resetPageNumber().fetch();
     }
 
-    private void displayImagesFromProvider(ArrayList<DerpibooruImageThumb> imageThumbs) {
+    private void displayImagesFromProvider(List<DerpibooruImage> images) {
         if (mImageListAdapter == null) {
-            initializeImageListAdapter(imageThumbs);
+            initializeImageListAdapter(images);
         } else if (mImageRefreshLayout.isRefreshing()) {
-            mImageListAdapter.resetItems(imageThumbs);
+            mImageListAdapter.resetItems(images);
             mImageRefreshLayout.setRefreshing(false);
         } else {
-            mImageListAdapter.appendItems(imageThumbs);
+            mImageListAdapter.appendItems(images);
         }
     }
 
-    private void initializeImageListAdapter(ArrayList<DerpibooruImageThumb> imageThumbs) {
-        mImageListAdapter = new ImageListAdapter(getActivity(), imageThumbs) {
+    private void initializeImageListAdapter(List<DerpibooruImage> images) {
+        mImageListAdapter = new ImageListAdapter(getActivity(), images) {
             @Override
-            public void startImageActivityWithThumb(DerpibooruImageThumb thumb) {
+            public void startImageActivity(DerpibooruImage image) {
                 Intent intent = new Intent(getContext(), ImageActivity.class);
-                intent.putExtra(ImageActivity.INTENT_EXTRA_IMAGE_THUMB, thumb);
+                intent.putExtra(ImageActivity.INTENT_EXTRA_IMAGE, image);
                 startActivityForResult(intent, IMAGE_ACTIVITY_REQUEST_CODE);
             }
         };
@@ -105,17 +105,17 @@ public abstract class ImageListFragment extends Fragment {
         switch (requestCode) {
             case (IMAGE_ACTIVITY_REQUEST_CODE):
                 if (mImageListAdapter != null) {
-                    mImageListAdapter.replaceImageThumb(
-                            (DerpibooruImageThumb) data.getParcelableExtra(ImageActivity.INTENT_EXTRA_IMAGE_THUMB));
+                    mImageListAdapter.replaceItem(
+                            (DerpibooruImage) data.getParcelableExtra(ImageActivity.INTENT_EXTRA_IMAGE));
                 }
                 break;
         }
     }
 
-    protected class ImageListRequestHandler implements QueryHandler<List<DerpibooruImageThumb>> {
+    protected class ImageListRequestHandler implements QueryHandler<List<DerpibooruImage>> {
         @Override
-        public void onQueryExecuted(List<DerpibooruImageThumb> result) {
-            displayImagesFromProvider((ArrayList<DerpibooruImageThumb>) result);
+        public void onQueryExecuted(List<DerpibooruImage> result) {
+            displayImagesFromProvider((ArrayList<DerpibooruImage>) result);
         }
 
         @Override
@@ -124,7 +124,7 @@ public abstract class ImageListFragment extends Fragment {
                     .setAction(R.string.snackbar_action_retry, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            fetchImageThumbs();
+                            fetchImages();
                         }
                     }).show();
         }

@@ -4,17 +4,17 @@ import android.content.Context;
 
 import java.util.List;
 
-import derpibooru.derpy.data.server.DerpibooruImageThumb;
+import derpibooru.derpy.data.server.DerpibooruImage;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.ImageListParser;
 
-public class ImageListProvider extends Provider<List<DerpibooruImageThumb>> {
+public class ImageListProvider extends Provider<List<DerpibooruImage>> {
     protected static final int IMAGES_PER_PAGE = 16;
 
     private int mCurrentPage = 1;
 
-    public ImageListProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler) {
+    public ImageListProvider(Context context, QueryHandler<List<DerpibooruImage>> handler) {
         super(context, handler);
     }
 

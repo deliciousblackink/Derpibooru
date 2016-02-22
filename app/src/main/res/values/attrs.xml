@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- see ui.views -->
     <declare-styleable name="ImageListRecyclerView">
         <attr name="imageThumbSize" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="AccentColorIconButton">
+        <attr name="buttonIcon" format="integer" />
+        <attr name="buttonText" format="string" />
     </declare-styleable>
     <!-- see ui.views.FlowLayout class -->
     <declare-styleable name="FlowLayout">

@@ -1,80 +1,41 @@
-<!-- TODO: Optimize (simplify) the layout -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="?attr/actionBarSize"
-             android:background="@color/colorPrimary">
-    <LinearLayout
-        android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:gravity="center_vertical|center_horizontal"
+    android:background="@color/colorPrimary"
+    android:weightSum="3">
+    <!-- score -->
+    <derpibooru.derpy.ui.views.AccentColorIconButton
+        android:id="@+id/buttonScore"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal"
-        android:weightSum="3">
-        <TextView
-            android:id="@+id/textScore"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:text="1766"
-            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-            android:textColor="@color/colorTextLight"
-            android:background="@color/colorPrimary"
-            android:gravity="center_vertical|center_horizontal"/>
-        <!-- upvote -->
-        <LinearLayout
-            android:id="@+id/buttonUpvote"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:background="@drawable/selector_toolbar_button">
-            <ImageView
-                android:id="@+id/imgUpvote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_thumb_up_white_24dp"
-                android:background="@drawable/selector_toolbar_button"/>
-            <TextView
-                android:id="@+id/textUpvotes"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="2800"
-                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                android:textColor="@color/colorTextLight"
-                android:gravity="center_vertical"
-                android:background="@drawable/selector_toolbar_button"
-                android:paddingLeft="5dp"/>
-        </LinearLayout>
-        <!-- downvote -->
-        <LinearLayout
-            android:id="@+id/buttonDownvote"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:background="@drawable/selector_toolbar_button">
-            <ImageView
-                android:id="@+id/imgDownvote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_thumb_down_white_24dp"
-                android:background="@drawable/selector_toolbar_button"/>
-            <TextView
-                android:id="@+id/textDownvotes"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="1034"
-                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                android:textColor="@color/colorTextLight"
-                android:gravity="center_vertical"
-                android:background="@drawable/selector_toolbar_button"
-                android:paddingLeft="5dp"/>
-        </LinearLayout>
-    </LinearLayout>
-</FrameLayout>
+        app:buttonText="1766"
+        android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+        android:textColor="@color/colorTextLight"
+        android:background="@drawable/selector_toolbar_button" />
+    <!-- upvote -->
+    <derpibooru.derpy.ui.views.AccentColorIconButton
+        android:id="@+id/buttonUpvote"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        app:buttonText="2800"
+        android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+        android:textColor="@color/colorTextLight"
+        app:buttonIcon="@drawable/ic_thumb_up_white_24dp"
+        android:background="@drawable/selector_toolbar_button" />
+    <!-- downvote -->
+    <derpibooru.derpy.ui.views.AccentColorIconButton
+        android:id="@+id/buttonDownvote"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        app:buttonText="1034"
+        android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+        android:textColor="@color/colorTextLight"
+        app:buttonIcon="@drawable/ic_thumb_down_white_24dp"
+        android:background="@drawable/selector_toolbar_button" />
+</LinearLayout>

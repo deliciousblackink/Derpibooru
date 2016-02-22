@@ -15,8 +15,8 @@ import android.widget.EditText;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruLoginForm;
-import derpibooru.derpy.data.server.DerpibooruUser;
-import derpibooru.derpy.server.User;
+import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.requesters.LoginRequester;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int MIN_ACCEPTED_PASSWORD_LENGTH = 6;
@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.buttonLogin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                login();
+                validateInputDataAndLogin();
             }
         });
     }
@@ -64,50 +64,37 @@ public class LoginActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    private void showSnackbar(String content) {
-        Snackbar.make(findViewById(R.id.viewLogin),
-                      content, Snackbar.LENGTH_LONG).show();
-    }
-
-    private void login() {
+    private void validateInputDataAndLogin() {
         String email = mEmailText.getText().toString();
         String password = mPasswordText.getText().toString();
         if (!isEmailValid(email)) {
-            showSnackbar("Invalid e-mail");
+            showSnackbar(R.string.activity_login_invalid_email);
             return;
         }
         if (password.length() < MIN_ACCEPTED_PASSWORD_LENGTH) {
-            showSnackbar("The password is too short");
+            showSnackbar(R.string.activity_login_invalid_password);
             return;
         }
+        DerpibooruLoginForm credentials =
+                new DerpibooruLoginForm(email, password, ((CheckBox) findViewById(R.id.checkRememberMe)).isChecked());
+        loginWithCredentials(credentials);
+        showProgressBar();
+    }
 
-        DerpibooruLoginForm form =
-                new DerpibooruLoginForm(email, password,
-                                        ((CheckBox) findViewById(R.id.checkRememberMe)).isChecked());
-
-        User user = new User(this,
-                             new User.UserRequestHandler() {
-                                 @Override
-                                 public void onUserDataObtained(DerpibooruUser userData) {
-                                     setResult(Activity.RESULT_OK);
-                                     finish();
-                                 }
-
-                                 @Override
-                                 public void onNetworkError() {
-                                 }
-                             }, new User.AuthenticationRequestHandler() {
+    private void loginWithCredentials(DerpibooruLoginForm credentials) {
+        new LoginRequester(this, credentials, new QueryHandler<Boolean>() {
             @Override
-            public void onFailedLogin() {
-                hideProgressBar();
-                showSnackbar("Incorrect e-mail and/or password");
+            public void onQueryExecuted(Boolean result) {
+                setResult(Activity.RESULT_OK);
+                finish();
             }
 
             @Override
-            public void onFailedLogout() { }
-        });
-        user.login(form);
-        showProgressBar();
+            public void onQueryFailed() {
+                hideProgressBar();
+                showSnackbar(R.string.activity_login_failed_request);
+            }
+        }).fetch();
     }
 
     private void showProgressBar() {
@@ -133,6 +120,10 @@ public class LoginActivity extends AppCompatActivity {
         mEmailText.setEnabled(true);
         mPasswordText.setEnabled(true);
         findViewById(R.id.checkRememberMe).setEnabled(true);
+    }
+
+    private void showSnackbar(int stringResId) {
+        Snackbar.make(findViewById(R.id.viewLogin), getString(stringResId), Snackbar.LENGTH_LONG).show();
     }
 
     private boolean isEmailValid(String email) {

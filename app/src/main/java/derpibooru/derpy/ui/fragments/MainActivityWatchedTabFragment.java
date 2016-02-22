@@ -5,13 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import derpibooru.derpy.server.WatchedProvider;
+import derpibooru.derpy.server.providers.WatchedProvider;
 
 public class MainActivityWatchedTabFragment extends ImageListFragment {
-    public MainActivityWatchedTabFragment() {
-        super();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

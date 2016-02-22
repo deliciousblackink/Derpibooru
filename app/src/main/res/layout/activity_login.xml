@@ -68,7 +68,7 @@
             android:textColor="@color/colorTextLight"
             android:text="Login"
             android:textSize="16dp"/>
-        <derpibooru.derpy.ui.views.ProgressBarAccentColor
+        <derpibooru.derpy.ui.views.AccentColorProgressBar
             android:id="@+id/progressLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

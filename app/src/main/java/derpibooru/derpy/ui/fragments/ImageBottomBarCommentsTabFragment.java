@@ -10,12 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageComment;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
-import derpibooru.derpy.server.ImageCommentsProvider;
-import derpibooru.derpy.server.ProviderRequestHandler;
+import derpibooru.derpy.server.providers.ImageCommentsProvider;
+import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.ui.adapters.ImageCommentsAdapter;
 import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
@@ -25,10 +26,6 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
     /* TODO: notify bottom bar when the number of comments changes */
     private SwipeRefreshLayout mCommentsRefreshLayout;
     private RecyclerView mCommentsView;
-
-    public ImageBottomBarCommentsTabFragment() {
-        super();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,10 +74,10 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
                 }
             });
         } else if (mCommentsRefreshLayout.isRefreshing()) {
-            mCommentsAdapter.resetImageComments(comments);
+            mCommentsAdapter.resetItems(comments);
             mCommentsRefreshLayout.setRefreshing(false);
         } else {
-            mCommentsAdapter.appendImageComments(comments);
+            mCommentsAdapter.appendItems(comments);
         }
         showCommentsIfNotVisible();
     }
@@ -93,14 +90,14 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
         }
     }
 
-    private class ImageCommentsRequestHandler implements ProviderRequestHandler {
+    private class ImageCommentsRequestHandler implements QueryHandler<List<DerpibooruImageComment>> {
         @Override
-        public void onRequestCompleted(Object result) {
+        public void onQueryExecuted(List<DerpibooruImageComment> result) {
             displayCommentsFromProvider((ArrayList<DerpibooruImageComment>) result);
         }
 
         @Override
-        public void onRequestFailed() {
+        public void onQueryFailed() {
             /* TODO: handle request failure */
         }
     }

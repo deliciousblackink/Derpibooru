@@ -11,8 +11,9 @@ import java.util.List;
 
 import derpibooru.derpy.data.server.DerpibooruFilter;
 
-public class FilterListParser implements ServerResponseParser {
-    public Object parseResponse(String rawResponse) throws JSONException {
+public class FilterListParser implements ServerResponseParser<List<DerpibooruFilter>> {
+    @Override
+    public List<DerpibooruFilter> parseResponse(String rawResponse) throws JSONException {
         JSONObject json = new JSONObject(rawResponse);
 
         /* TODO: parse complex filters */

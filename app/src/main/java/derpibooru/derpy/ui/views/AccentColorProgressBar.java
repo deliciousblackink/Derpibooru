@@ -7,18 +7,18 @@ import android.widget.ProgressBar;
 
 import derpibooru.derpy.R;
 
-public class ProgressBarAccentColor extends ProgressBar {
-    public ProgressBarAccentColor(Context context) {
+public class AccentColorProgressBar extends ProgressBar {
+    public AccentColorProgressBar(Context context) {
         super(context, null, android.R.attr.progressBarStyleLarge);
         init(context);
     }
 
-    public ProgressBarAccentColor(Context context, AttributeSet attrs) {
+    public AccentColorProgressBar(Context context, AttributeSet attrs) {
         super(context, attrs, android.R.attr.progressBarStyleLarge);
         init(context);
     }
 
-    public ProgressBarAccentColor(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AccentColorProgressBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }

@@ -9,7 +9,7 @@ import derpibooru.derpy.data.server.DerpibooruTagFull;
 
 public class TagStorage {
     /* TODO: memory caching */
-    public static final String PREFERENCES_NAME = "Tags";
+    private static final String PREFERENCES_NAME = "Tags";
 
     private SharedPreferences mPreferences;
     private Gson mGson;

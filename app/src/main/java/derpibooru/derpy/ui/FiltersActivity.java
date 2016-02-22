@@ -1,20 +1,26 @@
 package derpibooru.derpy.ui;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruFilter;
-import derpibooru.derpy.server.Filters;
+import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.providers.FilterListProvider;
+import derpibooru.derpy.server.requesters.FilterChangeRequester;
 import derpibooru.derpy.ui.adapters.FiltersViewAdapter;
 
 public class FiltersActivity extends NavigationDrawerActivity {
     private ArrayList<DerpibooruFilter> mAvailableFilterList;
+    private FilterListProvider mFilterListProvider;
+
     private RecyclerView mViewFilters;
-    private Filters mFilterActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,7 @@ public class FiltersActivity extends NavigationDrawerActivity {
     }
 
     @Override
-    protected void onUserDataRefreshed() {
+    public void onUserDataRefreshed() {
         fetchAvailableFilters();
     }
 
@@ -47,35 +53,43 @@ public class FiltersActivity extends NavigationDrawerActivity {
     }
 
     private void fetchAvailableFilters() {
-        if (mFilterActions == null) {
-            initFilterActions();
+        if (mFilterListProvider == null) {
+            initFilterListProvider();
         }
-        mFilterActions.fetchAvailableFilters();
+        mFilterListProvider.fetch();
     }
 
     private void setCurrentFilter(DerpibooruFilter newFilter) {
-        if (mFilterActions == null) {
-            initFilterActions();
-        }
-        mFilterActions.changeCurrentFilterTo(newFilter);
-    }
-
-    private void initFilterActions() {
-        mFilterActions = new Filters(this, new Filters.FiltersRequestHandler() {
+        new FilterChangeRequester(this, new QueryHandler<Boolean>() {
             @Override
-            public void onAvailableFiltersFetched(ArrayList<DerpibooruFilter> filters) {
-                mAvailableFilterList = filters;
-                displayFilters();
-            }
-
-            @Override
-            public void onFilterChangedSuccessfully() {
+            public void onQueryExecuted(Boolean result) {
                 FiltersActivity.super.refreshUserData();
             }
 
             @Override
-            public void onNetworkError() {
-                /* TODO: handle network errors */
+            public void onQueryFailed() {
+                Snackbar.make(mViewFilters, R.string.activity_filters_failed_to_change_filter, Snackbar.LENGTH_SHORT).show();
+            }
+        }, newFilter).fetch();
+    }
+
+    private void initFilterListProvider() {
+        mFilterListProvider = new FilterListProvider(this, new QueryHandler<List<DerpibooruFilter>>() {
+            @Override
+            public void onQueryExecuted(List<DerpibooruFilter> filters) {
+                mAvailableFilterList = (ArrayList<DerpibooruFilter>) filters;
+                displayFilters();
+            }
+
+            @Override
+            public void onQueryFailed() {
+                Snackbar.make(mViewFilters, R.string.activity_filters_failed_to_fetch_list, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.snackbar_action_retry, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                fetchAvailableFilters();
+                            }
+                        }).show();
             }
         });
     }
@@ -83,7 +97,7 @@ public class FiltersActivity extends NavigationDrawerActivity {
     private void displayFilters() {
         if (mViewFilters.getAdapter() == null) {
             FiltersViewAdapter fva =
-                    new FiltersViewAdapter(mFilterActions.getCurrentFilter(), mAvailableFilterList,
+                    new FiltersViewAdapter(mFilterListProvider.getCurrentFilter(), mAvailableFilterList,
                                            new FiltersViewAdapter.FiltersViewHandler() {
                                                @Override
                                                public void changeFilterTo(DerpibooruFilter newFilter) {
@@ -93,7 +107,7 @@ public class FiltersActivity extends NavigationDrawerActivity {
             mViewFilters.setAdapter(fva);
         } else {
             ((FiltersViewAdapter) mViewFilters.getAdapter())
-                    .replaceFilters(mAvailableFilterList, mFilterActions.getCurrentFilter());
+                    .replaceFilters(mAvailableFilterList, mFilterListProvider.getCurrentFilter());
         }
     }
 }

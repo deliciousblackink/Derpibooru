@@ -30,7 +30,7 @@ public class MainActivity extends NavigationDrawerActivity {
     }
 
     @Override
-    protected void onUserDataRefreshed() {
+    public void onUserDataRefreshed() {
         if (mTabViewPager != null) {
             ((MainActivityTabAdapter) mTabViewPager.getFragmentAdapter()).toggleWatchedTab();
         }

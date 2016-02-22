@@ -17,29 +17,28 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruUser;
-import derpibooru.derpy.server.User;
+import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.providers.UserDataProvider;
+import derpibooru.derpy.server.requesters.LogoutRequester;
 
 class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListener {
-    private static final int ACTIVITY_LOGIN_REQUEST_CODE = 1;
-    private Activity mParent;
-    private UserDataObtainedHandler mUserDataObtainedHandler;
+    private static final int LOGIN_ACTIVITY_REQUEST_CODE = 1;
+
+    private NavigationDrawerActivity mParent;
     private int mParentNavigationId;
 
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
     private View mDrawerHeader;
 
-    private User mUser;
+    private UserDataProvider mUserProvider;
 
-    public NavigationDrawer(Activity parent, DrawerLayout drawer, Toolbar toolbar,
-                            NavigationView menu, UserDataObtainedHandler refreshHandler) {
+    NavigationDrawer(NavigationDrawerActivity parent, DrawerLayout drawer, Toolbar toolbar, NavigationView menu) {
         mParent = parent;
-        mUserDataObtainedHandler = refreshHandler;
         setActivityMenuItemId();
 
         mDrawerLayout = drawer;
-        mNavigationView = ((NavigationView)
-                mDrawerLayout.findViewById(R.id.navigationView));
+        mNavigationView = ((NavigationView) mDrawerLayout.findViewById(R.id.navigationView));
         mDrawerHeader = mNavigationView.getHeaderView(0);
 
         mDrawerHeader.findViewById(R.id.buttonRefreshUserData)
@@ -52,8 +51,8 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
 
         initDrawerToggle(parent, toolbar, drawer, menu);
 
-        mUser = new User(parent, new UserHandler(), new AuthenticationHandler());
-        mUser.fetchUserData();
+        mUserProvider = new UserDataProvider(parent, new UserQueryHandler());
+        mUserProvider.fetch();
     }
 
     private void setActivityMenuItemId() {
@@ -71,7 +70,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
                 .setVisibility(View.INVISIBLE);
         ((TextView) mDrawerHeader.findViewById(R.id.textHeaderFilter))
                 .setText("Loading...");
-        mUser.refreshUserData();
+        mUserProvider.refreshUserData();
     }
 
     @Override
@@ -96,24 +95,35 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
                 break;
             case (R.id.navigationLogin):
                 mParent.startActivityForResult(new Intent(mParent, LoginActivity.class),
-                                               ACTIVITY_LOGIN_REQUEST_CODE);
+                                               LOGIN_ACTIVITY_REQUEST_CODE);
                 mNavigationView.getMenu()
                         .findItem(mParentNavigationId).setChecked(false);
                 break;
             case (R.id.navigationLogout):
-                mUser.logout();
+                logout();
                 return true; /* do not hide the drawer */
         }
-
         closeDrawer();
         return true;
     }
 
+    private void logout() {
+        new LogoutRequester(mParent, new QueryHandler<Boolean>() {
+            @Override
+            public void onQueryExecuted(Boolean result) {
+                mUserProvider.refreshUserData();
+            }
+
+            @Override
+            public void onQueryFailed() { }
+        }).fetch();
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case (ACTIVITY_LOGIN_REQUEST_CODE):
+            case (LOGIN_ACTIVITY_REQUEST_CODE):
                 if (resultCode == Activity.RESULT_OK) {
-                    mUser.refreshUserData();
+                    mUserProvider.refreshUserData();
                 }
                 mNavigationView.getMenu().findItem(R.id.navigationLogin).setChecked(false);
 
@@ -167,8 +177,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
                 new ActionBarDrawerToggle(parent, mDrawerLayout, toolbar,
                                           R.string.open_drawer, R.string.close_drawer) {
                     @Override
-                    public void onDrawerSlide(View drawerView, float slideOffset)
-                    {
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
                         /* Disable the hamburger icon animation (for more info refer to
                          * https://medium.com/android-news/navigation-drawer-styling-according-material-design-5306190da08f#.9wrzhczd8 ) */
                         super.onDrawerSlide(drawerView, 0);
@@ -187,26 +196,14 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    public interface UserDataObtainedHandler {
-        void onUserDataObtained();
-    }
-
-    private class UserHandler implements User.UserRequestHandler {
+    private class UserQueryHandler implements QueryHandler<DerpibooruUser> {
         @Override
-        public void onUserDataObtained(DerpibooruUser userData) {
-            mUserDataObtainedHandler.onUserDataObtained();
-            displayUserData(userData);
+        public void onQueryExecuted(DerpibooruUser result) {
+            mParent.onUserDataRefreshed();
+            displayUserData(result);
         }
 
         @Override
-        public void onNetworkError() { }
-    }
-
-    private static class AuthenticationHandler implements User.AuthenticationRequestHandler {
-        @Override
-        public void onFailedLogin() { }
-
-        @Override
-        public void onFailedLogout() { }
+        public void onQueryFailed() { }
     }
 }

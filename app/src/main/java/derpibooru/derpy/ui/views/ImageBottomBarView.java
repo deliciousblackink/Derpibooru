@@ -2,12 +2,11 @@ package derpibooru.derpy.ui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
-import derpibooru.derpy.server.ImageInfoProvider;
-import derpibooru.derpy.server.ProviderRequestHandler;
+import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.providers.ImageInfoProvider;
 
 public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {
     public ImageBottomBarView(Context context) {
@@ -22,25 +21,27 @@ public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {
         super(context, attrs, defStyle);
     }
 
-    public void setBasicInfo(int imageId, int faves, int comments) {
+    public AccentColorIconButton getFaveButton() {
+        return ((AccentColorIconButton) this.findViewById(R.id.buttonFave));
+    }
+
+    public void setBasicInfo(int imageId, int comments) {
         super.inflateLayout();
-        TextView d = (TextView) this.findViewById(R.id.textFaves);
-        d.setText(Integer.toString(faves));
-        TextView u = (TextView) this.findViewById(R.id.textComments);
-        u.setText(Integer.toString(comments));
+        ((AccentColorIconButton) this.findViewById(R.id.buttonComments))
+                .setText(Integer.toString(comments));
         loadDetailedInfo(imageId);
     }
 
     private void loadDetailedInfo(int imageId) {
          /* get image uploader, description, tags */
-        ImageInfoProvider provider = new ImageInfoProvider(getContext(), new ProviderRequestHandler() {
+        ImageInfoProvider provider = new ImageInfoProvider(getContext(), new QueryHandler<DerpibooruImageInfo>() {
             @Override
-            public void onRequestCompleted(Object result) {
-                populateViewPagerTabsWithImageInfo((DerpibooruImageInfo) result);
+            public void onQueryExecuted(DerpibooruImageInfo info) {
+                populateViewPagerTabsWithImageInfo(info);
             }
 
             @Override
-            public void onRequestFailed() {
+            public void onQueryFailed() {
                 /* TODO: handle failed request */
             }
         });

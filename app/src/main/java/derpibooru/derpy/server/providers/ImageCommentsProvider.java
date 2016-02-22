@@ -1,14 +1,18 @@
-package derpibooru.derpy.server;
+package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
+import java.util.List;
+
+import derpibooru.derpy.data.server.DerpibooruImageComment;
+import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.ImageCommentsParser;
 
-public class ImageCommentsProvider extends Provider {
+public class ImageCommentsProvider extends Provider<List<DerpibooruImageComment>> {
     private int mCurrentPage = 1;
     private int mImageId;
 
-    public ImageCommentsProvider(Context context, ProviderRequestHandler handler) {
+    public ImageCommentsProvider(Context context, QueryHandler<List<DerpibooruImageComment>> handler) {
         super(context, handler);
     }
 
@@ -50,6 +54,6 @@ public class ImageCommentsProvider extends Provider {
 
     @Override
     public void fetch() {
-        super.executeQuery(generateUrl(), new ImageCommentsParser());
+        super.executeQuery(new ImageCommentsParser());
     }
 }

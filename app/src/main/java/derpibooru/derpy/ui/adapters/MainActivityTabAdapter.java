@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.ArrayList;
 
 import derpibooru.derpy.data.server.DerpibooruRankingsListType;
-import derpibooru.derpy.server.User;
+import derpibooru.derpy.server.providers.UserDataProvider;
 import derpibooru.derpy.ui.fragments.MainActivityNewImagesTabFragment;
 import derpibooru.derpy.ui.fragments.MainActivityRankingsTabFragment;
 import derpibooru.derpy.ui.fragments.MainActivityWatchedTabFragment;
@@ -35,7 +35,7 @@ public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
     }
 
     public void toggleWatchedTab() {
-        boolean loggedIn = new User(mContext).isLoggedIn();
+        boolean loggedIn = new UserDataProvider(mContext, null).isLoggedIn();
         boolean watchedTabDisplayed = mTabs.contains(TITLE_WATCHED);
         if (loggedIn && !watchedTabDisplayed) {
             mTabs.add(1, TITLE_WATCHED);

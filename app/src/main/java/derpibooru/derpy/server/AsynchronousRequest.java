@@ -14,40 +14,49 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-class AsynchronousRequest implements Runnable {
+public abstract class AsynchronousRequest<T> implements Runnable {
     private OkHttpClient mHttpClient;
+    private ServerResponseParser<T> mResponseParser;
+    private int mSuccessCode;
 
-    protected ServerResponseParser mResponseParser;
     protected String mUrl;
 
-    protected RequestHandler mRequestHandler;
-
-    public AsynchronousRequest(Context context,
-                               @Nullable ServerResponseParser parser,
-                               String url,
-                               RequestHandler requestHandler) {
+    protected AsynchronousRequest(Context context, @Nullable ServerResponseParser<T> parser, String url) {
         mHttpClient = ((Derpibooru) context.getApplicationContext()).getHttpClient();
         mResponseParser = parser;
         mUrl = url;
-        mRequestHandler = requestHandler;
+        mSuccessCode = 200;
     }
 
+    AsynchronousRequest(Context context, @Nullable ServerResponseParser<T> parser, String url, int successResponseCode) {
+        mHttpClient = ((Derpibooru) context.getApplicationContext()).getHttpClient();
+        mResponseParser = parser;
+        mUrl = url;
+        mSuccessCode = successResponseCode;
+    }
+
+    protected abstract void onRequestCompleted(T parsedResponse);
+
+    protected abstract void onRequestFailed();
+
+    @Override
     public void run() {
         Request r = generateRequest();
         mHttpClient.newCall(r).enqueue(new Callback() {
             @Override
             public void onFailure(Call request, IOException e) {
                 Log.e("AsynchronousRequest", request.toString(), e);
-                mRequestHandler.onRequestFailed();
+                onRequestFailed();
             }
 
             @Override
             public void onResponse(Call request, Response response) throws IOException {
-                if (!response.isSuccessful() && response.code() != 302) {
-                    Log.e("AsynchronousRequest", "run(): Callback() onResponse");
-                    mRequestHandler.onRequestFailed();
+                if (response.code() == mSuccessCode) {
+                    onRequestCompleted(parseResponse(response));
+                } else {
+                    Log.e("AsynchronousRequest", String.format("run(): Response code doesn't match the required value (expected %d, got %d)", mSuccessCode, response.code()));
+                    onRequestFailed();
                 }
-                mRequestHandler.onRequestCompleted(parseResponse(response));
             }
         });
     }
@@ -58,21 +67,15 @@ class AsynchronousRequest implements Runnable {
                 .build();
     }
 
-    protected Object parseResponse(Response response) {
+    protected T parseResponse(Response response) {
         if (mResponseParser != null) {
             try {
                 return mResponseParser.parseResponse(response.body().string());
             } catch (Exception e) {
                 Log.e("AsynchronousRequest", "Error parsing response", e);
-                mRequestHandler.onRequestFailed();
+                onRequestFailed();
             }
         }
         return null;
-    }
-
-    interface RequestHandler {
-        void onRequestCompleted(Object parsedResponse);
-
-        void onRequestFailed();
     }
 }

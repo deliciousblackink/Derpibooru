@@ -1,18 +1,20 @@
-package derpibooru.derpy.server;
+package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
 import java.util.List;
 
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTagFull;
+import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.ImageListParser;
 
-public class ImageListProvider extends Provider {
+public class ImageListProvider extends Provider<List<DerpibooruImageThumb>> {
     protected static final int IMAGES_PER_PAGE = 16;
 
     private int mCurrentPage = 1;
 
-    public ImageListProvider(Context context, ProviderRequestHandler handler) {
+    public ImageListProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler) {
         super(context, handler);
     }
 
@@ -44,16 +46,20 @@ public class ImageListProvider extends Provider {
 
     @Override
     public void fetch() {
-        Tags t = new Tags(mContext, new Tags.TagRequestHandler() {
+        new SpoileredTagsProvider(mContext, new QueryHandler<List<DerpibooruTagFull>>() {
             @Override
-            public void onTagsFetched(List<DerpibooruTagFull> tagList) {
-                fetchImages(tagList);
+            public void onQueryExecuted(List<DerpibooruTagFull> spoileredTags) {
+                fetchImages(spoileredTags);
             }
-        });
-        t.fetchSpoileredTagsForCurrentFilter();
+
+            @Override
+            public void onQueryFailed() {
+                mHandler.onQueryFailed();
+            }
+        }).fetch();
     }
 
     private void fetchImages(List<DerpibooruTagFull> spoileredTags) {
-        super.executeQuery(generateUrl(), new ImageListParser(spoileredTags));
+        super.executeQuery(new ImageListParser(spoileredTags));
     }
 }

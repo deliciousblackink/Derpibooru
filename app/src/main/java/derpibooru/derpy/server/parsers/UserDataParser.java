@@ -14,11 +14,11 @@ import java.util.regex.Pattern;
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruUser;
 
-public class UserDataParser implements ServerResponseParser {
+public class UserDataParser implements ServerResponseParser<DerpibooruUser> {
     private boolean mIsLoggedIn = false;
 
     @Override
-    public Object parseResponse(String rawResponse) throws Exception {
+    public DerpibooruUser parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
         mIsLoggedIn = isLoggedIn(doc);
         Element userBox = doc.select("div.userbox").first();

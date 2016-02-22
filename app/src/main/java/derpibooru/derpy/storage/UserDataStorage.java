@@ -10,7 +10,7 @@ import derpibooru.derpy.data.server.DerpibooruUser;
 
 public class UserDataStorage {
     /* TODO: memory caching */
-    public static final String PREFERENCES_NAME = "Derpibooru";
+    private static final String PREFERENCES_NAME = "Derpibooru";
 
     private SharedPreferences mPreferences;
     private Gson mGson;

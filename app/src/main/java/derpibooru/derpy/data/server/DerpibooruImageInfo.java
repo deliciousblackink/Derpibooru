@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DerpibooruImageInfo implements Parcelable {
     private int mId;
@@ -11,12 +12,12 @@ public class DerpibooruImageInfo implements Parcelable {
     private String mUploader;
     private String mDescription;
     private String mCreatedAt;
-    private ArrayList<DerpibooruTag> mTags = new ArrayList<>();
-    private ArrayList<String> mFavedBy = new ArrayList<>();
+    private List<DerpibooruTag> mTags = new ArrayList<>();
+    private List<String> mFavedBy = new ArrayList<>();
 
     public DerpibooruImageInfo(int id, String sourceUrl,
                                String uploader, String description, String createdAt,
-                               ArrayList<DerpibooruTag> tags, ArrayList<String> favedBy) {
+                               List<DerpibooruTag> tags, List<String> favedBy) {
         mId = id;
         mSourceUrl = sourceUrl;
         mUploader = uploader;
@@ -46,11 +47,11 @@ public class DerpibooruImageInfo implements Parcelable {
         return mCreatedAt;
     }
 
-    public ArrayList<DerpibooruTag> getTags() {
+    public List<DerpibooruTag> getTags() {
         return mTags;
     }
 
-    public ArrayList<String> getFavedBy() {
+    public List<String> getFavedBy() {
         return mFavedBy;
     }
 

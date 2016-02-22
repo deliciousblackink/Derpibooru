@@ -16,7 +16,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
@@ -193,7 +193,7 @@ public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<
 
             @NonNull
             @Override
-            protected List<DerpibooruImageInteraction.InteractionType> getInteractions() {
+            protected Set<DerpibooruImageInteraction.InteractionType> getInteractions() {
                 return getItems().get(position).getImageInteractions();
             }
 

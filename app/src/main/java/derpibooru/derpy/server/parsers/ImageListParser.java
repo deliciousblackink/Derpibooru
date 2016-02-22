@@ -1,5 +1,7 @@
 package derpibooru.derpy.server.parsers;
 
+import android.support.annotation.Nullable;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -75,6 +77,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
         }
     }
 
+    @Nullable
     private DerpibooruImageInteraction.InteractionType getImageInteractionType(JSONObject interaction) throws JSONException {
         if (interaction.getString("interaction_type").equals("faved")) {
             return DerpibooruImageInteraction.InteractionType.Fave;
@@ -85,7 +88,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
                 return DerpibooruImageInteraction.InteractionType.Downvote;
             }
         }
-        return DerpibooruImageInteraction.InteractionType.None;
+        return null;
     }
 
     private List<String> getSpoileredTagNames(List<Integer> imageTagIds) {

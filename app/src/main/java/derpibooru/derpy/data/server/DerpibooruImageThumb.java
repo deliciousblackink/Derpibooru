@@ -4,7 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DerpibooruImageThumb implements Parcelable {
     private int mId;
@@ -19,7 +21,7 @@ public class DerpibooruImageThumb implements Parcelable {
     private List<String> mSpoileredTagNames = new ArrayList<>();
     private String mSpoilerImageUrl;
 
-    private List<DerpibooruImageInteraction.InteractionType> mImageInteractions = new ArrayList<>();
+    private Set<DerpibooruImageInteraction.InteractionType> mImageInteractions = new HashSet<>();
 
     /* a non-persistent variable used by image lists to indicate if a user has unspoilered an image */
     private boolean isSpoilered = false;
@@ -98,7 +100,7 @@ public class DerpibooruImageThumb implements Parcelable {
         return mSpoilerImageUrl;
     }
 
-    public List<DerpibooruImageInteraction.InteractionType> getImageInteractions() {
+    public Set<DerpibooruImageInteraction.InteractionType> getImageInteractions() {
         return mImageInteractions;
     }
 
@@ -121,7 +123,11 @@ public class DerpibooruImageThumb implements Parcelable {
         mLargeUrl = in.readString();
         in.readStringList(mSpoileredTagNames);
         mSpoilerImageUrl = in.readString();
-        in.readList(mImageInteractions, List.class.getClassLoader());
+
+        int[] interactionValues = in.createIntArray();
+        for (int value : interactionValues) {
+            mImageInteractions.add(DerpibooruImageInteraction.InteractionType.fromValue(value));
+        }
     }
 
     @Override
@@ -141,7 +147,15 @@ public class DerpibooruImageThumb implements Parcelable {
         dest.writeString(mLargeUrl);
         dest.writeStringList(mSpoileredTagNames);
         dest.writeString(mSpoilerImageUrl);
-        dest.writeList(mImageInteractions);
+
+        /* TODO: redo transition of Set<enum> to parcel */
+        int[] interactionValues = new int[mImageInteractions.size()];
+        int iterator = 0;
+        for (DerpibooruImageInteraction.InteractionType interactionType : mImageInteractions) {
+            interactionValues[iterator] = interactionType.toValue();
+            iterator++;
+        }
+        dest.writeIntArray(interactionValues);
     }
 
     @SuppressWarnings("unused")

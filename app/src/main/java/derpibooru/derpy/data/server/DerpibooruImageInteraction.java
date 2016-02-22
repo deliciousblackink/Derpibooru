@@ -1,7 +1,5 @@
 package derpibooru.derpy.data.server;
 
-import java.util.List;
-
 public class DerpibooruImageInteraction {
     private int mScore;
     private int mFavorites;
@@ -45,11 +43,29 @@ public class DerpibooruImageInteraction {
     }
 
     public enum InteractionType {
-        Fave,
-        Upvote,
-        Downvote,
-        ClearVote,
-        ClearFave,
-        None
+        Fave(0),
+        Upvote(1),
+        Downvote(2),
+        ClearFave(3),
+        ClearVote(4);
+
+        private int mValue;
+
+        InteractionType(int value) {
+            mValue = value;
+        }
+
+        public static InteractionType fromValue(int value) {
+            for (InteractionType type : values()) {
+                if (type.mValue == value) {
+                    return type;
+                }
+            }
+            return ClearVote;
+        }
+
+        public int toValue() {
+            return mValue;
+        }
     }
 }

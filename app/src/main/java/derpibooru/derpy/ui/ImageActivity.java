@@ -17,7 +17,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-import java.util.List;
+import java.util.Set;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
@@ -141,7 +141,7 @@ public class ImageActivity extends AppCompatActivity {
 
             @NonNull
             @Override
-            protected List<DerpibooruImageInteraction.InteractionType> getInteractions() {
+            protected Set<DerpibooruImageInteraction.InteractionType> getInteractions() {
                 return mImageData.getImageInteractions();
             }
 

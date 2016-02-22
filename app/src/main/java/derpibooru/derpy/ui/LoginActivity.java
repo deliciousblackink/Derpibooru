@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.buttonLogin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkInputDataAndLogin();
+                validateInputDataAndLogin();
             }
         });
     }
@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    private void checkInputDataAndLogin() {
+    private void validateInputDataAndLogin() {
         String email = mEmailText.getText().toString();
         String password = mPasswordText.getText().toString();
         if (!isEmailValid(email)) {

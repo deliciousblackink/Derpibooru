@@ -31,7 +31,7 @@ abstract class AuthenticatedRequester<T> extends Requester<T> {
     }
 
     private static class AuthenticityTokenProvider extends Provider<String> {
-        public AuthenticityTokenProvider(Context context, QueryHandler<String> handler) {
+        AuthenticityTokenProvider(Context context, QueryHandler<String> handler) {
             super(context, handler);
         }
 

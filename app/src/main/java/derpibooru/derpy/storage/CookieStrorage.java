@@ -15,7 +15,7 @@ import okhttp3.Cookie;
 
 public class CookieStrorage {
     /* TODO: memory caching */
-    public static final String PREFERENCES_NAME = "Cookies";
+    private static final String PREFERENCES_NAME = "Cookies";
 
     private SharedPreferences mPreferences;
     private Gson mGson;

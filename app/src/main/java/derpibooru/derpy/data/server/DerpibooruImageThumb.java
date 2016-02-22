@@ -39,7 +39,7 @@ public class DerpibooruImageThumb implements Parcelable {
         mSpoileredTagNames = spoileredTagNames;
         mSpoilerImageUrl = spoilerImageUrl;
 
-        isSpoilered = (mSpoileredTagNames.size() > 0);
+        isSpoilered = !mSpoileredTagNames.isEmpty();
     }
 
     public int getId() {

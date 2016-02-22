@@ -94,7 +94,7 @@ public class AccentColorIconButton extends RelativeLayout {
         private boolean mKeepColorFilter = false;
         private boolean mColorFilterSet = false;
 
-        public TextViewButton(Context context, AttributeSet attrs) {
+        TextViewButton(Context context, AttributeSet attrs) {
             super(context, attrs);
             init(context, attrs);
         }

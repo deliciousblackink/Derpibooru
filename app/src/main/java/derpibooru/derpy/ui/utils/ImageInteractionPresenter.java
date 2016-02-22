@@ -18,7 +18,7 @@ import derpibooru.derpy.ui.views.AccentColorIconButton;
 public abstract class ImageInteractionPresenter {
     private ImageInteractionRequester mInteractionRequester;
 
-    public ImageInteractionPresenter(Context context) {
+    protected ImageInteractionPresenter(Context context) {
         mInteractionRequester = new ImageInteractionRequester(context, new InteractionRequestHandler());
         initializeInteractionListeners();
     }
@@ -79,7 +79,7 @@ public abstract class ImageInteractionPresenter {
     private class OnButtonClickListener implements View.OnClickListener {
         private final DerpibooruImageInteraction.InteractionType mType;
 
-        public OnButtonClickListener(final DerpibooruImageInteraction.InteractionType type) {
+        OnButtonClickListener(final DerpibooruImageInteraction.InteractionType type) {
             mType = type;
         }
 

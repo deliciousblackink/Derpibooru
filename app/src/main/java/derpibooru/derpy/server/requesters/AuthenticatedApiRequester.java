@@ -32,7 +32,7 @@ abstract class AuthenticatedApiRequester<T> extends Requester<T> {
     }
 
     private static class ApiKeyProvider extends Provider<String> {
-        public ApiKeyProvider(Context context, QueryHandler<String> handler) {
+        ApiKeyProvider(Context context, QueryHandler<String> handler) {
             super(context, handler);
         }
 

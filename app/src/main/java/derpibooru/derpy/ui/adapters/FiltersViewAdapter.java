@@ -34,9 +34,9 @@ public class FiltersViewAdapter extends RecyclerView.Adapter<FiltersViewAdapter.
             Log.e("FiltersViewAdapter", "the current filter hasn't been found in the filter list");
         } else {
             /* make current filter the first item in the filter list */
-            newCurrentFilter = mFilters.get(indexOfCurrentFilterInFilterList);
+            DerpibooruFilter newFilter = mFilters.get(indexOfCurrentFilterInFilterList);
             mFilters.remove(indexOfCurrentFilterInFilterList);
-            mFilters.add(0, newCurrentFilter);
+            mFilters.add(0, newFilter);
         }
         super.notifyDataSetChanged();
     }

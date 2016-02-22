@@ -16,12 +16,12 @@ import okhttp3.Response;
 
 public abstract class AsynchronousRequest<T> implements Runnable {
     private OkHttpClient mHttpClient;
+    private ServerResponseParser<T> mResponseParser;
+    private int mSuccessCode;
 
-    protected ServerResponseParser<T> mResponseParser;
     protected String mUrl;
-    protected int mSuccessCode;
 
-    public AsynchronousRequest(Context context, @Nullable ServerResponseParser<T> parser, String url) {
+    protected AsynchronousRequest(Context context, @Nullable ServerResponseParser<T> parser, String url) {
         mHttpClient = ((Derpibooru) context.getApplicationContext()).getHttpClient();
         mResponseParser = parser;
         mUrl = url;
@@ -39,6 +39,7 @@ public abstract class AsynchronousRequest<T> implements Runnable {
 
     protected abstract void onRequestFailed();
 
+    @Override
     public void run() {
         Request r = generateRequest();
         mHttpClient.newCall(r).enqueue(new Callback() {

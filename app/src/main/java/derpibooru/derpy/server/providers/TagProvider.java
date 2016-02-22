@@ -71,7 +71,7 @@ public class TagProvider extends Provider<List<DerpibooruTagFull>> {
                 tagsToBeFetchedFromServer.add(tagId);
             }
         }
-        if (tagsToBeFetchedFromServer.size() == 0) {
+        if (tagsToBeFetchedFromServer.isEmpty()) {
             mHandler.onQueryExecuted(mCachedTags);
             return true;
         }

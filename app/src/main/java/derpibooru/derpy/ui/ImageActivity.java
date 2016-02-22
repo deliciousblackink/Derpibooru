@@ -1,5 +1,7 @@
 package derpibooru.derpy.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +29,8 @@ import derpibooru.derpy.ui.views.ImageTopBarView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageActivity extends AppCompatActivity {
+    public static final String INTENT_EXTRA_IMAGE_THUMB = "derpibooru.derpy.ImageThumb";
+
     private ImageTopBarView mTopBar;
     private ImageBottomBarView mBottomBar;
 
@@ -44,15 +48,15 @@ public class ImageActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
 
         mTopBar = ((ImageTopBarView) findViewById(R.id.imageTopBar));
         mBottomBar = ((ImageBottomBarView) findViewById(R.id.imageBottomBar));
         mImageData = (DerpibooruImageThumb)
-                ((savedInstanceState == null) ? getIntent().getParcelableExtra("derpibooru.derpy.ImageThumb")
-                                              : savedInstanceState.getParcelable("image_data"));
+                ((savedInstanceState == null) ? getIntent().getParcelableExtra(INTENT_EXTRA_IMAGE_THUMB)
+                                              : savedInstanceState.getParcelable(INTENT_EXTRA_IMAGE_THUMB));
         setImageInfoFromThumb(toolbar);
         loadImageWithGlide(mImageData.getLargeImageUrl());
         initializeImageInteractions();
@@ -63,7 +67,14 @@ public class ImageActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putParcelable("image_data", mImageData);
+        savedInstanceState.putParcelable(INTENT_EXTRA_IMAGE_THUMB, mImageData);
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(Activity.RESULT_OK,
+                  new Intent().putExtra(INTENT_EXTRA_IMAGE_THUMB, mImageData));
+        super.onBackPressed();
     }
 
     private void setImageInfoFromThumb(Toolbar toolbar) {

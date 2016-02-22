@@ -1,7 +1,6 @@
 package derpibooru.derpy.ui.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +12,9 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,18 +22,19 @@ import java.util.List;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.animations.ImageListItemAnimator;
 import derpibooru.derpy.ui.utils.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
-public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImageThumb, ImageListAdapter.ViewHolder> {
+public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImageThumb, ImageListAdapter.ViewHolder> {
     private ImageListItemAnimator mAnimator;
 
     public ImageListAdapter(Context context, ArrayList<DerpibooruImageThumb> items) {
         super(context, items);
         mAnimator = new ImageListItemAnimator();
     }
+
+    public abstract void startImageActivityWithThumb(DerpibooruImageThumb thumb);
 
     @Override
     public ImageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -49,6 +52,16 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
         holder.buttonComments.setEnabled(false);
     }
 
+    public void replaceImageThumb(final DerpibooruImageThumb target) {
+        int targetIndex = Iterables.indexOf(getItems(), new Predicate<DerpibooruImageThumb>() {
+            public boolean apply(DerpibooruImageThumb it) {
+                return it.getId() == target.getId();
+            }
+        });
+        getItems().set(targetIndex, target);
+        notifyItemChanged(targetIndex);
+    }
+
     private void initializeImageView(final ViewHolder target, final int position) {
         if (getItems().get(position).isSpoilered()) {
             displaySpoiler(target, position);
@@ -59,9 +72,7 @@ public class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<Derpiboor
             @Override
             public void onClick(View v) {
                 Glide.get(getContext()).clearMemory();
-                Intent intent = new Intent(getContext(), ImageActivity.class);
-                intent.putExtra("derpibooru.derpy.ImageThumb", getItems().get(position));
-                getContext().startActivity(intent);
+                startImageActivityWithThumb(getItems().get(position));
             }
         });
     }

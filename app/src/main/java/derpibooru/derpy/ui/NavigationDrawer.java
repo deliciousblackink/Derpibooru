@@ -22,7 +22,7 @@ import derpibooru.derpy.server.providers.UserDataProvider;
 import derpibooru.derpy.server.requesters.LogoutRequester;
 
 class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListener {
-    private static final int ACTIVITY_LOGIN_REQUEST_CODE = 1;
+    private static final int LOGIN_ACTIVITY_REQUEST_CODE = 1;
 
     private NavigationDrawerActivity mParent;
     private int mParentNavigationId;
@@ -96,7 +96,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
                 break;
             case (R.id.navigationLogin):
                 mParent.startActivityForResult(new Intent(mParent, LoginActivity.class),
-                                               ACTIVITY_LOGIN_REQUEST_CODE);
+                                               LOGIN_ACTIVITY_REQUEST_CODE);
                 mNavigationView.getMenu()
                         .findItem(mParentNavigationId).setChecked(false);
                 break;
@@ -122,7 +122,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case (ACTIVITY_LOGIN_REQUEST_CODE):
+            case (LOGIN_ACTIVITY_REQUEST_CODE):
                 if (resultCode == Activity.RESULT_OK) {
                     mUserProvider.refreshUserData();
                 }

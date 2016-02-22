@@ -1,5 +1,6 @@
 package derpibooru.derpy.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,11 +18,14 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.server.providers.ImageListProvider;
 import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.ImageListAdapter;
 import derpibooru.derpy.ui.views.ImageListRecyclerView;
 import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
 public abstract class ImageListFragment extends Fragment {
+    private static final int IMAGE_ACTIVITY_REQUEST_CODE = 1;
+
     private ImageListAdapter mImageListAdapter;
     private ImageListProvider mImageListProvider;
     private ImageListRecyclerView mImageView;
@@ -58,10 +62,6 @@ public abstract class ImageListFragment extends Fragment {
         return mImageListProvider;
     }
 
-    protected void resetImageListAdapter() {
-        mImageListAdapter = null;
-    }
-
     protected abstract void fetchImageThumbs();
 
     protected void refreshImages() {
@@ -71,20 +71,41 @@ public abstract class ImageListFragment extends Fragment {
 
     private void displayImagesFromProvider(ArrayList<DerpibooruImageThumb> imageThumbs) {
         if (mImageListAdapter == null) {
-            mImageListAdapter = new ImageListAdapter(getActivity(), imageThumbs);
-            mImageView.setAdapter(mImageListAdapter);
-            mImageView.addOnScrollListener(new RecyclerViewEndlessScrollListener(
-                    (GridLayoutManager) mImageView.getLayoutManager()) {
-                @Override
-                public void onLoadMore(int page) {
-                    mImageListProvider.nextPage().fetch();
-                }
-            });
+            initializeImageListAdapter(imageThumbs);
         } else if (mImageRefreshLayout.isRefreshing()) {
             mImageListAdapter.resetItems(imageThumbs);
             mImageRefreshLayout.setRefreshing(false);
         } else {
             mImageListAdapter.appendItems(imageThumbs);
+        }
+    }
+
+    private void initializeImageListAdapter(ArrayList<DerpibooruImageThumb> imageThumbs) {
+        mImageListAdapter = new ImageListAdapter(getActivity(), imageThumbs) {
+            @Override
+            public void startImageActivityWithThumb(DerpibooruImageThumb thumb) {
+                Intent intent = new Intent(getContext(), ImageActivity.class);
+                intent.putExtra(ImageActivity.INTENT_EXTRA_IMAGE_THUMB, thumb);
+                startActivityForResult(intent, IMAGE_ACTIVITY_REQUEST_CODE);
+            }
+        };
+        mImageView.setAdapter(mImageListAdapter);
+        mImageView.addOnScrollListener(new RecyclerViewEndlessScrollListener(
+                (GridLayoutManager) mImageView.getLayoutManager()) {
+            @Override
+            public void onLoadMore(int page) {
+                mImageListProvider.nextPage().fetch();
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case (IMAGE_ACTIVITY_REQUEST_CODE):
+                mImageListAdapter.replaceImageThumb(
+                        (DerpibooruImageThumb) data.getParcelableExtra(ImageActivity.INTENT_EXTRA_IMAGE_THUMB));
+                break;
         }
     }
 

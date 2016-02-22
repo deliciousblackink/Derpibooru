@@ -23,7 +23,7 @@ public class DerpibooruImageThumb implements Parcelable {
     private List<DerpibooruImageInteraction.InteractionType> mImageInteractions = new ArrayList<>();
 
     /* a non-persistent variable used by image lists to indicate if a user has unspoilered an image */
-    private boolean isSpoilered = true;
+    private boolean isSpoilered = false;
 
     public DerpibooruImageThumb(int id, int internalId, int score, int upvotes, int downvotes, int faves,
                                 int comments, String thumbUrl, String largeUrl,

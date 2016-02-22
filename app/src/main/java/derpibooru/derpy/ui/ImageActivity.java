@@ -188,7 +188,7 @@ public class ImageActivity extends AppCompatActivity {
     private class GlideRequestListener implements RequestListener<String, GlideDrawable> {
         private ImageView mImageView;
 
-        public GlideRequestListener(ImageView glideTarget) {
+        GlideRequestListener(ImageView glideTarget) {
             mImageView = glideTarget;
         }
 

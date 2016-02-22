@@ -57,7 +57,7 @@ public abstract class ImageInteractionPresenter {
                                  getInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote));
         refreshInteractionButton(getDownvoteButton(), downvotes,
                                  getInteractions().contains(DerpibooruImageInteraction.InteractionType.Downvote));
-        refreshInteractionButton(getScoreButton(), (upvotes - downvotes), getInteractions().size() > 0);
+        refreshInteractionButton(getScoreButton(), (upvotes - downvotes), !getInteractions().isEmpty());
     }
 
     private void refreshInteractionButton(AccentColorIconButton button, int buttonValue, boolean active) {

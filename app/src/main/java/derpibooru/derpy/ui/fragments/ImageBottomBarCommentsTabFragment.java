@@ -27,10 +27,6 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
     private SwipeRefreshLayout mCommentsRefreshLayout;
     private RecyclerView mCommentsView;
 
-    public ImageBottomBarCommentsTabFragment() {
-        super();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

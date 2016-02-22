@@ -10,8 +10,8 @@ import derpibooru.derpy.server.providers.Provider;
 /**
  * A subclass of Requester that fetches an API key before performing the request.
  */
-public abstract class AuthenticatedApiRequester<T> extends Requester<T> {
-    public AuthenticatedApiRequester(Context context, QueryHandler<T> handler) {
+abstract class AuthenticatedApiRequester<T> extends Requester<T> {
+    AuthenticatedApiRequester(Context context, QueryHandler<T> handler) {
         super(context, handler);
     }
 

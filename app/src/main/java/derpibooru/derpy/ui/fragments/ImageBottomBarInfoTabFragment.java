@@ -21,10 +21,6 @@ import derpibooru.derpy.ui.views.FlowLayout;
 import derpibooru.derpy.ui.views.ImageTagView;
 
 public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
-    public ImageBottomBarInfoTabFragment() {
-        super();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

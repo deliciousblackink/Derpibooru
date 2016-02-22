@@ -28,8 +28,7 @@ public abstract class AsynchronousRequest<T> implements Runnable {
         mSuccessCode = 200;
     }
 
-    public AsynchronousRequest(Context context, @Nullable ServerResponseParser<T> parser,
-                               String url, int successResponseCode) {
+    AsynchronousRequest(Context context, @Nullable ServerResponseParser<T> parser, String url, int successResponseCode) {
         mHttpClient = ((Derpibooru) context.getApplicationContext()).getHttpClient();
         mResponseParser = parser;
         mUrl = url;

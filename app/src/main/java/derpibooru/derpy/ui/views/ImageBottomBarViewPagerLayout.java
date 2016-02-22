@@ -33,15 +33,15 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
     private int mExtensionHeightOnHeaderButtonClick;
     private int mMaximumExtension;
 
-    public ImageBottomBarViewPagerLayout(Context context) {
+    ImageBottomBarViewPagerLayout(Context context) {
         super(context);
     }
 
-    public ImageBottomBarViewPagerLayout(Context context, AttributeSet attrs) {
+    ImageBottomBarViewPagerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ImageBottomBarViewPagerLayout(Context context, AttributeSet attrs, int defStyle) {
+    ImageBottomBarViewPagerLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

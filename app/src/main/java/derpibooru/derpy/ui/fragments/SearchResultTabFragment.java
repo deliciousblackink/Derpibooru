@@ -9,26 +9,22 @@ import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 import derpibooru.derpy.server.providers.SearchProvider;
 
 public class SearchResultTabFragment extends ImageListFragment {
-    private DerpibooruSearchOptions mCurrentOptions;
+    private static final String SEARCH_OPTIONS_BUNDLE_KEY = "options";
 
-    public SearchResultTabFragment() {
-        super();
-    }
+    private DerpibooruSearchOptions mCurrentOptions;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("options", mCurrentOptions);
+        outState.putParcelable(SEARCH_OPTIONS_BUNDLE_KEY, mCurrentOptions);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            mCurrentOptions = savedInstanceState.getParcelable("options");
-        } else {
-            mCurrentOptions = new DerpibooruSearchOptions();
-        }
+        mCurrentOptions = (DerpibooruSearchOptions)
+                ((savedInstanceState == null) ? new DerpibooruSearchOptions()
+                                              : savedInstanceState.getParcelable(SEARCH_OPTIONS_BUNDLE_KEY));
         super.setImageListProvider(new SearchProvider(getActivity(), new ImageListRequestHandler()));
         return super.onCreateView(inflater, container, savedInstanceState);
     }

@@ -11,10 +11,6 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
 
 public class ImageBottomBarFavoritesTabFragment extends ImageBottomBarTabFragment {
-    public ImageBottomBarFavoritesTabFragment() {
-        super();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

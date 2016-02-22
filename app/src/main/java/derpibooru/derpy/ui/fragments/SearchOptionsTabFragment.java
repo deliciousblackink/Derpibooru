@@ -17,10 +17,6 @@ import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 public class SearchOptionsTabFragment extends Fragment {
     private DerpibooruSearchOptions mSelectedOptions = new DerpibooruSearchOptions();
 
-    public SearchOptionsTabFragment() {
-        super();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -121,6 +117,6 @@ public class SearchOptionsTabFragment extends Fragment {
     }
 
     private Integer getInt(String text) {
-        return (!text.equals("")) ? Integer.parseInt(text) : null;
+        return (text.equals("")) ? null : Integer.parseInt(text);
     }
 }

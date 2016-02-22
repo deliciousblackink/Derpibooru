@@ -33,8 +33,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
 
     private UserDataProvider mUserProvider;
 
-    public NavigationDrawer(NavigationDrawerActivity parent,
-                            DrawerLayout drawer, Toolbar toolbar, NavigationView menu) {
+    NavigationDrawer(NavigationDrawerActivity parent, DrawerLayout drawer, Toolbar toolbar, NavigationView menu) {
         mParent = parent;
         setActivityMenuItemId();
 

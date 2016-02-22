@@ -8,10 +8,6 @@ import android.view.ViewGroup;
 import derpibooru.derpy.server.providers.ImageListProvider;
 
 public class MainActivityNewImagesTabFragment extends ImageListFragment {
-    public MainActivityNewImagesTabFragment() {
-        super();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -14,7 +14,6 @@ import derpibooru.derpy.data.server.DerpibooruImageInfo;
 
 public abstract class ImageBottomBarTabFragment extends Fragment {
     public ImageBottomBarTabFragment() {
-        super();
         setArguments(new Bundle());
     }
 

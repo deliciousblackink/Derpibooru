@@ -15,8 +15,8 @@ import derpibooru.derpy.server.providers.Provider;
 /**
  * Asynchronous performer of unsafe (both idempotent and non-idempotent) HTTP requests with form submission.
  */
-public abstract class Requester<T> extends Provider<T> {
-    public Requester(Context context, QueryHandler<T> handler) {
+abstract class Requester<T> extends Provider<T> {
+    Requester(Context context, QueryHandler<T> handler) {
         super(context, handler);
     }
 

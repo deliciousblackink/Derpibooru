@@ -9,8 +9,8 @@ import derpibooru.derpy.server.providers.Provider;
 /**
  * A subclass of Requester that fetches a Rails authentication token before performing the request.
  */
-public abstract class AuthenticatedRequester<T> extends Requester<T> {
-    public AuthenticatedRequester(Context context, QueryHandler<T> handler) {
+abstract class AuthenticatedRequester<T> extends Requester<T> {
+    AuthenticatedRequester(Context context, QueryHandler<T> handler) {
         super(context, handler);
     }
 

@@ -9,10 +9,6 @@ import derpibooru.derpy.data.server.DerpibooruRankingsListType;
 import derpibooru.derpy.server.providers.RankingsProvider;
 
 public class MainActivityRankingsTabFragment extends ImageListFragment {
-    public MainActivityRankingsTabFragment() {
-        super();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

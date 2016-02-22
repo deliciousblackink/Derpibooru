@@ -2,6 +2,7 @@ package derpibooru.derpy.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -119,7 +120,13 @@ public abstract class ImageListFragment extends Fragment {
 
         @Override
         public void onQueryFailed() {
-            /* TODO: display error message */
+            Snackbar.make(mImageView, R.string.fragment_image_list_failed_to_fetch_list, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.snackbar_action_retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fetchImageThumbs();
+                        }
+                    }).show();
         }
     }
 }

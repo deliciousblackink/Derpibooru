@@ -84,7 +84,7 @@ public class FiltersActivity extends NavigationDrawerActivity {
             @Override
             public void onQueryFailed() {
                 Snackbar.make(mViewFilters, R.string.activity_filters_failed_to_fetch_list, Snackbar.LENGTH_LONG)
-                        .setAction("Action", new View.OnClickListener() {
+                        .setAction(R.string.snackbar_action_retry, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 fetchAvailableFilters();

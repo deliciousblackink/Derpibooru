@@ -103,8 +103,10 @@ public abstract class ImageListFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case (IMAGE_ACTIVITY_REQUEST_CODE):
-                mImageListAdapter.replaceImageThumb(
-                        (DerpibooruImageThumb) data.getParcelableExtra(ImageActivity.INTENT_EXTRA_IMAGE_THUMB));
+                if (mImageListAdapter != null) {
+                    mImageListAdapter.replaceImageThumb(
+                            (DerpibooruImageThumb) data.getParcelableExtra(ImageActivity.INTENT_EXTRA_IMAGE_THUMB));
+                }
                 break;
         }
     }

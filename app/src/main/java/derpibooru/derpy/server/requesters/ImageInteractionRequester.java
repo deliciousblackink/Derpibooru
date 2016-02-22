@@ -46,8 +46,6 @@ public class ImageInteractionRequester extends AuthenticatedApiRequester<Derpibo
                 form.put("value", "down");
                 break;
             case ClearVote:
-                form.put("value", "false");
-                break;
             case ClearFave:
                 form.put("value", "false");
                 break;

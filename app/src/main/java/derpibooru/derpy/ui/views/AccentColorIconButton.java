@@ -114,7 +114,7 @@ public class AccentColorIconButton extends RelativeLayout {
 
         public void toggleActive(boolean makeActive) {
             setActive((makeActive && !mColorFilterSet)
-                      || (!makeActive && mKeepColorFilter));
+                              || (!makeActive && mKeepColorFilter));
         }
 
         public void setActive(boolean active) {

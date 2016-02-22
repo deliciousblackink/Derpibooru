@@ -40,11 +40,6 @@ public class FragmentTabPagerView extends LinearLayout {
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
     }
 
-    public void setFragmentAdapter(PagerAdapter adapter) {
-        mViewPager.setAdapter(adapter);
-        refreshTabTitles();
-    }
-
     public void refreshTabTitles() {
         mTabLayout.setupWithViewPager(mViewPager);
         setTabTitleTypeface();
@@ -52,6 +47,11 @@ public class FragmentTabPagerView extends LinearLayout {
 
     public PagerAdapter getFragmentAdapter() {
         return mViewPager.getAdapter();
+    }
+
+    public void setFragmentAdapter(PagerAdapter adapter) {
+        mViewPager.setAdapter(adapter);
+        refreshTabTitles();
     }
 
     public ViewPager getViewPager() {

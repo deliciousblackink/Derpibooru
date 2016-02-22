@@ -37,7 +37,7 @@ public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
     public void transferSearchOptionsToSearchResultsTab(int viewPagerId) {
         String searchOptionsTabTag = getFragmentTag(viewPagerId, SEARCH_OPTIONS_TAB_POSITION);
         String searchResultsTabTag = getFragmentTag(viewPagerId, SEARCH_RESULTS_TAB_POSITION);
-        
+
         DerpibooruSearchOptions newOptions =
                 ((SearchOptionsTabFragment) mFragmentManager.findFragmentByTag(searchOptionsTabTag)).getSelectedOptions();
         ((SearchResultTabFragment) mFragmentManager.findFragmentByTag(searchResultsTabTag)).setSearchOptions(newOptions);

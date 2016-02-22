@@ -178,8 +178,7 @@ class NavigationDrawer implements NavigationView.OnNavigationItemSelectedListene
                 new ActionBarDrawerToggle(parent, mDrawerLayout, toolbar,
                                           R.string.open_drawer, R.string.close_drawer) {
                     @Override
-                    public void onDrawerSlide(View drawerView, float slideOffset)
-                    {
+                    public void onDrawerSlide(View drawerView, float slideOffset) {
                         /* Disable the hamburger icon animation (for more info refer to
                          * https://medium.com/android-news/navigation-drawer-styling-according-material-design-5306190da08f#.9wrzhczd8 ) */
                         super.onDrawerSlide(drawerView, 0);

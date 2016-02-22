@@ -16,8 +16,8 @@ import java.util.List;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.server.providers.ImageListProvider;
 import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.providers.ImageListProvider;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.ImageListAdapter;
 import derpibooru.derpy.ui.views.ImageListRecyclerView;
@@ -54,12 +54,12 @@ public abstract class ImageListFragment extends Fragment {
         return v;
     }
 
-    protected void setImageListProvider(ImageListProvider provider) {
-        mImageListProvider = provider;
-    }
-
     protected ImageListProvider getImageListProvider() {
         return mImageListProvider;
+    }
+
+    protected void setImageListProvider(ImageListProvider provider) {
+        mImageListProvider = provider;
     }
 
     protected abstract void fetchImageThumbs();

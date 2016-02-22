@@ -3,8 +3,6 @@ package derpibooru.derpy.server.parsers;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
-
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 
 public class ImageInteractionResultParser implements ServerResponseParser<DerpibooruImageInteraction> {

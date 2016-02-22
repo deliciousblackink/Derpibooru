@@ -7,7 +7,6 @@ import java.util.Map;
 
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.server.QueryHandler;
-import derpibooru.derpy.server.parsers.ServerResponseParser;
 import derpibooru.derpy.storage.UserDataStorage;
 
 public class FilterChangeRequester extends AuthenticatedRequester<Boolean> {

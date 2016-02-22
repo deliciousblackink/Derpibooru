@@ -47,7 +47,7 @@ public class SearchResultActivity extends AppCompatActivity {
                  * see http://stackoverflow.com/a/12422905/1726690 */
                 if (state == ViewPager.SCROLL_STATE_IDLE
                         && tabView.getViewPager().getCurrentItem() == 0) {
-                    ((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE))
+                    ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
                             .hideSoftInputFromWindow(tabView.getViewPager().getWindowToken(), 0);
                 }
             }

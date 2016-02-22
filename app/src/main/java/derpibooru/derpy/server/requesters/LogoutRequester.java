@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import derpibooru.derpy.server.QueryHandler;
-import derpibooru.derpy.server.parsers.ServerResponseParser;
 
 public class LogoutRequester extends AuthenticatedRequester<Boolean> {
     private String mAuthenticityToken;

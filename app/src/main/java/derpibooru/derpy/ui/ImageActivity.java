@@ -200,7 +200,7 @@ public class ImageActivity extends AppCompatActivity {
 
         @Override
         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-        boolean isFromMemoryCache, boolean isFirstResource) {
+                                       boolean isFromMemoryCache, boolean isFirstResource) {
             findViewById(R.id.progressImage).setVisibility(View.GONE);
             attachPhotoView(mImageView);
             return false;

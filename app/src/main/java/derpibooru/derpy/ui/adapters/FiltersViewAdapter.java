@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruFilter;

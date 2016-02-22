@@ -52,16 +52,16 @@ public class Derpibooru extends Application {
     }
 
     /**
-     * Sets the user's API key.
-     */
-    public void setApiKey(String key) {
-        mApiKey = key;
-    }
-
-    /**
      * Returns the API key associated with the current user.
      */
     public String getApiKey() {
         return mApiKey;
+    }
+
+    /**
+     * Sets the user's API key.
+     */
+    public void setApiKey(String key) {
+        mApiKey = key;
     }
 }

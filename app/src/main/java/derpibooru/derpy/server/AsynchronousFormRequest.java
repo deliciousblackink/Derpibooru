@@ -8,7 +8,6 @@ import java.util.Map;
 import derpibooru.derpy.server.parsers.ServerResponseParser;
 import okhttp3.FormBody;
 import okhttp3.Request;
-import okhttp3.Response;
 
 public abstract class AsynchronousFormRequest<T> extends AsynchronousRequest<T> {
     private Map<String, String> mForm;

@@ -1,12 +1,12 @@
 package derpibooru.derpy.server.requesters;
 
 import android.content.Context;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import derpibooru.derpy.data.server.DerpibooruLoginForm;
 import derpibooru.derpy.server.QueryHandler;
-import derpibooru.derpy.server.parsers.ServerResponseParser;
 
 public class LoginRequester extends AuthenticatedRequester<Boolean> {
     private DerpibooruLoginForm mCredentials;

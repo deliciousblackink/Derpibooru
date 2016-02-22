@@ -1,11 +1,8 @@
 package derpibooru.derpy.server.requesters;
 
 import android.content.Context;
-import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
@@ -59,7 +56,7 @@ public class ImageInteractionRequester extends AuthenticatedApiRequester<Derpibo
         StringBuilder sb = new StringBuilder();
         sb.append(DERPIBOORU_DOMAIN).append(DERPIBOORU_API_ENDPOINT);
         if (mType == DerpibooruImageInteraction.InteractionType.Fave
-            || mType == DerpibooruImageInteraction.InteractionType.ClearFave) {
+                || mType == DerpibooruImageInteraction.InteractionType.ClearFave) {
             sb.append("interactions/fave.json");
         } else {
             sb.append("interactions/vote.json");

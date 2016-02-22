@@ -4,12 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.TextView;
-
-import java.util.List;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 
 public class ImageTopBarView extends FrameLayout {
     public ImageTopBarView(Context context) {

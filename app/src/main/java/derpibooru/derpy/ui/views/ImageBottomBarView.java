@@ -2,12 +2,11 @@ package derpibooru.derpy.ui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
-import derpibooru.derpy.server.providers.ImageInfoProvider;
 import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.providers.ImageInfoProvider;
 
 public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {
     public ImageBottomBarView(Context context) {

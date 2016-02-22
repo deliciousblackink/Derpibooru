@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruImageInfo;
+import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruTag;
 import derpibooru.derpy.ui.views.FlowLayout;
 import derpibooru.derpy.ui.views.ImageTagView;
@@ -26,13 +26,13 @@ public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_image_bottom_bar_info_tab, container, false);
         if (getArguments().containsKey("info")) {
-            displayInfoInView(v, (DerpibooruImageInfo) getArguments().getParcelable("info"));
+            displayInfoInView(v, (DerpibooruImageDetailed) getArguments().getParcelable("info"));
         }
         return v;
     }
 
     @Override
-    protected void displayInfoInView(View target, DerpibooruImageInfo info) {
+    protected void displayInfoInView(View target, DerpibooruImageDetailed info) {
         setImageUploader(info, target);
         setImageDescription(info, target);
         setImageTags(info, target);
@@ -47,7 +47,7 @@ public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
         /* TODO: handle profile view/image link/external link */
     }
 
-    private void setImageUploader(DerpibooruImageInfo info, View layout) {
+    private void setImageUploader(DerpibooruImageDetailed info, View layout) {
         String uploaderHtml;
         try {
             Date imageCreatedAt;
@@ -67,7 +67,7 @@ public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
                                   uploaderHtml);
     }
 
-    private void setImageDescription(DerpibooruImageInfo info, View layout) {
+    private void setImageDescription(DerpibooruImageDetailed info, View layout) {
         if (!info.getDescription().equals("")) {
             ((TextView) layout.findViewById(R.id.textDescription))
                     .setText(Html.fromHtml(info.getDescription()));
@@ -77,7 +77,7 @@ public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
         }
     }
 
-    private void setImageTags(DerpibooruImageInfo info, View layout) {
+    private void setImageTags(DerpibooruImageDetailed info, View layout) {
         FlowLayout l = (FlowLayout) layout.findViewById(R.id.layoutImageTags);
         for (DerpibooruTag tag : info.getTags()) {
             ImageTagView itv = new ImageTagView(getActivity());

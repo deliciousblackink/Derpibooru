@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruImageInfo;
+import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 
 public class ImageBottomBarFavoritesTabFragment extends ImageBottomBarTabFragment {
     @Override
@@ -16,13 +16,13 @@ public class ImageBottomBarFavoritesTabFragment extends ImageBottomBarTabFragmen
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_image_bottom_bar_favorites_tab, container, false);
         if (getArguments().containsKey("info")) {
-            displayInfoInView(v, (DerpibooruImageInfo) getArguments().getParcelable("info"));
+            displayInfoInView(v, (DerpibooruImageDetailed) getArguments().getParcelable("info"));
         }
         return v;
     }
 
     @Override
-    protected void displayInfoInView(View target, DerpibooruImageInfo info) {
+    protected void displayInfoInView(View target, DerpibooruImageDetailed info) {
         ArrayAdapter<String> aa = new ArrayAdapter<>(getActivity(), R.layout.view_image_bottom_bar_favorites_item,
                                                      info.getFavedBy());
         ((GridView) target.findViewById(R.id.gridFavedBy)).setAdapter(aa);

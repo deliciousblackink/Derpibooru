@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
-import derpibooru.derpy.data.server.DerpibooruTagFull;
+import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
 public class TagStorage {
     /* TODO: memory caching */
@@ -19,16 +19,16 @@ public class TagStorage {
         mGson = new Gson();
     }
 
-    public DerpibooruTagFull getTag(int tagId) {
+    public DerpibooruTagDetailed getTag(int tagId) {
         String json = mPreferences.getString(Integer.toString(tagId), "");
         if (!json.equals("")) {
-            return mGson.fromJson(json, DerpibooruTagFull.class);
+            return mGson.fromJson(json, DerpibooruTagDetailed.class);
         }
         return null;
     }
 
-    public void setTag(DerpibooruTagFull tag) {
-        String json = mGson.toJson(tag, DerpibooruTagFull.class);
+    public void setTag(DerpibooruTagDetailed tag) {
+        String json = mGson.toJson(tag, DerpibooruTagDetailed.class);
         mPreferences.edit()
                 .putString(Integer.toString(tag.getId()), json)
                 .apply();

@@ -16,12 +16,12 @@ import java.util.List;
 import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.data.server.DerpibooruTagFull;
+import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
 public class ImageListParser implements ServerResponseParser<List<DerpibooruImageThumb>> {
-    private List<DerpibooruTagFull> mSpoileredTags;
+    private List<DerpibooruTagDetailed> mSpoileredTags;
 
-    public ImageListParser(List<DerpibooruTagFull> spoileredTags) {
+    public ImageListParser(List<DerpibooruTagDetailed> spoileredTags) {
         mSpoileredTags = spoileredTags;
     }
 
@@ -93,7 +93,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
 
     private List<String> getSpoileredTagNames(List<Integer> imageTagIds) {
         List<String> spoilered = new ArrayList<>();
-        for (DerpibooruTagFull tag : mSpoileredTags) {
+        for (DerpibooruTagDetailed tag : mSpoileredTags) {
             if (imageTagIds.contains(tag.getId())) {
                 spoilered.add(tag.getName());
             }
@@ -105,7 +105,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
         /* if the image has multiple tags spoilered, it should use
          * the spoiler image for the ContentSafety one (e.g. "suggestive") */
         Collections.sort(mSpoileredTags, new DerpibooruTagTypeComparator());
-        for (DerpibooruTagFull tag : mSpoileredTags) {
+        for (DerpibooruTagDetailed tag : mSpoileredTags) {
             if (imageTagIds.contains(tag.getId())) {
                 return tag.getSpoilerUrl();
             }

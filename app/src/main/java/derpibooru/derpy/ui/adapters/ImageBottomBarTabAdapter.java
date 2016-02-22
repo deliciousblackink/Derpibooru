@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 
 import derpibooru.derpy.data.internal.FragmentAdapterItem;
-import derpibooru.derpy.data.server.DerpibooruImageInfo;
+import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.ui.fragments.ImageBottomBarCommentsTabFragment;
 import derpibooru.derpy.ui.fragments.ImageBottomBarFavoritesTabFragment;
 import derpibooru.derpy.ui.fragments.ImageBottomBarInfoTabFragment;
@@ -28,7 +28,7 @@ public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
                                           new ImageBottomBarCommentsTabFragment()));
     }
 
-    public void setTabInfo(DerpibooruImageInfo info) {
+    public void setTabInfo(DerpibooruImageDetailed info) {
         for (FragmentAdapterItem item : mTabs) {
             item.getContent().getArguments().putParcelable("info", info);
             ((ImageBottomBarTabFragment) item.getContent()).onTabInfoFetched(info);

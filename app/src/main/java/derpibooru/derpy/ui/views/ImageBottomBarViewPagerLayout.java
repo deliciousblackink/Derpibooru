@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableBiMap;
 import java.util.Map;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruImageInfo;
+import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
 
 class ImageBottomBarViewPagerLayout extends FrameLayout {
@@ -172,7 +172,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
         });
     }
 
-    protected void populateViewPagerTabsWithImageInfo(DerpibooruImageInfo content) {
+    protected void populateViewPagerTabsWithImageInfo(DerpibooruImageDetailed content) {
         ((ImageBottomBarTabAdapter) mPager.getAdapter()).setTabInfo(content);
     }
 

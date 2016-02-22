@@ -7,18 +7,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import derpibooru.derpy.data.server.DerpibooruTagFull;
+import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
-public class TagListParser implements ServerResponseParser<List<DerpibooruTagFull>> {
-    private List<DerpibooruTagFull> mTagsToAppend;
+public class TagListParser implements ServerResponseParser<List<DerpibooruTagDetailed>> {
+    private List<DerpibooruTagDetailed> mTagsToAppend;
 
-    public TagListParser(List<DerpibooruTagFull> tagsToAppend) {
+    public TagListParser(List<DerpibooruTagDetailed> tagsToAppend) {
         mTagsToAppend = tagsToAppend;
     }
 
     @Override
-    public List<DerpibooruTagFull> parseResponse(String rawResponse) throws JSONException {
-        ArrayList<DerpibooruTagFull> output = new ArrayList<>();
+    public List<DerpibooruTagDetailed> parseResponse(String rawResponse) throws JSONException {
+        ArrayList<DerpibooruTagDetailed> output = new ArrayList<>();
 
         JSONObject json = new JSONObject(rawResponse);
         JSONArray tags = json.getJSONArray("tags");
@@ -27,11 +27,9 @@ public class TagListParser implements ServerResponseParser<List<DerpibooruTagFul
         for (int x = 0; x < tagCount; x++) {
             JSONObject source = tags.getJSONObject(x);
 
-            DerpibooruTagFull tf = new DerpibooruTagFull(source.getInt("id"),
-                                                         source.getInt("images"),
-                                                         source.getString("name"),
-                                                         source.getString("description"),
-                                                         source.getString("spoiler_image_uri"));
+            DerpibooruTagDetailed tf = new DerpibooruTagDetailed(
+                    source.getInt("id"), source.getInt("images"), source.getString("name"),
+                    source.getString("description"), source.getString("spoiler_image_uri"));
             output.add(tf);
         }
 

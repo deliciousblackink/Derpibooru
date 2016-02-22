@@ -9,7 +9,6 @@ import java.util.List;
 public class DerpibooruImageThumb implements Parcelable {
     private int mId;
     private int mInternalId;
-    private int mScore;
     private int mUpvotes;
     private int mDownvotes;
     private int mFaves;
@@ -25,12 +24,11 @@ public class DerpibooruImageThumb implements Parcelable {
     /* a non-persistent variable used by image lists to indicate if a user has unspoilered an image */
     private boolean isSpoilered = false;
 
-    public DerpibooruImageThumb(int id, int internalId, int score, int upvotes, int downvotes, int faves,
+    public DerpibooruImageThumb(int id, int internalId, int upvotes, int downvotes, int faves,
                                 int comments, String thumbUrl, String largeUrl,
                                 List<String> spoileredTagNames, String spoilerImageUrl) {
         mId = id;
         mInternalId = internalId;
-        mScore = score;
         mUpvotes = upvotes;
         mDownvotes = downvotes;
         mFaves = faves;
@@ -53,12 +51,9 @@ public class DerpibooruImageThumb implements Parcelable {
     }
 
     public int getScore() {
-        return mScore;
+        return (getUpvotes() - getDownvotes());
     }
 
-    public void setScore(int score) {
-        mScore = score;
-    }
     public int getUpvotes() {
         return mUpvotes;
     }
@@ -107,14 +102,6 @@ public class DerpibooruImageThumb implements Parcelable {
         return mImageInteractions;
     }
 
-    public void addImageInteraction(DerpibooruImageInteraction.InteractionType interaction) {
-        mImageInteractions.add(interaction);
-    }
-
-    public void removeImageInteraction(DerpibooruImageInteraction.InteractionType interaction) {
-        mImageInteractions.remove(interaction);
-    }
-
     public boolean isSpoilered() {
         return isSpoilered;
     }
@@ -126,7 +113,6 @@ public class DerpibooruImageThumb implements Parcelable {
     protected DerpibooruImageThumb(Parcel in) {
         mId = in.readInt();
         mInternalId = in.readInt();
-        mScore = in.readInt();
         mUpvotes = in.readInt();
         mDownvotes = in.readInt();
         mFaves = in.readInt();
@@ -147,7 +133,6 @@ public class DerpibooruImageThumb implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mId);
         dest.writeInt(mInternalId);
-        dest.writeInt(mScore);
         dest.writeInt(mUpvotes);
         dest.writeInt(mDownvotes);
         dest.writeInt(mFaves);

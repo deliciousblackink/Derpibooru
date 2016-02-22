@@ -47,13 +47,11 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
         for (int x = 0; x < imgCount; x++) {
             JSONObject img = images.getJSONObject(x);
             List<Integer> imgTags = intListFromArray(img.getJSONArray("tag_ids"));
-            DerpibooruImageThumb it =
-                    new DerpibooruImageThumb(img.getInt("id_number"), img.getInt("id"), img.getInt("score"),
-                                             img.getInt("upvotes"), img.getInt("downvotes"),
-                                             img.getInt("faves"), img.getInt("comment_count"),
-                                             img.getJSONObject("representations").getString("thumb"),
-                                             img.getJSONObject("representations").getString("large"),
-                                             getSpoileredTagNames(imgTags), getSpoilerUrl(imgTags));
+            DerpibooruImageThumb it = new DerpibooruImageThumb(
+                    img.getInt("id_number"), img.getInt("id"), img.getInt("upvotes"), img.getInt("downvotes"),
+                    img.getInt("faves"), img.getInt("comment_count"),
+                    img.getJSONObject("representations").getString("thumb"), img.getJSONObject("representations").getString("large"),
+                    getSpoileredTagNames(imgTags), getSpoilerUrl(imgTags));
             out.add(it);
         }
         return out;
@@ -71,7 +69,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
                     return it.getInternalId() == imageId;
                 }
             });
-            correspondingThumb.addImageInteraction(imageInteractionType);
+            correspondingThumb.getImageInteractions().add(imageInteractionType);
         }
     }
 

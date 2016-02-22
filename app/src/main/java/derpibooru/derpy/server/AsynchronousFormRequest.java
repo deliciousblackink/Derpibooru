@@ -13,7 +13,7 @@ public abstract class AsynchronousFormRequest<T> extends AsynchronousRequest<T> 
     private Map<String, String> mForm;
     private String mHttpMethod;
 
-    public AsynchronousFormRequest(Context context, @Nullable ServerResponseParser<T> parser,
+    protected AsynchronousFormRequest(Context context, @Nullable ServerResponseParser<T> parser,
                                    String url, Map<String, String> form,
                                    int successResponseCode, String httpMethod) {
         super(context, parser, url, successResponseCode);

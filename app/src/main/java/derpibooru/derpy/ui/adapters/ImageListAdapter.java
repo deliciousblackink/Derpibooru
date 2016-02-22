@@ -28,7 +28,7 @@ import derpibooru.derpy.ui.views.AccentColorIconButton;
 public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImageThumb, ImageListAdapter.ViewHolder> {
     private ImageListItemAnimator mAnimator;
 
-    public ImageListAdapter(Context context, ArrayList<DerpibooruImageThumb> items) {
+    protected ImageListAdapter(Context context, ArrayList<DerpibooruImageThumb> items) {
         super(context, items);
         mAnimator = new ImageListItemAnimator();
     }
@@ -53,6 +53,7 @@ public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<
 
     public void replaceImageThumb(final DerpibooruImageThumb target) {
         int targetIndex = Iterables.indexOf(getItems(), new Predicate<DerpibooruImageThumb>() {
+            @Override
             public boolean apply(DerpibooruImageThumb it) {
                 return it.getId() == target.getId();
             }

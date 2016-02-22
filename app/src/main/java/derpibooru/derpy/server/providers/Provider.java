@@ -18,7 +18,7 @@ public abstract class Provider<T> {
     protected QueryHandler<T> mHandler;
     protected Context mContext;
 
-    public Provider(Context context, QueryHandler<T> handler) {
+    protected Provider(Context context, QueryHandler<T> handler) {
         mContext = context;
         mHandler = handler;
     }

@@ -22,6 +22,7 @@ public class ImageListItemAnimator {
         ValueAnimator va = ValueAnimator.ofInt(from, to);
         va.setDuration(ANIMATION_DURATION);
         va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 v.getLayoutParams().height = (Integer) animation.getAnimatedValue();
                 v.requestLayout();

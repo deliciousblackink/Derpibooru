@@ -212,6 +212,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
             ValueAnimator va = ValueAnimator.ofInt(getCurrentOverlayHeight(), calculateTargetOverlayHeight());
             va.setDuration(mAnimationDuration);
             va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     int overlayHeight = (Integer) animation.getAnimatedValue();
                     mTransparentOverlay.getLayoutParams().height = overlayHeight;

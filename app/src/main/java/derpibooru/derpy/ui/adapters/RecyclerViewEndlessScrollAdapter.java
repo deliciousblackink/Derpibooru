@@ -10,7 +10,7 @@ public abstract class RecyclerViewEndlessScrollAdapter<TItem, TViewHolder extend
     private Context mContext;
     private ArrayList<TItem> mItems;
 
-    public RecyclerViewEndlessScrollAdapter(Context context, ArrayList<TItem> items) {
+    protected RecyclerViewEndlessScrollAdapter(Context context, ArrayList<TItem> items) {
         mContext = context;
         mItems = items;
     }

@@ -12,11 +12,6 @@ import derpibooru.derpy.R;
 abstract class NavigationDrawerActivity extends AppCompatActivity {
     private NavigationDrawer mNavigationDrawer;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     protected void initializeNavigationDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

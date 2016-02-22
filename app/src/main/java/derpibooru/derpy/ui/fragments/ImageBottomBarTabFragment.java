@@ -13,7 +13,7 @@ import android.widget.TextView;
 import derpibooru.derpy.data.server.DerpibooruImageInfo;
 
 public abstract class ImageBottomBarTabFragment extends Fragment {
-    public ImageBottomBarTabFragment() {
+    protected ImageBottomBarTabFragment() {
         setArguments(new Bundle());
     }
 
@@ -36,6 +36,7 @@ public abstract class ImageBottomBarTabFragment extends Fragment {
         int end = strBuilder.getSpanEnd(span);
         int flags = strBuilder.getSpanFlags(span);
         ClickableSpan clickable = new ClickableSpan() {
+            @Override
             public void onClick(View view) {
                 onLinkClick(view);
             }

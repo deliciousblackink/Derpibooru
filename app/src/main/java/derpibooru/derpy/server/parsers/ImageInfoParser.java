@@ -13,6 +13,7 @@ import derpibooru.derpy.data.server.DerpibooruImageInfo;
 import derpibooru.derpy.data.server.DerpibooruTag;
 
 public class ImageInfoParser implements ServerResponseParser<DerpibooruImageInfo> {
+    @Override
     public DerpibooruImageInfo parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
 

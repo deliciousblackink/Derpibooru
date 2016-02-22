@@ -23,6 +23,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
         mSpoileredTags = spoileredTags;
     }
 
+    @Override
     public List<DerpibooruImageThumb> parseResponse(String rawResponse) throws JSONException {
         JSONObject json = new JSONObject(rawResponse);
         JSONArray jsonImages = getRootArray(json);
@@ -65,6 +66,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
             DerpibooruImageInteraction.InteractionType imageInteractionType = getImageInteractionType(action);
             final int imageId = action.getInt("image_id");
             DerpibooruImageThumb correspondingThumb = Iterables.find(thumbs, new Predicate<DerpibooruImageThumb>() {
+                @Override
                 public boolean apply(DerpibooruImageThumb it) {
                     return it.getInternalId() == imageId;
                 }

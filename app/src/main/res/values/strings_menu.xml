@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_drawer_home">Home</string>
+    <string name="navigation_drawer_search">Search</string>
+    <string name="navigation_drawer_filters">Filters</string>
+    <string name="navigation_drawer_group_account">Account</string>
+    <string name="navigation_drawer_log_in">Log in</string>
+    <string name="navigation_drawer_log_out">Log out</string>
+    <string name="navigation_drawer_favorites">Favorites</string>
+</resources>

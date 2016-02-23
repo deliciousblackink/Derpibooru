@@ -81,8 +81,7 @@ abstract class NavigationDrawerLayout implements NavigationView.OnNavigationItem
                 .setText(user.getUsername());
         mNavigationView.getMenu().clear();
         mNavigationView.inflateMenu(R.menu.menu_navigation_drawer_logged_in);
-        mNavigationView.getMenu()
-                .findItem(mParentNavigationId).setChecked(true);
+        selectMenuItem(mParentNavigationId);
     }
 
     private void onUserLoggedOut(DerpibooruUser user) {
@@ -90,8 +89,7 @@ abstract class NavigationDrawerLayout implements NavigationView.OnNavigationItem
                 .setText(R.string.user_logged_out);
         mNavigationView.getMenu().clear();
         mNavigationView.inflateMenu(R.menu.menu_navigation_drawer_logged_out);
-        mNavigationView.getMenu()
-                .findItem(mParentNavigationId).setChecked(true);
+        selectMenuItem(mParentNavigationId);
     }
 
     private void initDrawerToggle(Activity parent, Toolbar toolbar,
@@ -120,7 +118,15 @@ abstract class NavigationDrawerLayout implements NavigationView.OnNavigationItem
     }
 
     protected void deselectParentMenuItemAndCloseDrawer() {
-        mNavigationView.getMenu().findItem(mParentNavigationId).setChecked(false);
+        deselectMenuItem(mParentNavigationId);
         closeDrawer();
+    }
+
+    protected void selectMenuItem(int itemId) {
+        mNavigationView.getMenu().findItem(mParentNavigationId).setChecked(true);
+    }
+
+    protected void deselectMenuItem(int itemId) {
+        mNavigationView.getMenu().findItem(mParentNavigationId).setChecked(false);
     }
 }

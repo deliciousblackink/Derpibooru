@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 
 import derpibooru.derpy.R;
 
+/* TODO: navigation drawer should operate fragments, not activities */
 abstract class NavigationDrawerActivity extends AppCompatActivity {
     private NavigationDrawer mNavigationDrawer;
 

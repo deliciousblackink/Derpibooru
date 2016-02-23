@@ -18,6 +18,7 @@ import derpibooru.derpy.server.providers.UserDataProvider;
 import derpibooru.derpy.server.providers.UserImageListProvider;
 import derpibooru.derpy.server.requesters.LogoutRequester;
 
+/* TODO: navigation drawer should operate fragments, not activities */
 class NavigationDrawer extends NavigationDrawerLayout {
     private static final int LOGIN_ACTIVITY_REQUEST_CODE = 1;
 
@@ -101,8 +102,8 @@ class NavigationDrawer extends NavigationDrawerLayout {
             if (resultCode == Activity.RESULT_OK) {
                 mUserProvider.refreshUserData();
             }
-            mNavigationView.getMenu().findItem(R.id.navigationLogin).setChecked(false);
-            mNavigationView.getMenu().findItem(mParentNavigationId).setChecked(false);
+            deselectMenuItem(R.id.navigationLogin);
+            selectMenuItem(mParentNavigationId);
         }
     }
 

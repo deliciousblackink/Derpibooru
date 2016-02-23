@@ -39,7 +39,7 @@ public class UserImageListProvider extends ImageListProvider {
                 sb.append("images/uploaded.json");
                 break;
         }
-        sb.append("&perpage=");
+        sb.append("?perpage=");
         sb.append(IMAGES_PER_PAGE);
         sb.append("&page=");
         sb.append(super.getCurrentPage());

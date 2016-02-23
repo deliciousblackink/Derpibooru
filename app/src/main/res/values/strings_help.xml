@@ -4,7 +4,7 @@
     <string name="search_help">
 		<![CDATA[
         <h3>Search basics</h3>
-        <p>Derpibooru\'s search engine is based on the tags associated with the uploaded images. A
+        <p>Derpibooru’s search engine is based on the tags associated with the uploaded images. A
         search for <strong>pinkie pie</strong>, for example, yields the entries featuring Pinkie Pie.</p>
         <p>Separate multiple tags with a comma or <strong>&&</strong>. The queries are not case sensitive — the
         capitalization does not matter.</p>

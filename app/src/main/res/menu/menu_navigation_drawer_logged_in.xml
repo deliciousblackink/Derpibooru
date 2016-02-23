@@ -17,17 +17,17 @@
     <item android:title="@string/navigation_drawer_group_account">
         <menu>
             <item
+                android:id="@+id/navigationUploaded"
+                android:icon="@drawable/ic_file_upload_black_24dp"
+                android:title="@string/navigation_drawer_uploaded"/>
+            <item
                 android:id="@+id/navigationFaves"
                 android:icon="@drawable/ic_star_black_24dp"
                 android:title="@string/navigation_drawer_favorites"/>
             <item
                 android:id="@+id/navigationUpvoted"
-                android:icon="@drawable/ic_star_black_24dp"
+                android:icon="@drawable/ic_thumb_up_black_24dp"
                 android:title="@string/navigation_drawer_upvoted"/>
-            <item
-                android:id="@+id/navigationUploaded"
-                android:icon="@drawable/ic_star_black_24dp"
-                android:title="@string/navigation_drawer_uploaded"/>
             <item
                 android:id="@+id/navigationLogout"
                 android:icon="@drawable/ic_key_black_24dp"

@@ -56,8 +56,7 @@ class NavigationDrawer extends NavigationDrawerLayout {
     private boolean isAnotherActivitySelected(int itemId) {
         for (Map.Entry<Integer, Class<?>> activityItem : ACTIVITY_NAVIGATION_ACTIONS.entrySet()) {
             if (activityItem.getKey() == itemId) {
-                deselectParentMenuItemAndCloseDrawer();
-                mParent.startActivity(new Intent(mParent, activityItem.getValue()));
+                startActivityWithIntent(new Intent(mParent, activityItem.getValue()));
                 return true;
             }
         }
@@ -79,8 +78,7 @@ class NavigationDrawer extends NavigationDrawerLayout {
             default:
                 return false;
         }
-        deselectParentMenuItemAndCloseDrawer();
-        mParent.startActivity(intent);
+        startActivityWithIntent(intent);
         return true;
     }
 
@@ -95,6 +93,15 @@ class NavigationDrawer extends NavigationDrawerLayout {
             return true; /* don't close the drawer */
         }
         return false;
+    }
+
+    private void startActivityWithIntent(Intent intent) {
+        deselectParentMenuItemAndCloseDrawer();
+        mParent.startActivity(intent);
+        /* FIXME: finish() breaks back button navigation
+         * it however ensures that menu items are selected according to the current activity
+         * using fragments instead of activities will fix this */
+        mParent.finish();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

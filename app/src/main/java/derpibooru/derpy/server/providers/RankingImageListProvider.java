@@ -7,14 +7,14 @@ import java.util.List;
 import derpibooru.derpy.data.server.DerpibooruImage;
 import derpibooru.derpy.server.QueryHandler;
 
-public class RankingsProvider extends ImageListProvider {
+public class RankingImageListProvider extends ImageListProvider {
     private static final String ALL_TIME = "520w";
     /* 520 weeks (10 years) effectively equals to 'All Time' */
 
     private RankingsType mListType;
     private String mTime = ALL_TIME;
 
-    public RankingsProvider(Context context, QueryHandler<List<DerpibooruImage>> handler) {
+    public RankingImageListProvider(Context context, QueryHandler<List<DerpibooruImage>> handler) {
         super(context, handler);
     }
 
@@ -23,7 +23,7 @@ public class RankingsProvider extends ImageListProvider {
      *
      * @param listType the type of the image list
      */
-    public RankingsProvider type(RankingsType listType) {
+    public RankingImageListProvider type(RankingsType listType) {
         mListType = listType;
         return this;
     }
@@ -34,7 +34,7 @@ public class RankingsProvider extends ImageListProvider {
      *
      * @param hours the time limit in hours
      */
-    public RankingsProvider inHours(int hours) {
+    public RankingImageListProvider inHours(int hours) {
         mTime = Integer.toString(hours) + "h";
         return this;
     }
@@ -45,7 +45,7 @@ public class RankingsProvider extends ImageListProvider {
      *
      * @param days the time limit in days
      */
-    public RankingsProvider inDays(int days) {
+    public RankingImageListProvider inDays(int days) {
         mTime = Integer.toString(days) + "d";
         return this;
     }
@@ -56,7 +56,7 @@ public class RankingsProvider extends ImageListProvider {
      *
      * @param weeks the time limit in weeks
      */
-    public RankingsProvider inWeeks(int weeks) {
+    public RankingImageListProvider inWeeks(int weeks) {
         mTime = Integer.toString(weeks) + "w";
         return this;
     }
@@ -81,7 +81,6 @@ public class RankingsProvider extends ImageListProvider {
         sb.append(super.getCurrentPage());
         return sb.toString();
     }
-
 
     public enum RankingsType {
         TopScoring(1),

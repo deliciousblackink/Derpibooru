@@ -1,12 +1,11 @@
 package derpibooru.derpy.ui;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.server.providers.UserImageListProvider;
 import derpibooru.derpy.ui.fragments.ImageListFragment;
-import derpibooru.derpy.ui.fragments.UserImageListsFragment;
+import derpibooru.derpy.ui.fragments.UserImageListFragment;
 
 public class UserImageListActivity extends NavigationDrawerActivity {
     @Override
@@ -22,7 +21,7 @@ public class UserImageListActivity extends NavigationDrawerActivity {
     public void onUserDataRefreshed() { }
 
     private void initializeImageListView() {
-        ImageListFragment imageList = new UserImageListsFragment();
+        ImageListFragment imageList = new UserImageListFragment();
         imageList.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.layoutImageList, imageList).commit();

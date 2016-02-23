@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import derpibooru.derpy.server.providers.UserImageListProvider;
 
-public class UserImageListsFragment extends ImageListFragment {
+public class UserImageListFragment extends ImageListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

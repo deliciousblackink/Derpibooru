@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruFilter;
 
-public class FiltersViewAdapter extends RecyclerView.Adapter<FiltersViewAdapter.ViewHolder> {
+public class FilterListAdapter extends RecyclerView.Adapter<FilterListAdapter.ViewHolder> {
     private ArrayList<DerpibooruFilter> mFilters;
     private FiltersViewHandler mHandler;
 
-    public FiltersViewAdapter(DerpibooruFilter currentFilter,
-                              ArrayList<DerpibooruFilter> filters,
-                              FiltersViewHandler handler) {
+    public FilterListAdapter(DerpibooruFilter currentFilter,
+                             ArrayList<DerpibooruFilter> filters,
+                             FiltersViewHandler handler) {
         mHandler = handler;
         replaceFilters(filters, currentFilter);
     }
@@ -42,7 +42,7 @@ public class FiltersViewAdapter extends RecyclerView.Adapter<FiltersViewAdapter.
     }
 
     @Override
-    public FiltersViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public FilterListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                             int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_filters_item, parent, false);

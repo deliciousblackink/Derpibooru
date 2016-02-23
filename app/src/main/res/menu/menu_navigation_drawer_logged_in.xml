@@ -21,6 +21,14 @@
                 android:icon="@drawable/ic_star_black_24dp"
                 android:title="@string/navigation_drawer_favorites"/>
             <item
+                android:id="@+id/navigationUpvoted"
+                android:icon="@drawable/ic_star_black_24dp"
+                android:title="@string/navigation_drawer_upvoted"/>
+            <item
+                android:id="@+id/navigationUploaded"
+                android:icon="@drawable/ic_star_black_24dp"
+                android:title="@string/navigation_drawer_uploaded"/>
+            <item
                 android:id="@+id/navigationLogout"
                 android:icon="@drawable/ic_key_black_24dp"
                 android:title="@string/navigation_drawer_log_out"/>

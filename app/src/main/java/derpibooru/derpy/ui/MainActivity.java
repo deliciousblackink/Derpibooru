@@ -5,35 +5,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.ui.adapters.MainActivityTabAdapter;
+import derpibooru.derpy.ui.adapters.HomeTabAdapter;
 import derpibooru.derpy.ui.views.FragmentTabPagerView;
 
-/* TODO: https://github.com/JakeWharton/butterknife */
-
 public class MainActivity extends NavigationDrawerActivity {
-    private FragmentTabPagerView mTabViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mTabViewPager = (FragmentTabPagerView) findViewById(R.id.fragmentPagerView);
-        mTabViewPager.setFragmentAdapter(
-                new MainActivityTabAdapter(this, getSupportFragmentManager(),
-                                           new MainActivityTabAdapter.TabSetChangeHandler() {
-                                               @Override
-                                               public void onTabSetChanged() {
-                                                   mTabViewPager.refreshTabTitles();
-                                               }
-                                           }));
         super.initializeNavigationDrawer();
     }
 
     @Override
     public void onUserDataRefreshed() {
-        if (mTabViewPager != null) {
-            ((MainActivityTabAdapter) mTabViewPager.getFragmentAdapter()).toggleWatchedTab();
-        }
     }
 
     @Override

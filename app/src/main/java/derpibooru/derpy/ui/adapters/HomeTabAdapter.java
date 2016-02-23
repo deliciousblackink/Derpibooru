@@ -14,7 +14,7 @@ import derpibooru.derpy.ui.fragments.tabs.MainActivityNewImagesTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.MainActivityRankingsTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.MainActivityWatchedTabFragment;
 
-public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
+public class HomeTabAdapter extends FragmentStatePagerAdapter {
     private static final String TITLE_NEW = "New";
     private static final String TITLE_WATCHED = "Watched";
     private static final String TITLE_TOP_SCORING = "Top Scoring";
@@ -24,8 +24,8 @@ public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
     private TabSetChangeHandler mTabChangeHandler;
     private Context mContext;
 
-    public MainActivityTabAdapter(Context context, FragmentManager fm,
-                                  TabSetChangeHandler tabChangeHandler) {
+    public HomeTabAdapter(Context context, FragmentManager fm,
+                          TabSetChangeHandler tabChangeHandler) {
         super(fm);
         mContext = context;
         mTabChangeHandler = tabChangeHandler;

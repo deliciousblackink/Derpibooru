@@ -28,8 +28,8 @@ public class FilterListFragment extends Fragment {
     private ArrayList<DerpibooruFilter> mAvailableFilterList;
     private FilterListProvider mFilterListProvider;
 
-    @Bind(R.id.viewFilterList) RecyclerView mFilterListView;
-    @Bind(R.id.progressFilterList) AccentColorProgressBar mProgressView;
+    @Bind(R.id.viewFilterList) private RecyclerView mFilterListView;
+    @Bind(R.id.progressFilterList) private AccentColorProgressBar mProgressView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

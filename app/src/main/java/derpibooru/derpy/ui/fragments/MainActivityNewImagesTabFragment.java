@@ -17,7 +17,7 @@ public class MainActivityNewImagesTabFragment extends ImageListFragment {
     }
 
     @Override
-    protected void fetchImageThumbs() {
+    protected void fetchImages() {
         super.getImageListProvider().fetch();
     }
 }

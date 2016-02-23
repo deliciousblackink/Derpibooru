@@ -14,7 +14,7 @@ import java.util.List;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageComment;
-import derpibooru.derpy.data.server.DerpibooruImageInfo;
+import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.server.providers.ImageCommentsProvider;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.ui.adapters.ImageCommentsAdapter;
@@ -43,13 +43,13 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
         mCommentsProvider = new ImageCommentsProvider(getActivity(), new ImageCommentsRequestHandler());
         mCommentsAdapter = null;
         if (getArguments().containsKey("info")) {
-            displayInfoInView(v, (DerpibooruImageInfo) getArguments().getParcelable("info"));
+            displayInfoInView(v, (DerpibooruImageDetailed) getArguments().getParcelable("info"));
         }
         return v;
     }
 
     @Override
-    protected void displayInfoInView(View target, DerpibooruImageInfo info) {
+    protected void displayInfoInView(View target, DerpibooruImageDetailed info) {
         mCommentsProvider.id(info.getId()).fetch();
     }
 

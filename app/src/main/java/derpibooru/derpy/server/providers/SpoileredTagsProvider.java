@@ -4,12 +4,12 @@ import android.content.Context;
 
 import java.util.List;
 
-import derpibooru.derpy.data.server.DerpibooruTagFull;
+import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
 
 public class SpoileredTagsProvider extends TagProvider {
-    public SpoileredTagsProvider(Context context, QueryHandler<List<DerpibooruTagFull>> handler) {
+    public SpoileredTagsProvider(Context context, QueryHandler<List<DerpibooruTagDetailed>> handler) {
         super(context, handler);
     }
 

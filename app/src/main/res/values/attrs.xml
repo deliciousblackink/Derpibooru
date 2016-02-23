@@ -2,7 +2,7 @@
 <resources>
     <!-- see ui.views -->
     <declare-styleable name="ImageListRecyclerView">
-        <attr name="imageThumbSize" format="dimension" />
+        <attr name="imageSize" format="dimension" />
     </declare-styleable>
     <declare-styleable name="AccentColorIconButton">
         <attr name="buttonIcon" format="integer" />

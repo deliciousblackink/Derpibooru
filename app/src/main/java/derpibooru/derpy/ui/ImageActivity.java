@@ -21,7 +21,7 @@ import java.util.Set;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
-import derpibooru.derpy.data.server.DerpibooruImageThumb;
+import derpibooru.derpy.data.server.DerpibooruImage;
 import derpibooru.derpy.ui.utils.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
@@ -29,12 +29,12 @@ import derpibooru.derpy.ui.views.ImageTopBarView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageActivity extends AppCompatActivity {
-    public static final String INTENT_EXTRA_IMAGE_THUMB = "derpibooru.derpy.ImageThumb";
+    public static final String INTENT_EXTRA_IMAGE = "derpibooru.derpy.Image";
 
     private ImageTopBarView mTopBar;
     private ImageBottomBarView mBottomBar;
 
-    private DerpibooruImageThumb mImageData;
+    private DerpibooruImage mImageData;
 
     /* TODO: should be a singleTop activity
      * http://developer.android.com/reference/android/app/Activity.html#onNewIntent(android.content.Intent) */
@@ -54,10 +54,10 @@ public class ImageActivity extends AppCompatActivity {
 
         mTopBar = ((ImageTopBarView) findViewById(R.id.imageTopBar));
         mBottomBar = ((ImageBottomBarView) findViewById(R.id.imageBottomBar));
-        mImageData = (DerpibooruImageThumb)
-                ((savedInstanceState == null) ? getIntent().getParcelableExtra(INTENT_EXTRA_IMAGE_THUMB)
-                                              : savedInstanceState.getParcelable(INTENT_EXTRA_IMAGE_THUMB));
-        setImageInfoFromThumb(toolbar);
+        mImageData = (DerpibooruImage)
+                ((savedInstanceState == null) ? getIntent().getParcelableExtra(INTENT_EXTRA_IMAGE)
+                                              : savedInstanceState.getParcelable(INTENT_EXTRA_IMAGE));
+        setImageInfo(toolbar);
         loadImageWithGlide(mImageData.getLargeImageUrl());
         initializeImageInteractions();
 
@@ -67,17 +67,17 @@ public class ImageActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putParcelable(INTENT_EXTRA_IMAGE_THUMB, mImageData);
+        savedInstanceState.putParcelable(INTENT_EXTRA_IMAGE, mImageData);
     }
 
     @Override
     public void onBackPressed() {
         setResult(Activity.RESULT_OK,
-                  new Intent().putExtra(INTENT_EXTRA_IMAGE_THUMB, mImageData));
+                  new Intent().putExtra(INTENT_EXTRA_IMAGE, mImageData));
         super.onBackPressed();
     }
 
-    private void setImageInfoFromThumb(Toolbar toolbar) {
+    private void setImageInfo(Toolbar toolbar) {
         toolbar.setTitle("#" + Integer.toString(mImageData.getId()));
 
         mBottomBar.setFragmentManager(getSupportFragmentManager());

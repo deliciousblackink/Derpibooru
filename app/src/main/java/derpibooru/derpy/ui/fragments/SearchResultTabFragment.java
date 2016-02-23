@@ -30,7 +30,7 @@ public class SearchResultTabFragment extends ImageListFragment {
     }
 
     @Override
-    protected void fetchImageThumbs() {
+    protected void fetchImages() {
         ((SearchProvider) super.getImageListProvider())
                 .searching(getArguments().getString("query"))
                 .with(mCurrentOptions)

@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.data.server.DerpibooruTagFull;
+import derpibooru.derpy.data.server.DerpibooruImage;
+import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.parsers.ImageListParser;
 
 public class ImageListParserTest {
@@ -26,13 +26,13 @@ public class ImageListParserTest {
     public void run() throws Exception {
         Object result =
                 mTest.runParserWithInputResource("/resources/SampleImageListResponse.json");
-        ArrayList<DerpibooruImageThumb> images = (ArrayList<DerpibooruImageThumb>) result;
+        ArrayList<DerpibooruImage> images = (ArrayList<DerpibooruImage>) result;
         assertThat("The number of items parsed does not match the input provided",
                    images.size(), is(15));
         compareImageThumb(firstImageThumb, images.get(0));
     }
 
-    private void compareImageThumb(DerpibooruImageThumb expected, DerpibooruImageThumb parsed) {
+    private void compareImageThumb(DerpibooruImage expected, DerpibooruImage parsed) {
         assertThat("Id does not match", parsed.getId(), is(expected.getId()));
         assertThat("Internal id does not match", parsed.getInternalId(), is(expected.getInternalId()));
         assertThat("Upvotes do not match", parsed.getUpvotes(), is(expected.getUpvotes()));
@@ -41,18 +41,17 @@ public class ImageListParserTest {
         assertThat("Number of comments does not match", parsed.getCommentCount(), is(expected.getCommentCount()));
         assertThat("Thumb url does not match", parsed.getThumbUrl(), is(expected.getThumbUrl()));
         assertThat("Full image url does not match", parsed.getLargeImageUrl(), is(expected.getLargeImageUrl()));
-        assertThat("Spoilered tags do not match", parsed.getSpoileredTagNames(), is(expected.getSpoileredTagNames()));
         assertThat("Spoiler image does not match", parsed.getSpoilerImageUrl(), is(expected.getSpoilerImageUrl()));
     }
 
-    private static final DerpibooruImageThumb firstImageThumb =
-            new DerpibooruImageThumb(960596, 960387, 3, 23, 1, 4,
-                                     "//derpicdn.net/img/2015/8/18/960596/thumb.png",
-                                     "//derpicdn.net/img/2015/8/18/960596/large.png",
-                                     Lists.newArrayList("artist:pikapetey"), "https://derpicdn.net/dummy_spoiler");
+    private static final DerpibooruImage firstImageThumb =
+            new DerpibooruImage(960596, 960387, 3, 23, 1, 4,
+                                     "https://derpicdn.net/img/2015/8/18/960596/thumb.png",
+                                     "https://derpicdn.net/img/2015/8/18/960596/large.png",
+                                     "https://derpicdn.net/dummy_spoiler");
 
-    private static final DerpibooruTagFull dummySpoilerTag =
-            new DerpibooruTagFull(67509, 0, "artist:pikapetey", "", "//derpicdn.net/dummy_spoiler");
+    private static final DerpibooruTagDetailed dummySpoilerTag =
+            new DerpibooruTagDetailed(67509, 0, "artist:pikapetey", "", "//derpicdn.net/dummy_spoiler");
 
-    private static final ArrayList<DerpibooruTagFull> dummyFilter = Lists.newArrayList(dummySpoilerTag);
+    private static final ArrayList<DerpibooruTagDetailed> dummyFilter = Lists.newArrayList(dummySpoilerTag);
 }

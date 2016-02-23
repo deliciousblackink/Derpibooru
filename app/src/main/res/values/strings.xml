@@ -5,6 +5,9 @@
     <string name="activity_search">Search</string>
     <string name="activity_filters">Filters</string>
     <string name="activity_login">Log in</string>
+    <string name="activity_user_list_faved">My Favorites</string>
+    <string name="activity_user_list_upvoted">Images I’ve Upvoted</string>
+    <string name="activity_user_list_uploaded">Images I’ve Uploaded</string>
     <!-- menu items -->
     <string name="action_settings">Settings</string>
 </resources>

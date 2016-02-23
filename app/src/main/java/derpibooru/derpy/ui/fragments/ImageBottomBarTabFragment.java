@@ -10,7 +10,7 @@ import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.TextView;
 
-import derpibooru.derpy.data.server.DerpibooruImageInfo;
+import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 
 public abstract class ImageBottomBarTabFragment extends Fragment {
     protected ImageBottomBarTabFragment() {
@@ -45,13 +45,13 @@ public abstract class ImageBottomBarTabFragment extends Fragment {
         strBuilder.removeSpan(span);
     }
 
-    public void onTabInfoFetched(DerpibooruImageInfo info) {
+    public void onTabInfoFetched(DerpibooruImageDetailed info) {
         if (getView() != null) {
             displayInfoInView(getView(), info);
         }
     }
 
-    protected abstract void displayInfoInView(View target, DerpibooruImageInfo info);
+    protected abstract void displayInfoInView(View target, DerpibooruImageDetailed info);
 
     protected abstract void onLinkClick(View view);
 }

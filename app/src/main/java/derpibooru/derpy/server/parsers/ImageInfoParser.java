@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import derpibooru.derpy.data.server.DerpibooruImageInfo;
+import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruTag;
 
-public class ImageInfoParser implements ServerResponseParser<DerpibooruImageInfo> {
+public class ImageInfoParser implements ServerResponseParser<DerpibooruImageDetailed> {
     @Override
-    public DerpibooruImageInfo parseResponse(String rawResponse) throws Exception {
+    public DerpibooruImageDetailed parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
 
         int imageId = parseImageId(doc);
@@ -25,7 +25,7 @@ public class ImageInfoParser implements ServerResponseParser<DerpibooruImageInfo
         ArrayList<String> imageFavedBy = parseFavedBy(doc);
         ArrayList<DerpibooruTag> imageTags = parseTags(doc);
 
-        return new DerpibooruImageInfo(imageId, imageSourceUrl, imageUploader,
+        return new DerpibooruImageDetailed(imageId, imageSourceUrl, imageUploader,
                                        imageDescription, imageCreatedAt,
                                        imageTags, imageFavedBy);
     }

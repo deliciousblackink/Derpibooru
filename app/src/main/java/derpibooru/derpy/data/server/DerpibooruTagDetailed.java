@@ -3,12 +3,12 @@ package derpibooru.derpy.data.server;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class DerpibooruTagFull extends DerpibooruTag {
+public class DerpibooruTagDetailed extends DerpibooruTag {
     private String mDescription;
     private String mSpoilerUrl;
 
-    public DerpibooruTagFull(int id, int imageCount, String name,
-                             String description, String spoilerUrl) {
+    public DerpibooruTagDetailed(int id, int imageCount, String name,
+                                 String description, String spoilerUrl) {
         super(id, imageCount, name);
         mDescription = description;
         mSpoilerUrl = "https:" + spoilerUrl;
@@ -22,7 +22,7 @@ public class DerpibooruTagFull extends DerpibooruTag {
         return mSpoilerUrl;
     }
 
-    protected DerpibooruTagFull(Parcel in) {
+    protected DerpibooruTagDetailed(Parcel in) {
         super(in);
         mDescription = in.readString();
         mSpoilerUrl = in.readString();
@@ -36,15 +36,15 @@ public class DerpibooruTagFull extends DerpibooruTag {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<DerpibooruTagFull> CREATOR = new Parcelable.Creator<DerpibooruTagFull>() {
+    public static final Parcelable.Creator<DerpibooruTagDetailed> CREATOR = new Parcelable.Creator<DerpibooruTagDetailed>() {
         @Override
-        public DerpibooruTagFull createFromParcel(Parcel in) {
-            return new DerpibooruTagFull(in);
+        public DerpibooruTagDetailed createFromParcel(Parcel in) {
+            return new DerpibooruTagDetailed(in);
         }
 
         @Override
-        public DerpibooruTagFull[] newArray(int size) {
-            return new DerpibooruTagFull[size];
+        public DerpibooruTagDetailed[] newArray(int size) {
+            return new DerpibooruTagDetailed[size];
         }
     };
 }

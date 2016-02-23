@@ -7,18 +7,18 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import derpibooru.derpy.data.server.DerpibooruTagFull;
+import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.TagListParser;
 import derpibooru.derpy.storage.TagStorage;
 
-public class TagProvider extends Provider<List<DerpibooruTagFull>> {
-    private List<DerpibooruTagFull> mCachedTags = new ArrayList<>();
+public class TagProvider extends Provider<List<DerpibooruTagDetailed>> {
+    private List<DerpibooruTagDetailed> mCachedTags = new ArrayList<>();
     private TagStorage mTagStorage;
 
     private List<Integer> mRequestedTagIds;
 
-    public TagProvider(Context context, QueryHandler<List<DerpibooruTagFull>> handler) {
+    public TagProvider(Context context, QueryHandler<List<DerpibooruTagDetailed>> handler) {
         super(context, handler);
         mTagStorage = new TagStorage(context);
     }
@@ -55,8 +55,8 @@ public class TagProvider extends Provider<List<DerpibooruTagFull>> {
     }
 
     @Override
-    protected void cacheResponse(List<DerpibooruTagFull> tagsFromServer) {
-        for (DerpibooruTagFull tag : tagsFromServer) {
+    protected void cacheResponse(List<DerpibooruTagDetailed> tagsFromServer) {
+        for (DerpibooruTagDetailed tag : tagsFromServer) {
             mTagStorage.setTag(tag);
         }
     }
@@ -64,7 +64,7 @@ public class TagProvider extends Provider<List<DerpibooruTagFull>> {
     private boolean areTagsCached() {
         List<Integer> tagsToBeFetchedFromServer = new ArrayList<>();
         for (Integer tagId : mRequestedTagIds) {
-            DerpibooruTagFull tag = mTagStorage.getTag(tagId);
+            DerpibooruTagDetailed tag = mTagStorage.getTag(tagId);
             if (tag != null) {
                 mCachedTags.add(tag);
             } else {

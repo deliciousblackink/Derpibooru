@@ -15,25 +15,25 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
-import derpibooru.derpy.data.server.DerpibooruImageThumb;
+import derpibooru.derpy.data.server.DerpibooruImage;
 import derpibooru.derpy.ui.animations.ImageListItemAnimator;
 import derpibooru.derpy.ui.utils.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
-public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImageThumb, ImageListAdapter.ViewHolder> {
+public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImage, ImageListAdapter.ViewHolder> {
     private ImageListItemAnimator mAnimator;
 
-    protected ImageListAdapter(Context context, ArrayList<DerpibooruImageThumb> items) {
+    protected ImageListAdapter(Context context, List<DerpibooruImage> items) {
         super(context, items);
         mAnimator = new ImageListItemAnimator();
     }
 
-    public abstract void startImageActivityWithThumb(DerpibooruImageThumb thumb);
+    public abstract void startImageActivity(DerpibooruImage image);
 
     @Override
     public ImageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -51,10 +51,10 @@ public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<
         holder.buttonComments.setEnabled(false);
     }
 
-    public void replaceImageThumb(final DerpibooruImageThumb target) {
-        int targetIndex = Iterables.indexOf(getItems(), new Predicate<DerpibooruImageThumb>() {
+    public void replaceItem(final DerpibooruImage target) {
+        int targetIndex = Iterables.indexOf(getItems(), new Predicate<DerpibooruImage>() {
             @Override
-            public boolean apply(DerpibooruImageThumb it) {
+            public boolean apply(DerpibooruImage it) {
                 return it.getId() == target.getId();
             }
         });
@@ -72,7 +72,7 @@ public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<
             @Override
             public void onClick(View v) {
                 Glide.get(getContext()).clearMemory();
-                startImageActivityWithThumb(getItems().get(position));
+                startImageActivity(getItems().get(position));
             }
         });
     }

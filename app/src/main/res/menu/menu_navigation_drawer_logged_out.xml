@@ -4,18 +4,22 @@
         <item
             android:id="@+id/navigationHome"
             android:icon="@drawable/ic_home_black_24dp"
-            android:title="Home"/>
+            android:title="@string/navigation_drawer_home"/>
         <item
             android:id="@+id/navigationSearch"
             android:icon="@drawable/ic_search_black_24dp"
-            android:title="Search"/>
+            android:title="@string/navigation_drawer_search"/>
+        <item
+            android:id="@+id/navigationFilters"
+            android:icon="@drawable/ic_block_black_24dp"
+            android:title="@string/navigation_drawer_filters"/>
     </group>
-    <item android:title="Account">
+    <item android:title="@string/navigation_drawer_group_account">
         <menu>
             <item
                 android:id="@+id/navigationLogin"
                 android:icon="@drawable/ic_key_black_24dp"
-                android:title="Log in"/>
+                android:title="@string/navigation_drawer_log_in"/>
         </menu>
     </item>
 </menu>

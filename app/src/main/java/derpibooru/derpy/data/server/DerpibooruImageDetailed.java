@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DerpibooruImageInfo implements Parcelable {
+public class DerpibooruImageDetailed implements Parcelable {
     private int mId;
     private String mSourceUrl;
     private String mUploader;
@@ -15,9 +15,9 @@ public class DerpibooruImageInfo implements Parcelable {
     private List<DerpibooruTag> mTags = new ArrayList<>();
     private List<String> mFavedBy = new ArrayList<>();
 
-    public DerpibooruImageInfo(int id, String sourceUrl,
-                               String uploader, String description, String createdAt,
-                               List<DerpibooruTag> tags, List<String> favedBy) {
+    public DerpibooruImageDetailed(int id, String sourceUrl,
+                                   String uploader, String description, String createdAt,
+                                   List<DerpibooruTag> tags, List<String> favedBy) {
         mId = id;
         mSourceUrl = sourceUrl;
         mUploader = uploader;
@@ -55,7 +55,7 @@ public class DerpibooruImageInfo implements Parcelable {
         return mFavedBy;
     }
 
-    protected DerpibooruImageInfo(Parcel in) {
+    protected DerpibooruImageDetailed(Parcel in) {
         mId = in.readInt();
         mSourceUrl = in.readString();
         mUploader = in.readString();
@@ -82,15 +82,15 @@ public class DerpibooruImageInfo implements Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<DerpibooruImageInfo> CREATOR = new Parcelable.Creator<DerpibooruImageInfo>() {
+    public static final Parcelable.Creator<DerpibooruImageDetailed> CREATOR = new Parcelable.Creator<DerpibooruImageDetailed>() {
         @Override
-        public DerpibooruImageInfo createFromParcel(Parcel in) {
-            return new DerpibooruImageInfo(in);
+        public DerpibooruImageDetailed createFromParcel(Parcel in) {
+            return new DerpibooruImageDetailed(in);
         }
 
         @Override
-        public DerpibooruImageInfo[] newArray(int size) {
-            return new DerpibooruImageInfo[size];
+        public DerpibooruImageDetailed[] newArray(int size) {
+            return new DerpibooruImageDetailed[size];
         }
     };
 }

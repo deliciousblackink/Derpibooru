@@ -1,4 +1,4 @@
-package derpibooru.derpy.ui.fragments;
+package derpibooru.derpy.ui.fragments.tabs;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 import derpibooru.derpy.server.providers.SearchProvider;
+import derpibooru.derpy.ui.fragments.ImageListFragment;
 
 public class SearchResultTabFragment extends ImageListFragment {
     private static final String SEARCH_OPTIONS_BUNDLE_KEY = "options";

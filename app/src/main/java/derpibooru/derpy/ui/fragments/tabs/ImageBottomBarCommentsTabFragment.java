@@ -1,4 +1,4 @@
-package derpibooru.derpy.ui.fragments;
+package derpibooru.derpy.ui.fragments.tabs;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,7 +30,7 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_image_bottom_bar_comments_tab, container, false);
+        View v = inflater.inflate(R.layout.tab_image_bottom_bar_comments, container, false);
         mCommentsView = (RecyclerView) v.findViewById(R.id.viewComments);
         mCommentsRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.layoutCommentsRefresh);
         mCommentsRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);

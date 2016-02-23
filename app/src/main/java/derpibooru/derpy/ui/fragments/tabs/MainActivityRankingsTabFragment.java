@@ -1,4 +1,4 @@
-package derpibooru.derpy.ui.fragments;
+package derpibooru.derpy.ui.fragments.tabs;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import derpibooru.derpy.server.providers.RankingImageListProvider;
+import derpibooru.derpy.ui.fragments.ImageListFragment;
 
 public class MainActivityRankingsTabFragment extends ImageListFragment {
     @Override

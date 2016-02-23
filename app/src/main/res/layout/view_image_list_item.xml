@@ -2,7 +2,7 @@
                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
                                                 android:layout_width="170dp"
                                                 android:layout_height="170dp">
-    <!-- the real size of the view is set in fragment_image_list_tab due to a measuring limitation for RecycleView grid layout -->
+    <!-- the real size of the view is set in fragment_image_list due to a measuring limitation for RecycleView grid layout -->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"

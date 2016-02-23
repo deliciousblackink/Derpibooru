@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.data.internal.FragmentAdapterItem;
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
-import derpibooru.derpy.ui.fragments.SearchOptionsTabFragment;
-import derpibooru.derpy.ui.fragments.SearchResultTabFragment;
+import derpibooru.derpy.ui.fragments.tabs.SearchOptionsTabFragment;
+import derpibooru.derpy.ui.fragments.tabs.SearchResultTabFragment;
 
 public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
     private static final String SEARCH_RESULTS_TAB_TITLE = "Search results";

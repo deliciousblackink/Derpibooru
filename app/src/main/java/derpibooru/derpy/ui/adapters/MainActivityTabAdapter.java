@@ -10,9 +10,9 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.server.providers.RankingImageListProvider;
 import derpibooru.derpy.server.providers.UserDataProvider;
-import derpibooru.derpy.ui.fragments.MainActivityNewImagesTabFragment;
-import derpibooru.derpy.ui.fragments.MainActivityRankingsTabFragment;
-import derpibooru.derpy.ui.fragments.MainActivityWatchedTabFragment;
+import derpibooru.derpy.ui.fragments.tabs.MainActivityNewImagesTabFragment;
+import derpibooru.derpy.ui.fragments.tabs.MainActivityRankingsTabFragment;
+import derpibooru.derpy.ui.fragments.tabs.MainActivityWatchedTabFragment;
 
 public class MainActivityTabAdapter extends FragmentStatePagerAdapter {
     private static final String TITLE_NEW = "New";

@@ -1,4 +1,4 @@
-package derpibooru.derpy.ui.fragments;
+package derpibooru.derpy.ui.fragments.tabs;
 
 import android.os.Bundle;
 import android.text.Html;
@@ -24,7 +24,7 @@ public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_image_bottom_bar_info_tab, container, false);
+        View v = inflater.inflate(R.layout.tab_image_bottom_bar_info, container, false);
         if (getArguments().containsKey("info")) {
             displayInfoInView(v, (DerpibooruImageDetailed) getArguments().getParcelable("info"));
         }

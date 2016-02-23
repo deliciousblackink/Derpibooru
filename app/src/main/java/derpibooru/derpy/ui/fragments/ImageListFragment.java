@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import derpibooru.derpy.R;
@@ -35,7 +34,7 @@ public abstract class ImageListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_image_list_tab, container, false);
+        View v = inflater.inflate(R.layout.fragment_image_list, container, false);
         mImageView = (ImageListRecyclerView) v.findViewById(R.id.viewImages);
         /* disable item change animations for image interactions */
         ((SimpleItemAnimator) mImageView.getItemAnimator()).setSupportsChangeAnimations(false);
@@ -112,10 +111,10 @@ public abstract class ImageListFragment extends Fragment {
         }
     }
 
-    protected class ImageListRequestHandler implements QueryHandler<List<DerpibooruImage>> {
+    public class ImageListRequestHandler implements QueryHandler<List<DerpibooruImage>> {
         @Override
         public void onQueryExecuted(List<DerpibooruImage> result) {
-            displayImagesFromProvider((ArrayList<DerpibooruImage>) result);
+            displayImagesFromProvider(result);
         }
 
         @Override

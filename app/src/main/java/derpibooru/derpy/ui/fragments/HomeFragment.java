@@ -13,12 +13,12 @@ import derpibooru.derpy.ui.adapters.HomeTabAdapter;
 import derpibooru.derpy.ui.views.FragmentTabPagerView;
 
 public class HomeFragment extends Fragment {
-    @Bind(R.id.fragmentPagerView) private FragmentTabPagerView mTabViewPager;
+    @Bind(R.id.fragmentPagerView) FragmentTabPagerView mTabViewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        ButterKnife.bind(v);
+        ButterKnife.bind(this, v);
         initializeTabViewPager();
         return v;
     }

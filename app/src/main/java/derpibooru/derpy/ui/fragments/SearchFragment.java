@@ -15,13 +15,13 @@ import derpibooru.derpy.ui.SearchResultActivity;
 import derpibooru.derpy.ui.views.FloatingSearchView;
 
 public class SearchFragment extends Fragment {
-    @Bind(R.id.floatingSearchView) private FloatingSearchView mSearchView;
-    @Bind(R.id.textSearchHelp) private TextView mHelpView;
+    @Bind(R.id.floatingSearchView) FloatingSearchView mSearchView;
+    @Bind(R.id.textSearchHelp) TextView mHelpView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_search, container, false);
-        ButterKnife.bind(v);
+        ButterKnife.bind(this, v);
         initializeSearchView();
         initializeHelpView();
         return v;

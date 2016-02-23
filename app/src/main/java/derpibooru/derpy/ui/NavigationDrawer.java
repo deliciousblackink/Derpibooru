@@ -120,6 +120,15 @@ class NavigationDrawer extends NavigationDrawerLayout {
                 mParentNavigationId = activityItem.getKey();
             }
         }
+        if (mParent.getClass().equals(UserImageListActivity.class)) {
+            UserImageListProvider.UserListType type = UserImageListProvider.UserListType.fromValue(
+                    mParent.getIntent().getIntExtra("type", 0));
+            mParentNavigationId = ((type == UserImageListProvider.UserListType.Faved)
+                                   ? R.id.navigationFaves
+                                   : ((type == UserImageListProvider.UserListType.Upvoted)
+                                    ? R.id.navigationUpvoted
+                                    : R.id.navigationUploaded));
+        }
     }
 
     private void logout() {

@@ -48,6 +48,12 @@ public abstract class NavigationDrawerUserPresenter {
         onUserRefreshRequested();
     }
 
+    /**
+     * Displays username and current filter, swaps menu items depending on whether the user
+     * is logged in or not.
+     * <br>
+     * Always <strong>set</strong> the active fragment's menu item <strong>checked</strong> after calling the method.
+     */
     public void displayUser(DerpibooruUser user) {
         mButtonRefreshUser.setVisibility(View.VISIBLE);
         if (!user.isLoggedIn()) {

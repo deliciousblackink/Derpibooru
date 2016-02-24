@@ -51,6 +51,7 @@ public class User {
 
     public interface OnUserRefreshListener {
         void onUserRefreshed(DerpibooruUser user);
+        void onRefreshFailed();
     }
 
     private class UserQueryHandler implements QueryHandler<DerpibooruUser> {
@@ -64,7 +65,9 @@ public class User {
 
         @Override
         public void onQueryFailed() {
-
+            if (mRefreshListener != null) {
+                mRefreshListener.onRefreshFailed();
+            }
         }
     }
 }

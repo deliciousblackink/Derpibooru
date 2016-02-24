@@ -41,8 +41,8 @@ public class FilterListFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null
-                && savedInstanceState.getParcelableArrayList(BUNDLE_FILTER_LIST) != null) {
+        if ((savedInstanceState != null)
+                && (savedInstanceState.getParcelableArrayList(BUNDLE_FILTER_LIST) != null)) {
             mAvailableFilterList = savedInstanceState.getParcelableArrayList(BUNDLE_FILTER_LIST);
             displayFilters();
         } else {
@@ -106,7 +106,7 @@ public class FilterListFragment extends Fragment {
             @Override
             public void onQueryFailed() {
                 Snackbar.make(mFilterListView, R.string.activity_filters_failed_to_fetch_list, Snackbar.LENGTH_LONG)
-                        .setAction(R.string.snackbar_action_retry, new View.OnClickListener() {
+                        .setAction(R.string.retry, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 fetchAvailableFilters();

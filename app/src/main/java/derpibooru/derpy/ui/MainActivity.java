@@ -3,16 +3,13 @@ package derpibooru.derpy.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import derpibooru.derpy.R;
@@ -27,7 +24,7 @@ import derpibooru.derpy.ui.fragments.SearchFragment;
 import derpibooru.derpy.ui.utils.NavigationDrawerUserPresenter;
 
 public class MainActivity extends NavigationDrawerFragmentActivity {
-    public static final String BUNDLE_USER = "DerpibooruUser";
+    public static final String EXTRAS_USER = "derpibooru.derpy.DerpibooruUser";
 
     private static final int LOGIN_ACTIVITY_REQUEST_CODE = 1;
     private static final List<NavigationDrawerItem> FRAGMENT_NAVIGATION_ITEMS =
@@ -53,13 +50,7 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        try {
-            outState.putParcelable(BUNDLE_USER, mUser.getUser());
-        } catch (IllegalStateException e) {
-            /* the exception is to be expected when a configuration change occurs prior to user data being fetched
-             * it doesn't have to be handled here as the data is going to be fetched again anyway,
-             * though the user management should be moved into a Service sometime */
-        }
+        outState.putParcelable(EXTRAS_USER, mUser.getUser());
     }
 
     @Override
@@ -81,16 +72,16 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
     private void initializeUser(Bundle savedInstanceState) {
         initializeUserPresenter();
         if ((savedInstanceState != null)
-                && (savedInstanceState.getParcelable(BUNDLE_USER) != null)) {
-            mUser = new User(this, (DerpibooruUser) savedInstanceState.getParcelable(BUNDLE_USER));
-            mUser.setOnUserRefreshListener(new UserRefreshListener());
-            mUserPresenter.displayUser(mUser.getUser());
-            setActiveMenuItem();
+                && (savedInstanceState.getParcelable(EXTRAS_USER) != null)) {
+            mUser = new User(this, (DerpibooruUser) savedInstanceState.getParcelable(EXTRAS_USER));
+        } else if (getIntent().getParcelableExtra(EXTRAS_USER) != null) {
+            mUser = new User(this, (DerpibooruUser) getIntent().getParcelableExtra(EXTRAS_USER));
         } else {
-            mUser = new User(this);
-            mUser.setOnUserRefreshListener(new UserRefreshListener());
-            mUser.refresh();
+            throw new IllegalStateException("MainActivity didn't receive DerpibooruUser with the Intent");
         }
+        mUser.setOnUserRefreshListener(new UserRefreshListener());
+        mUserPresenter.displayUser(mUser.getUser());
+        setActiveMenuItem();
     }
 
     private void initializeUserPresenter() {
@@ -157,6 +148,11 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
         public void onUserRefreshed(DerpibooruUser user) {
             mUserPresenter.displayUser(user);
             setActiveMenuItem();
+        }
+
+        @Override
+        public void onRefreshFailed() {
+
         }
     }
 }

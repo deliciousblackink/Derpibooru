@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Derpibooru</string>
+    <!-- general labels and messages -->
+    <string name="retry">Retry</string>
     <!-- activity titles -->
     <string name="activity_search">Search</string>
     <string name="activity_filters">Filters</string>
@@ -10,4 +12,6 @@
     <string name="activity_user_list_uploaded">Images I’ve Uploaded</string>
     <!-- menu items -->
     <string name="action_settings">Settings</string>
+    <!-- errors -->
+    <string name="activity_splash_user_loader_request_failed">Derpibooru couldn’t reach the server! Check your internet connection and tap Retry</string>
 </resources>

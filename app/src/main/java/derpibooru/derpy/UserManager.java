@@ -1,27 +1,25 @@
 package derpibooru.derpy;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
-import derpibooru.derpy.server.providers.Provider;
 import derpibooru.derpy.server.providers.UserDataProvider;
 
-public class User {
+public class UserManager {
     private UserDataProvider mUserProvider;
     private DerpibooruUser mUser;
 
     private OnUserRefreshListener mRefreshListener;
     private Context mContext;
 
-    public User(Context context) {
+    public UserManager(Context context) {
         mContext = context;
         mUserProvider = new UserDataProvider(context, new UserQueryHandler());
     }
 
-    public User(Context context, DerpibooruUser user) {
+    public UserManager(Context context, DerpibooruUser user) {
         this(context);
         mUser = user;
     }

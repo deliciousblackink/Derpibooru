@@ -3,22 +3,17 @@ package derpibooru.derpy.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import com.google.common.collect.ImmutableList;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
 import derpibooru.derpy.R;
-import derpibooru.derpy.User;
+import derpibooru.derpy.UserManager;
 import derpibooru.derpy.data.internal.NavigationDrawerItem;
 import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
@@ -36,7 +31,7 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
     private List<NavigationDrawerItem> mFragmentNavigationItems;
 
     private NavigationDrawerUserPresenter mUserPresenter;
-    private User mUser;
+    private UserManager mUserManager;
 
     @Bind(R.id.fragmentLayout) FrameLayout mFragmentLayout;
 
@@ -53,7 +48,7 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(EXTRAS_USER, mUser.getUser());
+        outState.putParcelable(EXTRAS_USER, mUserManager.getUser());
     }
 
     @Override
@@ -76,14 +71,14 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
         initializeUserPresenter();
         if ((savedInstanceState != null)
                 && (savedInstanceState.getParcelable(EXTRAS_USER) != null)) {
-            mUser = new User(this, (DerpibooruUser) savedInstanceState.getParcelable(EXTRAS_USER));
+            mUserManager = new UserManager(this, (DerpibooruUser) savedInstanceState.getParcelable(EXTRAS_USER));
         } else if (getIntent().getParcelableExtra(EXTRAS_USER) != null) {
-            mUser = new User(this, (DerpibooruUser) getIntent().getParcelableExtra(EXTRAS_USER));
+            mUserManager = new UserManager(this, (DerpibooruUser) getIntent().getParcelableExtra(EXTRAS_USER));
         } else {
             throw new IllegalStateException("MainActivity didn't receive DerpibooruUser with the Intent");
         }
-        mUser.setOnUserRefreshListener(new UserRefreshListener());
-        mUserPresenter.displayUser(mUser.getUser());
+        mUserManager.setOnUserRefreshListener(new UserRefreshListener());
+        mUserPresenter.displayUser(mUserManager.getUser());
         setActiveMenuItem();
     }
 
@@ -91,7 +86,7 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
         mUserPresenter = new NavigationDrawerUserPresenter(this) {
             @Override
             protected void onUserRefreshRequested() {
-                mUser.refresh();
+                mUserManager.refresh();
             }};
         mUserPresenter.initializeWithView(mNavigationView);
     }
@@ -112,7 +107,7 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
             f.setArguments(fragmentMenuItem.getFragmentArguments());
         }
         if (f instanceof UserFragment) {
-            f.getArguments().putParcelable(EXTRAS_USER, mUser.getUser());
+            f.getArguments().putParcelable(EXTRAS_USER, mUserManager.getUser());
         }
         return f;
     }
@@ -167,7 +162,7 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class UserRefreshListener implements User.OnUserRefreshListener {
+    private class UserRefreshListener implements UserManager.OnUserRefreshListener {
         @Override
         public void onUserRefreshed(DerpibooruUser user) {
             mUserPresenter.displayUser(user);

@@ -7,11 +7,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.User;
+import derpibooru.derpy.UserManager;
 import derpibooru.derpy.data.server.DerpibooruUser;
 
 public class SplashUserLoaderActivity extends AppCompatActivity {
-    private User mUser;
+    private UserManager mUserManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,8 +20,8 @@ public class SplashUserLoaderActivity extends AppCompatActivity {
     }
 
     private void loadUserDataFromServer() {
-        mUser = new User(this);
-        mUser.setOnUserRefreshListener(new User.OnUserRefreshListener() {
+        mUserManager = new UserManager(this);
+        mUserManager.setOnUserRefreshListener(new UserManager.OnUserRefreshListener() {
             @Override
             public void onUserRefreshed(DerpibooruUser user) {
                 launchMainActivity(user);
@@ -32,7 +32,7 @@ public class SplashUserLoaderActivity extends AppCompatActivity {
                 getErrorDialog().show();
             }
         });
-        mUser.refresh();
+        mUserManager.refresh();
     }
 
     private void launchMainActivity(DerpibooruUser userData) {
@@ -48,7 +48,7 @@ public class SplashUserLoaderActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        mUser.refresh();
+                        mUserManager.refresh();
                     }
                 }).create();
     }

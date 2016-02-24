@@ -175,6 +175,9 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
         public void onUserRefreshed(DerpibooruUser user) {
             mUserPresenter.displayUser(user);
             setActiveMenuItem();
+            if (getCurrentFragment() instanceof UserFragment) {
+                ((UserFragment) getCurrentFragment()).setRefreshedUserData(user);
+            }
         }
 
         @Override

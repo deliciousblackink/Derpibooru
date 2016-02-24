@@ -38,7 +38,16 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
      */
     protected abstract FrameLayout getContentLayout();
 
+    /**
+     * Provides an initialized instance of a fragment requested from a menu item.
+     * @param fragmentMenuItem fragment menu item
+     * @return initialized fragment
+     */
     protected abstract Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem) throws Exception;
+
+    protected Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentById(getContentLayout().getId());
+    }
 
     protected NavigationDrawerLayout getNavigationDrawerLayout() {
         return mNavigationDrawer;

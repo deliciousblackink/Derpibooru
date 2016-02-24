@@ -30,7 +30,7 @@ public abstract class UserFragment extends Fragment {
         outState.putParcelable(MainActivity.EXTRAS_USER, mUserData);
     }
 
-    public void refreshUser(DerpibooruUser newUserData) {
+    public void setRefreshedUserData(DerpibooruUser newUserData) {
         mUserData = newUserData;
         onUserRefreshed(mUserData);
     }

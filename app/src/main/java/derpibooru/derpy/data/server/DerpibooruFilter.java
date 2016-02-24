@@ -90,8 +90,7 @@ public class DerpibooruFilter implements Parcelable {
         mId = in.readInt();
         mName = in.readString();
 
-        int[] spoileredTags = new int[0];
-        in.readIntArray(spoileredTags);
+        int[] spoileredTags = in.createIntArray();
         mSpoileredTags = Ints.asList(spoileredTags);
 
         mDescription = in.readString();

@@ -9,11 +9,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
             <include layout="@layout/navigation_drawer_toolbar"/>
-            <derpibooru.derpy.ui.views.FragmentTabPagerView
-                android:id="@+id/fragmentPagerView"
+            <FrameLayout
+                android:id="@+id/fragmentLayout"
                 android:layout_width="match_parent"
-                android:layout_height="0px"
-                android:layout_weight="1"/>
+                android:layout_height="match_parent" />
     </LinearLayout>
     <include layout="@layout/navigation_drawer_navigation_view"/>
 </android.support.v4.widget.DrawerLayout>

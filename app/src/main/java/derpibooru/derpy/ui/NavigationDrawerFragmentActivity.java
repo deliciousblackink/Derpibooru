@@ -1,5 +1,6 @@
 package derpibooru.derpy.ui;
 
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -37,6 +38,8 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
      */
     protected abstract FrameLayout getContentLayout();
 
+    protected abstract Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem) throws Exception;
+
     protected NavigationDrawerLayout getNavigationDrawerLayout() {
         return mNavigationDrawer;
     }
@@ -69,13 +72,9 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
 
     protected void navigateTo(NavigationDrawerItem item) {
         try {
-            Fragment f = item.getFragmentClass().newInstance();
-            if (item.getFragmentArguments() != null) {
-                f.setArguments(item.getFragmentArguments());
-            }
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(getContentLayout().getId(), f).commit();
+                    .replace(getContentLayout().getId(), getFragmentInstance(item)).commit();
             mSelectedMenuItemId = item.getNavigationViewItemId();
             mNavigationDrawer.selectMenuItem(mSelectedMenuItemId);
         } catch (Exception t) {

@@ -3,12 +3,17 @@ package derpibooru.derpy.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.google.common.collect.ImmutableList;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -21,17 +26,14 @@ import derpibooru.derpy.server.requesters.LogoutRequester;
 import derpibooru.derpy.ui.fragments.FilterListFragment;
 import derpibooru.derpy.ui.fragments.HomeFragment;
 import derpibooru.derpy.ui.fragments.SearchFragment;
+import derpibooru.derpy.ui.fragments.UserFragment;
 import derpibooru.derpy.ui.utils.NavigationDrawerUserPresenter;
 
 public class MainActivity extends NavigationDrawerFragmentActivity {
     public static final String EXTRAS_USER = "derpibooru.derpy.DerpibooruUser";
 
     private static final int LOGIN_ACTIVITY_REQUEST_CODE = 1;
-    private static final List<NavigationDrawerItem> FRAGMENT_NAVIGATION_ITEMS =
-            ImmutableList.<NavigationDrawerItem>builder()
-                    .add(new NavigationDrawerItem(R.id.navigationHome, HomeFragment.class))
-                    .add(new NavigationDrawerItem(R.id.navigationSearch, SearchFragment.class))
-                    .add(new NavigationDrawerItem(R.id.navigationFilters, FilterListFragment.class)).build();
+    private List<NavigationDrawerItem> mFragmentNavigationItems;
 
     private NavigationDrawerUserPresenter mUserPresenter;
     private User mUser;
@@ -44,7 +46,8 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
         setContentView(R.layout.activity_main);
         super.initializeNavigationDrawer();
         initializeUser(savedInstanceState);
-        navigateTo(FRAGMENT_NAVIGATION_ITEMS.get(0));
+        initializeFragmentNavigationItems();
+        navigateTo(mFragmentNavigationItems.get(0));
     }
 
     @Override
@@ -55,7 +58,7 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
 
     @Override
     protected List<NavigationDrawerItem> getFragmentNavigationItems() {
-        return FRAGMENT_NAVIGATION_ITEMS;
+        return mFragmentNavigationItems;
     }
 
     @Override
@@ -91,6 +94,27 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
                 mUser.refresh();
             }};
         mUserPresenter.initializeWithView(mNavigationView);
+    }
+
+    private void initializeFragmentNavigationItems() {
+        mFragmentNavigationItems = Arrays.asList(
+                new NavigationDrawerItem(R.id.navigationHome, HomeFragment.class),
+                new NavigationDrawerItem(R.id.navigationSearch, SearchFragment.class),
+                new NavigationDrawerItem(R.id.navigationFilters, FilterListFragment.class)
+        );
+    }
+
+    protected Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem)
+            throws IllegalAccessException, InstantiationException {
+        Fragment f = fragmentMenuItem.getFragmentClass().newInstance();
+        f.setArguments(new Bundle());
+        if (fragmentMenuItem.getFragmentArguments() != null) {
+            f.setArguments(fragmentMenuItem.getFragmentArguments());
+        }
+        if (f instanceof UserFragment) {
+            f.getArguments().putParcelable(EXTRAS_USER, mUser.getUser());
+        }
+        return f;
     }
 
     private boolean isAuthenticationActionSelected(int itemId) {

@@ -9,10 +9,11 @@ import android.view.ViewGroup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.ui.adapters.HomeTabAdapter;
 import derpibooru.derpy.ui.views.FragmentTabPagerView;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends UserFragment {
     @Bind(R.id.fragmentPagerView) FragmentTabPagerView mTabViewPager;
 
     @Override
@@ -21,6 +22,14 @@ public class HomeFragment extends Fragment {
         ButterKnife.bind(this, v);
         initializeTabViewPager();
         return v;
+    }
+
+    @Override
+    protected void onUserRefreshed(DerpibooruUser user) {
+        if (mTabViewPager != null) {
+            ((HomeTabAdapter) mTabViewPager.getFragmentAdapter())
+                    .toggleWatchedTab(user.isLoggedIn());
+        }
     }
 
     private void initializeTabViewPager() {
@@ -32,12 +41,6 @@ public class HomeFragment extends Fragment {
                                            mTabViewPager.refreshTabTitles();
                                        }
                                    }));
+        onUserRefreshed(getUser());
     }
-
-    /*@Override
-    public void onUserDataRefreshed() {
-        if (mTabViewPager != null) {
-            ((HomeTabAdapter) mTabViewPager.getFragmentAdapter()).toggleWatchedTab();
-        }
-    } */
 }

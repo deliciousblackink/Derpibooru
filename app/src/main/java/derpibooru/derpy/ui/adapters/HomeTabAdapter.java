@@ -34,14 +34,13 @@ public class HomeTabAdapter extends FragmentStatePagerAdapter {
         mTabs.add(TITLE_MOST_COMMENTED);
     }
 
-    public void toggleWatchedTab() {
-        boolean loggedIn = new UserDataProvider(mContext, null).isLoggedIn();
+    public void toggleWatchedTab(boolean isUserLoggedIn) {
         boolean watchedTabDisplayed = mTabs.contains(TITLE_WATCHED);
-        if (loggedIn && !watchedTabDisplayed) {
+        if (isUserLoggedIn && !watchedTabDisplayed) {
             mTabs.add(1, TITLE_WATCHED);
             notifyDataSetChanged();
             mTabChangeHandler.onTabSetChanged();
-        } else if (!loggedIn && watchedTabDisplayed) {
+        } else if (!isUserLoggedIn && watchedTabDisplayed) {
             mTabs.remove(TITLE_WATCHED);
             notifyDataSetChanged();
             mTabChangeHandler.onTabSetChanged();

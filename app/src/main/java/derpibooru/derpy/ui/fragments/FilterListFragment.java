@@ -16,17 +16,19 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruFilter;
+import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.providers.FilterListProvider;
 import derpibooru.derpy.server.requesters.FilterChangeRequester;
 import derpibooru.derpy.ui.adapters.FilterListAdapter;
 import derpibooru.derpy.ui.views.AccentColorProgressBar;
 
-public class FilterListFragment extends Fragment {
+public class FilterListFragment extends UserFragment {
     private static final String BUNDLE_FILTER_LIST = "FilterList";
 
     private ArrayList<DerpibooruFilter> mAvailableFilterList;
     private FilterListProvider mFilterListProvider;
+    private OnFilterChangeListener mFilterChangeListener;
 
     @Bind(R.id.viewFilterList) RecyclerView mFilterListView;
     @Bind(R.id.progressFilterList) AccentColorProgressBar mProgressView;
@@ -56,7 +58,18 @@ public class FilterListFragment extends Fragment {
         outState.putParcelableArrayList(BUNDLE_FILTER_LIST, mAvailableFilterList);
     }
 
+    @Override
+    protected void onUserRefreshed(DerpibooruUser user) {
+        fetchAvailableFilters();
+    }
+
+    public void setOnFilterChangeListener(OnFilterChangeListener listener) {
+        mFilterChangeListener = listener;
+    }
+
     private void fetchAvailableFilters() {
+        mFilterListView.setVisibility(View.GONE);
+        mProgressView.setVisibility(View.VISIBLE);
         if (mFilterListProvider == null) {
             initializeFilterListProvider();
         }
@@ -64,28 +77,20 @@ public class FilterListFragment extends Fragment {
     }
 
     private void displayFilters() {
-        if (isFilterListViewInitialized()) {
+        if (mFilterListView.getAdapter() != null) {
             ((FilterListAdapter) mFilterListView.getAdapter())
-                    .replaceFilters(mAvailableFilterList, mFilterListProvider.getCurrentFilter());
+                    .replaceFilters(mAvailableFilterList, getUser().getCurrentFilter());
         } else {
-            initializeFilterListView();
+            mFilterListView.setLayoutManager(new LinearLayoutManager(getContext()));
+            initializeFilterListAdapter();
         }
-    }
-
-    private boolean isFilterListViewInitialized() {
-        return (mFilterListView.getVisibility() == View.VISIBLE);
-    }
-
-    private void initializeFilterListView() {
-        mFilterListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        initializeFilterListAdapter();
         mProgressView.setVisibility(View.GONE);
         mFilterListView.setVisibility(View.VISIBLE);
     }
 
     private void initializeFilterListAdapter() {
         FilterListAdapter fva =
-                new FilterListAdapter(mFilterListProvider.getCurrentFilter(), mAvailableFilterList,
+                new FilterListAdapter(getUser().getCurrentFilter(), mAvailableFilterList,
                                       new FilterListAdapter.FiltersViewHandler() {
                                           @Override
                                           public void changeFilterTo(DerpibooruFilter newFilter) {
@@ -120,7 +125,7 @@ public class FilterListFragment extends Fragment {
         new FilterChangeRequester(getContext(), new QueryHandler<Boolean>() {
             @Override
             public void onQueryExecuted(Boolean result) {
-                //FiltersActivity.super.refreshUserData();
+                mFilterChangeListener.onFilterChanged();
             }
 
             @Override
@@ -128,5 +133,9 @@ public class FilterListFragment extends Fragment {
                 Snackbar.make(mFilterListView, R.string.activity_filters_failed_to_change_filter, Snackbar.LENGTH_SHORT).show();
             }
         }, newFilter).fetch();
+    }
+
+    public interface OnFilterChangeListener {
+        void onFilterChanged();
     }
 }

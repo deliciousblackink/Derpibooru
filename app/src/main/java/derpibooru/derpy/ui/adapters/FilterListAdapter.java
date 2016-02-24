@@ -31,7 +31,7 @@ public class FilterListAdapter extends RecyclerView.Adapter<FilterListAdapter.Vi
          * does not specify which one of them is currently used. */
         int indexOfCurrentFilterInFilterList = mFilters.indexOf(newCurrentFilter);
         if (indexOfCurrentFilterInFilterList == -1) {
-            Log.e("FiltersViewAdapter", "the current filter hasn't been found in the filter list");
+            Log.e("FiltersViewAdapter", "the current filter wasn't found in the filter list");
         } else {
             /* make current filter the first item in the filter list */
             DerpibooruFilter newFilter = mFilters.get(indexOfCurrentFilterInFilterList);

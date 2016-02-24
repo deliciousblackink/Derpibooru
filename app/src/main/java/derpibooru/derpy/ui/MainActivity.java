@@ -109,6 +109,14 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
         if (f instanceof UserFragment) {
             f.getArguments().putParcelable(EXTRAS_USER, mUserManager.getUser());
         }
+        if (f instanceof FilterListFragment) {
+            ((FilterListFragment) f).setOnFilterChangeListener(new FilterListFragment.OnFilterChangeListener() {
+                @Override
+                public void onFilterChanged() {
+                    mUserPresenter.refreshUser();
+                }
+            });
+        }
         return f;
     }
 

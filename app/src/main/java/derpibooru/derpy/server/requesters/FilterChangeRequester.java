@@ -7,7 +7,6 @@ import java.util.Map;
 
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.server.QueryHandler;
-import derpibooru.derpy.storage.UserDataStorage;
 
 public class FilterChangeRequester extends AuthenticatedRequester<Boolean> {
     private String mAuthenticityToken;
@@ -38,11 +37,6 @@ public class FilterChangeRequester extends AuthenticatedRequester<Boolean> {
     @Override
     public void fetch() {
         fetchToken();
-    }
-
-    @Override
-    protected void cacheResponse(Boolean parsedResponse) {
-        new UserDataStorage(mContext).setCurrentFilter(mNewFilter);
     }
 
     /**

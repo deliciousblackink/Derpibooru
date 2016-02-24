@@ -16,6 +16,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.common.collect.ImmutableMap;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruUser;
 
@@ -23,77 +25,17 @@ abstract class NavigationDrawerLayout implements NavigationView.OnNavigationItem
     protected NavigationDrawerActivity mParent;
     protected int mParentNavigationId;
 
-    protected NavigationView mNavigationView;
+    @Bind(R.id.navigationView) NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
-    private View mDrawerHeader;
 
     NavigationDrawerLayout(NavigationDrawerActivity parent, DrawerLayout drawer, Toolbar toolbar, NavigationView menu) {
         mParent = parent;
-
         mDrawerLayout = drawer;
-        mNavigationView = ((NavigationView) mDrawerLayout.findViewById(R.id.navigationView));
-        mDrawerHeader = mNavigationView.getHeaderView(0);
-
-        mDrawerHeader.findViewById(R.id.buttonRefreshUserData)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        refreshUserData();
-                    }
-                });
-
+        ButterKnife.bind(parent, drawer);
         initDrawerToggle(parent, toolbar, drawer, menu);
     }
 
-    protected abstract void fetchUserData();
-
-    public void refreshUserData() {
-        mDrawerHeader.findViewById(R.id.buttonRefreshUserData)
-                .setVisibility(View.INVISIBLE);
-        ((TextView) mDrawerHeader.findViewById(R.id.textHeaderFilter))
-                .setText(R.string.loading);
-        fetchUserData();
-    }
-
-    protected void displayUserData(DerpibooruUser user) {
-        mDrawerHeader.findViewById(R.id.buttonRefreshUserData)
-                .setVisibility(View.VISIBLE);
-        if (!user.isLoggedIn()) {
-            onUserLoggedOut(user);
-        } else {
-            onUserLoggedIn(user);
-        }
-        ((TextView) mDrawerHeader.findViewById(R.id.textHeaderFilter))
-                .setText(String.format(mParent.getString(R.string.user_filter),
-                                       user.getCurrentFilter().getName()));
-        /* ! copied from ImageCommentsAdapter; perhaps it should be made into a separate class? */
-        if (!user.getAvatarUrl().endsWith(".svg")) {
-            Glide.with(mParent).load(user.getAvatarUrl()).diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .dontAnimate().into((ImageView) mDrawerHeader.findViewById(R.id.imageAvatar));
-        } else {
-            Glide.with(mParent).load(R.drawable.no_avatar).dontAnimate()
-                    .into((ImageView) mDrawerHeader.findViewById(R.id.imageAvatar));
-        }
-    }
-
-    private void onUserLoggedIn(DerpibooruUser user) {
-        ((TextView) mDrawerHeader.findViewById(R.id.textHeaderUser))
-                .setText(user.getUsername());
-        mNavigationView.getMenu().clear();
-        mNavigationView.inflateMenu(R.menu.menu_navigation_drawer_logged_in);
-        selectMenuItem(mParentNavigationId);
-    }
-
-    private void onUserLoggedOut(DerpibooruUser user) {
-        ((TextView) mDrawerHeader.findViewById(R.id.textHeaderUser))
-                .setText(R.string.user_logged_out);
-        mNavigationView.getMenu().clear();
-        mNavigationView.inflateMenu(R.menu.menu_navigation_drawer_logged_out);
-        selectMenuItem(mParentNavigationId);
-    }
-
-    private void initDrawerToggle(Activity parent, Toolbar toolbar,
-                                  DrawerLayout drawer, NavigationView menu) {
+    private void initDrawerToggle(Activity parent, Toolbar toolbar, DrawerLayout drawer, NavigationView menu) {
         ActionBarDrawerToggle toggle =
                 new ActionBarDrawerToggle(parent, mDrawerLayout, toolbar,
                                           R.string.open_drawer, R.string.close_drawer) {
@@ -123,10 +65,10 @@ abstract class NavigationDrawerLayout implements NavigationView.OnNavigationItem
     }
 
     protected void selectMenuItem(int itemId) {
-        mNavigationView.getMenu().findItem(mParentNavigationId).setChecked(true);
+        mNavigationView.getMenu().findItem(itemId).setChecked(true);
     }
 
     protected void deselectMenuItem(int itemId) {
-        mNavigationView.getMenu().findItem(mParentNavigationId).setChecked(false);
+        mNavigationView.getMenu().findItem(itemId).setChecked(false);
     }
 }

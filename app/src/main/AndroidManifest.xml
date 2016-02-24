@@ -24,9 +24,6 @@
             android:name=".ui.ImageActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".ui.SearchActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
             android:name=".ui.SearchResultActivity"/>
         <activity
             android:name=".ui.UserImageListActivity"

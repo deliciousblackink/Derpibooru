@@ -1,34 +1,24 @@
 package derpibooru.derpy.ui;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.common.collect.ImmutableMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruUser;
 
 abstract class NavigationDrawerLayout implements NavigationView.OnNavigationItemSelectedListener {
-    protected NavigationDrawerActivity mParent;
-    protected int mParentNavigationId;
-
-    @Bind(R.id.navigationView) NavigationView mNavigationView;
+    private NavigationDrawerFragmentActivity mParent;
     private DrawerLayout mDrawerLayout;
 
-    NavigationDrawerLayout(NavigationDrawerActivity parent, DrawerLayout drawer, Toolbar toolbar, NavigationView menu) {
+    @Bind(R.id.navigationView) NavigationView mNavigationView;
+
+    NavigationDrawerLayout(NavigationDrawerFragmentActivity parent, DrawerLayout drawer, Toolbar toolbar, NavigationView menu) {
         mParent = parent;
         mDrawerLayout = drawer;
         ButterKnife.bind(parent, drawer);
@@ -57,11 +47,6 @@ abstract class NavigationDrawerLayout implements NavigationView.OnNavigationItem
 
     public void closeDrawer() {
         mDrawerLayout.closeDrawer(GravityCompat.START);
-    }
-
-    protected void deselectParentMenuItemAndCloseDrawer() {
-        deselectMenuItem(mParentNavigationId);
-        closeDrawer();
     }
 
     protected void selectMenuItem(int itemId) {

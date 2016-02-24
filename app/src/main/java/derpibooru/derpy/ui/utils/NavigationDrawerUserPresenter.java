@@ -29,7 +29,6 @@ public abstract class NavigationDrawerUserPresenter {
         ButterKnife.bind(context, menu.getHeaderView(0));
         mNavigationView = menu;
     }
-
     /**
      * Called internally (from the presenter class) when user refresh is requested,
      * either from the UI or by calling the refreshUser() method.
@@ -37,7 +36,6 @@ public abstract class NavigationDrawerUserPresenter {
      */
     protected abstract void onUserRefreshRequested();
 
-    protected abstract void selectParentMenuItem();
 
     @OnClick(R.id.buttonRefreshUser)
     public void refreshUser() {
@@ -74,13 +72,11 @@ public abstract class NavigationDrawerUserPresenter {
         mTextUsername.setText(username);
         mNavigationView.getMenu().clear();
         mNavigationView.inflateMenu(R.menu.menu_navigation_drawer_logged_in);
-        selectParentMenuItem();
     }
 
     private void onUserLoggedOut() {
         mTextUsername.setText(R.string.user_logged_out);
         mNavigationView.getMenu().clear();
         mNavigationView.inflateMenu(R.menu.menu_navigation_drawer_logged_out);
-        selectParentMenuItem();
     }
 }

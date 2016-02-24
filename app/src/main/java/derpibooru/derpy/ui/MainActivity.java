@@ -53,7 +53,13 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(BUNDLE_USER, mUser.getUser());
+        try {
+            outState.putParcelable(BUNDLE_USER, mUser.getUser());
+        } catch (IllegalStateException e) {
+            /* the exception is to be expected when a configuration change occurs prior to user data being fetched
+             * it doesn't have to be handled here as the data is going to be fetched again anyway,
+             * though the user management should be moved into a Service sometime */
+        }
     }
 
     @Override
@@ -79,6 +85,7 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
             mUser = new User(this, (DerpibooruUser) savedInstanceState.getParcelable(BUNDLE_USER));
             mUser.setOnUserRefreshListener(new UserRefreshListener());
             mUserPresenter.displayUser(mUser.getUser());
+            setActiveMenuItem();
         } else {
             mUser = new User(this);
             mUser.setOnUserRefreshListener(new UserRefreshListener());
@@ -149,6 +156,7 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
         @Override
         public void onUserRefreshed(DerpibooruUser user) {
             mUserPresenter.displayUser(user);
+            setActiveMenuItem();
         }
     }
 }

@@ -45,6 +45,10 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
         return mSelectedMenuItemId;
     }
 
+    protected void setActiveMenuItem() {
+        mNavigationDrawer.selectMenuItem(mSelectedMenuItemId);
+    }
+
     protected void initializeNavigationDrawer() {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
@@ -60,7 +64,6 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
     protected boolean onNavigationItemSelected(MenuItem item) {
         boolean result =  isCurrentFragmentItemSelected(item.getItemId())
                 || isAnotherFragmentItemSelected(item.getItemId());
-        mSelectedMenuItemId = item.getItemId();
         return result;
     }
 
@@ -73,6 +76,8 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(getContentLayout().getId(), f).commit();
+            mSelectedMenuItemId = item.getNavigationViewItemId();
+            mNavigationDrawer.selectMenuItem(mSelectedMenuItemId);
         } catch (Exception t) {
             Log.e("DrawerFragmentActivity", "failed to initialize a Fragment class", t);
         }
@@ -89,6 +94,8 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
     private boolean isAnotherFragmentItemSelected(int menuId) {
         for (NavigationDrawerItem item : getFragmentNavigationItems()) {
             if (item.getNavigationViewItemId() == menuId) {
+                mNavigationDrawer.deselectMenuItem(mSelectedMenuItemId);
+                mNavigationDrawer.closeDrawer();
                 navigateTo(item);
             }
         }

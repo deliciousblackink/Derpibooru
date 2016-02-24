@@ -8,20 +8,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 
 abstract class NavigationDrawerLayout implements NavigationView.OnNavigationItemSelectedListener {
-    private NavigationDrawerFragmentActivity mParent;
+    private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
 
-    @Bind(R.id.navigationView) NavigationView mNavigationView;
-
     NavigationDrawerLayout(NavigationDrawerFragmentActivity parent, DrawerLayout drawer, Toolbar toolbar, NavigationView menu) {
-        mParent = parent;
         mDrawerLayout = drawer;
-        ButterKnife.bind(parent, drawer);
+        mNavigationView = menu;
         initDrawerToggle(parent, toolbar, drawer, menu);
     }
 

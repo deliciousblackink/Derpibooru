@@ -120,7 +120,7 @@ public abstract class ImageListFragment extends Fragment {
         @Override
         public void onQueryFailed() {
             Snackbar.make(mImageView, R.string.fragment_image_list_failed_to_fetch_list, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.snackbar_action_retry, new View.OnClickListener() {
+                    .setAction(R.string.retry, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             fetchImages();

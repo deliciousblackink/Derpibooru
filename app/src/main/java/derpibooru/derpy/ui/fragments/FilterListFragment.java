@@ -68,8 +68,7 @@ public class FilterListFragment extends UserFragment {
     }
 
     private void fetchAvailableFilters() {
-        mFilterListView.setVisibility(View.GONE);
-        mProgressView.setVisibility(View.VISIBLE);
+        toggleProgressBar(true);
         if (mFilterListProvider == null) {
             initializeFilterListProvider();
         }
@@ -84,8 +83,7 @@ public class FilterListFragment extends UserFragment {
             mFilterListView.setLayoutManager(new LinearLayoutManager(getContext()));
             initializeFilterListAdapter();
         }
-        mProgressView.setVisibility(View.GONE);
-        mFilterListView.setVisibility(View.VISIBLE);
+        toggleProgressBar(false);
     }
 
     private void initializeFilterListAdapter() {
@@ -130,9 +128,21 @@ public class FilterListFragment extends UserFragment {
 
             @Override
             public void onQueryFailed() {
+                toggleProgressBar(false);
                 Snackbar.make(mFilterListView, R.string.activity_filters_failed_to_change_filter, Snackbar.LENGTH_SHORT).show();
             }
         }, newFilter).fetch();
+        toggleProgressBar(true);
+    }
+
+    private void toggleProgressBar(boolean makeActive) {
+        if (makeActive) {
+            mFilterListView.setVisibility(View.GONE);
+            mProgressView.setVisibility(View.VISIBLE);
+        } else {
+            mProgressView.setVisibility(View.GONE);
+            mFilterListView.setVisibility(View.VISIBLE);
+        }
     }
 
     public interface OnFilterChangeListener {

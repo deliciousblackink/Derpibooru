@@ -47,6 +47,7 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
         setContentView(R.layout.activity_main);
         super.initializeNavigationDrawer();
         initializeUser(savedInstanceState);
+        navigateTo(FRAGMENT_NAVIGATION_ITEMS.get(0));
     }
 
     @Override
@@ -86,11 +87,12 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
     }
 
     private void initializeUserPresenter() {
-        mUserPresenter = new NavigationDrawerUserPresenter(this, mNavigationView) {
+        mUserPresenter = new NavigationDrawerUserPresenter(this) {
             @Override
             protected void onUserRefreshRequested() {
                 mUser.refresh();
             }};
+        mUserPresenter.initializeWithView(mNavigationView);
     }
 
     private boolean isAuthenticationActionSelected(int itemId) {

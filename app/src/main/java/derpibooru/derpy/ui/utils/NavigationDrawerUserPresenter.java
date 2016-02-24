@@ -25,17 +25,21 @@ public abstract class NavigationDrawerUserPresenter {
     private NavigationView mNavigationView;
     private Context mContext;
 
-    public NavigationDrawerUserPresenter(Context context, NavigationView menu) {
-        ButterKnife.bind(context, menu.getHeaderView(0));
-        mNavigationView = menu;
+    public NavigationDrawerUserPresenter(Context context) {
+        mContext = context;
     }
+
+    public void initializeWithView(NavigationView menu) {
+        mNavigationView = menu;
+        ButterKnife.bind(this, menu.getHeaderView(0));
+    }
+
     /**
      * Called internally (from the presenter class) when user refresh is requested,
      * either from the UI or by calling the refreshUser() method.
      * Don't forget to call displayUser(DerpibooruUser) with updated data.
      */
     protected abstract void onUserRefreshRequested();
-
 
     @OnClick(R.id.buttonRefreshUser)
     public void refreshUser() {

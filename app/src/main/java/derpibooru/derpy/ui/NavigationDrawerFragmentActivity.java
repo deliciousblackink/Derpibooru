@@ -64,28 +64,32 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
         return result;
     }
 
-    private boolean isCurrentFragmentItemSelected(int itemId) {
-        if (itemId == mSelectedMenuItemId) {
+    protected void navigateTo(NavigationDrawerItem item) {
+        try {
+            Fragment f = item.getFragmentClass().newInstance();
+            if (item.getFragmentArguments() != null) {
+                f.setArguments(item.getFragmentArguments());
+            }
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(getContentLayout().getId(), f).commit();
+        } catch (Exception t) {
+            Log.e("DrawerFragmentActivity", "failed to initialize a Fragment class", t);
+        }
+    }
+
+    private boolean isCurrentFragmentItemSelected(int menuId) {
+        if (menuId == mSelectedMenuItemId) {
             mNavigationDrawer.closeDrawer();
             return true;
         }
         return false;
     }
 
-    private boolean isAnotherFragmentItemSelected(int itemId) {
+    private boolean isAnotherFragmentItemSelected(int menuId) {
         for (NavigationDrawerItem item : getFragmentNavigationItems()) {
-            if (item.getNavigationViewItemId() == itemId) {
-                try {
-                    Fragment f = item.getFragmentClass().newInstance();
-                    if (item.getFragmentArguments() != null) {
-                        f.setArguments(item.getFragmentArguments());
-                    }
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .add(getContentLayout().getId(), f).commit();
-                } catch (Exception t) {
-                    Log.e("DrawerFragmentActivity", "failed to initialize a Fragment class", t);
-                }
+            if (item.getNavigationViewItemId() == menuId) {
+                navigateTo(item);
             }
         }
         return false;

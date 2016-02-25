@@ -13,6 +13,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import derpibooru.derpy.R;
+import derpibooru.derpy.UserManager;
 import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
@@ -23,50 +24,58 @@ public abstract class NavigationDrawerUserPresenter {
     @Bind(R.id.imageAvatar) ImageView mViewAvatar;
 
     private NavigationView mNavigationView;
+    private UserManager mUserManager;
     private Context mContext;
 
-    public NavigationDrawerUserPresenter(Context context) {
+    public NavigationDrawerUserPresenter(Context context, DerpibooruUser user) {
+        mUserManager = new UserManager(context, user);
+        mUserManager.setOnUserRefreshListener(new UserRefreshListener());
         mContext = context;
     }
 
     public void initializeWithView(NavigationView menu) {
         mNavigationView = menu;
         ButterKnife.bind(this, menu.getHeaderView(0));
+        displayUser();
     }
 
-    /**
-     * Called internally (from the presenter class) when user refresh is requested,
-     * either from the UI or by calling the refreshUser() method.
-     * Don't forget to call displayUser(DerpibooruUser) with updated data.
-     */
-    protected abstract void onUserRefreshRequested();
+    public DerpibooruUser getUser() throws IllegalStateException {
+        return mUserManager.getUser();
+    }
 
     @OnClick(R.id.buttonRefreshUser)
     public void refreshUser() {
         mButtonRefreshUser.setVisibility(View.INVISIBLE);
         mTextCurrentFilter.setText(R.string.loading);
-        onUserRefreshRequested();
+        mUserManager.refresh();
     }
+
+    /**
+     * Invoked when user data has been refreshed.
+     * <br>
+     * Always <strong>set</strong> the active fragment's menu item <strong>checked</strong> after receiving the call,
+     * as the menu items may have been swapped if the user's authentication status had changed.
+     * @param user refreshed user data
+     */
+    protected abstract void onUserRefreshed(DerpibooruUser user);
 
     /**
      * Displays username and current filter, swaps menu items depending on whether the user
      * is logged in or not.
-     * <br>
-     * Always <strong>set</strong> the active fragment's menu item <strong>checked</strong> after calling the method.
      */
-    public void displayUser(DerpibooruUser user) {
+    public void displayUser() {
         mButtonRefreshUser.setVisibility(View.VISIBLE);
-        if (!user.isLoggedIn()) {
+        if (!getUser().isLoggedIn()) {
             onUserLoggedOut();
         } else {
-            onUserLoggedIn(user.getUsername());
+            onUserLoggedIn(getUser().getUsername());
         }
         mTextCurrentFilter.setText(String.format(mContext.getString(R.string.user_filter),
-                                                 user.getCurrentFilter().getName()));
+                                                 getUser().getCurrentFilter().getName()));
         /* ! copied from ImageCommentsAdapter; perhaps it should be made into a separate class? */
-        if (!user.getAvatarUrl().endsWith(".svg")) {
+        if (!getUser().getAvatarUrl().endsWith(".svg")) {
             Glide.with(mContext)
-                    .load(user.getAvatarUrl())
+                    .load(getUser().getAvatarUrl())
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .dontAnimate()
                     .into(mViewAvatar);
@@ -88,5 +97,18 @@ public abstract class NavigationDrawerUserPresenter {
         mTextUsername.setText(R.string.user_logged_out);
         mNavigationView.getMenu().clear();
         mNavigationView.inflateMenu(R.menu.menu_navigation_drawer_logged_out);
+    }
+
+    private class UserRefreshListener implements UserManager.OnUserRefreshListener {
+        @Override
+        public void onUserRefreshed(DerpibooruUser user) {
+            displayUser();
+            NavigationDrawerUserPresenter.this.onUserRefreshed(user);
+        }
+
+        @Override
+        public void onRefreshFailed() {
+            /* TODO: show an error message */
+        }
     }
 }

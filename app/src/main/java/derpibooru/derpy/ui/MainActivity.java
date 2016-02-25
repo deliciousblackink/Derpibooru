@@ -17,11 +17,13 @@ import derpibooru.derpy.UserManager;
 import derpibooru.derpy.data.internal.NavigationDrawerItem;
 import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.providers.UserImageListProvider;
 import derpibooru.derpy.server.requesters.LogoutRequester;
 import derpibooru.derpy.ui.fragments.FilterListFragment;
 import derpibooru.derpy.ui.fragments.HomeFragment;
 import derpibooru.derpy.ui.fragments.SearchFragment;
 import derpibooru.derpy.ui.fragments.UserFragment;
+import derpibooru.derpy.ui.fragments.UserImageListFragment;
 import derpibooru.derpy.ui.utils.NavigationDrawerUserPresenter;
 
 public class MainActivity extends NavigationDrawerFragmentActivity {
@@ -92,10 +94,20 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
     }
 
     private void initializeFragmentNavigationItems() {
+        /* FIXME: keeping multiple instances of Bundle to store ints is extremely inefficient resource-wise */
+        Bundle userListFaved = new Bundle();
+        userListFaved.putInt("type", UserImageListProvider.UserListType.Faved.toValue());
+        Bundle userListUpvoted = new Bundle();
+        userListUpvoted.putInt("type", UserImageListProvider.UserListType.Upvoted.toValue());
+        Bundle userListUploaded = new Bundle();
+        userListUploaded.putInt("type", UserImageListProvider.UserListType.Uploaded.toValue());
         mFragmentNavigationItems = Arrays.asList(
                 new NavigationDrawerItem(R.id.navigationHome, HomeFragment.class),
                 new NavigationDrawerItem(R.id.navigationSearch, SearchFragment.class),
-                new NavigationDrawerItem(R.id.navigationFilters, FilterListFragment.class)
+                new NavigationDrawerItem(R.id.navigationFilters, FilterListFragment.class),
+                new NavigationDrawerItem(R.id.navigationFaves, UserImageListFragment.class, userListFaved),
+                new NavigationDrawerItem(R.id.navigationUpvoted, UserImageListFragment.class, userListUpvoted),
+                new NavigationDrawerItem(R.id.navigationUploaded, UserImageListFragment.class, userListUploaded)
         );
     }
 

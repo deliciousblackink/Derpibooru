@@ -3,6 +3,6 @@
     <item android:drawable="@android:color/white"/>
     <item>
         <bitmap android:gravity="center"
-                android:src="@drawable/ic_launcher_vector"/>
+                android:src="@drawable/splash_screen_icon"/>
     </item>
 </layer-list>

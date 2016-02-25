@@ -19,10 +19,12 @@ import derpibooru.derpy.ui.views.AccentColorIconButton;
 public abstract class ImageInteractionPresenter {
     private ImageInteractionRequester mInteractionRequester;
 
-    protected ImageInteractionPresenter(Context context) {
+    protected ImageInteractionPresenter(Context context, boolean isLoggedIn) {
         mInteractionRequester = new ImageInteractionRequester(context, new InteractionRequestHandler());
-        if (new UserDataProvider(context, null).isLoggedIn()) {
+        if (isLoggedIn) {
             initializeInteractionListeners();
+        } else {
+            /* TODO: display "log in to interact" message */
         }
     }
 

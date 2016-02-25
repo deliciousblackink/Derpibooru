@@ -21,16 +21,19 @@ import java.util.Set;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImage;
+import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.ui.animations.ImageListItemAnimator;
 import derpibooru.derpy.ui.utils.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
 public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImage, ImageListAdapter.ViewHolder> {
     private ImageListItemAnimator mAnimator;
+    private boolean mUserLoggedIn;
 
-    protected ImageListAdapter(Context context, List<DerpibooruImage> items) {
+    protected ImageListAdapter(Context context, List<DerpibooruImage> items, boolean isUserLoggedIn) {
         super(context, items);
         mAnimator = new ImageListItemAnimator();
+        mUserLoggedIn = isUserLoggedIn;
     }
 
     public abstract void startImageActivity(DerpibooruImage image);
@@ -49,6 +52,16 @@ public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<
         setInteractionListeners(holder, position);
         holder.buttonComments.setText(String.format("%d", getItems().get(position).getCommentCount()));
         holder.buttonComments.setEnabled(false);
+    }
+
+    /**
+     * Resets items and configures image interactions according to the user authentication state.
+     * @param newItems new items
+     * @param isUserLoggedIn new user interaction state
+     */
+    public void resetItems(List<DerpibooruImage> newItems, boolean isUserLoggedIn) {
+        mUserLoggedIn = isUserLoggedIn;
+        super.resetItems(newItems);
     }
 
     public void replaceItem(final DerpibooruImage target) {
@@ -161,7 +174,7 @@ public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<
     }
 
     private void initializeImageInteractions(final ViewHolder target, final int position) {
-        target.interactions = new ImageInteractionPresenter(getContext()) {
+        target.interactions = new ImageInteractionPresenter(getContext(), mUserLoggedIn) {
             @Nullable
             @Override
             protected AccentColorIconButton getScoreButton() {

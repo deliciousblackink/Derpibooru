@@ -13,5 +13,5 @@
     <!-- menu items -->
     <string name="action_settings">Settings</string>
     <!-- errors -->
-    <string name="activity_splash_user_loader_request_failed">Derpibooru couldn’t reach the server! Check your internet connection and tap Retry</string>
+    <string name="activity_splash_user_loader_request_failed">Couldn’t reach the server. Check your Internet connection and try again</string>
 </resources>

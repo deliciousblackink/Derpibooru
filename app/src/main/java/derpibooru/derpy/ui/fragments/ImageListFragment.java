@@ -14,8 +14,11 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImage;
+import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.providers.ImageListProvider;
 import derpibooru.derpy.ui.ImageActivity;
@@ -23,22 +26,21 @@ import derpibooru.derpy.ui.adapters.ImageListAdapter;
 import derpibooru.derpy.ui.views.ImageListRecyclerView;
 import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
-public abstract class ImageListFragment extends Fragment {
+public abstract class ImageListFragment extends UserFragment {
     private static final int IMAGE_ACTIVITY_REQUEST_CODE = 1;
 
     private ImageListAdapter mImageListAdapter;
     private ImageListProvider mImageListProvider;
-    private ImageListRecyclerView mImageView;
-    private SwipeRefreshLayout mImageRefreshLayout;
+
+    @Bind(R.id.layoutImageRefresh) SwipeRefreshLayout mImageRefreshLayout;
+    @Bind(R.id.viewImages) ImageListRecyclerView mImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_image_list, container, false);
-        mImageView = (ImageListRecyclerView) v.findViewById(R.id.viewImages);
-        /* disable item change animations for image interactions */
-        ((SimpleItemAnimator) mImageView.getItemAnimator()).setSupportsChangeAnimations(false);
-        mImageRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.layoutImageRefresh);
+        ButterKnife.bind(this, v);
+        ((SimpleItemAnimator) mImageView.getItemAnimator()).setSupportsChangeAnimations(false); /* disable item change animations for image interactions */
         mImageRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
         mImageRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -64,6 +66,17 @@ public abstract class ImageListFragment extends Fragment {
 
     protected abstract void fetchImages();
 
+    @Override
+    protected void onUserRefreshed(DerpibooruUser user) {
+        if (mImageListAdapter == null) {
+            return;
+        }
+        if ((user.isLoggedIn() != getUser().isLoggedIn())
+                || (!user.getCurrentFilter().equals(getUser().getCurrentFilter()))) {
+            refreshImages();
+        }
+    }
+
     protected void refreshImages() {
         mImageRefreshLayout.setRefreshing(true); /* in case the method was called by a subclass */
         mImageListProvider.resetPageNumber().fetch();
@@ -73,7 +86,7 @@ public abstract class ImageListFragment extends Fragment {
         if (mImageListAdapter == null) {
             initializeImageListAdapter(images);
         } else if (mImageRefreshLayout.isRefreshing()) {
-            mImageListAdapter.resetItems(images);
+            mImageListAdapter.resetItems(images, getUser().isLoggedIn());
             mImageRefreshLayout.setRefreshing(false);
         } else {
             mImageListAdapter.appendItems(images);
@@ -81,7 +94,7 @@ public abstract class ImageListFragment extends Fragment {
     }
 
     private void initializeImageListAdapter(List<DerpibooruImage> images) {
-        mImageListAdapter = new ImageListAdapter(getActivity(), images) {
+        mImageListAdapter = new ImageListAdapter(getActivity(), images, getUser().isLoggedIn()) {
             @Override
             public void startImageActivity(DerpibooruImage image) {
                 Intent intent = new Intent(getContext(), ImageActivity.class);
@@ -119,13 +132,15 @@ public abstract class ImageListFragment extends Fragment {
 
         @Override
         public void onQueryFailed() {
-            Snackbar.make(mImageView, R.string.fragment_image_list_failed_to_fetch_list, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            fetchImages();
-                        }
-                    }).show();
+            if (mImageView != null) {
+                Snackbar.make(mImageView, R.string.fragment_image_list_failed_to_fetch_list, Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.retry, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                fetchImages();
+                            }
+                        }).show();
+            }
         }
     }
 }

@@ -139,7 +139,7 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
             return true;
         } else if (itemId == R.id.navigationLogout) {
             logout();
-            return true; /* don't close the drawer */
+            return true;
         }
         return false;
     }
@@ -148,6 +148,9 @@ public class MainActivity extends NavigationDrawerFragmentActivity {
         new LogoutRequester(this, new QueryHandler<Boolean>() {
             @Override
             public void onQueryExecuted(Boolean result) {
+                /* make sure UserImageListFragment is not active after logout */
+                navigateTo(mFragmentNavigationItems.get(0));
+                getNavigationDrawerLayout().closeDrawer();
                 mUserPresenter.refreshUser();
             }
 

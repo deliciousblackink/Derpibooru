@@ -27,20 +27,17 @@ public class HomeFragment extends UserFragment {
     @Override
     protected void onUserRefreshed(DerpibooruUser user) {
         if (mTabViewPager != null) {
-            ((HomeTabAdapter) mTabViewPager.getFragmentAdapter())
-                    .toggleWatchedTab(user.isLoggedIn());
+            ((HomeTabAdapter) mTabViewPager.getFragmentAdapter()).refreshUser(user);
         }
     }
 
     private void initializeTabViewPager() {
-        mTabViewPager.setFragmentAdapter(
-                new HomeTabAdapter(getContext(), getFragmentManager(),
-                                   new HomeTabAdapter.TabSetChangeHandler() {
-                                       @Override
-                                       public void onTabSetChanged() {
-                                           mTabViewPager.refreshTabTitles();
-                                       }
-                                   }));
-        onUserRefreshed(getUser());
+        mTabViewPager.setFragmentAdapter(new HomeTabAdapter(
+                getFragmentManager(), new HomeTabAdapter.TabSetChangeHandler() {
+            @Override
+            public void onTabSetChanged() {
+                mTabViewPager.refreshTabTitles();
+            }
+        }, getUser()));
     }
 }

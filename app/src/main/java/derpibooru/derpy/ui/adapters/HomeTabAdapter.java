@@ -1,6 +1,5 @@
 package derpibooru.derpy.ui.adapters;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,8 +7,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 
+import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.providers.RankingImageListProvider;
-import derpibooru.derpy.server.providers.UserDataProvider;
+import derpibooru.derpy.ui.MainActivity;
+import derpibooru.derpy.ui.fragments.UserFragment;
 import derpibooru.derpy.ui.fragments.tabs.MainActivityNewImagesTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.MainActivityRankingsTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.MainActivityWatchedTabFragment;
@@ -20,54 +21,66 @@ public class HomeTabAdapter extends FragmentStatePagerAdapter {
     private static final String TITLE_TOP_SCORING = "Top Scoring";
     private static final String TITLE_MOST_COMMENTED = "Most Commented";
 
-    private ArrayList<String> mTabs = new ArrayList<>();
+    private ArrayList<String> mTabs = new ArrayList<>(3);
     private TabSetChangeHandler mTabChangeHandler;
-    private Context mContext;
 
-    public HomeTabAdapter(Context context, FragmentManager fm,
-                          TabSetChangeHandler tabChangeHandler) {
+    private DerpibooruUser mUser;
+
+    public HomeTabAdapter(FragmentManager fm, TabSetChangeHandler tabChangeHandler, DerpibooruUser user) {
         super(fm);
-        mContext = context;
         mTabChangeHandler = tabChangeHandler;
         mTabs.add(TITLE_NEW);
         mTabs.add(TITLE_TOP_SCORING);
         mTabs.add(TITLE_MOST_COMMENTED);
+        mUser = user;
     }
 
-    public void toggleWatchedTab(boolean isUserLoggedIn) {
+    public void refreshUser(DerpibooruUser user) {
+        if (isTabSetChangeRequired(user.isLoggedIn())) {
+            notifyDataSetChanged();
+            mTabChangeHandler.onTabSetChanged();
+        } else if (!mUser.getCurrentFilter().equals(user.getCurrentFilter())) {
+            notifyDataSetChanged();
+        }
+        mUser = user;
+    }
+
+    private boolean isTabSetChangeRequired(boolean isUserLoggedIn) {
         boolean watchedTabDisplayed = mTabs.contains(TITLE_WATCHED);
         if (isUserLoggedIn && !watchedTabDisplayed) {
             mTabs.add(1, TITLE_WATCHED);
-            notifyDataSetChanged();
-            mTabChangeHandler.onTabSetChanged();
-        } else if (!isUserLoggedIn && watchedTabDisplayed) {
-            mTabs.remove(TITLE_WATCHED);
-            notifyDataSetChanged();
-            mTabChangeHandler.onTabSetChanged();
+            return true;
         }
+        if (!isUserLoggedIn && watchedTabDisplayed) {
+            mTabs.remove(TITLE_WATCHED);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public Fragment getItem(int position) throws NullPointerException {
+        Bundle args = new Bundle();
+        args.putParcelable(MainActivity.EXTRAS_USER, mUser);
+        Fragment fragment = null;
         switch (mTabs.get(position)) {
             case TITLE_NEW:
-                return new MainActivityNewImagesTabFragment();
+                fragment = new MainActivityNewImagesTabFragment();
+                break;
             case TITLE_TOP_SCORING:
-                Bundle args = new Bundle();
+                fragment = new MainActivityRankingsTabFragment();
                 args.putInt("type", RankingImageListProvider.RankingsType.TopScoring.toValue());
-                MainActivityRankingsTabFragment fragmentTopScoring = new MainActivityRankingsTabFragment();
-                fragmentTopScoring.setArguments(args);
-                return fragmentTopScoring;
+                break;
             case TITLE_MOST_COMMENTED:
-                MainActivityRankingsTabFragment fragmentMostCommented = new MainActivityRankingsTabFragment();
-                args = new Bundle();
+                fragment = new MainActivityRankingsTabFragment();
                 args.putInt("type", RankingImageListProvider.RankingsType.MostCommented.toValue());
-                fragmentMostCommented.setArguments(args);
-                return fragmentMostCommented;
+                break;
             case TITLE_WATCHED:
-                return new MainActivityWatchedTabFragment();
+                fragment = new MainActivityWatchedTabFragment();
+                break;
         }
-        return null;
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

@@ -15,14 +15,13 @@ public abstract class UserFragment extends Fragment {
         if ((savedInstanceState != null)
                 && (savedInstanceState.getParcelableArrayList(MainActivity.EXTRAS_USER) != null)) {
             mUserData = savedInstanceState.getParcelable(MainActivity.EXTRAS_USER);
-        } else if (getArguments().getParcelable(MainActivity.EXTRAS_USER) != null) {
+        } else if ((getArguments() != null)
+                && (getArguments().getParcelable(MainActivity.EXTRAS_USER) != null)) {
             mUserData = getArguments().getParcelable(MainActivity.EXTRAS_USER);
         } else {
             throw new IllegalStateException("UserFragment didn't receive DerpibooruUser as an argument");
         }
     }
-
-    protected abstract void onUserRefreshed(DerpibooruUser user);
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -30,11 +29,26 @@ public abstract class UserFragment extends Fragment {
         outState.putParcelable(MainActivity.EXTRAS_USER, mUserData);
     }
 
+    /**
+     * Triggered on user data refresh. May indicate filter or authentication state change.
+     * At this point, the getUser() method returns the old user data, so the new data can be compared against that.
+     * @param user updated user data
+     */
+    protected abstract void onUserRefreshed(DerpibooruUser user);
+
+    /**
+     * Updates the fragment with new user data and triggers the corresponding UI change.
+     * @param newUserData updated user data
+     */
     public void setRefreshedUserData(DerpibooruUser newUserData) {
+        onUserRefreshed(newUserData);
         mUserData = newUserData;
-        onUserRefreshed(mUserData);
     }
 
+    /**
+     * Returns user data. When called from the onUserRefreshed(DerpibooruUser) method, returns
+     * the old data (obtained prior to refresh).
+     */
     protected DerpibooruUser getUser() {
         return mUserData;
     }

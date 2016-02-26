@@ -10,40 +10,34 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruUser;
+import derpibooru.derpy.storage.SearchHistoryStorage;
 import derpibooru.derpy.ui.MainActivity;
 import derpibooru.derpy.ui.SearchResultActivity;
-import derpibooru.derpy.ui.adapters.RecentSearchListAdapter;
 
 /**
  * A floating search view that, unlike AppCompat's SearchView, works
  * outside the AppBar and does not require any XML.
  */
-public class FloatingSearchView extends LinearLayout {
+public class FloatingSearchView extends FrameLayout {
     private static final int ICON_SEARCH = R.drawable.ic_search_white_24dp;
     private static final int ICON_BACK = R.drawable.ic_arrow_back_white_24dp;
 
-    /* TODO: AutoCompleteTextView */
-
     private FloatingSearchViewListener mListener;
-    private RecyclerView mRecentSearchView;
-    private View mRecentSearchDivider;
-    private ImageView mSearchButton;
-    private EditText mSearchText;
-    private RecentSearchListAdapter mAdapter;
 
-    private boolean isExtended = false;
-
-    public FloatingSearchView(Context context) {
-        super(context);
-        init();
-    }
+    @Bind(R.id.buttonSearch) ImageView buttonSearch;
+    @Bind(R.id.textSearch) AutoCompleteTextView textSearch;
 
     public FloatingSearchView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -57,50 +51,33 @@ public class FloatingSearchView extends LinearLayout {
 
     private void init() {
         View view = inflate(getContext(), R.layout.view_floating_search, null);
+        ButterKnife.bind(this, view);
         addView(view);
 
-        mRecentSearchDivider = findViewById(R.id.viewRecentSearchDivider);
-        mRecentSearchView = (RecyclerView) findViewById(R.id.viewRecentSearch);
-
-        mRecentSearchView.setHasFixedSize(true);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        mRecentSearchView.setLayoutManager(mLayoutManager);
-        mAdapter = new RecentSearchListAdapter(getContext());
-        mRecentSearchView.setAdapter(mAdapter);
-
-        mSearchButton = (ImageView) findViewById(R.id.buttonSearch);
-        mSearchButton.setOnClickListener(new OnClickListener() {
+        buttonSearch.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isExtended) {
-                    expandSearch();
-                } else {
-                    collapseSearch();
-                }
+                setFocusOnTextView(!textSearch.hasFocus());
             }
         });
 
-        mSearchText = (EditText) findViewById(R.id.textSearch);
-        mSearchText.setOnFocusChangeListener(new OnFocusChangeListener() {
+        textSearch.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus && !isExtended) {
-                    expandSearch();
-                } else if (!hasFocus && isExtended) {
-                    collapseSearch();
-                }
+                setFocusOnTextView(hasFocus);
             }
         });
 
-        collapseSearch();
+        SearchHistoryStorage s = new SearchHistoryStorage(getContext());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                getContext(), R.layout.view_floating_search_recent_item, s.getSearchHistory());
+        textSearch.setAdapter(adapter);
 
-        mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        textSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    if (mListener != null) {
-                        mListener.onSearchAction(v.getText().toString());
-                    }
+                    initiateSearchAction(v.getText().toString());
                     return true;
                 }
                 return false;
@@ -108,41 +85,30 @@ public class FloatingSearchView extends LinearLayout {
         });
     }
 
+    private void setFocusOnTextView(boolean focus) {
+        if (focus) {
+            buttonSearch.setImageDrawable(ContextCompat.getDrawable(getContext(), ICON_BACK));
+            textSearch.requestFocus();
+            ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .showSoftInput(textSearch, InputMethodManager.SHOW_IMPLICIT);
+        } else {
+            buttonSearch.setImageDrawable(ContextCompat.getDrawable(getContext(), ICON_SEARCH));
+            getRootView().requestFocus();
+            InputMethodManager inputManager =
+                    (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputManager != null) {
+                inputManager.hideSoftInputFromWindow(textSearch.getWindowToken(), 0);
+            }
+        }
+    }
+
+    private void initiateSearchAction(String query) {
+        if (mListener != null) {
+            mListener.onSearchAction(query);
+        }
+    }
+
     /* TODO: Handle hardware Back button */
-
-    private void collapseSearch() {
-        isExtended = false;
-        mSearchButton.setImageDrawable(ContextCompat.getDrawable(getContext(), ICON_SEARCH));
-        mRecentSearchView.setVisibility(View.GONE);
-        mRecentSearchDivider.setVisibility(View.GONE);
-        findViewById(R.id.searchViewLayout).requestFocus();
-
-        InputMethodManager inputManager =
-                (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputManager != null) {
-            inputManager.hideSoftInputFromWindow(mSearchText.getWindowToken(), 0);
-        }
-
-        if (mListener != null) {
-            mListener.onSizeChanged();
-        }
-    }
-
-    private void expandSearch() {
-        isExtended = true;
-        mSearchButton.setImageDrawable(ContextCompat.getDrawable(getContext(), ICON_BACK));
-        mRecentSearchView.setVisibility(View.VISIBLE);
-        mRecentSearchDivider.setVisibility(View.VISIBLE);
-        mSearchText.requestFocus();
-        ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
-                .showSoftInput(mSearchText, InputMethodManager.SHOW_IMPLICIT);
-        /* play item animations */
-        mAdapter.notifyDataSetChanged();
-
-        if (mListener != null) {
-            mListener.onSizeChanged();
-        }
-    }
 
     public void setFloatingSearchViewListener(FloatingSearchViewListener listener) {
         mListener = listener;
@@ -150,6 +116,5 @@ public class FloatingSearchView extends LinearLayout {
 
     public interface FloatingSearchViewListener {
         void onSearchAction(String query);
-        void onSizeChanged();
     }
 }

@@ -1,5 +1,6 @@
 package derpibooru.derpy.ui;
 
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -39,11 +40,28 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
     protected abstract FrameLayout getContentLayout();
 
     /**
-     * Provides an initialized instance of a fragment requested from a menu item.
+     * Provides an initialized instance of a fragment requested from a menu item. Override
+     * this method to provide additional arguments depending on the fragment class:
+     * <pre>{@code      @Override
+     * protected Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem) {
+     *     Fragment f = super.getFragmentInstance(fragmentMenuItem);
+     *     if (f instanceof RequiredFragmentClass) {
+     *         f.getArguments().put ...
+     *     }
+     *     return f;
+     * }}</pre>
      * @param fragmentMenuItem fragment menu item
      * @return initialized fragment
      */
-    protected abstract Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem) throws Exception;
+    protected Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem)
+            throws IllegalAccessException, InstantiationException {
+        Fragment f = fragmentMenuItem.getFragmentClass().newInstance();
+        f.setArguments(new Bundle());
+        if (fragmentMenuItem.getFragmentArguments() != null) {
+            f.setArguments(fragmentMenuItem.getFragmentArguments());
+        }
+        return f;
+    }
 
     protected Fragment getCurrentFragment() {
         return getSupportFragmentManager().findFragmentById(getContentLayout().getId());

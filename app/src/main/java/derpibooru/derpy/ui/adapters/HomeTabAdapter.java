@@ -30,6 +30,9 @@ public class HomeTabAdapter extends FragmentStatePagerAdapter {
         super(fm);
         mTabChangeHandler = tabChangeHandler;
         mTabs.add(TITLE_NEW);
+        if (user.isLoggedIn()) {
+            mTabs.add(TITLE_WATCHED);
+        }
         mTabs.add(TITLE_TOP_SCORING);
         mTabs.add(TITLE_MOST_COMMENTED);
         mUser = user;

@@ -18,6 +18,8 @@ import com.google.common.collect.Iterables;
 import java.util.List;
 import java.util.Set;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImage;
@@ -144,32 +146,24 @@ public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<
         }
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView imageView;
-        public View layoutImageInfo;
-        public AccentColorIconButton buttonScore;
-        public AccentColorIconButton buttonComments;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.imageView) ImageView imageView;
+        @Bind(R.id.layoutImageInfo) View layoutImageInfo;
+        @Bind(R.id.buttonScore) AccentColorIconButton buttonScore;
+        @Bind(R.id.buttonComments) AccentColorIconButton buttonComments;
 
-        public View layoutUnspoiler;
-        public AccentColorIconButton buttonUnspoiler;
+        @Bind(R.id.layoutUnspoiler) View layoutUnspoiler;
+        @Bind(R.id.buttonUnspoiler) AccentColorIconButton buttonUnspoiler;
 
-        public View layoutImageInteractions;
-        public AccentColorIconButton buttonFave;
-        public AccentColorIconButton buttonUpvote;
+        @Bind(R.id.layoutImageInteractions) View layoutImageInteractions;
+        @Bind(R.id.buttonFave) AccentColorIconButton buttonFave;
+        @Bind(R.id.buttonUpvote) AccentColorIconButton buttonUpvote;
 
         public ImageInteractionPresenter interactions;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
-            imageView = (ImageView) v.findViewById(R.id.imageView);
-            layoutImageInfo = v.findViewById(R.id.layoutImageInfo);
-            buttonScore = (AccentColorIconButton) v.findViewById(R.id.buttonScore);
-            buttonComments = (AccentColorIconButton) v.findViewById(R.id.buttonComments);
-            layoutUnspoiler = v.findViewById(R.id.layoutUnspoiler);
-            buttonUnspoiler = (AccentColorIconButton) v.findViewById(R.id.buttonUnspoiler);
-            layoutImageInteractions = v.findViewById(R.id.layoutImageInteractions);
-            buttonFave = (AccentColorIconButton) v.findViewById(R.id.buttonFave);
-            buttonUpvote = (AccentColorIconButton) v.findViewById(R.id.buttonUpvote);
+            ButterKnife.bind(this, v);
         }
     }
 

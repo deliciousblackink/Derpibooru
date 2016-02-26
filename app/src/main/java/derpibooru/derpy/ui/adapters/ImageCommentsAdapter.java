@@ -14,23 +14,24 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageComment;
 
 public class ImageCommentsAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImageComment, ImageCommentsAdapter.ViewHolder> {
-    public ImageCommentsAdapter(Context context, ArrayList<DerpibooruImageComment> items) {
+    public ImageCommentsAdapter(Context context, List<DerpibooruImageComment> items) {
         super(context, items);
     }
 
     @Override
-    public ImageCommentsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                              int viewType) {
+    public ImageCommentsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_image_bottom_bar_comments_item, parent, false);
         return new ViewHolder(v);
@@ -38,21 +39,18 @@ public class ImageCommentsAdapter extends RecyclerViewEndlessScrollAdapter<Derpi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.data = getItems().get(position);
-
         /* FIXME: Support library has some SVG compatibility solutions, dig that up */
-        if (!holder.data.getAuthorAvatarUrl().endsWith(".svg")) {
+        if (!getItems().get(position).getAuthorAvatarUrl().endsWith(".svg")) {
             Glide.with(getContext())
-                    .load(holder.data.getAuthorAvatarUrl())
+                    .load(getItems().get(position).getAuthorAvatarUrl())
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .dontAnimate().into(holder.imageAvatar);
         } else {
             Glide.with(getContext()).load(R.drawable.no_avatar).dontAnimate().into(holder.imageAvatar);
         }
-
-        holder.textAuthor.setText(holder.data.getAuthor());
-        holder.textPostedAt.setText(getRelativeDate(holder.data.getPostedAt()));
-        holder.textComment.setText(holder.data.getText());
+        holder.textAuthor.setText(getItems().get(position).getAuthor());
+        holder.textPostedAt.setText(getRelativeDate(getItems().get(position).getPostedAt()));
+        holder.textComment.setText(getItems().get(position).getText());
     }
 
     private String getRelativeDate(String date) {
@@ -71,19 +69,15 @@ public class ImageCommentsAdapter extends RecyclerViewEndlessScrollAdapter<Derpi
         return "";
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public CircleImageView imageAvatar;
-        public TextView textAuthor;
-        public TextView textPostedAt;
-        public TextView textComment;
-        public DerpibooruImageComment data;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.imageAvatar) CircleImageView imageAvatar;
+        @Bind(R.id.textAuthor) TextView textAuthor;
+        @Bind(R.id.textPostedAt) TextView textPostedAt;
+        @Bind(R.id.textComment) TextView textComment;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
-            imageAvatar = (CircleImageView) v.findViewById(R.id.imageAvatar);
-            textAuthor = (TextView) v.findViewById(R.id.textAuthor);
-            textPostedAt = (TextView) v.findViewById(R.id.textPostedAt);
-            textComment = (TextView) v.findViewById(R.id.textComment);
+            ButterKnife.bind(this, v);
         }
     }
 }

@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruFilter;
 
@@ -42,8 +44,7 @@ public class FilterListAdapter extends RecyclerView.Adapter<FilterListAdapter.Vi
     }
 
     @Override
-    public FilterListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                            int viewType) {
+    public FilterListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_filters_item, parent, false);
         return new ViewHolder(v);
@@ -81,24 +82,18 @@ public class FilterListAdapter extends RecyclerView.Adapter<FilterListAdapter.Vi
         return (mFilters != null) ? mFilters.size() : 0;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textName;
-        public TextView textUsedBy;
-        public TextView textStatistics;
-        public TextView textDescription;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.textName) TextView textName;
+        @Bind(R.id.textUsedBy) TextView textUsedBy;
+        @Bind(R.id.textStatistics) TextView textStatistics;
+        @Bind(R.id.textDescription) TextView textDescription;
 
-        public AppCompatButton buttonDetails;
-        public AppCompatButton buttonUse;
+        @Bind(R.id.buttonDetails) AppCompatButton buttonDetails;
+        @Bind(R.id.buttonUse) AppCompatButton buttonUse;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
-            textName = (TextView) v.findViewById(R.id.textName);
-            textUsedBy = (TextView) v.findViewById(R.id.textUsedBy);
-            textStatistics = (TextView) v.findViewById(R.id.textStatistics);
-            textDescription = (TextView) v.findViewById(R.id.textDescription);
-
-            buttonDetails = (AppCompatButton) v.findViewById(R.id.buttonDetails);
-            buttonUse = (AppCompatButton) v.findViewById(R.id.buttonUse);
+            ButterKnife.bind(this, v);
         }
     }
 

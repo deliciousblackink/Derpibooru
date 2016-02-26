@@ -1,7 +1,9 @@
 package derpibooru.derpy.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
@@ -30,7 +32,7 @@ abstract class NavigationDrawerUserFragmentActivity extends NavigationDrawerFrag
 
     protected void initialize(Bundle savedInstanceState) {
         super.initializeNavigationDrawer();
-        mHeader = new NavigationDrawerHeaderViewHolder(mNavigationView.getHeaderView(0));
+        mHeader = new NavigationDrawerHeaderViewHolder(mNavigationView.getHeaderView(0), this);
         mHeader.buttonRefreshUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,11 +173,14 @@ abstract class NavigationDrawerUserFragmentActivity extends NavigationDrawerFrag
         TextView textCurrentFilter;
         ImageView viewAvatar;
 
-        private NavigationDrawerHeaderViewHolder(View v) {
+        private NavigationDrawerHeaderViewHolder(View v, Context c) {
             buttonRefreshUser = (AccentColorIconButton) v.findViewById(R.id.buttonRefreshUser);
             textUsername = (TextView) v.findViewById(R.id.textHeaderUser);
             textCurrentFilter = (TextView) v.findViewById(R.id.textHeaderFilter);
             viewAvatar = (ImageView) v.findViewById(R.id.imageAvatar);
+            /* as per Material Design Guidelines http://www.google.com/design/spec/patterns/navigation-drawer.html */
+            textUsername.setTypeface(Typeface.createFromAsset(c.getAssets(), "fonts/Roboto-Medium.ttf"));
+            textCurrentFilter.setTypeface(Typeface.createFromAsset(c.getAssets(), "fonts/Roboto-Regular.ttf"));
         }
     }
 

@@ -1,0 +1,5 @@
+<resources>
+    <!-- tablet (7"+) dimensions -->
+    <!-- navigation drawer -->
+    <dimen name="navigation_drawer_header_height">172dp</dimen>
+</resources>

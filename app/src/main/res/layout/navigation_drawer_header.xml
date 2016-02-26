@@ -1,50 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
-              android:layout_height="170dp"
+              android:layout_height="@dimen/navigation_drawer_header_height"
               android:background="@color/colorPrimary"
               android:orientation="vertical"
               android:theme="@style/ThemeOverlay.AppCompat.Dark"
-              android:padding="10dp">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageAvatar"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:src="@drawable/no_avatar"
-            android:layout_marginTop="4dp"/>
-        <derpibooru.derpy.ui.views.AccentColorIconButton
-            android:id="@+id/buttonRefreshUser"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            app:buttonIcon="@drawable/ic_sync_white_24dp"
-            app:buttonText=""
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="4dp"/>
-    </LinearLayout>
+              android:paddingTop="@dimen/navigation_drawer_screen_padding"
+              android:paddingLeft="@dimen/navigation_drawer_screen_padding"
+              android:paddingRight="@dimen/navigation_drawer_screen_padding"
+              android:paddingBottom="@dimen/navigation_drawer_content_padding">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageAvatar"
+        android:layout_width="@dimen/navigation_drawer_avatar_size"
+        android:layout_height="@dimen/navigation_drawer_avatar_size"
+        android:src="@drawable/no_avatar"
+        android:layout_marginBottom="@dimen/navigation_drawer_screen_padding"/>
+    <derpibooru.derpy.ui.views.AccentColorIconButton
+        android:id="@+id/buttonRefreshUser"
+        android:layout_width="@dimen/navigation_drawer_avatar_size"
+        android:layout_height="@dimen/navigation_drawer_avatar_size"
+        app:buttonIcon="@drawable/ic_sync_white_24dp"
+        app:buttonText=""
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="4dp"
+        android:layout_toRightOf="@id/imageAvatar"
+        android:layout_toEndOf="@id/imageAvatar"/>
     <TextView
         android:id="@+id/textHeaderUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:text="Not logged in"
         android:textColor="@color/colorTextLight"
-        android:textSize="16sp"
-        android:paddingLeft="4dp"/>
+        android:textSize="14sp"
+        android:layout_below="@+id/imageAvatar"
+        android:layout_marginBottom="4dp"/>
     <TextView
         android:id="@+id/textHeaderFilter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
         android:text="Loading..."
-        android:paddingLeft="4dp"
-        android:textSize="14sp"/>
-</LinearLayout>
+        android:textSize="14sp"
+        android:layout_below="@+id/textHeaderUser"/>
+</RelativeLayout>

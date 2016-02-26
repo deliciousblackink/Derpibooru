@@ -7,17 +7,18 @@ import android.view.ViewGroup;
 
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 import derpibooru.derpy.server.providers.SearchProvider;
+import derpibooru.derpy.ui.SearchResultActivity;
 import derpibooru.derpy.ui.fragments.ImageListFragment;
 
 public class SearchResultTabFragment extends ImageListFragment {
-    private static final String SEARCH_OPTIONS_BUNDLE_KEY = "options";
+    private static final String EXTRAS_OPTIONS = "options";
 
     private DerpibooruSearchOptions mCurrentOptions;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(SEARCH_OPTIONS_BUNDLE_KEY, mCurrentOptions);
+        outState.putParcelable(EXTRAS_OPTIONS, mCurrentOptions);
     }
 
     @Override
@@ -25,7 +26,8 @@ public class SearchResultTabFragment extends ImageListFragment {
                              Bundle savedInstanceState) {
         mCurrentOptions = (DerpibooruSearchOptions)
                 ((savedInstanceState == null) ? new DerpibooruSearchOptions()
-                                              : savedInstanceState.getParcelable(SEARCH_OPTIONS_BUNDLE_KEY));
+                                              : savedInstanceState.getParcelable(EXTRAS_OPTIONS));
+
         super.setImageListProvider(new SearchProvider(getActivity(), new ImageListRequestHandler()));
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -33,7 +35,7 @@ public class SearchResultTabFragment extends ImageListFragment {
     @Override
     protected void fetchImages() {
         ((SearchProvider) super.getImageListProvider())
-                .searching(getArguments().getString("query"))
+                .searching(getArguments().getString(SearchResultActivity.EXTRAS_SEARCH_QUERY))
                 .with(mCurrentOptions)
                 .fetch();
     }

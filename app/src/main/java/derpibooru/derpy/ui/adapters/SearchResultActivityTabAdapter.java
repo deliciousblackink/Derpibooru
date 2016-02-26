@@ -9,6 +9,9 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.data.internal.FragmentAdapterItem;
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
+import derpibooru.derpy.data.server.DerpibooruUser;
+import derpibooru.derpy.ui.MainActivity;
+import derpibooru.derpy.ui.SearchResultActivity;
 import derpibooru.derpy.ui.fragments.tabs.SearchOptionsTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.SearchResultTabFragment;
 
@@ -21,15 +24,17 @@ public class SearchResultActivityTabAdapter extends FragmentPagerAdapter {
     private ArrayList<FragmentAdapterItem> mTabs = new ArrayList<>();
     private FragmentManager mFragmentManager;
 
-    public SearchResultActivityTabAdapter(FragmentManager fm, String query) {
+    public SearchResultActivityTabAdapter(FragmentManager fm, String query, DerpibooruUser user) {
         super(fm);
         mFragmentManager = fm;
 
         SearchResultTabFragment results = new SearchResultTabFragment();
         Bundle args = new Bundle();
-        args.putString("query", query);
+        args.putString(SearchResultActivity.EXTRAS_SEARCH_QUERY, query);
+        args.putParcelable(MainActivity.EXTRAS_USER, user);
         results.setArguments(args);
         mTabs.add(new FragmentAdapterItem(SEARCH_RESULTS_TAB_POSITION, SEARCH_RESULTS_TAB_TITLE, results));
+
         mTabs.add(new FragmentAdapterItem(SEARCH_OPTIONS_TAB_POSITION, SEARCH_OPTIONS_TAB_TITLE,
                                           new SearchOptionsTabFragment()));
     }

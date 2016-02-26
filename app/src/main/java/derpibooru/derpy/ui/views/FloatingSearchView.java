@@ -16,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.server.DerpibooruUser;
+import derpibooru.derpy.ui.MainActivity;
+import derpibooru.derpy.ui.SearchResultActivity;
 import derpibooru.derpy.ui.adapters.RecentSearchListAdapter;
 
 /**
@@ -28,7 +31,7 @@ public class FloatingSearchView extends LinearLayout {
 
     /* TODO: AutoCompleteTextView */
 
-    private OnLayoutSizeChangedListener mLayoutSizeChangedListener;
+    private FloatingSearchViewListener mListener;
     private RecyclerView mRecentSearchView;
     private View mRecentSearchDivider;
     private ImageView mSearchButton;
@@ -90,6 +93,19 @@ public class FloatingSearchView extends LinearLayout {
         });
 
         collapseSearch();
+
+        mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    if (mListener != null) {
+                        mListener.onSearchAction(v.getText().toString());
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     /* TODO: Handle hardware Back button */
@@ -107,8 +123,8 @@ public class FloatingSearchView extends LinearLayout {
             inputManager.hideSoftInputFromWindow(mSearchText.getWindowToken(), 0);
         }
 
-        if (mLayoutSizeChangedListener != null) {
-            mLayoutSizeChangedListener.onSizeChanged();
+        if (mListener != null) {
+            mListener.onSizeChanged();
         }
     }
 
@@ -123,31 +139,17 @@ public class FloatingSearchView extends LinearLayout {
         /* play item animations */
         mAdapter.notifyDataSetChanged();
 
-        if (mLayoutSizeChangedListener != null) {
-            mLayoutSizeChangedListener.onSizeChanged();
+        if (mListener != null) {
+            mListener.onSizeChanged();
         }
     }
 
-    public void setSearchResultActivity(final Class searchResultActivity) {
-        mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Intent i = new Intent(v.getContext(), searchResultActivity);
-                    i.putExtra("derpibooru.derpy.SearchQuery", v.getText().toString());
-                    v.getContext().startActivity(i);
-                    return true;
-                }
-                return false;
-            }
-        });
+    public void setFloatingSearchViewListener(FloatingSearchViewListener listener) {
+        mListener = listener;
     }
 
-    public void setOnLayoutSizeChangedListener(OnLayoutSizeChangedListener listener) {
-        mLayoutSizeChangedListener = listener;
-    }
-
-    public interface OnLayoutSizeChangedListener {
+    public interface FloatingSearchViewListener {
+        void onSearchAction(String query);
         void onSizeChanged();
     }
 }

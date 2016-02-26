@@ -1,5 +1,6 @@
 package derpibooru.derpy.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -11,10 +12,12 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.server.DerpibooruUser;
+import derpibooru.derpy.ui.MainActivity;
 import derpibooru.derpy.ui.SearchResultActivity;
 import derpibooru.derpy.ui.views.FloatingSearchView;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends UserFragment {
     @Bind(R.id.floatingSearchView) FloatingSearchView mSearchView;
     @Bind(R.id.textSearchHelp) TextView mHelpView;
 
@@ -27,9 +30,19 @@ public class SearchFragment extends Fragment {
         return v;
     }
 
+    @Override
+    protected void onUserRefreshed(DerpibooruUser user) { }
+
     private void initializeSearchView() {
-        mSearchView.setSearchResultActivity(SearchResultActivity.class);
-        mSearchView.setOnLayoutSizeChangedListener(new FloatingSearchView.OnLayoutSizeChangedListener() {
+        mSearchView.setFloatingSearchViewListener(new FloatingSearchView.FloatingSearchViewListener() {
+            @Override
+            public void onSearchAction(String query) {
+                Intent i = new Intent(getContext(), SearchResultActivity.class);
+                i.putExtra(SearchResultActivity.EXTRAS_SEARCH_QUERY, query);
+                i.putExtra(MainActivity.EXTRAS_USER, getUser());
+                startActivity(i);
+            }
+
             @Override
             public void onSizeChanged() {
                 mSearchView.findViewById(R.id.topLayout).requestLayout();

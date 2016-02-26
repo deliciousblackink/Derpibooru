@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -63,6 +64,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
         return f;
     }
 
+    @Nullable
     protected Fragment getCurrentFragment() {
         return getSupportFragmentManager().findFragmentById(getContentLayout().getId());
     }
@@ -99,9 +101,14 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
 
     protected void navigateTo(NavigationDrawerItem item) {
         try {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(getContentLayout().getId(), getFragmentInstance(item)).commit();
+            FragmentTransaction transaction =
+                    getSupportFragmentManager().beginTransaction();
+            if (getCurrentFragment() != null) {
+                transaction.addToBackStack(null);
+            }
+            transaction
+                    .replace(getContentLayout().getId(), getFragmentInstance(item))
+                    .commit();
             mSelectedMenuItemId = item.getNavigationViewItemId();
             mNavigationDrawer.selectMenuItem(mSelectedMenuItemId);
         } catch (Exception t) {

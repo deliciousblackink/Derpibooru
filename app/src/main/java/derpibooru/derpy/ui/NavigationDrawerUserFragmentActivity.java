@@ -94,6 +94,7 @@ abstract class NavigationDrawerUserFragmentActivity extends NavigationDrawerFrag
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == LOGIN_ACTIVITY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 refreshUser();

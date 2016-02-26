@@ -3,7 +3,6 @@ package derpibooru.derpy.ui.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -22,12 +21,13 @@ import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.providers.ImageListProvider;
 import derpibooru.derpy.ui.ImageActivity;
+import derpibooru.derpy.ui.MainActivity;
 import derpibooru.derpy.ui.adapters.ImageListAdapter;
 import derpibooru.derpy.ui.views.ImageListRecyclerView;
 import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
 public abstract class ImageListFragment extends UserFragment {
-    private static final int IMAGE_ACTIVITY_REQUEST_CODE = 1;
+    private static final int IMAGE_ACTIVITY_REQUEST_CODE = 2;
 
     private ImageListAdapter mImageListAdapter;
     private ImageListProvider mImageListProvider;
@@ -98,7 +98,8 @@ public abstract class ImageListFragment extends UserFragment {
             @Override
             public void startImageActivity(DerpibooruImage image) {
                 Intent intent = new Intent(getContext(), ImageActivity.class);
-                intent.putExtra(ImageActivity.INTENT_EXTRA_IMAGE, image);
+                intent.putExtra(ImageActivity.EXTRAS_IMAGE, image);
+                intent.putExtra(MainActivity.EXTRAS_USER, getUser());
                 startActivityForResult(intent, IMAGE_ACTIVITY_REQUEST_CODE);
             }
         };
@@ -114,11 +115,12 @@ public abstract class ImageListFragment extends UserFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case (IMAGE_ACTIVITY_REQUEST_CODE):
                 if (mImageListAdapter != null) {
                     mImageListAdapter.replaceItem(
-                            (DerpibooruImage) data.getParcelableExtra(ImageActivity.INTENT_EXTRA_IMAGE));
+                            (DerpibooruImage) data.getParcelableExtra(ImageActivity.EXTRAS_IMAGE));
                 }
                 break;
         }

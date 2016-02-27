@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,15 +13,17 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.internal.NavigationDrawerItem;
 
-abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
+abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
     private NavigationDrawerLayout mNavigationDrawer;
 
     private int mSelectedMenuItemId;
@@ -109,8 +112,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
             transaction
                     .replace(getContentLayout().getId(), getFragmentInstance(item))
                     .commit();
-            mSelectedMenuItemId = item.getNavigationViewItemId();
-            mNavigationDrawer.selectMenuItem(mSelectedMenuItemId);
+            setMenuItemAndTitleFor(item);
         } catch (Exception t) {
             Log.e("DrawerFragmentActivity", "failed to initialize a Fragment class", t);
         }
@@ -133,6 +135,32 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        final Fragment fragment = getCurrentFragment();
+        if (fragment != null) {
+            NavigationDrawerItem item = Iterables.find(
+                    getFragmentNavigationItems(), new Predicate<NavigationDrawerItem>() {
+                        @Override
+                        public boolean apply(NavigationDrawerItem item) {
+                            return item.getFragmentClass().equals(fragment.getClass());
+                        }
+                    });
+            setMenuItemAndTitleFor(item);
+        }
+    }
+
+    private void setMenuItemAndTitleFor(NavigationDrawerItem fragmentItem) {
+        mSelectedMenuItemId = fragmentItem.getNavigationViewItemId();
+        mNavigationDrawer.selectMenuItem(mSelectedMenuItemId);
     }
 
     @Override

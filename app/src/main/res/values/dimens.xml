@@ -8,4 +8,7 @@
     <dimen name="navigation_drawer_content_padding">8dp</dimen>
     <dimen name="navigation_drawer_avatar_size">64dp</dimen>
     <dimen name="navigation_drawer_header_height">148dp</dimen>
+    <!-- floating search view -->
+    <dimen name="floating_search_view_margins">10dp</dimen>
+    <dimen name="floating_search_view_drawable_padding">16dp</dimen>
 </resources>

@@ -40,7 +40,7 @@ public class SearchFragment extends UserFragment {
                 Intent i = new Intent(getContext(), SearchResultActivity.class);
                 i.putExtra(SearchResultActivity.EXTRAS_SEARCH_QUERY, query);
                 i.putExtra(MainActivity.EXTRAS_USER, getUser());
-                //startActivity(i);
+                startActivity(i);
             }
         });
     }

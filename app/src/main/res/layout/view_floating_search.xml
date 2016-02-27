@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
-             android:layout_height="wrap_content">
+             android:layout_height="wrap_content"
+             android:focusable="true"
+             android:focusableInTouchMode="true">
+    <!-- FIXME: there's a bug somewhere in layout inflation; the attributes of the root layout are disregarded
+    that requires an additional layout (below) to be put inside the parent, otherwise margins and paddings don't work -->
     <LinearLayout
-        android:id="@+id/topLayout"
+        android:id="@+id/floatingSearchLayout"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:layout_margin="@dimen/floating_search_view_margins">
         <!-- focusable and focusableInTouchMode
         to prevent EditText from receiving focus on startup -->
-        <ImageView
-            android:id="@+id/buttonSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_search_white_24dp"
-            android:clickable="true"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"/>
         <AutoCompleteTextView
             android:id="@+id/textSearch"
             android:layout_width="match_parent"
@@ -31,10 +22,13 @@
             android:textColor="@color/colorTextLight"
             android:hint="@string/text_search"
             android:textColorHint="@color/colorTextLight"
+            android:drawableLeft="@drawable/ic_search_white_24dp"
+            android:drawablePadding="@dimen/floating_search_view_drawable_padding"
             android:textSize="18sp"
             android:gravity="center_vertical"
             android:inputType="text"
             android:imeOptions="actionSearch"
-            android:paddingRight="10dp"/>
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"/>
     </LinearLayout>
 </FrameLayout>

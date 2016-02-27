@@ -41,13 +41,7 @@ public abstract class ImageListFragment extends UserFragment {
         View v = inflater.inflate(R.layout.fragment_image_list, container, false);
         ButterKnife.bind(this, v);
         ((SimpleItemAnimator) mImageView.getItemAnimator()).setSupportsChangeAnimations(false); /* disable item change animations for image interactions */
-        mImageRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
-        mImageRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshImages();
-            }
-        });
+        initializeImageRefreshLayout();
         if (mImageListProvider != null) {
             fetchImages();
         } else {
@@ -85,12 +79,31 @@ public abstract class ImageListFragment extends UserFragment {
     private void displayImagesFromProvider(List<DerpibooruImage> images) {
         if (mImageListAdapter == null) {
             initializeImageListAdapter(images);
+            mImageRefreshLayout.setRefreshing(false);
         } else if (mImageRefreshLayout.isRefreshing()) {
             mImageListAdapter.resetItems(images, getUser().isLoggedIn());
             mImageRefreshLayout.setRefreshing(false);
         } else {
             mImageListAdapter.appendItems(images);
         }
+    }
+
+    private void initializeImageRefreshLayout() {
+        mImageRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary);
+        mImageRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshImages();
+            }
+        });
+        /* show progress animation for intial image loading
+         * ("why post a Runnable?" -> http://stackoverflow.com/a/26910973/1726690) */
+        mImageRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mImageRefreshLayout.setRefreshing(true);
+            }
+        });
     }
 
     private void initializeImageListAdapter(List<DerpibooruImage> images) {

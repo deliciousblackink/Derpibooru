@@ -1,6 +1,7 @@
 package derpibooru.derpy.ui;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.internal.NavigationDrawerItem;
 
 abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
+    private static final String EXTRAS_CURRENT_MENU_ITEM_ID = "derpibooru.derpy.NavDrawerSelectedItemId";
     private NavigationDrawerLayout mNavigationDrawer;
 
     private int mSelectedMenuItemId;
@@ -35,6 +37,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
      * Provides a List of NavigationDrawerItem used for fragment navigation.
      * @return a List used for fragment navigation
      */
+    @NonNull
     protected abstract List<NavigationDrawerItem> getFragmentNavigationItems();
 
     /**
@@ -59,6 +62,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
      */
     protected Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem)
             throws IllegalAccessException, InstantiationException {
+        Log.e("get fragment", fragmentMenuItem.getToolbarTitle());
         Fragment f = fragmentMenuItem.getFragmentClass().newInstance();
         f.setArguments(new Bundle());
         if (fragmentMenuItem.getFragmentArguments() != null) {
@@ -84,7 +88,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
         mNavigationDrawer.selectMenuItem(mSelectedMenuItemId);
     }
 
-    protected void initializeNavigationDrawer() {
+    protected void initializeDrawerAndFragmentNavigation() {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         mNavigationDrawer = new NavigationDrawerLayout(
@@ -97,12 +101,16 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
     }
 
     protected boolean onNavigationItemSelected(MenuItem item) {
-        boolean result =  isCurrentFragmentItemSelected(item.getItemId())
+        boolean result = isCurrentFragmentItemSelected(item.getItemId())
                 || isAnotherFragmentItemSelected(item.getItemId());
         return result;
     }
 
+    /**
+     * Replaces the currently visible fragment with the one specified by a NavigationDrawerItem.
+     */
     protected void navigateTo(NavigationDrawerItem item) {
+        Log.e("navigation", "navigated to " + item.getToolbarTitle());
         try {
             FragmentTransaction transaction =
                     getSupportFragmentManager().beginTransaction();
@@ -118,6 +126,12 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
         }
     }
 
+    /**
+     * Checks if the menu item specified belongs to a currently displayed fragment. If so,
+     * closes the navigation drawer.
+     * @param menuId menu item
+     * @return <strong>true</strong> if menu item belongs to the current fragment; <strong>false</strong> otherwise.
+     */
     private boolean isCurrentFragmentItemSelected(int menuId) {
         if (menuId == mSelectedMenuItemId) {
             mNavigationDrawer.closeDrawer();
@@ -126,44 +140,93 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
         return false;
     }
 
+    /**
+     * Checks if the menu item specified belongs to a fragment not currently displayed. If so,
+     * closes the navigation drawer and navigates to the fragment.
+     * @param menuId menu item
+     * @return <strong>true</strong> if navigated to another fragment; <strong>false</strong> otherwise.
+     */
     private boolean isAnotherFragmentItemSelected(int menuId) {
         for (NavigationDrawerItem item : getFragmentNavigationItems()) {
             if (item.getNavigationViewItemId() == menuId) {
                 mNavigationDrawer.deselectMenuItem(mSelectedMenuItemId);
                 mNavigationDrawer.closeDrawer();
                 navigateTo(item);
+                return true;
             }
         }
         return false;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getSupportFragmentManager().addOnBackStackChangedListener(this);
-    }
-
-    @Override
-    public void onBackStackChanged() {
-        final Fragment fragment = getCurrentFragment();
-        if (fragment != null) {
-            NavigationDrawerItem item = Iterables.find(
-                    getFragmentNavigationItems(), new Predicate<NavigationDrawerItem>() {
-                        @Override
-                        public boolean apply(NavigationDrawerItem item) {
-                            return item.getToolbarTitle().equals(fragment.getTag());
-                        }
-                    });
-            setMenuItemAndTitleFor(item);
-        }
+    /**
+     * Looks up a NavigationDrawerItem corresponding to the fragment.
+     * <br>
+     * Note: the tag should be equal to the toolbar title of a fragment. Such tag is applied for fragments
+     * displayed via {@link #navigateTo(NavigationDrawerItem)}.
+     */
+    protected NavigationDrawerItem findNavigationItemByFragmentTag(final String tag) {
+        return Iterables.find(
+                getFragmentNavigationItems(), new Predicate<NavigationDrawerItem>() {
+                    @Override
+                    public boolean apply(NavigationDrawerItem item) {
+                        return item.getToolbarTitle().equals(tag);
+                    }
+                });
     }
 
     private void setMenuItemAndTitleFor(NavigationDrawerItem fragmentItem) {
+        Log.e("setting item to", fragmentItem.getToolbarTitle());
         mSelectedMenuItemId = fragmentItem.getNavigationViewItemId();
         mNavigationDrawer.selectMenuItem(mSelectedMenuItemId);
         mToolbar.setTitle(fragmentItem.getToolbarTitle());
     }
 
+    /**
+     * Restores the menu item selected prior to a configuration change.
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
+        if (savedInstanceState != null) {
+            mSelectedMenuItemId = savedInstanceState.getInt(EXTRAS_CURRENT_MENU_ITEM_ID);
+        }
+    }
+
+    /**
+     * Preserves the menu item selected prior to a configuration change.
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(EXTRAS_CURRENT_MENU_ITEM_ID, mSelectedMenuItemId);
+    }
+
+    /**
+     * Sets the toolbar title and menu position for fragments displayed from a back stack.
+     */
+    @Override
+    public void onBackStackChanged() {
+        final Fragment fragment = getCurrentFragment();
+        if (fragment != null) {
+            setMenuItemAndTitleFor(findNavigationItemByFragmentTag(fragment.getTag()));
+        }
+    }
+
+    /**
+     * Sets the Toolbar title according to the fragment displayed; called on configuration changes.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (getCurrentFragment() != null) {
+            mToolbar.setTitle(getCurrentFragment().getTag());
+        }
+    }
+
+    /**
+     * Closes the navigation drawer on back button pressed.
+     */
     @Override
     public void onBackPressed() {
         if (mNavigationDrawer.isDrawerOpen()) {

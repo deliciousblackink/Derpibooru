@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
+import derpibooru.derpy.server.providers.ImageListProvider;
 import derpibooru.derpy.server.providers.SearchProvider;
 import derpibooru.derpy.ui.SearchResultActivity;
 import derpibooru.derpy.ui.fragments.ImageListFragment;
@@ -28,16 +29,15 @@ public class SearchResultTabFragment extends ImageListFragment {
                 ((savedInstanceState == null) ? new DerpibooruSearchOptions()
                                               : savedInstanceState.getParcelable(EXTRAS_OPTIONS));
 
-        super.setImageListProvider(new SearchProvider(getActivity(), new ImageListRequestHandler()));
+        super.setImageListProvider(
+                new SearchProvider(getActivity(), new ImageListRequestHandler())
+                        .searching(getArguments().getString(SearchResultActivity.EXTRAS_SEARCH_QUERY)));
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
-    protected void fetchImages() {
-        ((SearchProvider) super.getImageListProvider())
-                .searching(getArguments().getString(SearchResultActivity.EXTRAS_SEARCH_QUERY))
-                .with(mCurrentOptions)
-                .fetch();
+    protected ImageListProvider getImageListProviderWithParameters(ImageListProvider target) {
+        return ((SearchProvider) target).with(mCurrentOptions);
     }
 
     public void setSearchOptions(DerpibooruSearchOptions newOptions) {
@@ -46,9 +46,6 @@ public class SearchResultTabFragment extends ImageListFragment {
              * Apparently, Parcelable does not always create a deep copy of an object,
              * which is required here (in order for comparison to work) */
             mCurrentOptions = DerpibooruSearchOptions.copyFrom(newOptions);
-
-            ((SearchProvider) super.getImageListProvider())
-                    .with(mCurrentOptions);
             super.refreshImages();
         }
     }

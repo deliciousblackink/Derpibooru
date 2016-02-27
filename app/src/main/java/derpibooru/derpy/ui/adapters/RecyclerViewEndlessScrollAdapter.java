@@ -15,6 +15,10 @@ public abstract class RecyclerViewEndlessScrollAdapter<TItem, TViewHolder extend
         mItems = items;
     }
 
+    public List<TItem> getItems() {
+        return mItems;
+    }
+
     public void resetItems(List<TItem> newItems) {
         super.notifyItemRangeRemoved(0, mItems.size());
         mItems = newItems;
@@ -30,10 +34,6 @@ public abstract class RecyclerViewEndlessScrollAdapter<TItem, TViewHolder extend
 
     protected Context getContext() {
         return mContext;
-    }
-
-    protected List<TItem> getItems() {
-        return mItems;
     }
 
     @Override

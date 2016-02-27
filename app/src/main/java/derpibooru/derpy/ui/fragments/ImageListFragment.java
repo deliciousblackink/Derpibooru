@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -27,6 +29,10 @@ import derpibooru.derpy.ui.views.ImageListRecyclerView;
 import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
 public abstract class ImageListFragment extends UserFragment {
+    private static final String EXTRAS_RECYCLER_VIEW_POSITION = "derpibooru.derpy.ImageListRecyclerViewPosition";
+    private static final String EXTRAS_PROVIDER_PAGE = "derpibooru.derpy.ImageListProviderPage";
+    private static final String EXTRAS_IMAGE_LIST = "derpibooru.derpy.ImageListItems";
+
     private static final int IMAGE_ACTIVITY_REQUEST_CODE = 2;
 
     private ImageListAdapter mImageListAdapter;
@@ -35,48 +41,101 @@ public abstract class ImageListFragment extends UserFragment {
     @Bind(R.id.layoutImageRefresh) SwipeRefreshLayout mImageRefreshLayout;
     @Bind(R.id.viewImages) ImageListRecyclerView mImageView;
 
+    /**
+     * Returns an inflated image list view.
+     * <br>
+     * <strong>Warning:</strong> make sure you call {@link #setImageListProvider(ImageListProvider)} before this.
+     * @throws IllegalStateException the method was called before an ImageListProvider has been set
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState) throws IllegalStateException {
         View v = inflater.inflate(R.layout.fragment_image_list, container, false);
+        Log.e("onCreateView", savedInstanceState == null ? "null state" : "present state");
         ButterKnife.bind(this, v);
-        ((SimpleItemAnimator) mImageView.getItemAnimator()).setSupportsChangeAnimations(false); /* disable item change animations for image interactions */
         initializeImageRefreshLayout();
-        if (mImageListProvider != null) {
-            /* reset the adapter in case the fragment was restored from a FragmentManager backstack, otherwise it doesn't show anything */
-            /* TODO: instead of resetting the adapter, find a way to reuse it */
-            mImageListAdapter = null;
-            fetchImages();
+        /* disable item change animations for image interactions */
+        ((SimpleItemAnimator) mImageView.getItemAnimator()).setSupportsChangeAnimations(false);
+        if (mImageListProvider == null) {
+            throw new IllegalStateException("ImageListFragment: call 'setImageListProvider(ImageListProvider) before 'onCreateView'");
+        }
+        /* reset the adapter in case the fragment was restored from a FragmentManager backstack, otherwise it doesn't show anything */
+        mImageListAdapter = null;
+        if (savedInstanceState != null) {
+            restoreImages(savedInstanceState);
         } else {
-            Log.e("ImageListFragment", "call setImageListProvider before super.onCreateView");
+            fetchFirstPage();
         }
         return v;
     }
 
-    protected ImageListProvider getImageListProvider() {
-        return mImageListProvider;
-    }
-
+    /**
+     * Sets a subclass of ImageListProvider for the image list. Call this method <strong>before</strong>
+     * getting the inflated view from {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}. Do not
+     * configure the provider with any paramters that may change during the runtime (see {@link #getImageListProviderWithParameters(ImageListProvider)})
+     * <br>
+     * <strong>Note:</strong> pass an instance of {@link ImageListRequestHandler} to the provider.
+     */
     protected void setImageListProvider(ImageListProvider provider) {
         mImageListProvider = provider;
     }
 
-    protected abstract void fetchImages();
+    /**
+     * Returns an ImageListProvider configured with additional parameters that are set <strong>depending on the user input.</strong>
+     * Do not set parameters from Fragment's {@link #getArguments()} as the method may be called after a configuration change, after which
+     * the argument Bundle may be null. See {@link #setImageListProvider(ImageListProvider)}.
+     * <br>
+     * Consider an example:
+     * <pre>{@code      @Override
+     * protected void getImageListProviderWithParameters(ImageListProvider target) {
+     *     return ((MyImageListProvider) super.getImageListProvider()).withArguments(args);
+     * }}</pre>
+     * @param target ImageListProvider to configure
+     * @return a configured ImageListProvider
+     */
+    protected abstract ImageListProvider getImageListProviderWithParameters(ImageListProvider target);
 
+    /**
+     * Refreshes the image list if:
+     * <ul>
+     *     <li>the user has logged in/out</li>
+     *     <li>the user has changed the filter</li>
+     * </ul>
+     * Does nothing otherwise.
+     * @param user updated user data
+     */
     @Override
     protected void onUserRefreshed(DerpibooruUser user) {
         if (mImageListAdapter == null) {
             return;
         }
-        if ((user.isLoggedIn() != getUser().isLoggedIn())
-                || (!user.getCurrentFilter().equals(getUser().getCurrentFilter()))) {
+        if (user.isLoggedIn() != getUser().isLoggedIn()) {
+            /* reset the adapter to ensure image interactions are set according to the authentication status */
+            mImageListAdapter = null;
+            refreshImages();
+        } else if (!user.getCurrentFilter().equals(getUser().getCurrentFilter())) {
             refreshImages();
         }
     }
 
+    /**
+     * Requests the provider to fetch the first page of an image list. Here you can pass additional parameters to the
+     * ImageListProvider depending on the user input:
+     */
+    private void fetchFirstPage() {
+        getImageListProviderWithParameters(mImageListProvider).resetPageNumber().fetch();
+    }
+
+    /**
+     * Requests the provider to fetch the next page of an image list.
+     */
+    private void fetchNextPage() {
+        getImageListProviderWithParameters(mImageListProvider).nextPage().fetch();
+    }
+
     protected void refreshImages() {
         mImageRefreshLayout.setRefreshing(true); /* in case the method was called by a subclass */
-        mImageListProvider.resetPageNumber().fetch();
+        fetchFirstPage();
     }
 
     private void displayImagesFromProvider(List<DerpibooruImage> images) {
@@ -109,6 +168,11 @@ public abstract class ImageListFragment extends UserFragment {
         });
     }
 
+    /**
+     * Creates an instance of {@link ImageListAdapter} and adds an EndlessScrollListener to the RecyclerView
+     * that handles pagination.
+     * @param images initial adapter items
+     */
     private void initializeImageListAdapter(List<DerpibooruImage> images) {
         mImageListAdapter = new ImageListAdapter(getActivity(), images, getUser().isLoggedIn()) {
             @Override
@@ -124,11 +188,14 @@ public abstract class ImageListFragment extends UserFragment {
                 (GridLayoutManager) mImageView.getLayoutManager()) {
             @Override
             public void onLoadMore(int page) {
-                mImageListProvider.nextPage().fetch();
+                fetchNextPage();
             }
         });
     }
 
+    /**
+     * Retrieves updated image information (image interactions) from the ImageActivity and passes it to the adapter.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -139,6 +206,38 @@ public abstract class ImageListFragment extends UserFragment {
                             (DerpibooruImage) data.getParcelableExtra(ImageActivity.EXTRAS_IMAGE));
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mImageView != null) {
+            int itemPosition = ((LinearLayoutManager) mImageView.getLayoutManager()).findFirstVisibleItemPosition();
+            int page = mImageListProvider.getCurrentPage();
+            List<DerpibooruImage> items = mImageListAdapter.getItems();
+            outState.putInt(EXTRAS_RECYCLER_VIEW_POSITION, itemPosition);
+            outState.putInt(EXTRAS_PROVIDER_PAGE, page);
+            outState.putParcelableArrayList(EXTRAS_IMAGE_LIST, (ArrayList) items);
+        }
+    }
+
+    private void restoreImages(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(EXTRAS_IMAGE_LIST)) {
+            List<DerpibooruImage> images = savedInstanceState.getParcelableArrayList(EXTRAS_IMAGE_LIST);
+            mImageListProvider.fromPage(
+                    savedInstanceState.getInt(EXTRAS_PROVIDER_PAGE));
+            initializeImageListAdapter(images);
+            mImageView.getLayoutManager().scrollToPosition(
+                    savedInstanceState.getInt(EXTRAS_RECYCLER_VIEW_POSITION));
+            mImageRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mImageRefreshLayout.setRefreshing(false);
+                }
+            });
+        } else {
+            fetchFirstPage();
         }
     }
 
@@ -155,7 +254,8 @@ public abstract class ImageListFragment extends UserFragment {
                         .setAction(R.string.retry, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                fetchImages();
+                                /* request the same page as before */
+                                getImageListProviderWithParameters(mImageListProvider).fetch();
                             }
                         }).show();
             }

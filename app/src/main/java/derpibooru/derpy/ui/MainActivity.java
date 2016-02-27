@@ -51,12 +51,18 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
         Bundle userListUploaded = new Bundle();
         userListUploaded.putInt("type", UserImageListProvider.UserListType.Uploaded.toValue());
         mFragmentNavigationItems = Arrays.asList(
-                new NavigationDrawerItem(R.id.navigationHome, HomeFragment.class),
-                new NavigationDrawerItem(R.id.navigationSearch, SearchFragment.class),
-                new NavigationDrawerItem(R.id.navigationFilters, FilterListFragment.class),
-                new NavigationDrawerItem(R.id.navigationFaves, UserImageListFragment.class, userListFaved),
-                new NavigationDrawerItem(R.id.navigationUpvoted, UserImageListFragment.class, userListUpvoted),
-                new NavigationDrawerItem(R.id.navigationUploaded, UserImageListFragment.class, userListUploaded)
+                new NavigationDrawerItem(
+                        R.id.navigationHome, getString(R.string.fragment_home), HomeFragment.class),
+                new NavigationDrawerItem(
+                        R.id.navigationSearch, getString(R.string.fragment_search), SearchFragment.class),
+                new NavigationDrawerItem(
+                        R.id.navigationFilters, getString(R.string.fragment_filters), FilterListFragment.class),
+                new NavigationDrawerItem(
+                        R.id.navigationFaves, getString(R.string.fragment_user_list_faved), UserImageListFragment.class, userListFaved),
+                new NavigationDrawerItem(
+                        R.id.navigationUpvoted, getString(R.string.fragment_user_list_upvoted), UserImageListFragment.class, userListUpvoted),
+                new NavigationDrawerItem(
+                        R.id.navigationUploaded, getString(R.string.fragment_user_list_uploaded), UserImageListFragment.class, userListUploaded)
         );
     }
 

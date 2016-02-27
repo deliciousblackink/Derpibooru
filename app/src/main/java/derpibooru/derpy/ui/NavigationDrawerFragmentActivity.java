@@ -110,7 +110,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
                 transaction.addToBackStack(null);
             }
             transaction
-                    .replace(getContentLayout().getId(), getFragmentInstance(item))
+                    .replace(getContentLayout().getId(), getFragmentInstance(item), item.getToolbarTitle())
                     .commit();
             setMenuItemAndTitleFor(item);
         } catch (Exception t) {
@@ -151,7 +151,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
                     getFragmentNavigationItems(), new Predicate<NavigationDrawerItem>() {
                         @Override
                         public boolean apply(NavigationDrawerItem item) {
-                            return item.getFragmentClass().equals(fragment.getClass());
+                            return item.getToolbarTitle().equals(fragment.getTag());
                         }
                     });
             setMenuItemAndTitleFor(item);
@@ -161,6 +161,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
     private void setMenuItemAndTitleFor(NavigationDrawerItem fragmentItem) {
         mSelectedMenuItemId = fragmentItem.getNavigationViewItemId();
         mNavigationDrawer.selectMenuItem(mSelectedMenuItemId);
+        mToolbar.setTitle(fragmentItem.getToolbarTitle());
     }
 
     @Override

@@ -6,23 +6,30 @@ import android.support.v4.app.Fragment;
 
 public class NavigationDrawerItem {
     private int mNavigationViewItemId;
+    private String mToolbarTitle;
     private Class<? extends Fragment> mFragmentClass;
     private Bundle mFragmentArguments;
 
-    public NavigationDrawerItem(int navigationViewItemId, Class<? extends Fragment> fragmentClass) {
+    public NavigationDrawerItem(int navigationViewItemId, String toolbarTitle, Class<? extends Fragment> fragmentClass) {
         mNavigationViewItemId = navigationViewItemId;
+        mToolbarTitle = toolbarTitle;
         mFragmentClass = fragmentClass;
     }
 
-    public NavigationDrawerItem(int navigationViewItemId, Class<? extends Fragment> fragmentClass,
-                                Bundle fragmentArguments) {
+    public NavigationDrawerItem(int navigationViewItemId, String toolbarTitle,
+                                Class<? extends Fragment> fragmentClass, Bundle fragmentArguments) {
         mNavigationViewItemId = navigationViewItemId;
+        mToolbarTitle = toolbarTitle;
         mFragmentClass = fragmentClass;
         mFragmentArguments = fragmentArguments;
     }
 
     public int getNavigationViewItemId() {
         return mNavigationViewItemId;
+    }
+
+    public String getToolbarTitle() {
+        return mToolbarTitle;
     }
 
     public Class<? extends Fragment> getFragmentClass() {

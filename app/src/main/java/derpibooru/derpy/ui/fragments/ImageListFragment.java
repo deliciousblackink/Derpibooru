@@ -43,6 +43,9 @@ public abstract class ImageListFragment extends UserFragment {
         ((SimpleItemAnimator) mImageView.getItemAnimator()).setSupportsChangeAnimations(false); /* disable item change animations for image interactions */
         initializeImageRefreshLayout();
         if (mImageListProvider != null) {
+            /* reset the adapter in case the fragment was restored from a FragmentManager backstack, otherwise it doesn't show anything */
+            /* TODO: instead of resetting the adapter, find a way to reuse it */
+            mImageListAdapter = null;
             fetchImages();
         } else {
             Log.e("ImageListFragment", "call setImageListProvider before super.onCreateView");

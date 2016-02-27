@@ -33,7 +33,8 @@ public class HomeFragment extends UserFragment {
 
     private void initializeTabViewPager() {
         mTabViewPager.setFragmentAdapter(new HomeTabAdapter(
-                getFragmentManager(), new HomeTabAdapter.TabSetChangeHandler() {
+                getChildFragmentManager() /* http://stackoverflow.com/a/15386994/1726690 */,
+                new HomeTabAdapter.TabSetChangeHandler() {
             @Override
             public void onTabSetChanged() {
                 mTabViewPager.refreshTabTitles();

@@ -1,6 +1,7 @@
 package derpibooru.derpy.ui;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,11 +28,15 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        super.initialize(savedInstanceState);
         initializeFragmentNavigationItems();
-        navigateTo(mFragmentNavigationItems.get(0));
+        super.initialize(savedInstanceState);
+        if (getSupportFragmentManager().getFragments() == null) {
+            navigateTo(getFragmentNavigationItems().get(0));
+        }
+        setCallbackHandlersFor(super.getCurrentFragment());
     }
 
+    @NonNull
     @Override
     protected List<NavigationDrawerItem> getFragmentNavigationItems() {
         return mFragmentNavigationItems;
@@ -66,19 +71,23 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
         );
     }
 
-    @Override
-    protected Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem)
-            throws IllegalAccessException, InstantiationException {
-        Fragment f = super.getFragmentInstance(fragmentMenuItem);
-        if (f instanceof FilterListFragment) {
-            ((FilterListFragment) f).setOnFilterChangeListener(new FilterListFragment.OnFilterChangeListener() {
+    private void setCallbackHandlersFor(Fragment fragment) {
+        if (fragment instanceof FilterListFragment) {
+            ((FilterListFragment) fragment).setOnFilterChangeListener(new FilterListFragment.OnFilterChangeListener() {
                 @Override
                 public void onFilterChanged() {
                     MainActivity.super.refreshUser();
                 }
             });
         }
-        return f;
+    }
+
+    @Override
+    protected Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem)
+            throws IllegalAccessException, InstantiationException {
+        Fragment fragment = super.getFragmentInstance(fragmentMenuItem);
+        setCallbackHandlersFor(fragment);
+        return fragment;
     }
 
     @Override

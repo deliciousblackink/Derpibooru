@@ -62,7 +62,6 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
      */
     protected Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem)
             throws IllegalAccessException, InstantiationException {
-        Log.e("get fragment", fragmentMenuItem.getToolbarTitle());
         Fragment f = fragmentMenuItem.getFragmentClass().newInstance();
         f.setArguments(new Bundle());
         if (fragmentMenuItem.getFragmentArguments() != null) {
@@ -110,7 +109,6 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
      * Replaces the currently visible fragment with the one specified by a NavigationDrawerItem.
      */
     protected void navigateTo(NavigationDrawerItem item) {
-        Log.e("navigation", "navigated to " + item.getToolbarTitle());
         try {
             FragmentTransaction transaction =
                     getSupportFragmentManager().beginTransaction();
@@ -175,7 +173,6 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
     }
 
     private void setMenuItemAndTitleFor(NavigationDrawerItem fragmentItem) {
-        Log.e("setting item to", fragmentItem.getToolbarTitle());
         mSelectedMenuItemId = fragmentItem.getNavigationViewItemId();
         mNavigationDrawer.selectMenuItem(mSelectedMenuItemId);
         mToolbar.setTitle(fragmentItem.getToolbarTitle());

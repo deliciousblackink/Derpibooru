@@ -31,7 +31,7 @@ abstract class NavigationDrawerUserFragmentActivity extends NavigationDrawerFrag
     private UserManager mUserManager;
 
     protected void initialize(Bundle savedInstanceState) {
-        super.initializeNavigationDrawer();
+        super.initializeDrawerAndFragmentNavigation();
         mHeader = new NavigationDrawerHeaderViewHolder(mNavigationView.getHeaderView(0), this);
         mHeader.buttonRefreshUser.setOnClickListener(new View.OnClickListener() {
             @Override

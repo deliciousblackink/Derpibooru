@@ -14,12 +14,11 @@
             android:icon="@drawable/ic_block_black_24dp"
             android:title="@string/navigation_drawer_filters"/>
     </group>
-    <item android:title="@string/navigation_drawer_group_account">
-        <menu>
-            <item
-                android:id="@+id/navigationLogin"
-                android:icon="@drawable/ic_key_black_24dp"
-                android:title="@string/navigation_drawer_log_in"/>
-        </menu>
-    </item>
+    <group android:id="@+id/groupAccount"
+           android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigationLogin"
+            android:icon="@drawable/ic_key_black_24dp"
+            android:title="@string/navigation_drawer_log_in"/>
+    </group>
 </menu>

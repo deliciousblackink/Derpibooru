@@ -6,6 +6,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import derpibooru.derpy.R;
@@ -45,10 +46,16 @@ abstract class NavigationDrawerLayout implements NavigationView.OnNavigationItem
     }
 
     protected void selectMenuItem(int itemId) {
-        mNavigationView.getMenu().findItem(itemId).setChecked(true);
+        MenuItem target = mNavigationView.getMenu().findItem(itemId);
+        if (target != null) {
+            target.setChecked(true);
+        }
     }
 
     protected void deselectMenuItem(int itemId) {
-        mNavigationView.getMenu().findItem(itemId).setChecked(false);
+        MenuItem target = mNavigationView.getMenu().findItem(itemId);
+        if (target != null) {
+            target.setChecked(false);
+        }
     }
 }

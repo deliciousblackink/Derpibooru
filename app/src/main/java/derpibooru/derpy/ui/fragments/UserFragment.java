@@ -13,7 +13,7 @@ public abstract class UserFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if ((savedInstanceState != null)
-                && (savedInstanceState.getParcelableArrayList(MainActivity.EXTRAS_USER) != null)) {
+                && (savedInstanceState.getParcelable(MainActivity.EXTRAS_USER) != null)) {
             mUserData = savedInstanceState.getParcelable(MainActivity.EXTRAS_USER);
         } else if ((getArguments() != null)
                 && (getArguments().getParcelable(MainActivity.EXTRAS_USER) != null)) {

@@ -22,13 +22,10 @@ public class HomeTabAdapter extends FragmentStatePagerAdapter {
     private static final String TITLE_MOST_COMMENTED = "Most Commented";
 
     private ArrayList<String> mTabs = new ArrayList<>(3);
-    private TabSetChangeHandler mTabChangeHandler;
-
     private DerpibooruUser mUser;
 
-    public HomeTabAdapter(FragmentManager fm, TabSetChangeHandler tabChangeHandler, DerpibooruUser user) {
+    public HomeTabAdapter(FragmentManager fm, DerpibooruUser user) {
         super(fm);
-        mTabChangeHandler = tabChangeHandler;
         mTabs.add(TITLE_NEW);
         if (user.isLoggedIn()) {
             mTabs.add(TITLE_WATCHED);
@@ -38,27 +35,8 @@ public class HomeTabAdapter extends FragmentStatePagerAdapter {
         mUser = user;
     }
 
-    public void refreshUser(DerpibooruUser user) {
-        if (isTabSetChangeRequired(user.isLoggedIn())) {
-            notifyDataSetChanged();
-            mTabChangeHandler.onTabSetChanged();
-        } else if (!mUser.getCurrentFilter().equals(user.getCurrentFilter())) {
-            notifyDataSetChanged();
-        }
-        mUser = user;
-    }
-
-    private boolean isTabSetChangeRequired(boolean isUserLoggedIn) {
-        boolean watchedTabDisplayed = mTabs.contains(TITLE_WATCHED);
-        if (isUserLoggedIn && !watchedTabDisplayed) {
-            mTabs.add(1, TITLE_WATCHED);
-            return true;
-        }
-        if (!isUserLoggedIn && watchedTabDisplayed) {
-            mTabs.remove(TITLE_WATCHED);
-            return true;
-        }
-        return false;
+    public DerpibooruUser getUser() {
+        return mUser;
     }
 
     @Override
@@ -99,9 +77,5 @@ public class HomeTabAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return mTabs.get(position);
-    }
-
-    public interface TabSetChangeHandler {
-        void onTabSetChanged();
     }
 }

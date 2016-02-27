@@ -20,25 +20,25 @@ public class HomeFragment extends UserFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, v);
-        initializeTabViewPager();
+        initializeTabViewPager(getUser());
         return v;
     }
 
     @Override
-    protected void onUserRefreshed(DerpibooruUser user) {
+    protected void onUserRefreshed(DerpibooruUser newUser) {
         if (mTabViewPager != null) {
-            ((HomeTabAdapter) mTabViewPager.getFragmentAdapter()).refreshUser(user);
+            DerpibooruUser oldUserData = ((HomeTabAdapter) mTabViewPager.getFragmentAdapter()).getUser();
+            if ((oldUserData.isLoggedIn() != newUser.isLoggedIn())
+                    || (!oldUserData.getCurrentFilter().equals(newUser.getCurrentFilter()))) {
+                /* due to the way ImageListFragment restores its state, it's easier to recreate all tabs at once than
+                 * to make each separate one refresh itself (which, in turn, would require hacky workarounds to be placed
+                 * inside the ImageListFragment) */
+                initializeTabViewPager(newUser);
+            }
         }
     }
 
-    private void initializeTabViewPager() {
-        mTabViewPager.setFragmentAdapter(new HomeTabAdapter(
-                getChildFragmentManager() /* http://stackoverflow.com/a/15386994/1726690 */,
-                new HomeTabAdapter.TabSetChangeHandler() {
-            @Override
-            public void onTabSetChanged() {
-                mTabViewPager.refreshTabTitles();
-            }
-        }, getUser()));
+    private void initializeTabViewPager(DerpibooruUser user) {
+        mTabViewPager.setFragmentAdapter(new HomeTabAdapter(getChildFragmentManager(), user));
     }
 }

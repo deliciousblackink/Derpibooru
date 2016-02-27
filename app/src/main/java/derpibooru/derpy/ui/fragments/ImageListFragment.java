@@ -7,7 +7,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SimpleItemAnimator;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,6 @@ public abstract class ImageListFragment extends UserFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) throws IllegalStateException {
         View v = inflater.inflate(R.layout.fragment_image_list, container, false);
-        Log.e("onCreateView", savedInstanceState == null ? "null state" : "present state");
         ButterKnife.bind(this, v);
         initializeImageRefreshLayout();
         /* disable item change animations for image interactions */

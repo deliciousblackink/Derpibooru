@@ -8,23 +8,25 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
+import butterknife.BindDimen;
+import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 
 /**
  * GridLayoutManager requires a definite number of columns: it doesn't resize itself based on the screen dimensions.
  * This view takes care of that.
- * <br>The minimum size of an item should be provided via the 'minImageListItemSize' attribute.
+ * <br>The minimum size of an item is specified by the "image_list_item_min_size" dimen attribute.
  * Note that the item may be enlarged since the number of columns is rounded down.
  * The view also adds padding between items (by applying a custom RecyclerView.ItemDecoration).
  *
  * @see <a href="http://blog.sqisland.com/2014/12/recyclerview-autofit-grid.html">Based on this AutoFit solution</a>
  */
 public class ImageListRecyclerView extends RecyclerView {
-    private static final int SPACING_BETWEEN_IMAGES = 10;
+    @BindDimen(R.dimen.image_list_item_min_size) int imageSize;
+    @BindDimen(R.dimen.image_list_spacing_between_items) int imageSpacing;
 
     private GridLayoutManager mLayoutManager;
 
-    private int mImageSize;
     private int mLastMeasuredWidth;
     private int mLastMeasuredNumberOfColumns;
 
@@ -36,29 +38,18 @@ public class ImageListRecyclerView extends RecyclerView {
     public ImageListRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
-        setAttrs(context, attrs);
     }
 
     public ImageListRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
-        setAttrs(context, attrs);
     }
 
     private void init() {
+        ButterKnife.bind(this);
         mLayoutManager = new GridLayoutManager(getContext(), 1);
         setLayoutManager(mLayoutManager);
         addItemDecoration(new ImageListSpacingDecoration());
-    }
-
-    private void setAttrs(Context context, AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImageListRecyclerView);
-        try {
-            mImageSize =
-                    a.getDimensionPixelSize(R.styleable.ImageListRecyclerView_minImageListItemSize, 1);
-        } finally {
-            a.recycle();
-        }
     }
 
     @Override
@@ -73,7 +64,7 @@ public class ImageListRecyclerView extends RecyclerView {
     }
 
     private int calculateNumberOfColumns(int width) {
-        return Math.max(1, (width / mImageSize));
+        return Math.max(1, (width / imageSize));
     }
 
     /**
@@ -86,13 +77,13 @@ public class ImageListRecyclerView extends RecyclerView {
             int position = parent.getChildAdapterPosition(view);
             int column = position % mLastMeasuredNumberOfColumns;
 
-            outRect.left = SPACING_BETWEEN_IMAGES - column * SPACING_BETWEEN_IMAGES / mLastMeasuredNumberOfColumns;
-            outRect.right = (column + 1) * SPACING_BETWEEN_IMAGES / mLastMeasuredNumberOfColumns;
+            outRect.left = imageSpacing - column * imageSpacing / mLastMeasuredNumberOfColumns;
+            outRect.right = (column + 1) * imageSpacing / mLastMeasuredNumberOfColumns;
 
             if (position < mLastMeasuredNumberOfColumns) {
-                outRect.top = SPACING_BETWEEN_IMAGES;
+                outRect.top = imageSpacing;
             }
-            outRect.bottom = SPACING_BETWEEN_IMAGES;
+            outRect.bottom = imageSpacing;
         }
     }
 }

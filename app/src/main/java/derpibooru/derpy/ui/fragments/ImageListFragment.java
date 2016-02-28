@@ -44,6 +44,7 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
      * Returns an inflated image list view.
      * <br>
      * <strong>Warning:</strong> make sure you call {@link #setImageListProvider(ImageListProvider)} before this.
+     *
      * @throws IllegalStateException the method was called before an ImageListProvider has been set
      */
     @Override
@@ -88,6 +89,7 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
      * protected void getImageListProviderWithParameters(ImageListProvider target) {
      *     return ((MyImageListProvider) super.getImageListProvider()).withArguments(args);
      * }}</pre>
+     *
      * @param target ImageListProvider to configure
      * @return a configured ImageListProvider
      */
@@ -96,10 +98,11 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
     /**
      * Refreshes the image list if:
      * <ul>
-     *     <li>the user has logged in/out</li>
-     *     <li>the user has changed the filter</li>
+     * <li>the user has logged in/out</li>
+     * <li>the user has changed the filter</li>
      * </ul>
      * Does nothing otherwise.
+     *
      * @param user updated user data
      */
     @Override
@@ -169,6 +172,7 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
     /**
      * Creates an instance of {@link ImageListAdapter} and adds an EndlessScrollListener to the RecyclerView
      * that handles pagination.
+     *
      * @param images initial adapter items
      */
     private void initializeImageListAdapter(List<DerpibooruImage> images) {

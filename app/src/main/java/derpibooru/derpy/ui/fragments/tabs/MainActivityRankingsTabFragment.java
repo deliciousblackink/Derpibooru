@@ -21,6 +21,6 @@ public class MainActivityRankingsTabFragment extends ImageListFragment {
 
     @Override
     protected ImageListProvider getImageListProviderWithParameters(ImageListProvider target) {
-        return  ((RankingImageListProvider) target).inDays(3);
+        return ((RankingImageListProvider) target).inDays(3);
     }
 }

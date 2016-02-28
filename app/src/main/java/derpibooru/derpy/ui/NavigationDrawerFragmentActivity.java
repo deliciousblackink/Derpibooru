@@ -35,6 +35,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
 
     /**
      * Provides a List of NavigationDrawerItem used for fragment navigation.
+     *
      * @return a List used for fragment navigation
      */
     @NonNull
@@ -42,6 +43,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
 
     /**
      * Provides the view that holds visible fragments.
+     *
      * @return the root view
      */
     protected abstract FrameLayout getContentLayout();
@@ -57,6 +59,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
      *     }
      *     return f;
      * }}</pre>
+     *
      * @param fragmentMenuItem fragment menu item
      * @return initialized fragment
      */
@@ -127,6 +130,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
     /**
      * Checks if the menu item specified belongs to a currently displayed fragment. If so,
      * closes the navigation drawer.
+     *
      * @param menuId menu item
      * @return <strong>true</strong> if menu item belongs to the current fragment; <strong>false</strong> otherwise.
      */
@@ -141,6 +145,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
     /**
      * Checks if the menu item specified belongs to a fragment not currently displayed. If so,
      * closes the navigation drawer and navigates to the fragment.
+     *
      * @param menuId menu item
      * @return <strong>true</strong> if navigated to another fragment; <strong>false</strong> otherwise.
      */

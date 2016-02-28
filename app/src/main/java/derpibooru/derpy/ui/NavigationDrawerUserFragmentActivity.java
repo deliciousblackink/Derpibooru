@@ -138,7 +138,7 @@ abstract class NavigationDrawerUserFragmentActivity extends NavigationDrawerFrag
             setLoggedInHeader(getUser().getUsername());
         }
         mHeader.textCurrentFilter.setText(String.format(getString(R.string.user_filter),
-                                                 getUser().getCurrentFilter().getName()));
+                                                        getUser().getCurrentFilter().getName()));
         /* ! copied from ImageCommentsAdapter; perhaps it should be made into a separate class? */
         if (!getUser().getAvatarUrl().endsWith(".svg")) {
             Glide.with(this)

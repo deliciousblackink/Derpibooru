@@ -32,12 +32,14 @@ public abstract class NavigationDrawerUserFragment extends Fragment {
     /**
      * Triggered on user data refresh. May indicate filter or authentication state change.
      * At this point, the getUser() method returns the old user data, so the new data can be compared against that.
+     *
      * @param user updated user data
      */
     protected abstract void onUserRefreshed(DerpibooruUser user);
 
     /**
      * Updates the fragment with new user data and triggers the corresponding UI change.
+     *
      * @param newUserData updated user data
      */
     public void setRefreshedUserData(DerpibooruUser newUserData) {

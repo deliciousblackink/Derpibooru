@@ -9,7 +9,6 @@ import java.util.Set;
 
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.server.QueryHandler;
-import derpibooru.derpy.server.providers.UserDataProvider;
 import derpibooru.derpy.server.requesters.ImageInteractionRequester;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 

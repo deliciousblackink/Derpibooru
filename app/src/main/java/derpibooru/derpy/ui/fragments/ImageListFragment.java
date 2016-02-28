@@ -210,7 +210,7 @@ public abstract class ImageListFragment extends UserFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mImageView != null) {
+        if ((mImageView != null) && (mImageListAdapter != null)) {
             int itemPosition = ((LinearLayoutManager) mImageView.getLayoutManager()).findFirstVisibleItemPosition();
             int page = mImageListProvider.getCurrentPage();
             List<DerpibooruImage> items = mImageListAdapter.getItems();

@@ -5,16 +5,13 @@
                                               android:layout_width="match_parent"
                                               android:layout_height="match_parent">
     <derpibooru.derpy.ui.views.ImageListRecyclerView
-        app:imageSize="170dp"
+        app:minImageListItemSize="170dp"
         android:id="@+id/viewImages"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:drawSelectorOnTop="true"
         android:gravity="center"
-        android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="5dp"
         android:focusable="true"
         android:clickable="true"
         android:background="@android:color/white"/>

@@ -11,6 +11,12 @@ import android.view.View;
 import derpibooru.derpy.R;
 
 /**
+ * GridLayoutManager requires a definite number of columns: it doesn't resize itself based on the screen dimensions.
+ * This view takes care of that.
+ * <br>The minimum size of an item should be provided via the 'minImageListItemSize' attribute.
+ * Note that the item may be enlarged since the number of columns is rounded down.
+ * The view also adds padding between items (by applying a custom RecyclerView.ItemDecoration).
+ *
  * @see <a href="http://blog.sqisland.com/2014/12/recyclerview-autofit-grid.html">Based on this AutoFit solution</a>
  */
 public class ImageListRecyclerView extends RecyclerView {
@@ -49,7 +55,7 @@ public class ImageListRecyclerView extends RecyclerView {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImageListRecyclerView);
         try {
             mImageSize =
-                    a.getDimensionPixelSize(R.styleable.ImageListRecyclerView_imageSize, 1);
+                    a.getDimensionPixelSize(R.styleable.ImageListRecyclerView_minImageListItemSize, 1);
         } finally {
             a.recycle();
         }

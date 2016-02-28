@@ -2,7 +2,6 @@ package derpibooru.derpy.ui.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,7 +22,7 @@ import derpibooru.derpy.server.requesters.FilterChangeRequester;
 import derpibooru.derpy.ui.adapters.FilterListAdapter;
 import derpibooru.derpy.ui.views.AccentColorProgressBar;
 
-public class FilterListFragment extends UserFragment {
+public class FilterListFragment extends NavigationDrawerUserFragment {
     private static final String BUNDLE_FILTER_LIST = "FilterList";
 
     private ArrayList<DerpibooruFilter> mAvailableFilterList;

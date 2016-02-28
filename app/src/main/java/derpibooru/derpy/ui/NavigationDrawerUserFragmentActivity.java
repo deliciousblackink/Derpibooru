@@ -20,7 +20,7 @@ import derpibooru.derpy.data.internal.NavigationDrawerItem;
 import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.requesters.LogoutRequester;
-import derpibooru.derpy.ui.fragments.UserFragment;
+import derpibooru.derpy.ui.fragments.NavigationDrawerUserFragment;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
 abstract class NavigationDrawerUserFragmentActivity extends NavigationDrawerFragmentActivity {
@@ -52,7 +52,7 @@ abstract class NavigationDrawerUserFragmentActivity extends NavigationDrawerFrag
     protected Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem)
             throws IllegalAccessException, InstantiationException {
         Fragment f = super.getFragmentInstance(fragmentMenuItem);
-        if (f instanceof UserFragment) {
+        if (f instanceof NavigationDrawerUserFragment) {
             f.getArguments().putParcelable(EXTRAS_USER, getUser());
         }
         return f;
@@ -188,8 +188,8 @@ abstract class NavigationDrawerUserFragmentActivity extends NavigationDrawerFrag
         @Override
         public void onUserRefreshed(DerpibooruUser user) {
             displayUser();
-            if (getCurrentFragment() instanceof UserFragment) {
-                ((UserFragment) getCurrentFragment()).setRefreshedUserData(user);
+            if (getCurrentFragment() instanceof NavigationDrawerUserFragment) {
+                ((NavigationDrawerUserFragment) getCurrentFragment()).setRefreshedUserData(user);
             }
         }
 

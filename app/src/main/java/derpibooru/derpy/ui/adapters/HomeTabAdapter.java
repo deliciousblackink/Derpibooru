@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.providers.RankingImageListProvider;
 import derpibooru.derpy.ui.MainActivity;
-import derpibooru.derpy.ui.fragments.UserFragment;
 import derpibooru.derpy.ui.fragments.tabs.MainActivityNewImagesTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.MainActivityRankingsTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.MainActivityWatchedTabFragment;

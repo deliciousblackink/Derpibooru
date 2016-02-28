@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.ui.MainActivity;
 
-public abstract class UserFragment extends Fragment {
+public abstract class NavigationDrawerUserFragment extends Fragment {
     private DerpibooruUser mUserData;
 
     @Override

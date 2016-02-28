@@ -1,7 +1,6 @@
 package derpibooru.derpy.ui.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.ui.adapters.HomeTabAdapter;
 import derpibooru.derpy.ui.views.FragmentTabPagerView;
 
-public class HomeFragment extends UserFragment {
+public class HomeFragment extends NavigationDrawerUserFragment {
     @Bind(R.id.fragmentPagerView) FragmentTabPagerView mTabViewPager;
 
     @Override

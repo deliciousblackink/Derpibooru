@@ -27,7 +27,7 @@ import derpibooru.derpy.ui.adapters.ImageListAdapter;
 import derpibooru.derpy.ui.views.ImageListRecyclerView;
 import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
-public abstract class ImageListFragment extends UserFragment {
+public abstract class ImageListFragment extends NavigationDrawerUserFragment {
     private static final String EXTRAS_RECYCLER_VIEW_POSITION = "derpibooru.derpy.ImageListRecyclerViewPosition";
     private static final String EXTRAS_PROVIDER_PAGE = "derpibooru.derpy.ImageListProviderPage";
     private static final String EXTRAS_IMAGE_LIST = "derpibooru.derpy.ImageListItems";

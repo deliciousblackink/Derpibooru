@@ -4,15 +4,15 @@ import android.content.Context;
 
 import java.util.List;
 
-import derpibooru.derpy.data.server.DerpibooruImageComment;
+import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.server.QueryHandler;
-import derpibooru.derpy.server.parsers.ImageCommentsParser;
+import derpibooru.derpy.server.parsers.CommentsParser;
 
-public class ImageCommentsProvider extends Provider<List<DerpibooruImageComment>> {
+public class CommentsProvider extends Provider<List<DerpibooruComment>> {
     private int mCurrentPage = 1;
     private int mImageId;
 
-    public ImageCommentsProvider(Context context, QueryHandler<List<DerpibooruImageComment>> handler) {
+    public CommentsProvider(Context context, QueryHandler<List<DerpibooruComment>> handler) {
         super(context, handler);
     }
 
@@ -21,17 +21,17 @@ public class ImageCommentsProvider extends Provider<List<DerpibooruImageComment>
      *
      * @param id image ID
      */
-    public ImageCommentsProvider id(int id) {
+    public CommentsProvider id(int id) {
         mImageId = id;
         return this;
     }
 
-    public ImageCommentsProvider nextPage() {
+    public CommentsProvider nextPage() {
         mCurrentPage++;
         return this;
     }
 
-    public ImageCommentsProvider resetPageNumber() {
+    public CommentsProvider resetPageNumber() {
         mCurrentPage = 1;
         return this;
     }
@@ -54,6 +54,6 @@ public class ImageCommentsProvider extends Provider<List<DerpibooruImageComment>
 
     @Override
     public void fetch() {
-        super.executeQuery(new ImageCommentsParser());
+        super.executeQuery(new CommentsParser());
     }
 }

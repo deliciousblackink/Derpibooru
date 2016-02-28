@@ -3,13 +3,13 @@ package derpibooru.derpy.data.server;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class DerpibooruImageComment implements Parcelable {
+public class DerpibooruComment implements Parcelable {
     private String mAuthor;
     private String mAuthorAvatarUrl;
     private String mText;
     private String mPostedAt;
 
-    public DerpibooruImageComment(String author, String avatarUrl, String text, String postedAt) {
+    public DerpibooruComment(String author, String avatarUrl, String text, String postedAt) {
         mAuthor = author;
         mAuthorAvatarUrl = "https:" + avatarUrl;
         mText = text;
@@ -32,7 +32,7 @@ public class DerpibooruImageComment implements Parcelable {
         return mPostedAt;
     }
 
-    protected DerpibooruImageComment(Parcel in) {
+    protected DerpibooruComment(Parcel in) {
         mAuthor = in.readString();
         mAuthorAvatarUrl = in.readString();
         mText = in.readString();
@@ -53,15 +53,15 @@ public class DerpibooruImageComment implements Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<DerpibooruImageComment> CREATOR = new Parcelable.Creator<DerpibooruImageComment>() {
+    public static final Parcelable.Creator<DerpibooruComment> CREATOR = new Parcelable.Creator<DerpibooruComment>() {
         @Override
-        public DerpibooruImageComment createFromParcel(Parcel in) {
-            return new DerpibooruImageComment(in);
+        public DerpibooruComment createFromParcel(Parcel in) {
+            return new DerpibooruComment(in);
         }
 
         @Override
-        public DerpibooruImageComment[] newArray(int size) {
-            return new DerpibooruImageComment[size];
+        public DerpibooruComment[] newArray(int size) {
+            return new DerpibooruComment[size];
         }
     };
 }

@@ -23,15 +23,15 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruImageComment;
+import derpibooru.derpy.data.server.DerpibooruComment;
 
-public class ImageCommentsAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImageComment, ImageCommentsAdapter.ViewHolder> {
-    public ImageCommentsAdapter(Context context, List<DerpibooruImageComment> items) {
+public class CommentsAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruComment, CommentsAdapter.ViewHolder> {
+    public CommentsAdapter(Context context, List<DerpibooruComment> items) {
         super(context, items);
     }
 
     @Override
-    public ImageCommentsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CommentsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_image_bottom_bar_comments_item, parent, false);
         return new ViewHolder(v);

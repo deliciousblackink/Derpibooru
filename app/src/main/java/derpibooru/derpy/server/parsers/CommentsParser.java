@@ -10,16 +10,16 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import derpibooru.derpy.data.server.DerpibooruImageComment;
+import derpibooru.derpy.data.server.DerpibooruComment;
 
-public class ImageCommentsParser implements ServerResponseParser<List<DerpibooruImageComment>> {
+public class CommentsParser implements ServerResponseParser<List<DerpibooruComment>> {
     @Override
-    public List<DerpibooruImageComment> parseResponse(String rawResponse) throws Exception {
+    public List<DerpibooruComment> parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
         if (doc.select("div.metabar").first() == null) {
             return new ArrayList<>();
         }
-        List<DerpibooruImageComment> commentList = new ArrayList<>();
+        List<DerpibooruComment> commentList = new ArrayList<>();
         /* TODO: parse comment author's badges */
         Elements comments = doc.select("div.post-content");
         Elements commentOptions = doc.select("div.post-options");
@@ -29,7 +29,7 @@ public class ImageCommentsParser implements ServerResponseParser<List<Derpibooru
             String avatarUrl = parseAvatarUrl(comments.get(x));
             String text = parseText(comments.get(x));
             String postedAt = parsePostedAt(commentOptions.get(x));
-            commentList.add(new DerpibooruImageComment(author, avatarUrl, text, postedAt));
+            commentList.add(new DerpibooruComment(author, avatarUrl, text, postedAt));
         }
         return commentList;
     }

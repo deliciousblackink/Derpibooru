@@ -13,16 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruImageComment;
+import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
-import derpibooru.derpy.server.providers.ImageCommentsProvider;
+import derpibooru.derpy.server.providers.CommentsProvider;
 import derpibooru.derpy.server.QueryHandler;
-import derpibooru.derpy.ui.adapters.ImageCommentsAdapter;
+import derpibooru.derpy.ui.adapters.CommentsAdapter;
 import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
 public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment {
-    private ImageCommentsProvider mCommentsProvider;
-    private ImageCommentsAdapter mCommentsAdapter;
+    private CommentsProvider mCommentsProvider;
+    private CommentsAdapter mCommentsAdapter;
     /* TODO: notify bottom bar when the number of comments changes */
     private SwipeRefreshLayout mCommentsRefreshLayout;
     private RecyclerView mCommentsView;
@@ -40,7 +40,7 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
                 refreshComments();
             }
         });
-        mCommentsProvider = new ImageCommentsProvider(getActivity(), new ImageCommentsRequestHandler());
+        mCommentsProvider = new CommentsProvider(getActivity(), new ImageCommentsRequestHandler());
         mCommentsAdapter = null;
         if (getArguments().containsKey("info")) {
             displayInfoInView(v, (DerpibooruImageDetailed) getArguments().getParcelable("info"));
@@ -57,13 +57,13 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
         mCommentsProvider.resetPageNumber().fetch();
     }
 
-    private void displayCommentsFromProvider(ArrayList<DerpibooruImageComment> comments) {
+    private void displayCommentsFromProvider(ArrayList<DerpibooruComment> comments) {
         if (getView() == null) {
             Log.e("CommentsTabFragment", "displayCommentsFromProvider(...) called on null root View");
             return;
         }
         if (mCommentsAdapter == null) {
-            mCommentsAdapter = new ImageCommentsAdapter(getActivity(), comments);
+            mCommentsAdapter = new CommentsAdapter(getActivity(), comments);
             mCommentsView.setLayoutManager(new LinearLayoutManager(getActivity()));
             mCommentsView.setAdapter(mCommentsAdapter);
             mCommentsView.addOnScrollListener(new RecyclerViewEndlessScrollListener(
@@ -90,10 +90,10 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
         }
     }
 
-    private class ImageCommentsRequestHandler implements QueryHandler<List<DerpibooruImageComment>> {
+    private class ImageCommentsRequestHandler implements QueryHandler<List<DerpibooruComment>> {
         @Override
-        public void onQueryExecuted(List<DerpibooruImageComment> result) {
-            displayCommentsFromProvider((ArrayList<DerpibooruImageComment>) result);
+        public void onQueryExecuted(List<DerpibooruComment> result) {
+            displayCommentsFromProvider((ArrayList<DerpibooruComment>) result);
         }
 
         @Override

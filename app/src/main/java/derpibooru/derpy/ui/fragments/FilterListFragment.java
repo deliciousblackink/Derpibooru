@@ -147,4 +147,10 @@ public class FilterListFragment extends NavigationDrawerUserFragment {
     public interface OnFilterChangeListener {
         void onFilterChanged();
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 }

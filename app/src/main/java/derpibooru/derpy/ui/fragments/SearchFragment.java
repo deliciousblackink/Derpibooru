@@ -47,4 +47,10 @@ public class SearchFragment extends NavigationDrawerUserFragment {
     private void initializeHelpView() {
         mHelpView.setText(Html.fromHtml(getString(R.string.search_help)));
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 }

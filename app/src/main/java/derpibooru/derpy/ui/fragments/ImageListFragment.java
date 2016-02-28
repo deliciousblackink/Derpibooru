@@ -263,4 +263,10 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
             }
         }
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 }

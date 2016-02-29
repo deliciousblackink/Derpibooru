@@ -23,7 +23,6 @@ import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImage;
-import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.ui.animations.ImageListItemAnimator;
 import derpibooru.derpy.ui.utils.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
@@ -194,8 +193,8 @@ public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<
             }
 
             @Override
-            protected int getInternalImageId() {
-                return getItems().get(position).getInternalId();
+            protected int getIdForImageInteractions() {
+                return getItems().get(position).getIdForImageInteractions();
             }
 
             @NonNull

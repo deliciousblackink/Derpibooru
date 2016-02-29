@@ -39,7 +39,7 @@ public abstract class ImageInteractionPresenter {
     @Nullable
     protected abstract AccentColorIconButton getDownvoteButton();
 
-    protected abstract int getInternalImageId();
+    protected abstract int getIdForImageInteractions();
 
     @NonNull
     protected abstract Set<DerpibooruImageInteraction.InteractionType> getInteractions();
@@ -91,13 +91,13 @@ public abstract class ImageInteractionPresenter {
         public void onClick(View v) {
             if (!getInteractions().contains(mType)) {
                 mInteractionRequester.interaction(mType)
-                        .onImage(getInternalImageId())
+                        .onImage(getIdForImageInteractions())
                         .fetch();
             } else {
                 mInteractionRequester.interaction(
                         mType == DerpibooruImageInteraction.InteractionType.Fave ? DerpibooruImageInteraction.InteractionType.ClearFave
                                                                                  : DerpibooruImageInteraction.InteractionType.ClearVote)
-                        .onImage(getInternalImageId())
+                        .onImage(getIdForImageInteractions())
                         .fetch();
             }
         }

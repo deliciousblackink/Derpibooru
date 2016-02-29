@@ -136,8 +136,8 @@ public class ImageActivity extends AppCompatActivity {
             }
 
             @Override
-            protected int getInternalImageId() {
-                return mImageData.getInternalId();
+            protected int getIdForImageInteractions() {
+                return mImageData.getIdForImageInteractions();
             }
 
             @NonNull

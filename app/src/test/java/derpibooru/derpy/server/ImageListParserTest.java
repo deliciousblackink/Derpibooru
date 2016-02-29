@@ -34,7 +34,7 @@ public class ImageListParserTest {
 
     private void compareImageThumb(DerpibooruImage expected, DerpibooruImage parsed) {
         assertThat("Id does not match", parsed.getId(), is(expected.getId()));
-        assertThat("Internal id does not match", parsed.getInternalId(), is(expected.getInternalId()));
+        assertThat("Internal id does not match", parsed.getIdForImageInteractions(), is(expected.getIdForImageInteractions()));
         assertThat("Upvotes do not match", parsed.getUpvotes(), is(expected.getUpvotes()));
         assertThat("Downvotes do not match", parsed.getDownvotes(), is(expected.getDownvotes()));
         assertThat("Faves do not match", parsed.getFaves(), is(expected.getFaves()));

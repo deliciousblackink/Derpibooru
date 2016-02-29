@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class DerpibooruImage implements Parcelable {
     private int mId;
-    private int mInternalId;
+    private int mIdUsedForImageInteractions;
     private int mUpvotes;
     private int mDownvotes;
     private int mFaves;
@@ -25,7 +25,7 @@ public class DerpibooruImage implements Parcelable {
     public DerpibooruImage(int id, int internalId, int upvotes, int downvotes, int faves,
                            int comments, String thumbUrl, String largeUrl, String spoilerImageUrl) {
         mId = id;
-        mInternalId = internalId;
+        mIdUsedForImageInteractions = interactionsId;
         mUpvotes = upvotes;
         mDownvotes = downvotes;
         mFaves = faves;
@@ -40,8 +40,8 @@ public class DerpibooruImage implements Parcelable {
         return mId;
     }
 
-    public int getInternalId() {
-        return mInternalId;
+    public int getIdForImageInteractions() {
+        return mIdUsedForImageInteractions;
     }
 
     public int getScore() {
@@ -102,7 +102,7 @@ public class DerpibooruImage implements Parcelable {
 
     protected DerpibooruImage(Parcel in) {
         mId = in.readInt();
-        mInternalId = in.readInt();
+        mIdUsedForImageInteractions = in.readInt();
         mUpvotes = in.readInt();
         mDownvotes = in.readInt();
         mFaves = in.readInt();
@@ -125,7 +125,7 @@ public class DerpibooruImage implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mId);
-        dest.writeInt(mInternalId);
+        dest.writeInt(mIdUsedForImageInteractions);
         dest.writeInt(mUpvotes);
         dest.writeInt(mDownvotes);
         dest.writeInt(mFaves);

@@ -75,7 +75,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
             DerpibooruImage correspondingThumb = Iterables.find(thumbs, new Predicate<DerpibooruImage>() {
                 @Override
                 public boolean apply(DerpibooruImage it) {
-                    return it.getInternalId() == imageId;
+                    return it.getIdForImageInteractions() == imageId;
                 }
             });
             correspondingThumb.getImageInteractions().add(imageInteractionType);

@@ -1,20 +1,12 @@
 # The Derpibooru Mobile Client for Android
 
+Available on [Google Play](https://play.google.com/store/apps/details?id=derpibooru.derpy) or as a side-load [APK](https://github.com/deliciousblackink/Derpibooru/releases).
+
+The minimum Android version required is Ice Cream Sandwich 4.0.3 (API 15).
+
 ### Overview
 
 The application brings convenient (and fast!) access to the booru on mobile devices. Its user interface follows the Material Design [guidelines](https://www.google.com/design/spec/material-design/introduction.html) to create a familiar environment for Android users.
-
-The minimum Android version required is Ice Cream Sandwich 4.0.3 (API 15). Head over to [Releases](https://github.com/deliciousblackink/Derpibooru/releases) to download an APK.
-
-##### Why an APK?
-
-Featuring the application on Google Play is out of the question, as there is a possibility of either
-* a user-submitted piece violating the content safety policies of the store, or
-* a user-submitted piece infringing on authors' rights ([more information](https://derpibooru.org/takedowns) on Derpibooru's policies regarding the matter)
-
-Therefore, it is only available as a side-load APK. As for the security concerns, do keep in mind that the application only requires Internet access permissions (meaning that it cannot access your contacts, messages and saved files). 
-
-__To ensure authenticity, please download the APK only from this repository's [Releases](https://github.com/deliciousblackink/Derpibooru/releases).__
 
 ### Screenshots
 

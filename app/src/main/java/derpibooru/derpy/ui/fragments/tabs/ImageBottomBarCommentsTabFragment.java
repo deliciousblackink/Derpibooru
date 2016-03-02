@@ -50,7 +50,7 @@ public class ImageBottomBarCommentsTabFragment extends ImageBottomBarTabFragment
 
     @Override
     protected void displayInfoInView(View target, DerpibooruImageDetailed info) {
-        mCommentsProvider.id(info.getId()).fetch();
+        mCommentsProvider.id(info.getThumb().getId()).fetch();
     }
 
     private void refreshComments() {

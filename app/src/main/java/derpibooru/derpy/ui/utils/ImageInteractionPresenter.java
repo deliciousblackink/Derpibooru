@@ -18,12 +18,17 @@ import derpibooru.derpy.ui.views.AccentColorIconButton;
 public abstract class ImageInteractionPresenter {
     private ImageInteractionRequester mInteractionRequester;
 
-    protected ImageInteractionPresenter(Context context, boolean isLoggedIn) {
+    protected ImageInteractionPresenter(Context context, boolean enableInteractions) {
         mInteractionRequester = new ImageInteractionRequester(context, new InteractionRequestHandler());
-        if (isLoggedIn) {
+        if (enableInteractions) {
+            enableButton(getFaveButton());
+            enableButton(getUpvoteButton());
+            enableButton(getDownvoteButton());
             initializeInteractionListeners();
         } else {
-            /* TODO: display "log in to interact" message */
+            disableButton(getFaveButton());
+            disableButton(getUpvoteButton());
+            disableButton(getDownvoteButton());
         }
     }
 
@@ -69,6 +74,14 @@ public abstract class ImageInteractionPresenter {
             button.setText(String.format("%d", buttonValue));
             button.setActive(active);
         }
+    }
+
+    private void enableButton(@Nullable AccentColorIconButton button) {
+        if (button != null) button.setEnabled(true);
+    }
+
+    private void disableButton(@Nullable AccentColorIconButton button) {
+        if (button != null) button.setEnabled(false);
     }
 
     private void initializeInteractionListeners() {

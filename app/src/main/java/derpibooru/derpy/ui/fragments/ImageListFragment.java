@@ -17,7 +17,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruImage;
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.providers.ImageListProvider;
@@ -139,7 +139,7 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
         fetchFirstPage();
     }
 
-    private void displayImagesFromProvider(List<DerpibooruImage> images) {
+    private void displayImagesFromProvider(List<DerpibooruImageThumb> images) {
         if (mImageListAdapter == null) {
             initializeImageListAdapter(images);
             mImageRefreshLayout.setRefreshing(false);
@@ -175,12 +175,12 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
      *
      * @param images initial adapter items
      */
-    private void initializeImageListAdapter(List<DerpibooruImage> images) {
+    private void initializeImageListAdapter(List<DerpibooruImageThumb> images) {
         mImageListAdapter = new ImageListAdapter(getActivity(), images, getUser().isLoggedIn()) {
             @Override
-            public void startImageActivity(DerpibooruImage image) {
+            public void startImageActivity(DerpibooruImageThumb image) {
                 Intent intent = new Intent(getContext(), ImageActivity.class);
-                intent.putExtra(ImageActivity.EXTRAS_IMAGE, image);
+                intent.putExtra(ImageActivity.EXTRAS_IMAGE_THUMB, image);
                 intent.putExtra(MainActivity.EXTRAS_USER, getUser());
                 startActivityForResult(intent, IMAGE_ACTIVITY_REQUEST_CODE);
             }
@@ -205,7 +205,7 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
             case (IMAGE_ACTIVITY_REQUEST_CODE):
                 if (mImageListAdapter != null) {
                     mImageListAdapter.replaceItem(
-                            (DerpibooruImage) data.getParcelableExtra(ImageActivity.EXTRAS_IMAGE));
+                            (DerpibooruImageThumb) data.getParcelableExtra(ImageActivity.EXTRAS_IMAGE_THUMB));
                 }
                 break;
         }
@@ -217,7 +217,7 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
         if ((mImageView != null) && (mImageListAdapter != null)) {
             int itemPosition = ((LinearLayoutManager) mImageView.getLayoutManager()).findFirstVisibleItemPosition();
             int page = mImageListProvider.getCurrentPage();
-            List<DerpibooruImage> items = mImageListAdapter.getItems();
+            List<DerpibooruImageThumb> items = mImageListAdapter.getItems();
             outState.putInt(EXTRAS_RECYCLER_VIEW_POSITION, itemPosition);
             outState.putInt(EXTRAS_PROVIDER_PAGE, page);
             outState.putParcelableArrayList(EXTRAS_IMAGE_LIST, (ArrayList) items);
@@ -226,7 +226,7 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
 
     private void restoreImages(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(EXTRAS_IMAGE_LIST)) {
-            List<DerpibooruImage> images = savedInstanceState.getParcelableArrayList(EXTRAS_IMAGE_LIST);
+            List<DerpibooruImageThumb> images = savedInstanceState.getParcelableArrayList(EXTRAS_IMAGE_LIST);
             mImageListProvider.fromPage(
                     savedInstanceState.getInt(EXTRAS_PROVIDER_PAGE));
             initializeImageListAdapter(images);
@@ -243,9 +243,9 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
         }
     }
 
-    public class ImageListRequestHandler implements QueryHandler<List<DerpibooruImage>> {
+    public class ImageListRequestHandler implements QueryHandler<List<DerpibooruImageThumb>> {
         @Override
-        public void onQueryExecuted(List<DerpibooruImage> result) {
+        public void onQueryExecuted(List<DerpibooruImageThumb> result) {
             displayImagesFromProvider(result);
         }
 

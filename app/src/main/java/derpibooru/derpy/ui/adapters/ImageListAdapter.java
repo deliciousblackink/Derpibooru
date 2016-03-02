@@ -22,22 +22,22 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
-import derpibooru.derpy.data.server.DerpibooruImage;
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.ui.animations.ImageListItemAnimator;
 import derpibooru.derpy.ui.utils.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
-public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImage, ImageListAdapter.ViewHolder> {
+public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImageThumb, ImageListAdapter.ViewHolder> {
     private ImageListItemAnimator mAnimator;
     private boolean mUserLoggedIn;
 
-    protected ImageListAdapter(Context context, List<DerpibooruImage> items, boolean isUserLoggedIn) {
+    protected ImageListAdapter(Context context, List<DerpibooruImageThumb> items, boolean isUserLoggedIn) {
         super(context, items);
         mAnimator = new ImageListItemAnimator();
         mUserLoggedIn = isUserLoggedIn;
     }
 
-    public abstract void startImageActivity(DerpibooruImage image);
+    public abstract void startImageActivity(DerpibooruImageThumb image);
 
     @Override
     public ImageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -60,15 +60,15 @@ public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<
      * @param newItems new items
      * @param isUserLoggedIn new user interaction state
      */
-    public void resetItems(List<DerpibooruImage> newItems, boolean isUserLoggedIn) {
+    public void resetItems(List<DerpibooruImageThumb> newItems, boolean isUserLoggedIn) {
         mUserLoggedIn = isUserLoggedIn;
         super.resetItems(newItems);
     }
 
-    public void replaceItem(final DerpibooruImage target) {
-        int targetIndex = Iterables.indexOf(getItems(), new Predicate<DerpibooruImage>() {
+    public void replaceItem(final DerpibooruImageThumb target) {
+        int targetIndex = Iterables.indexOf(getItems(), new Predicate<DerpibooruImageThumb>() {
             @Override
-            public boolean apply(DerpibooruImage it) {
+            public boolean apply(DerpibooruImageThumb it) {
                 return it.getId() == target.getId();
             }
         });

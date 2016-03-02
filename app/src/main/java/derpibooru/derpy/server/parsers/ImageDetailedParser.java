@@ -1,23 +1,36 @@
 package derpibooru.derpy.server.parsers;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruTag;
+import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
-public class ImageInfoParser implements ServerResponseParser<DerpibooruImageDetailed> {
+public class ImageDetailedParser implements ServerResponseParser<DerpibooruImageDetailed> {
+    private List<DerpibooruTagDetailed> mSpoileredTags;
+
+    public ImageDetailedParser(List<DerpibooruTagDetailed> spoileredTags) {
+        mSpoileredTags = spoileredTags;
+    }
+
     @Override
     public DerpibooruImageDetailed parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
 
-        int imageId = parseImageId(doc);
         String imageSourceUrl = parseSourceUrl(doc);
         String imageUploader = parseUploader(doc);
         String imageDescription = parseDescription(doc);
@@ -25,16 +38,8 @@ public class ImageInfoParser implements ServerResponseParser<DerpibooruImageDeta
         ArrayList<String> imageFavedBy = parseFavedBy(doc);
         ArrayList<DerpibooruTag> imageTags = parseTags(doc);
 
-        return new DerpibooruImageDetailed(imageId, imageSourceUrl, imageUploader,
-                                           imageDescription, imageCreatedAt,
-                                           imageTags, imageFavedBy);
-    }
-
-    private int parseImageId(Document doc) {
-        String title = doc.select("title").first().text();
-        Matcher m = Pattern.compile("^(?:#)([\\d]*)").matcher(title);
-        /* m.group(0) is '#000000', m.group(1) is '000000' */
-        return m.find() ? Integer.parseInt(m.group(1)) : 0;
+        return new DerpibooruImageDetailed(
+                getImage(doc), imageSourceUrl, imageUploader, imageDescription, imageCreatedAt, imageTags, imageFavedBy);
     }
 
     private String parseSourceUrl(Document doc) {
@@ -111,5 +116,49 @@ public class ImageInfoParser implements ServerResponseParser<DerpibooruImageDeta
             numberOfImages = Integer.parseInt(m.group(m.groupCount() - 1));
         }
         return numberOfImages;
+    }
+
+    private DerpibooruImageThumb getImage(Document doc) throws JSONException {
+        Element imageContainer = doc.select("div.image-show-container").first();
+        return new DerpibooruImageThumb(
+                parseImageId(doc),
+                Integer.parseInt(imageContainer.attr("data-image-id")),
+                Integer.parseInt(imageContainer.attr("data-upvotes")),
+                Integer.parseInt(imageContainer.attr("data-downvotes")),
+                Integer.parseInt(imageContainer.attr("data-faves")),
+                Integer.parseInt(imageContainer.attr("data-comment-count")),
+                "https:" + new JSONObject(imageContainer.attr("data-uris")).getString("thumb"),
+                "https:" + new JSONObject(imageContainer.attr("data-uris")).getString("large"),
+                getSpoilerUrl(intListFromArray(new JSONArray(imageContainer.attr("data-image-tags"))))
+        );
+    }
+
+    private int parseImageId(Document doc) {
+        String title = doc.select("title").first().text();
+        Matcher m = Pattern.compile("^(?:#)([\\d]*)").matcher(title);
+        /* m.group(0) is '#000000', m.group(1) is '000000' */
+        return m.find() ? Integer.parseInt(m.group(1)) : 0;
+    }
+
+    /* FIXME: copied from ImageListParser */
+
+    private String getSpoilerUrl(List<Integer> imageTagIds) {
+        /* if the image has multiple tags spoilered, it should use
+         * the spoiler image for the ContentSafety one (e.g. "suggestive") */
+        Collections.sort(mSpoileredTags, new DerpibooruTagTypeComparator());
+        for (DerpibooruTagDetailed tag : mSpoileredTags) {
+            if (imageTagIds.contains(tag.getId())) {
+                return tag.getSpoilerUrl();
+            }
+        }
+        return "";
+    }
+
+    private List<Integer> intListFromArray(JSONArray array) throws JSONException {
+        List<Integer> out = new ArrayList<>();
+        for (int x = 0; x < array.length(); x++) {
+            out.add(array.getInt(x));
+        }
+        return out;
     }
 }

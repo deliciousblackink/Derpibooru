@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DerpibooruImageDetailed implements Parcelable {
-    private int mId;
+    private DerpibooruImageThumb mThumb;
+
     private String mSourceUrl;
     private String mUploader;
     private String mDescription;
@@ -15,10 +16,10 @@ public class DerpibooruImageDetailed implements Parcelable {
     private List<DerpibooruTag> mTags = new ArrayList<>();
     private List<String> mFavedBy = new ArrayList<>();
 
-    public DerpibooruImageDetailed(int id, String sourceUrl,
+    public DerpibooruImageDetailed(DerpibooruImageThumb image, String sourceUrl,
                                    String uploader, String description, String createdAt,
                                    List<DerpibooruTag> tags, List<String> favedBy) {
-        mId = id;
+        mThumb = image;
         mSourceUrl = sourceUrl;
         mUploader = uploader;
         mDescription = description;
@@ -27,8 +28,8 @@ public class DerpibooruImageDetailed implements Parcelable {
         mFavedBy = favedBy;
     }
 
-    public int getId() {
-        return mId;
+    public DerpibooruImageThumb getThumb() {
+        return mThumb;
     }
 
     public String getSourceUrl() {
@@ -56,7 +57,7 @@ public class DerpibooruImageDetailed implements Parcelable {
     }
 
     protected DerpibooruImageDetailed(Parcel in) {
-        mId = in.readInt();
+        mThumb = in.readParcelable(DerpibooruImageThumb.class.getClassLoader());
         mSourceUrl = in.readString();
         mUploader = in.readString();
         mDescription = in.readString();
@@ -72,7 +73,7 @@ public class DerpibooruImageDetailed implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mId);
+        dest.writeParcelable(mThumb, flags);
         dest.writeString(mSourceUrl);
         dest.writeString(mUploader);
         dest.writeString(mDescription);

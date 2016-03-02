@@ -3,12 +3,10 @@ package derpibooru.derpy.data.server;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-public class DerpibooruImage implements Parcelable {
+public class DerpibooruImageThumb implements Parcelable {
     private int mId;
     private int mIdUsedForImageInteractions;
     private int mUpvotes;
@@ -22,8 +20,13 @@ public class DerpibooruImage implements Parcelable {
 
     private Set<DerpibooruImageInteraction.InteractionType> mImageInteractions = new HashSet<>();
 
-    public DerpibooruImage(int id, int internalId, int upvotes, int downvotes, int faves,
-                           int comments, String thumbUrl, String largeUrl, String spoilerImageUrl) {
+    public DerpibooruImageThumb(DerpibooruImageThumb from) {
+        this(from.getId(), from.getIdForImageInteractions(), from.getUpvotes(), from.getDownvotes(),
+             from.getFaves(), from.getCommentCount(), from.getThumbUrl(), from.getLargeImageUrl(), from.getSpoilerImageUrl());
+    }
+
+    public DerpibooruImageThumb(int id, int interactionsId, int upvotes, int downvotes, int faves,
+                                int comments, String thumbUrl, String largeUrl, String spoilerImageUrl) {
         mId = id;
         mIdUsedForImageInteractions = interactionsId;
         mUpvotes = upvotes;
@@ -100,7 +103,7 @@ public class DerpibooruImage implements Parcelable {
         mSpoilerImageUrl = "";
     }
 
-    protected DerpibooruImage(Parcel in) {
+    protected DerpibooruImageThumb(Parcel in) {
         mId = in.readInt();
         mIdUsedForImageInteractions = in.readInt();
         mUpvotes = in.readInt();
@@ -145,15 +148,15 @@ public class DerpibooruImage implements Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<DerpibooruImage> CREATOR = new Parcelable.Creator<DerpibooruImage>() {
+    public static final Parcelable.Creator<DerpibooruImageThumb> CREATOR = new Parcelable.Creator<DerpibooruImageThumb>() {
         @Override
-        public DerpibooruImage createFromParcel(Parcel in) {
-            return new DerpibooruImage(in);
+        public DerpibooruImageThumb createFromParcel(Parcel in) {
+            return new DerpibooruImageThumb(in);
         }
 
         @Override
-        public DerpibooruImage[] newArray(int size) {
-            return new DerpibooruImage[size];
+        public DerpibooruImageThumb[] newArray(int size) {
+            return new DerpibooruImageThumb[size];
         }
     };
 }

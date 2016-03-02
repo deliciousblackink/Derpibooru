@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-import derpibooru.derpy.data.server.DerpibooruImage;
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.parsers.ImageListParser;
 
@@ -26,13 +26,13 @@ public class ImageListParserTest {
     public void run() throws Exception {
         Object result =
                 mTest.runParserWithInputResource("/resources/SampleImageListResponse.json");
-        ArrayList<DerpibooruImage> images = (ArrayList<DerpibooruImage>) result;
+        ArrayList<DerpibooruImageThumb> images = (ArrayList<DerpibooruImageThumb>) result;
         assertThat("The number of items parsed does not match the input provided",
                    images.size(), is(15));
         compareImageThumb(firstImageThumb, images.get(0));
     }
 
-    private void compareImageThumb(DerpibooruImage expected, DerpibooruImage parsed) {
+    private void compareImageThumb(DerpibooruImageThumb expected, DerpibooruImageThumb parsed) {
         assertThat("Id does not match", parsed.getId(), is(expected.getId()));
         assertThat("Internal id does not match", parsed.getIdForImageInteractions(), is(expected.getIdForImageInteractions()));
         assertThat("Upvotes do not match", parsed.getUpvotes(), is(expected.getUpvotes()));
@@ -44,8 +44,8 @@ public class ImageListParserTest {
         assertThat("Spoiler image does not match", parsed.getSpoilerImageUrl(), is(expected.getSpoilerImageUrl()));
     }
 
-    private static final DerpibooruImage firstImageThumb =
-            new DerpibooruImage(960596, 960387, 3, 23, 1, 4,
+    private static final DerpibooruImageThumb firstImageThumb =
+            new DerpibooruImageThumb(960596, 960387, 3, 23, 1, 4,
                                      "https://derpicdn.net/img/2015/8/18/960596/thumb.png",
                                      "https://derpicdn.net/img/2015/8/18/960596/large.png",
                                      "https://derpicdn.net/dummy_spoiler");

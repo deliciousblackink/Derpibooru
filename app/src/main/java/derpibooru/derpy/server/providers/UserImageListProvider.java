@@ -4,13 +4,13 @@ import android.content.Context;
 
 import java.util.List;
 
-import derpibooru.derpy.data.server.DerpibooruImage;
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.server.QueryHandler;
 
 public class UserImageListProvider extends ImageListProvider {
     private UserListType mListType;
 
-    public UserImageListProvider(Context context, QueryHandler<List<DerpibooruImage>> handler) {
+    public UserImageListProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler) {
         super(context, handler);
     }
 

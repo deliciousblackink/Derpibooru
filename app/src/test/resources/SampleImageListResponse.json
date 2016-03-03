@@ -792,6 +792,19 @@
     ],
     "total":418,
     "interactions":[
-
+        {
+            "id":1234,
+            "interaction_type":"voted",
+            "value":"down",
+            "user_id":1,
+            "image_id":960596
+        },
+        {
+            "id":1234,
+            "interaction_type":"faved",
+            "value":null,
+            "user_id":1,
+            "image_id":960596
+        }
     ]
 }

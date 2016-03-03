@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import derpibooru.derpy.server.TestResourceLoader;
 
@@ -46,7 +47,6 @@ public class UserScriptParserObjectTest {
     public void testSpoileredTagIds() {
         assertThat(loggedInScript.getSpoileredTagIds(), is(Arrays.asList(
                 41133,41161,42773,114937,173118,173119,173120,173121,173122,173123,173124)));
-        assertThat(loggedOutScript.getSpoileredTagIds(), is(Arrays.asList(
-                41133,41161,42773,114937,173118,173119,173120,173121,173122,173123,173124)));
+        assertThat(loggedOutScript.getSpoileredTagIds(), is(Collections.<Integer>emptyList()));
     }
 }

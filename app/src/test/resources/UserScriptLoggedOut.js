@@ -5,7 +5,7 @@ try {
     window.booru.filterID = 100073;
     window.booru.filterCanEdit = false;
     window.booru.hiddenTagList = [61060,89379,20417,86723,94478,25605,25724,26707,188629,27611,27620,27793,27860,29220,29266,29300,30840,36299,36440,36699,38204,39068,44359,48119];
-    window.booru.spoileredTagList = [41133,41161,42773,114937,173118,173119,173120,173121,173122,173123,173124];
+    window.booru.spoileredTagList = [];
     window.booru.hiddenFilter = window.booru.parseSearch("");
     window.booru.spoileredFilter = window.booru.parseSearch("");
     window.booru.ignoredTagList = [];

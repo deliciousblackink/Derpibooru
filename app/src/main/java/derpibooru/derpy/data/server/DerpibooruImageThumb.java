@@ -3,8 +3,7 @@ package derpibooru.derpy.data.server;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.EnumSet;
 
 public class DerpibooruImageThumb implements Parcelable {
     private int mId;
@@ -15,18 +14,19 @@ public class DerpibooruImageThumb implements Parcelable {
     private int mCommentCount;
     private String mThumbUrl;
     private String mLargeUrl;
-
     private String mSpoilerImageUrl;
 
-    private Set<DerpibooruImageInteraction.InteractionType> mImageInteractions = new HashSet<>();
+    private EnumSet<DerpibooruImageInteraction.InteractionType> mImageInteractions;
 
     public DerpibooruImageThumb(DerpibooruImageThumb from) {
         this(from.getId(), from.getIdForImageInteractions(), from.getUpvotes(), from.getDownvotes(),
-             from.getFaves(), from.getCommentCount(), from.getThumbUrl(), from.getLargeImageUrl(), from.getSpoilerImageUrl());
+             from.getFaves(), from.getCommentCount(), from.getThumbUrl(), from.getLargeImageUrl(),
+             from.getSpoilerImageUrl(), from.getImageInteractions());
     }
 
     public DerpibooruImageThumb(int id, int interactionsId, int upvotes, int downvotes, int faves,
-                                int comments, String thumbUrl, String largeUrl, String spoilerImageUrl) {
+                                int comments, String thumbUrl, String largeUrl, String spoilerImageUrl,
+                                EnumSet<DerpibooruImageInteraction.InteractionType> interactions) {
         mId = id;
         mIdUsedForImageInteractions = interactionsId;
         mUpvotes = upvotes;
@@ -35,8 +35,8 @@ public class DerpibooruImageThumb implements Parcelable {
         mCommentCount = comments;
         mThumbUrl = thumbUrl;
         mLargeUrl = largeUrl;
-
         mSpoilerImageUrl = spoilerImageUrl;
+        mImageInteractions = interactions;
     }
 
     public int getId() {
@@ -91,7 +91,7 @@ public class DerpibooruImageThumb implements Parcelable {
         return mSpoilerImageUrl;
     }
 
-    public Set<DerpibooruImageInteraction.InteractionType> getImageInteractions() {
+    public EnumSet<DerpibooruImageInteraction.InteractionType> getImageInteractions() {
         return mImageInteractions;
     }
 

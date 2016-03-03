@@ -1,0 +1,38 @@
+<div class="userbox">
+    <div class="filter-menu">
+        <a data-notification-display="" href="/notifications">0</a>
+        <a class="hide-desktop-t" href="/profiles/UserLink"><i class="fa fa-user"></i></a>
+        <a class="hide-mobile-t" href="/filters">Filters</a>
+        <form id="filter-quick-form" action="/filters/select" accept-charset="UTF-8" method="post">
+            <input name="utf8" type="hidden" value="&#x2713;" />
+            <input type="hidden" name="_method" value="patch" />
+            <input type="hidden" name="authenticity_token" value="{token}" />
+            <select name="id" id="filter-quick-menu">
+                <optgroup label="Your Filters">
+                    <option value="100074">User-Defined Filter</option>
+                </optgroup>
+                <optgroup label="Recent Filters">
+                    <option value="100074">User-Defined Filter</option>
+                    <option selected="selected" value="100073">Some Long Filter Name</option>
+                    <option value="56027">Everything</option>
+                </optgroup>
+            </select>
+        </form>
+        <form id="spoiler-quick-form" class="hide-mobile-t" action="/pages/select_spoiler_type" accept-charset="UTF-8" method="post">
+            <input name="utf8" type="hidden" value="&#x2713;" />
+            <input type="hidden" name="_method" value="patch" />
+            <input type="hidden" name="authenticity_token" value="{token}" />
+            <select name="id" id="spoiler-quick-menu">
+                <optgroup label="Spoilers">
+                    <option value="static">static</option>
+                    <option value="click">click</option>
+                    <option selected="selected" value="hover">hover</option>
+                    <option value="off">off</option>
+                </optgroup>
+            </select>
+        </form>
+        <!-- spoiler change script -->
+    </div>
+    <!-- span.dropdown_container inherit -->
+    <!-- /users/sign_out -->
+</div>

@@ -7,14 +7,22 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
-
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.parsers.ImageListParser;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 public class ImageListParserTest {
+    private static final DerpibooruImageThumb firstImageThumb =
+            new DerpibooruImageThumb(960596, 960387, 3, 23, 1, 4,
+                                     "https://derpicdn.net/img/2015/8/18/960596/thumb.png",
+                                     "https://derpicdn.net/img/2015/8/18/960596/large.png",
+                                     "https://derpicdn.net/dummy_spoiler");
+    private static final DerpibooruTagDetailed dummySpoilerTag =
+            new DerpibooruTagDetailed(67509, 0, "artist:pikapetey", "", "//derpicdn.net/dummy_spoiler");
+    private static final ArrayList<DerpibooruTagDetailed> dummyFilter = Lists.newArrayList(dummySpoilerTag);
     private ResponseParserTest mTest;
 
     @Before
@@ -43,15 +51,4 @@ public class ImageListParserTest {
         assertThat("Full image url does not match", parsed.getLargeImageUrl(), is(expected.getLargeImageUrl()));
         assertThat("Spoiler image does not match", parsed.getSpoilerImageUrl(), is(expected.getSpoilerImageUrl()));
     }
-
-    private static final DerpibooruImageThumb firstImageThumb =
-            new DerpibooruImageThumb(960596, 960387, 3, 23, 1, 4,
-                                     "https://derpicdn.net/img/2015/8/18/960596/thumb.png",
-                                     "https://derpicdn.net/img/2015/8/18/960596/large.png",
-                                     "https://derpicdn.net/dummy_spoiler");
-
-    private static final DerpibooruTagDetailed dummySpoilerTag =
-            new DerpibooruTagDetailed(67509, 0, "artist:pikapetey", "", "//derpicdn.net/dummy_spoiler");
-
-    private static final ArrayList<DerpibooruTagDetailed> dummyFilter = Lists.newArrayList(dummySpoilerTag);
 }

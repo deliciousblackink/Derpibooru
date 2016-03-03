@@ -13,7 +13,7 @@ public class DerpibooruUser implements Parcelable {
 
     public DerpibooruUser(String username, String avatarUrl) {
         mUsername = username;
-        mAvatarUrl = "https:" + avatarUrl;
+        mAvatarUrl = avatarUrl;
         mIsLoggedIn = !username.isEmpty();
     }
 

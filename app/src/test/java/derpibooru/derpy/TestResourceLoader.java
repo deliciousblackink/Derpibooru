@@ -1,4 +1,4 @@
-package derpibooru.derpy.server;
+package derpibooru.derpy;
 
 import com.google.common.io.CharStreams;
 

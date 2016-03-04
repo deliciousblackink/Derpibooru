@@ -3,7 +3,7 @@ package derpibooru.derpy.server.parsers.objects;
 import org.junit.Before;
 import org.junit.Test;
 
-import derpibooru.derpy.server.TestResourceLoader;
+import derpibooru.derpy.TestResourceLoader;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

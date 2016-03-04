@@ -9,27 +9,42 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
+import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruTag;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
+import derpibooru.derpy.server.parsers.objects.ImageInteractionsParserObject;
+import derpibooru.derpy.server.parsers.objects.ImageSpoilerParserObject;
+import derpibooru.derpy.server.parsers.objects.UserScriptParserObject;
+import derpibooru.derpy.server.parsers.objects.UserboxParserObject;
 
 public class ImageDetailedParser implements ServerResponseParser<DerpibooruImageDetailed> {
-    private List<DerpibooruTagDetailed> mSpoileredTags;
+    private ImageSpoilerParserObject mSpoilers;
+    private ImageInteractionsParserObject mInteractions;
 
     public ImageDetailedParser(List<DerpibooruTagDetailed> spoileredTags) {
-        mSpoileredTags = spoileredTags;
+        mSpoilers = new ImageSpoilerParserObject(spoileredTags);
     }
 
     @Override
     public DerpibooruImageDetailed parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
+
+        UserboxParserObject box = new UserboxParserObject(doc.select("div.userbox").first().html());
+        if (box.isLoggedIn()) {
+            UserScriptParserObject script =
+                    new UserScriptParserObject(doc.select("script").get(doc.select("script").size() - 2).html());
+            mInteractions = new ImageInteractionsParserObject(script.getInteractions().toString());
+        }
 
         String imageSourceUrl = parseSourceUrl(doc);
         String imageUploader = parseUploader(doc);
@@ -120,17 +135,26 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
 
     private DerpibooruImageThumb getImage(Document doc) throws JSONException {
         Element imageContainer = doc.select("div.image-show-container").first();
-        return new DerpibooruImageThumb(
+
+        int imageIdForInteractions = Integer.parseInt(imageContainer.attr("data-image-id"));
+        EnumSet interactions = EnumSet.noneOf(DerpibooruImageInteraction.InteractionType.class);
+        if (mInteractions != null) {
+            interactions = mInteractions.getImageInteractionsForImage(imageIdForInteractions);
+        }
+
+        DerpibooruImageThumb thumb = new DerpibooruImageThumb(
                 parseImageId(doc),
-                Integer.parseInt(imageContainer.attr("data-image-id")),
+                imageIdForInteractions,
                 Integer.parseInt(imageContainer.attr("data-upvotes")),
                 Integer.parseInt(imageContainer.attr("data-downvotes")),
                 Integer.parseInt(imageContainer.attr("data-faves")),
                 Integer.parseInt(imageContainer.attr("data-comment-count")),
                 "https:" + new JSONObject(imageContainer.attr("data-uris")).getString("thumb"),
                 "https:" + new JSONObject(imageContainer.attr("data-uris")).getString("large"),
-                getSpoilerUrl(intListFromArray(new JSONArray(imageContainer.attr("data-image-tags"))))
+                mSpoilers.getSpoilerUrl(new JSONArray(imageContainer.attr("data-image-tags"))),
+                interactions
         );
+        return thumb;
     }
 
     private int parseImageId(Document doc) {
@@ -138,27 +162,5 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
         Matcher m = Pattern.compile("^(?:#)([\\d]*)").matcher(title);
         /* m.group(0) is '#000000', m.group(1) is '000000' */
         return m.find() ? Integer.parseInt(m.group(1)) : 0;
-    }
-
-    /* FIXME: copied from ImageListParser */
-
-    private String getSpoilerUrl(List<Integer> imageTagIds) {
-        /* if the image has multiple tags spoilered, it should use
-         * the spoiler image for the ContentSafety one (e.g. "suggestive") */
-        Collections.sort(mSpoileredTags, new DerpibooruTagTypeComparator());
-        for (DerpibooruTagDetailed tag : mSpoileredTags) {
-            if (imageTagIds.contains(tag.getId())) {
-                return tag.getSpoilerUrl();
-            }
-        }
-        return "";
-    }
-
-    private List<Integer> intListFromArray(JSONArray array) throws JSONException {
-        List<Integer> out = new ArrayList<>();
-        for (int x = 0; x < array.length(); x++) {
-            out.add(array.getInt(x));
-        }
-        return out;
     }
 }

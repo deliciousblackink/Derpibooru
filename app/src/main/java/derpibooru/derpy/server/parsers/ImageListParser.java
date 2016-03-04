@@ -17,21 +17,24 @@ import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
+import derpibooru.derpy.server.parsers.objects.ImageInteractionsParserObject;
+import derpibooru.derpy.server.parsers.objects.ImageSpoilerParserObject;
 
 public class ImageListParser implements ServerResponseParser<List<DerpibooruImageThumb>> {
-    private List<DerpibooruTagDetailed> mSpoileredTags;
+    private ImageSpoilerParserObject mSpoilers;
+    private ImageInteractionsParserObject mInteractions;
 
     public ImageListParser(List<DerpibooruTagDetailed> spoileredTags) {
-        mSpoileredTags = spoileredTags;
+        mSpoilers = new ImageSpoilerParserObject(spoileredTags);
     }
 
     @Override
     public List<DerpibooruImageThumb> parseResponse(String rawResponse) throws JSONException {
         JSONObject json = new JSONObject(rawResponse);
+        mInteractions = new ImageInteractionsParserObject(
+                json.getJSONArray("interactions").toString());
         JSONArray jsonImages = getRootArray(json);
         List<DerpibooruImageThumb> imageThumbs = getImageThumbs(jsonImages);
-        JSONArray jsonInteractions = json.getJSONArray("interactions");
-        assignImageInteractionsToImageThumbs(imageThumbs, jsonInteractions);
         return imageThumbs;
     }
 
@@ -49,13 +52,13 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
         int imgCount = images.length();
         for (int x = 0; x < imgCount; x++) {
             JSONObject img = images.getJSONObject(x);
-            List<Integer> imgTags = intListFromArray(img.getJSONArray("tag_ids"));
             DerpibooruImageThumb it = new DerpibooruImageThumb(
                     img.getInt("id_number"), img.getInt("id"), img.getInt("upvotes"), img.getInt("downvotes"),
                     img.getInt("faves"), img.getInt("comment_count"),
                     getAbsoluteUrl(img.getJSONObject("representations").getString("thumb")),
                     getAbsoluteUrl(img.getJSONObject("representations").getString("large")),
-                    getSpoilerUrl(imgTags));
+                    mSpoilers.getSpoilerUrl(img.getJSONArray("tag_ids")),
+                    mInteractions.getImageInteractionsForImage(img.getInt("id_number")));
             out.add(it);
         }
         return out;
@@ -65,64 +68,4 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
         return String.format("https:%s", relativeUrl);
     }
 
-    private void assignImageInteractionsToImageThumbs(List<DerpibooruImageThumb> thumbs,
-                                                      JSONArray interactions) throws JSONException {
-        int actionCount = interactions.length();
-        for (int x = 0; x < actionCount; x++) {
-            JSONObject action = interactions.getJSONObject(x);
-            DerpibooruImageInteraction.InteractionType imageInteractionType = getImageInteractionType(action);
-            final int imageId = action.getInt("image_id");
-            DerpibooruImageThumb correspondingThumb = Iterables.find(thumbs, new Predicate<DerpibooruImageThumb>() {
-                @Override
-                public boolean apply(DerpibooruImageThumb it) {
-                    return it.getIdForImageInteractions() == imageId;
-                }
-            });
-            correspondingThumb.getImageInteractions().add(imageInteractionType);
-        }
-    }
-
-    @Nullable
-    private DerpibooruImageInteraction.InteractionType getImageInteractionType(JSONObject interaction) throws JSONException {
-        if (interaction.getString("interaction_type").equals("faved")) {
-            return DerpibooruImageInteraction.InteractionType.Fave;
-        } else if (interaction.getString("interaction_type").equals("voted")) {
-            if (interaction.getString("value").equals("up")) {
-                return DerpibooruImageInteraction.InteractionType.Upvote;
-            } else {
-                return DerpibooruImageInteraction.InteractionType.Downvote;
-            }
-        }
-        return null;
-    }
-
-    private List<String> getSpoileredTagNames(List<Integer> imageTagIds) {
-        List<String> spoilered = new ArrayList<>();
-        for (DerpibooruTagDetailed tag : mSpoileredTags) {
-            if (imageTagIds.contains(tag.getId())) {
-                spoilered.add(tag.getName());
-            }
-        }
-        return spoilered;
-    }
-
-    private String getSpoilerUrl(List<Integer> imageTagIds) {
-        /* if the image has multiple tags spoilered, it should use
-         * the spoiler image for the ContentSafety one (e.g. "suggestive") */
-        Collections.sort(mSpoileredTags, new DerpibooruTagTypeComparator());
-        for (DerpibooruTagDetailed tag : mSpoileredTags) {
-            if (imageTagIds.contains(tag.getId())) {
-                return tag.getSpoilerUrl();
-            }
-        }
-        return "";
-    }
-
-    private List<Integer> intListFromArray(JSONArray array) throws JSONException {
-        List<Integer> out = new ArrayList<>();
-        for (int x = 0; x < array.length(); x++) {
-            out.add(array.getInt(x));
-        }
-        return out;
-    }
 }

@@ -65,7 +65,7 @@ public class UserScriptParserObject {
 
     @Nullable
     public JSONArray getInteractions() throws JSONException {
-        Matcher m = Pattern.compile("(?:window.booru._interactions = )(\\[.*\\])").matcher(mHtml);
+        Matcher m = Pattern.compile("(?:window.booru._interactions = )(\\[.*\\])", Pattern.DOTALL).matcher(mHtml);
         m.find();
         String interactionsArray = m.group(1);
         if (!interactionsArray.equals("[]")) {

@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
-import derpibooru.derpy.server.TestResourceLoader;
+import derpibooru.derpy.TestResourceLoader;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;

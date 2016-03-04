@@ -10,7 +10,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
-import derpibooru.derpy.server.TestResourceLoader;
+import derpibooru.derpy.TestResourceLoader;
 
 public class ImageInteractionsParserObjectTest {
     private ImageInteractionsParserObject interactions;

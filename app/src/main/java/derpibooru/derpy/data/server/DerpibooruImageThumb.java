@@ -113,11 +113,7 @@ public class DerpibooruImageThumb implements Parcelable {
         mThumbUrl = in.readString();
         mLargeUrl = in.readString();
         mSpoilerImageUrl = in.readString();
-
-        int[] interactionValues = in.createIntArray();
-        for (int value : interactionValues) {
-            mImageInteractions.add(DerpibooruImageInteraction.InteractionType.fromValue(value));
-        }
+        mImageInteractions = (EnumSet<DerpibooruImageInteraction.InteractionType>) in.readSerializable();
     }
 
     @Override
@@ -136,15 +132,7 @@ public class DerpibooruImageThumb implements Parcelable {
         dest.writeString(mThumbUrl);
         dest.writeString(mLargeUrl);
         dest.writeString(mSpoilerImageUrl);
-
-        /* TODO: redo transition of Set<enum> to parcel */
-        int[] interactionValues = new int[mImageInteractions.size()];
-        int iterator = 0;
-        for (DerpibooruImageInteraction.InteractionType interactionType : mImageInteractions) {
-            interactionValues[iterator] = interactionType.toValue();
-            iterator++;
-        }
-        dest.writeIntArray(interactionValues);
+        dest.writeSerializable(mImageInteractions);
     }
 
     @SuppressWarnings("unused")

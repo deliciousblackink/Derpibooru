@@ -58,7 +58,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
                     getAbsoluteUrl(img.getJSONObject("representations").getString("thumb")),
                     getAbsoluteUrl(img.getJSONObject("representations").getString("large")),
                     mSpoilers.getSpoilerUrl(img.getJSONArray("tag_ids")),
-                    mInteractions.getImageInteractionsForImage(img.getInt("id_number")));
+                    mInteractions.getImageInteractionsForImage(img.getInt("id")));
             out.add(it);
         }
         return out;

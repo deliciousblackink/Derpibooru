@@ -3,49 +3,33 @@ package derpibooru.derpy.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-
-import java.util.Set;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
-import derpibooru.derpy.data.server.DerpibooruImageInteraction;
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.providers.ImageDetailedProvider;
-import derpibooru.derpy.ui.utils.ImageInteractionPresenter;
-import derpibooru.derpy.ui.views.AccentColorIconButton;
-import derpibooru.derpy.ui.views.ImageBottomBarView;
-import derpibooru.derpy.ui.views.ImageTopBarView;
-import uk.co.senab.photoview.PhotoViewAttacher;
+import derpibooru.derpy.ui.fragments.ImageActivityMainFragment;
+import derpibooru.derpy.ui.fragments.ImageListFragment;
 
 public class ImageActivity extends AppCompatActivity {
-    public static final String EXTRAS_IMAGE_THUMB = "derpibooru.derpy.Image";
     public static final String EXTRAS_IMAGE_DETAILED = "derpibooru.derpy.ImageDetailed";
     public static final String EXTRAS_IMAGE_ID = "derpibooru.derpy.ImageId";
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.toolbarLayout) View toolbarLayout;
-    @Bind(R.id.imageView) ImageView imageView;
-    @Bind(R.id.imageTopBar) ImageTopBarView topBar;
-    @Bind(R.id.imageBottomBar) ImageBottomBarView bottomBar;
+    @Bind(R.id.fragmentLayout) FrameLayout contentLayout;
 
-    private ImageInteractionPresenter mInteractionPresenter;
     private DerpibooruImageDetailed mImage;
 
     @Override
@@ -60,8 +44,15 @@ public class ImageActivity extends AppCompatActivity {
             }
         });
         toolbar.setTitle(R.string.loading);
-        if (!isSavedStateAvailable(savedInstanceState)) {
-            initializeFromIntent();
+        if ((savedInstanceState != null) && (savedInstanceState.containsKey(EXTRAS_IMAGE_DETAILED))) {
+            mImage = savedInstanceState.getParcelable(EXTRAS_IMAGE_DETAILED);
+            displayMainFragment();
+        } else if (getIntent().hasExtra(EXTRAS_IMAGE_ID)) {
+            fetchDetailedInformation(getIntent().getIntExtra(EXTRAS_IMAGE_ID, 0));
+        } else if (getIntent().hasExtra(ImageListFragment.EXTRAS_IMAGE_THUMB)) {
+            DerpibooruImageThumb thumb = getIntent().getParcelableExtra(ImageListFragment.EXTRAS_IMAGE_THUMB);
+            displayMainFragmentFromThumb(thumb);
+            fetchDetailedInformation(thumb.getId());
         }
     }
 
@@ -77,59 +68,11 @@ public class ImageActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (mImage != null) {
             setResult(Activity.RESULT_OK,
-                      new Intent().putExtra(EXTRAS_IMAGE_THUMB, mImage.getThumb()));
+                      new Intent().putExtra(ImageListFragment.EXTRAS_IMAGE_THUMB, mImage.getThumb()));
         } else {
             setResult(Activity.RESULT_OK);
         }
         super.onBackPressed();
-    }
-    
-    private boolean isSavedStateAvailable(Bundle savedInstanceState) {
-        if ((savedInstanceState != null) && (savedInstanceState.containsKey(EXTRAS_IMAGE_DETAILED))) {
-            mImage = savedInstanceState.getParcelable(EXTRAS_IMAGE_DETAILED);
-            display(mImage);
-            return true;
-        }
-        return false;
-    }
-    
-    private void initializeFromIntent() throws IllegalStateException {
-        if (getIntent().getParcelableExtra(EXTRAS_IMAGE_THUMB) != null) {
-            DerpibooruImageThumb thumb = getIntent().getParcelableExtra(EXTRAS_IMAGE_THUMB);
-            display(thumb);
-            fetchDetailedInformation(thumb.getId());
-        } else if (getIntent().hasExtra(EXTRAS_IMAGE_ID)) {
-            fetchDetailedInformation(getIntent().getIntExtra(EXTRAS_IMAGE_ID, 0));
-        } else {
-            throw new IllegalStateException("ImageActivity has been provided with neither DerpibooruImage nor image id");
-        }
-    }
-
-    private void display(DerpibooruImageThumb thumb) {
-        if (toolbar.getTitle().equals(getString(R.string.loading))) {
-            toolbar.setTitle("#" + Integer.toString(thumb.getId()));
-            initializeBottomBarLayout();
-            loadImageWithGlide(thumb.getLargeImageUrl());
-        }
-        topBar.getUpvoteButton().setText(Integer.toString(thumb.getUpvotes()));
-        topBar.getUpvoteButton().setEnabled(false);
-        topBar.getDownvoteButton().setText(Integer.toString(thumb.getDownvotes()));
-        topBar.getDownvoteButton().setEnabled(false);
-        topBar.getScoreButton().setText(Integer.toString(thumb.getUpvotes() - thumb.getDownvotes()));
-        bottomBar.getFaveButton().setText(Integer.toString(thumb.getFaves()));
-        bottomBar.getFaveButton().setEnabled(false);
-        bottomBar.setInfoFromThumb(thumb);
-    }
-
-    private void display(DerpibooruImageDetailed image) {
-        if (toolbar.getTitle().equals(getString(R.string.loading))) {
-            toolbar.setTitle("#" + Integer.toString(image.getThumb().getId()));
-            initializeBottomBarLayout();
-            loadImageWithGlide(image.getThumb().getLargeImageUrl());
-        }
-        initializeInteractionPresenter(((DerpibooruUser) getIntent().getParcelableExtra(MainActivity.EXTRAS_USER))
-                                               .isLoggedIn());
-        bottomBar.setInfoFromDetailed(image);
     }
 
     private void fetchDetailedInformation(int imageId) {
@@ -138,7 +81,7 @@ public class ImageActivity extends AppCompatActivity {
             @Override
             public void onQueryExecuted(DerpibooruImageDetailed info) {
                 mImage = info;
-                display(mImage);
+                displayMainFragment();
             }
 
             @Override
@@ -149,146 +92,67 @@ public class ImageActivity extends AppCompatActivity {
         provider.id(imageId).fetch();
     }
 
-    private void loadImageWithGlide(String url) {
-        if (url.endsWith(".gif")) {
-            Glide.with(this).load(url).diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .listener(new GlideRequestListener(imageView))
-                    .into(imageView);
+    private void displayMainFragment() {
+        if (getCurrentFragment() == null) {
+            return; /* the view has been destroyed prior to async callback from provider */
+        }
+        if (toolbar.getTitle().equals(getString(R.string.loading))) {
+            displayMainFragmentFromThumb(null);
         } else {
-            Glide.with(this).load(url).diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .listener(new GlideRequestListener(imageView))
-                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                    .into(imageView);
+            /* the main fragment has already been instantiated with image thumb */
+            ((ImageActivityMainFragment) getCurrentFragment())
+                    .onDetailedImageFetched();
         }
     }
-    
-    private void initializeBottomBarLayout() {
-        bottomBar.initializeWithFragmentManager(getSupportFragmentManager());
-        bottomBar.post(new Runnable() {
-            @Override
-            public void run() {
-                int bottomBarMaximumHeightWhenExtended =
-                        imageView.getMeasuredHeight() - toolbarLayout.getMeasuredHeight();
-                bottomBar.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
-                bottomBar.getLayoutParams().height = bottomBarMaximumHeightWhenExtended;
-                bottomBar.requestLayout();
-            }
-        });
-    }
-    
-    private void initializeInteractionPresenter(boolean isUserLoggedIn) {
-        mInteractionPresenter = new ImageInteractionPresenter(this, isUserLoggedIn) {
-            @Nullable
-            @Override
-            protected AccentColorIconButton getScoreButton() {
-                return topBar.getScoreButton();
-            }
 
-            @Nullable
-            @Override
-            protected AccentColorIconButton getFaveButton() {
-                return bottomBar.getFaveButton();
-            }
+    private void displayMainFragmentFromThumb(@Nullable DerpibooruImageThumb thumb) {
+        toolbar.setTitle("#" + Integer.toString(thumb.getId()));
 
-            @Nullable
-            @Override
-            protected AccentColorIconButton getUpvoteButton() {
-                return topBar.getUpvoteButton();
-            }
+        ImageActivityMainFragment mainFragment = new ImageActivityMainFragment();
+        mainFragment.setActivityCallbacks(new MainFragmentCallbackHandler());
+        mainFragment.setArguments(getMainFragmentArguments(thumb));
 
-            @Nullable
-            @Override
-            protected AccentColorIconButton getDownvoteButton() {
-                return topBar.getDownvoteButton();
-            }
-
-            @Override
-            protected int getIdForImageInteractions() {
-                return mImage.getThumb().getIdForImageInteractions();
-            }
-
-            @NonNull
-            @Override
-            protected Set<DerpibooruImageInteraction.InteractionType> getInteractions() {
-                return mImage.getThumb().getImageInteractions();
-            }
-
-            @Override
-            protected void addInteraction(DerpibooruImageInteraction.InteractionType interaction) {
-                mImage.getThumb().getImageInteractions().add(interaction);
-            }
-
-            @Override
-            protected void removeInteraction(DerpibooruImageInteraction.InteractionType interaction) {
-                mImage.getThumb().getImageInteractions().remove(interaction);
-            }
-
-            @Override
-            protected void onInteractionFailed() {
-                /* TODO: pop up an error screen */
-            }
-
-            @Override
-            protected void onInteractionCompleted(DerpibooruImageInteraction result) {
-                mImage.getThumb().setFaves(result.getFavorites());
-                mImage.getThumb().setUpvotes(result.getUpvotes());
-                mImage.getThumb().setDownvotes(result.getDownvotes());
-                super.onInteractionCompleted(result);
-            }
-
-            @SuppressWarnings("ConstantConditions")
-            @Override
-            public void refreshInfo(int faves, int upvotes, int downvotes) {
-                /* prevent icons from blending into the background by disabling tint toggle on touch
-                 * (only in case there was no user interaction) */
-                getFaveButton().setToggleIconTintOnTouch(
-                        getInteractions().contains(DerpibooruImageInteraction.InteractionType.Fave));
-                getUpvoteButton().setToggleIconTintOnTouch(
-                        getInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote));
-                getDownvoteButton().setToggleIconTintOnTouch(
-                        getInteractions().contains(DerpibooruImageInteraction.InteractionType.Downvote));
-                super.refreshInfo(faves, upvotes, downvotes);
-            }
-        };
-        mInteractionPresenter.refreshInfo(mImage.getThumb().getFaves(), mImage.getThumb().getUpvotes(), mImage.getThumb().getDownvotes());
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(contentLayout.getId(), mainFragment)
+                .commit();
     }
 
-    private class GlideRequestListener implements RequestListener<String, GlideDrawable> {
-        private ImageView mImageView;
+    private Bundle getMainFragmentArguments(@Nullable DerpibooruImageThumb thumb) {
+        boolean isUserLoggedIn =
+                ((DerpibooruUser) getIntent().getParcelableExtra(MainActivity.EXTRAS_USER)).isLoggedIn();
+        Bundle arguments = new Bundle();
+        arguments.putBoolean(ImageActivityMainFragment.EXTRAS_IS_USER_LOGGED_IN, isUserLoggedIn);
+        if (thumb != null) {
+            arguments.putParcelable(ImageListFragment.EXTRAS_IMAGE_THUMB, thumb);
+        }
+        return arguments;
+    }
 
-        GlideRequestListener(ImageView glideTarget) {
-            mImageView = glideTarget;
+    @Nullable
+    protected Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentById(contentLayout.getId());
+    }
+
+    private class MainFragmentCallbackHandler implements ImageActivityMainFragment.ImageActivityMainFragmentListener {
+        @Override
+        public boolean isToolbarVisible() {
+            return toolbarLayout.getVisibility() == View.VISIBLE;
         }
 
         @Override
-        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-            Log.e("ImageActivity", "Failed to load the image with Glide", e);
-            return false;
+        public void setToolbarVisible(boolean visible) {
+            toolbarLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
 
         @Override
-        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
-                                       boolean isFromMemoryCache, boolean isFirstResource) {
+        public DerpibooruImageDetailed getImage() {
+            return mImage;
+        }
+
+        @Override
+        public void hideProgress() {
             findViewById(R.id.progressImage).setVisibility(View.GONE);
-            attachPhotoView(mImageView);
-            return false;
-        }
-
-        private void attachPhotoView(ImageView target) {
-            new PhotoViewAttacher(target).setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                @Override
-                public void onViewTap(View view, float x, float y) {
-                    if (toolbarLayout.getVisibility() == View.VISIBLE) {
-                        toolbarLayout.setVisibility(View.INVISIBLE);
-                        topBar.setVisibility(View.INVISIBLE);
-                        bottomBar.setVisibility(View.INVISIBLE);
-                    } else {
-                        toolbarLayout.setVisibility(View.VISIBLE);
-                        topBar.setVisibility(View.VISIBLE);
-                        bottomBar.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
         }
     }
 }

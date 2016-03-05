@@ -28,6 +28,7 @@ import derpibooru.derpy.ui.views.ImageListRecyclerView;
 import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
 public abstract class ImageListFragment extends NavigationDrawerUserFragment {
+    public static final String EXTRAS_IMAGE_THUMB = "derpibooru.derpy.Image";
     private static final String EXTRAS_RECYCLER_VIEW_POSITION = "derpibooru.derpy.ImageListRecyclerViewPosition";
     private static final String EXTRAS_PROVIDER_PAGE = "derpibooru.derpy.ImageListProviderPage";
     private static final String EXTRAS_IMAGE_LIST = "derpibooru.derpy.ImageListItems";
@@ -140,6 +141,9 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
     }
 
     private void displayImagesFromProvider(List<DerpibooruImageThumb> images) {
+        if (mImageView == null) {
+            return; /* the view has been destroyed prior to async callback from provider */
+        }
         if (mImageListAdapter == null) {
             initializeImageListAdapter(images);
             mImageRefreshLayout.setRefreshing(false);
@@ -180,7 +184,7 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
             @Override
             public void startImageActivity(DerpibooruImageThumb image) {
                 Intent intent = new Intent(getContext(), ImageActivity.class);
-                intent.putExtra(ImageActivity.EXTRAS_IMAGE_THUMB, image);
+                intent.putExtra(EXTRAS_IMAGE_THUMB, image);
                 intent.putExtra(MainActivity.EXTRAS_USER, getUser());
                 startActivityForResult(intent, IMAGE_ACTIVITY_REQUEST_CODE);
             }
@@ -203,9 +207,9 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case (IMAGE_ACTIVITY_REQUEST_CODE):
-                if (mImageListAdapter != null) {
+                if ((mImageListAdapter != null) && (data != null)) {
                     mImageListAdapter.replaceItem(
-                            (DerpibooruImageThumb) data.getParcelableExtra(ImageActivity.EXTRAS_IMAGE_THUMB));
+                            (DerpibooruImageThumb) data.getParcelableExtra(EXTRAS_IMAGE_THUMB));
                 }
                 break;
         }

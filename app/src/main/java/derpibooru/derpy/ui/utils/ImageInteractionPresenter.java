@@ -22,15 +22,19 @@ public abstract class ImageInteractionPresenter {
     protected ImageInteractionPresenter(Context context, boolean enableInteractions) {
         mInteractionRequester = new ImageInteractionRequester(context, new InteractionRequestHandler());
         if (enableInteractions) {
-            enableButton(getFaveButton());
-            enableButton(getUpvoteButton());
-            enableButton(getDownvoteButton());
-            initializeInteractionListeners();
+            enableInteractions();
         } else {
             disableButton(getFaveButton());
             disableButton(getUpvoteButton());
             disableButton(getDownvoteButton());
         }
+    }
+
+    public void enableInteractions() {
+        enableButton(getFaveButton());
+        enableButton(getUpvoteButton());
+        enableButton(getDownvoteButton());
+        initializeInteractionListeners();
     }
 
     @Nullable

@@ -1,5 +1,6 @@
 package derpibooru.derpy.server.parsers.objects;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.common.base.Predicate;
@@ -29,9 +30,12 @@ public class ImageInteractionsParserObject {
         parseInteractions();
     }
 
-    @Nullable
+    @NonNull
     public EnumSet<DerpibooruImageInteraction.InteractionType> getImageInteractionsForImage(int imageId) {
-        return mInteractionsByImage.get(imageId);
+        if (mInteractionsByImage.get(imageId) != null) {
+            return mInteractionsByImage.get(imageId);
+        }
+        return EnumSet.noneOf(DerpibooruImageInteraction.InteractionType.class);
     }
 
     private void parseInteractions() throws JSONException {

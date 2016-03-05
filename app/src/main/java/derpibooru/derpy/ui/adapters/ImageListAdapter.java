@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -199,7 +200,7 @@ public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<
 
             @NonNull
             @Override
-            protected Set<DerpibooruImageInteraction.InteractionType> getInteractions() {
+            protected EnumSet<DerpibooruImageInteraction.InteractionType> getInteractions() {
                 return getItems().get(position).getImageInteractions();
             }
 

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
@@ -47,7 +48,7 @@ public abstract class ImageInteractionPresenter {
     protected abstract int getIdForImageInteractions();
 
     @NonNull
-    protected abstract Set<DerpibooruImageInteraction.InteractionType> getInteractions();
+    protected abstract EnumSet<DerpibooruImageInteraction.InteractionType> getInteractions();
 
     protected abstract void addInteraction(DerpibooruImageInteraction.InteractionType interaction);
 

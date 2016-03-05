@@ -23,6 +23,13 @@ public class ImageInteractionsParserObjectTest {
     }
 
     @Test
+    public void testEmpty() {
+        EnumSet<DerpibooruImageInteraction.InteractionType> interactions = this.interactions.getImageInteractionsForImage(-1);
+        EnumSet expected = EnumSet.noneOf(DerpibooruImageInteraction.InteractionType.class);
+        assertThat(interactions, is(expected));
+    }
+
+    @Test
     public void testFavedAndUpvoted() {
         EnumSet<DerpibooruImageInteraction.InteractionType> interactions = this.interactions.getImageInteractionsForImage(1100009);
         EnumSet expected = EnumSet.of(DerpibooruImageInteraction.InteractionType.Fave,

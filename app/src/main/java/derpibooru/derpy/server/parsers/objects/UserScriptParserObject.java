@@ -48,17 +48,17 @@ public class UserScriptParserObject {
         return m.find() ? Integer.parseInt(m.group(1)) : 0;
     }
 
-    public List<Integer> getSpoileredTagIds() {
-        Matcher m = Pattern.compile("(?:window.booru.spoileredTagList = )(?:\\[)(.*)(?:\\])").matcher(mHtml);
+    public List<Integer> getSpoileredTagIds() throws JSONException {
+        Matcher m = Pattern.compile("(?:window.booru.spoileredTagList = )(\\[.*\\])").matcher(mHtml);
         m.find();
         String tagIdsArray = m.group(1);
         if (!tagIdsArray.equals("")) {
-            List<String> stringIds = new ArrayList<>(Arrays.asList(tagIdsArray.split(",")));
-            List<Integer> intIds = new ArrayList<>();
-            for (String stringId : stringIds) {
-                intIds.add(Integer.parseInt(stringId));
+            JSONArray json = new JSONArray(tagIdsArray);
+            List<Integer> out = new ArrayList<>(json.length());
+            for (int i = 0; i < json.length(); i++) {
+                out.add(json.getInt(i));
             }
-            return intIds;
+            return out;
         }
         return Collections.emptyList();
     }

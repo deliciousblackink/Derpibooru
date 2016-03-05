@@ -1,5 +1,6 @@
 package derpibooru.derpy.server.parsers;
 
+import org.json.JSONException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -34,7 +35,7 @@ public class UserDataParser implements ServerResponseParser<DerpibooruUser> {
                                      : doc.select("script").last();
     }
 
-    private DerpibooruFilter parseCurrentFilter() {
+    private DerpibooruFilter parseCurrentFilter() throws JSONException {
         return new DerpibooruFilter(mUserScript.getFilterId(), mUserbox.getFilterName(), mUserScript.getSpoileredTagIds());
     }
 }

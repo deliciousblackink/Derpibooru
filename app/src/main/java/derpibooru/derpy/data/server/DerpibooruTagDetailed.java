@@ -11,7 +11,7 @@ public class DerpibooruTagDetailed extends DerpibooruTag {
                                  String description, String spoilerUrl) {
         super(id, imageCount, name);
         mDescription = description;
-        mSpoilerUrl = "https:" + spoilerUrl;
+        mSpoilerUrl = spoilerUrl;
     }
 
     public String getDescription() {

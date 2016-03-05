@@ -1,0 +1,47 @@
+{
+  "tags":[
+    {
+      "id":24257,
+      "name":"cutelestia",
+      "slug":"cutelestia",
+      "description":"",
+      "short_description":"",
+      "spoiler":false,
+      "hidden":false,
+      "system":false,
+      "images":922,
+      "spoiler_image_uri":null,
+      "spoiler_image_uri_small":null,
+      "spoiler_image_uri_tiny":null,
+      "aliased_to":null,
+      "aliased_to_id":null,
+      "namespace":null,
+      "name_in_namespace":"cutelestia",
+      "implied_tags":"cute, princess celestia",
+      "implied_tag_ids":[
+        24249,
+        38648
+      ]
+    },
+    {
+      "id":36457,
+      "name":"oc",
+      "slug":"oc",
+      "description":"Tag for any character that has not appeared in official media or merchandise; that is, a fan-made character, regardless of how popular they may be.",
+      "short_description":"",
+      "spoiler":false,
+      "hidden":false,
+      "system":false,
+      "images":165700,
+      "spoiler_image_uri":"//derpicdn.net/media/W1siZiIsIjIwMTMvMTEvMjkvMTVfMDRfNTVfNjM2X29jLnBuZyJdLFsicCIsInRodW1iIiwiMjUweDI1MCJdXQ.png",
+      "spoiler_image_uri_small":"//derpicdn.net/media/W1siZiIsIjIwMTMvMTEvMjkvMTVfMDRfNTVfNjM2X29jLnBuZyJdLFsicCIsInRodW1iIiwiMTUweDE1MCJdXQ.png",
+      "spoiler_image_uri_tiny":"//derpicdn.net/media/W1siZiIsIjIwMTMvMTEvMjkvMTVfMDRfNTVfNjM2X29jLnBuZyJdLFsicCIsInRodW1iIiwiNTB4NTAiXV0.png",
+      "aliased_to":null,
+      "aliased_to_id":null,
+      "namespace":null,
+      "name_in_namespace":"oc",
+      "implied_tags":"",
+      "implied_tag_ids":[]
+    }
+  ]
+}

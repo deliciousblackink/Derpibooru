@@ -14,9 +14,9 @@ import derpibooru.derpy.TestResourceLoader;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
-import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
 import static org.junit.Assert.assertThat;
 
 public class ImageListParserTest {
@@ -28,7 +28,7 @@ public class ImageListParserTest {
                                      EnumSet.of(DerpibooruImageInteraction.InteractionType.Downvote,
                                                 DerpibooruImageInteraction.InteractionType.Fave));
     private static final DerpibooruTagDetailed dummySpoilerTag =
-            new DerpibooruTagDetailed(67509, 0, "artist:pikapetey", "", "//derpicdn.net/dummy_spoiler");
+            new DerpibooruTagDetailed(67509, 0, "artist:pikapetey", "", "https://derpicdn.net/dummy_spoiler");
     private static final ArrayList<DerpibooruTagDetailed> dummyFilter = Lists.newArrayList(dummySpoilerTag);
 
     private List<DerpibooruImageThumb> parsed;

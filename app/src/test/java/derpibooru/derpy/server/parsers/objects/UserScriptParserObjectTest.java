@@ -4,13 +4,12 @@ import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 
-import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.TestResourceLoader;
+import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;
@@ -48,9 +47,9 @@ public class UserScriptParserObjectTest {
     }
 
     @Test
-    public void testSpoileredTagIds() {
+    public void testSpoileredTagIds() throws JSONException {
         assertThat(loggedInScript.getSpoileredTagIds(), is(Arrays.asList(
-                41133,41161,42773,114937,173118,173119,173120,173121,173122,173123,173124)));
+                41133, 41161, 42773, 114937, 173118, 173119, 173120, 173121, 173122, 173123, 173124)));
         assertThat(loggedOutScript.getSpoileredTagIds(), is(Collections.<Integer>emptyList()));
     }
 

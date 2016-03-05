@@ -4,9 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import derpibooru.derpy.TestResourceLoader;
-import static org.hamcrest.CoreMatchers.is;
 
-import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class AuthenticityTokenParserTest {

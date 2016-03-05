@@ -6,11 +6,11 @@ import org.junit.Test;
 
 import java.util.EnumSet;
 
+import derpibooru.derpy.TestResourceLoader;
+import derpibooru.derpy.data.server.DerpibooruImageInteraction;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-
-import derpibooru.derpy.data.server.DerpibooruImageInteraction;
-import derpibooru.derpy.TestResourceLoader;
 
 public class ImageInteractionsParserObjectTest {
     private ImageInteractionsParserObject interactions;

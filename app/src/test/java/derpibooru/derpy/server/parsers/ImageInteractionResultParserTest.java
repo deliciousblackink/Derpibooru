@@ -4,13 +4,11 @@ import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import derpibooru.derpy.TestResourceLoader;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
+
+import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
+import static org.junit.Assert.assertThat;
 
 public class ImageInteractionResultParserTest {
     private static final DerpibooruImageInteraction expected =

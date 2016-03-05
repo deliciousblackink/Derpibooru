@@ -2,12 +2,11 @@ package derpibooru.derpy;
 
 import com.google.common.io.CharStreams;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import static org.junit.Assert.assertNotNull;
 
 public class TestResourceLoader {
     public String readTestResourceFile(String file) {

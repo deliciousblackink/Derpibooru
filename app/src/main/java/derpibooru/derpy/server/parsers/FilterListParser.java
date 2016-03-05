@@ -48,7 +48,7 @@ public class FilterListParser implements ServerResponseParser<List<DerpibooruFil
 
             /* for some reason, Derpibooru sets "system" to "null" for non-system
              * filters, so getBoolean() does not work */
-            boolean system = f.getString("system").equals("true");
+            boolean system = !f.isNull("system");
 
             DerpibooruFilter filter = new DerpibooruFilter(f.getInt("id"),
                                                            f.getString("name"),

@@ -10,17 +10,16 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-
 import derpibooru.derpy.TestResourceLoader;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTag;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
+import static org.junit.Assert.assertThat;
 
 public class ImageDetailedParserTest {
     private static final DerpibooruImageThumb thumb =
@@ -36,7 +35,7 @@ public class ImageDetailedParserTest {
             new DerpibooruImageDetailed(thumb, "", "Background Pony #14C8", "Trixie has no one to blame but herself.", "2014-06-17T22:32:45Z",
                                         tags, Arrays.asList("User1", "User2", "User3"));
     private static final DerpibooruTagDetailed dummySpoilerTag =
-            new DerpibooruTagDetailed(54235, 0, "animated", "", "//derpicdn.net/dummy_spoiler");
+            new DerpibooruTagDetailed(54235, 0, "animated", "", "https://derpicdn.net/dummy_spoiler");
     private static final ArrayList<DerpibooruTagDetailed> dummyFilter = Lists.newArrayList(dummySpoilerTag);
 
     private DerpibooruImageDetailed parsed;

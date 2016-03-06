@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,12 +45,12 @@ public class ImageActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.loading);
         if ((savedInstanceState != null) && (savedInstanceState.containsKey(EXTRAS_IMAGE_DETAILED))) {
             mImage = savedInstanceState.getParcelable(EXTRAS_IMAGE_DETAILED);
-            displayMainFragment();
+            displayMainFragment(null);
         } else if (getIntent().hasExtra(EXTRAS_IMAGE_ID)) {
             fetchDetailedInformation(getIntent().getIntExtra(EXTRAS_IMAGE_ID, 0));
         } else if (getIntent().hasExtra(ImageListFragment.EXTRAS_IMAGE_THUMB)) {
             DerpibooruImageThumb thumb = getIntent().getParcelableExtra(ImageListFragment.EXTRAS_IMAGE_THUMB);
-            displayMainFragmentFromThumb(thumb);
+            displayMainFragment(thumb);
             fetchDetailedInformation(thumb.getId());
         }
     }
@@ -81,7 +80,7 @@ public class ImageActivity extends AppCompatActivity {
             @Override
             public void onQueryExecuted(DerpibooruImageDetailed info) {
                 mImage = info;
-                displayMainFragment();
+                displayMainFragment(null);
             }
 
             @Override
@@ -92,25 +91,45 @@ public class ImageActivity extends AppCompatActivity {
         provider.id(imageId).fetch();
     }
 
-    private void displayMainFragment() {
-        if (getCurrentFragment() == null) {
-            return; /* the view has been destroyed prior to async callback from provider */
-        }
-        if (toolbar.getTitle().equals(getString(R.string.loading))) {
-            displayMainFragmentFromThumb(null);
-        } else {
-            /* the main fragment has already been instantiated with image thumb */
+    private void displayMainFragment(@Nullable DerpibooruImageThumb placeholderThumb) {
+        if (placeholderThumb != null) {
+            initializeMainFragmentWithPlaceholderThumb(placeholderThumb);
+        } else if (toolbar.getTitle().equals(getString(R.string.loading))) {
+            initializeMainFragmentWithDetailed();
+        } else if (getCurrentFragment() instanceof ImageActivityMainFragment) {
+            /* the main fragment has already been instantiated with a placeholder thumb */
             ((ImageActivityMainFragment) getCurrentFragment())
                     .onDetailedImageFetched();
         }
     }
 
-    private void displayMainFragmentFromThumb(@Nullable DerpibooruImageThumb thumb) {
-        toolbar.setTitle("#" + Integer.toString(thumb.getId()));
+    private void initializeMainFragmentWithDetailed() {
+        toolbar.setTitle("#" + Integer.toString(mImage.getThumb().getId()));
+        if (getCurrentFragment() instanceof ImageActivityMainFragment) {
+            /* on configuration change, fragmentmanager restores the fragment — no need to instantiate it again */
+            ((ImageActivityMainFragment) getCurrentFragment())
+                    .setActivityCallbacks(new MainFragmentCallbackHandler());
+            getCurrentFragment().getArguments().remove(ImageListFragment.EXTRAS_IMAGE_THUMB);
+        } else {
+            instantiateMainFragment(null);
+        }
+    }
 
+    private void initializeMainFragmentWithPlaceholderThumb(DerpibooruImageThumb thumb) {
+        toolbar.setTitle("#" + Integer.toString(thumb.getId()));
+        if (getCurrentFragment() instanceof ImageActivityMainFragment) {
+            /* on configuration change, fragmentmanager restores the fragment — no need to instantiate it again */
+            ((ImageActivityMainFragment) getCurrentFragment())
+                    .setActivityCallbacks(new MainFragmentCallbackHandler());
+        } else {
+            instantiateMainFragment(thumb);
+        }
+    }
+
+    private void instantiateMainFragment(@Nullable DerpibooruImageThumb placeholderThumb) {
         ImageActivityMainFragment mainFragment = new ImageActivityMainFragment();
         mainFragment.setActivityCallbacks(new MainFragmentCallbackHandler());
-        mainFragment.setArguments(getMainFragmentArguments(thumb));
+        mainFragment.setArguments(getMainFragmentArguments(placeholderThumb));
 
         getSupportFragmentManager()
                 .beginTransaction()

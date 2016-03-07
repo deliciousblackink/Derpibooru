@@ -9,7 +9,7 @@ import derpibooru.derpy.data.server.DerpibooruComment;
 import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
 import static org.junit.Assert.assertThat;
 
-public class CommentsParserTest {
+public class CommentListParserTest {
     private static final DerpibooruComment expected =
             new DerpibooruComment("Silent Wing", "https://derpicdn.net/assets/no_avatar-1f16e058f8de3098c829dbfded69eb028fc02f52cccb886edc659e93011545fe.svg",
                                   "<a href=\"#comment_2588558\">@PwnyPony</a> \n<br> The look on his face says, \"I don’t think that went as planned. Let me step back.\" XD",
@@ -21,7 +21,7 @@ public class CommentsParserTest {
     public void setUp() throws Exception {
         TestResourceLoader loader = new TestResourceLoader();
         String comments = loader.readTestResourceFile("SampleImageCommentsResponse.html");
-        CommentsParser parser = new CommentsParser();
+        CommentListParser parser = new CommentListParser();
         parsed = parser.parseResponse(comments).get(0);
     }
 

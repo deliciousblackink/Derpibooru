@@ -25,9 +25,9 @@ import java.util.Collections;
 import java.util.List;
 
 import derpibooru.derpy.ui.adapters.RecyclerViewPaginationAdapter;
-import derpibooru.derpy.ui.test_utils.MockIntegerParcelablePaginationAdapter;
-import derpibooru.derpy.ui.test_utils.MockIntegerParcelable;
-import derpibooru.derpy.ui.test_utils.MockIntegerParcelablePaginationProvider;
+import derpibooru.derpy.ui.presenters.mocks.MockIntegerParcelablePaginationAdapter;
+import derpibooru.derpy.ui.presenters.mocks.MockIntegerParcelable;
+import derpibooru.derpy.ui.presenters.mocks.MockIntegerParcelablePaginationProvider;
 
 @Config(sdk = 19, manifest = "./src/main/AndroidManifest.xml")
 @RunWith(RobolectricTestRunner.class)

@@ -6,13 +6,12 @@ import java.util.List;
 
 import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.server.QueryHandler;
-import derpibooru.derpy.server.parsers.CommentsParser;
+import derpibooru.derpy.server.parsers.CommentListParser;
 
-public class CommentsProvider extends Provider<List<DerpibooruComment>> {
-    private int mCurrentPage = 1;
+public class CommentListProvider extends PaginatedListProvider<DerpibooruComment> {
     private int mImageId;
 
-    public CommentsProvider(Context context, QueryHandler<List<DerpibooruComment>> handler) {
+    public CommentListProvider(Context context, QueryHandler<List<DerpibooruComment>> handler) {
         super(context, handler);
     }
 
@@ -21,23 +20,9 @@ public class CommentsProvider extends Provider<List<DerpibooruComment>> {
      *
      * @param id image ID
      */
-    public CommentsProvider id(int id) {
+    public CommentListProvider id(int id) {
         mImageId = id;
         return this;
-    }
-
-    public CommentsProvider nextPage() {
-        mCurrentPage++;
-        return this;
-    }
-
-    public CommentsProvider resetPageNumber() {
-        mCurrentPage = 1;
-        return this;
-    }
-
-    protected int getCurrentPage() {
-        return mCurrentPage;
     }
 
     @Override
@@ -54,6 +39,6 @@ public class CommentsProvider extends Provider<List<DerpibooruComment>> {
 
     @Override
     public void fetch() {
-        super.executeQuery(new CommentsParser());
+        super.executeQuery(new CommentListParser());
     }
 }

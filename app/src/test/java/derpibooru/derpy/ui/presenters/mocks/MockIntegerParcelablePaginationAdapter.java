@@ -1,4 +1,4 @@
-package derpibooru.derpy.ui.test_utils;
+package derpibooru.derpy.ui.presenters.mocks;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

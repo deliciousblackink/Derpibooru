@@ -1,4 +1,4 @@
-package derpibooru.derpy.ui.test_utils;
+package derpibooru.derpy.ui.presenters.mocks;
 
 import android.os.Parcel;
 import android.os.Parcelable;

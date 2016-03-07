@@ -25,13 +25,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruComment;
 
-public class CommentsAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruComment, CommentsAdapter.ViewHolder> {
-    public CommentsAdapter(Context context, List<DerpibooruComment> items) {
+public class CommentListAdapter extends RecyclerViewPaginationAdapter<DerpibooruComment, CommentListAdapter.ViewHolder> {
+    public CommentListAdapter(Context context, List<DerpibooruComment> items) {
         super(context, items);
     }
 
     @Override
-    public CommentsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CommentListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_image_bottom_bar_comments_item, parent, false);
         return new ViewHolder(v);

@@ -10,7 +10,7 @@ import java.util.List;
 
 import derpibooru.derpy.data.server.DerpibooruComment;
 
-public class CommentsParser implements ServerResponseParser<List<DerpibooruComment>> {
+public class CommentListParser implements ServerResponseParser<List<DerpibooruComment>> {
     @Override
     public List<DerpibooruComment> parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);

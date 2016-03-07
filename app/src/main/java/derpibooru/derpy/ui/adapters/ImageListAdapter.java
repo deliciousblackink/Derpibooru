@@ -17,7 +17,6 @@ import com.google.common.collect.Iterables;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,10 +24,10 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.ui.animations.ImageListItemAnimator;
-import derpibooru.derpy.ui.utils.ImageInteractionPresenter;
+import derpibooru.derpy.ui.presenters.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
-public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImageThumb, ImageListAdapter.ViewHolder> {
+public abstract class ImageListAdapter extends RecyclerViewPaginationAdapter<DerpibooruImageThumb, ImageListAdapter.ViewHolder> {
     private ImageListItemAnimator mAnimator;
     private boolean mUserLoggedIn;
 

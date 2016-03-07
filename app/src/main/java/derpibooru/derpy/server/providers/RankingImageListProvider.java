@@ -19,9 +19,9 @@ public class RankingImageListProvider extends ImageListProvider {
     }
 
     /**
-     * Sets image list type (either Top Scoring or Most commented).
+     * Sets ranking list type (either Top Scoring or Most commented).
      *
-     * @param listType the type of the image list
+     * @param listType type of a ranking list
      */
     public RankingImageListProvider type(RankingsType listType) {
         mListType = listType;
@@ -29,10 +29,10 @@ public class RankingImageListProvider extends ImageListProvider {
     }
 
     /**
-     * Sets time limit for an image list in days
+     * Sets time limit for a ranking list in days
      * (the default value is All Time).
      *
-     * @param hours the time limit in hours
+     * @param hours time limit in hours
      */
     public RankingImageListProvider inHours(int hours) {
         mTime = Integer.toString(hours) + "h";
@@ -40,10 +40,10 @@ public class RankingImageListProvider extends ImageListProvider {
     }
 
     /**
-     * Sets time limit for an image list in days
+     * Sets time limit for a ranking list in days
      * (the default value is All Time).
      *
-     * @param days the time limit in days
+     * @param days time limit in days
      */
     public RankingImageListProvider inDays(int days) {
         mTime = Integer.toString(days) + "d";
@@ -51,10 +51,10 @@ public class RankingImageListProvider extends ImageListProvider {
     }
 
     /**
-     * Sets time limit for an image list in weeks
+     * Sets time limit for a ranking list in weeks
      * (the default value is All Time).
      *
-     * @param weeks the time limit in weeks
+     * @param weeks time limit in weeks
      */
     public RankingImageListProvider inWeeks(int weeks) {
         mTime = Integer.toString(weeks) + "w";

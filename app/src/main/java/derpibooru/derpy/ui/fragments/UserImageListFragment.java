@@ -12,14 +12,10 @@ public class UserImageListFragment extends ImageListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.setImageListProvider(
-                new UserImageListProvider(getActivity(), new ImageListRequestHandler())
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        super.initializeList(
+                new UserImageListProvider(getActivity(), super.getNewInstanceOfProviderQueryHandler())
                         .type(UserImageListProvider.UserListType.fromValue(getArguments().getInt("type"))));
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    protected ImageListProvider getImageListProviderWithParameters(ImageListProvider target) {
-        return target;
+        return v;
     }
 }

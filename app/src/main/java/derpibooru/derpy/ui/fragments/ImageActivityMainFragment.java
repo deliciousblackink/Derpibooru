@@ -17,7 +17,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import java.util.EnumSet;
-import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,7 +24,7 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.ui.utils.ImageInteractionPresenter;
+import derpibooru.derpy.ui.presenters.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
 import derpibooru.derpy.ui.views.ImageTopBarView;

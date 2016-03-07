@@ -19,6 +19,12 @@ import derpibooru.derpy.server.providers.PaginatedListProvider;
 import derpibooru.derpy.ui.adapters.RecyclerViewPaginationAdapter;
 import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
+/**
+ * Presents paginated lists with endless scroll and swipe-to-refresh functionality.
+ * Couples {@link PaginatedListProvider} with a {@link RecyclerViewPaginationAdapter} operating on a RecyclerView
+ * and a SwipeRefreshLayout set via constructor arguments.
+ * @param <TItem> type of an individual item of a list; must implement Parcelable
+ */
 public abstract class PaginatedListPresenter<TItem extends Parcelable> {
     private static final String EXTRAS_RECYCLER_VIEW_POSITION = "derpibooru.derpy.PaginatedRecyclerViewPosition";
     private static final String EXTRAS_PROVIDER_PAGE = "derpibooru.derpy.PaginatedListProviderPage";
@@ -30,6 +36,14 @@ public abstract class PaginatedListPresenter<TItem extends Parcelable> {
     private SwipeRefreshLayout mRefreshLayout;
     private RecyclerView mListView;
 
+    /**
+     * Sets UI views used to present a list.
+     * <br>
+     * Call {@link #initializeWithProvider(PaginatedListProvider)} to initialize the presenter and display the first page of a list.
+     * <br>
+     * Call {@link #initializeWithProvider(PaginatedListProvider, Bundle)} to recover the presenter from a saved instance state
+     * ({@link #onSaveInstanceState(Bundle)} should be called beforehand to save the state).
+     */
     public PaginatedListPresenter(@NonNull SwipeRefreshLayout refreshLayout,
                                   @NonNull RecyclerView listView) {
         mRefreshLayout = refreshLayout;
@@ -37,14 +51,35 @@ public abstract class PaginatedListPresenter<TItem extends Parcelable> {
         initializeRefreshLayout();
     }
 
+    /**
+     * Initializes the presenter with the provider specified and displays the first page of a list.
+     * <br>
+     * Specify {@link PaginatedListProviderHandler} as the provider's {@link QueryHandler} to enable the
+     * presenter to handle pagination.
+     */
     public void initializeWithProvider(PaginatedListProvider<TItem> provider) {
         mProvider = provider;
         fetchFirstPage();
     }
 
-    public void initializeWithProvider(PaginatedListProvider<TItem> provider, Bundle savedInstanceState) {
+    /**
+     * Initializes the presenter with the provider specified and restores the items displayed on a saved state.
+     * <br>
+     * Specify {@link PaginatedListProviderHandler} as the provider's {@link QueryHandler} to enable the
+     * presenter to handle pagination.
+     */
+    public void initializeWithProvider(PaginatedListProvider<TItem> provider, @NonNull Bundle savedInstanceState) {
         mProvider = provider;
         restoreInstanceState(savedInstanceState);
+    }
+
+    /**
+     * Resets the adapter by calling {@link #getNewInstanceOfListAdapter(List)} with the items from the first
+     * page of a list.
+     */
+    public void resetAdapterAndRefreshList() {
+        mAdapter = null;
+        refreshList();
     }
 
     /**
@@ -118,7 +153,7 @@ public abstract class PaginatedListPresenter<TItem extends Parcelable> {
 
     /**
      * Creates an instance of {@link PaginatedListProvider} and adds an EndlessScrollListener
-     * that handles pagination to the RecyclerView.
+     * (that handles pagination) to the RecyclerView.
      *
      * @param initialItems initial adapter items
      */
@@ -191,5 +226,4 @@ public abstract class PaginatedListPresenter<TItem extends Parcelable> {
             }
         }
     }
-
 }

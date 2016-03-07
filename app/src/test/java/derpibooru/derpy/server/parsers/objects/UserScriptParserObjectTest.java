@@ -1,5 +1,6 @@
 package derpibooru.derpy.server.parsers.objects;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +13,7 @@ import derpibooru.derpy.TestResourceLoader;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class UserScriptParserObjectTest {
@@ -60,6 +61,6 @@ public class UserScriptParserObjectTest {
         ImageInteractionsParserObject interactionsHelper = new ImageInteractionsParserObject(
                 loggedInScript.getInteractions().toString());
         assertThat(interactionsHelper.getImageInteractionsForImage(10005), is(expected));
-        assertNull(loggedOutScript.getInteractions());
+        assertNotNull(loggedOutScript.getInteractions());
     }
 }

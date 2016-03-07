@@ -1,5 +1,6 @@
 package derpibooru.derpy.server.parsers.objects;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.json.JSONArray;
@@ -63,7 +64,7 @@ public class UserScriptParserObject {
         return Collections.emptyList();
     }
 
-    @Nullable
+    @NonNull
     public JSONArray getInteractions() throws JSONException {
         Matcher m = Pattern.compile("(?:window.booru._interactions = )(\\[.*\\])", Pattern.DOTALL).matcher(mHtml);
         m.find();
@@ -71,6 +72,6 @@ public class UserScriptParserObject {
         if (!interactionsArray.equals("[]")) {
             return new JSONArray(interactionsArray);
         }
-        return null;
+        return new JSONArray();
     }
 }

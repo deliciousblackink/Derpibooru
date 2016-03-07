@@ -5,12 +5,12 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
-public abstract class RecyclerViewEndlessScrollAdapter<TItem, TViewHolder extends RecyclerView.ViewHolder>
+public abstract class RecyclerViewPaginationAdapter<TItem, TViewHolder extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<TViewHolder> {
-    private Context mContext;
     private List<TItem> mItems;
+    private Context mContext;
 
-    protected RecyclerViewEndlessScrollAdapter(Context context, List<TItem> items) {
+    protected RecyclerViewPaginationAdapter(Context context, List<TItem> items) {
         mContext = context;
         mItems = items;
     }

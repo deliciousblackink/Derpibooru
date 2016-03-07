@@ -139,8 +139,6 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
         ButterKnife.bind(this, view);
         deselectButtonsOtherThan(null); /* deselect all buttons */
         setButtonsEnabled(false); /* until the 'initializeTabs' method is called with tab information */
-
-        tabPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager));
     }
 
     @OnPageChange(R.id.bottomTabsPager)
@@ -155,7 +153,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
 
     protected void initializeTabs(DerpibooruImageDetailed content) {
         setButtonsEnabled(true);
-        ((ImageBottomBarTabAdapter) tabPager.getAdapter()).setTabInfo(content);
+        tabPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content));
         /* set button listeners */
         for (int layoutId : TABS.keySet()) {
             if (layoutId == R.id.buttonFave) continue; /* buttonFave has custom listeners defined outside this class */

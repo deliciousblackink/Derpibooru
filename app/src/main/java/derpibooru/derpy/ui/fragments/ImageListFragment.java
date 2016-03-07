@@ -29,7 +29,6 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
     private static final int IMAGE_ACTIVITY_REQUEST_CODE = 2;
 
     private PaginatedListPresenter<DerpibooruImageThumb> mImageListPresenter;
-
     private Bundle mSavedInstanceState;
 
     @Bind(R.id.layoutImageRefresh) SwipeRefreshLayout refreshLayout;

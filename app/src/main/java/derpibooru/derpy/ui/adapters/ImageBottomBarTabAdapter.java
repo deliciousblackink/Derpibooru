@@ -1,5 +1,6 @@
 package derpibooru.derpy.ui.adapters;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -8,31 +9,32 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.data.internal.FragmentAdapterItem;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
-import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarCommentsTabFragment;
+import derpibooru.derpy.ui.ImageActivity;
+import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarCommentListTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarFavoritesTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarInfoTabFragment;
-import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarTabFragment;
 
 public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
     private ArrayList<FragmentAdapterItem> mTabs;
 
-    public ImageBottomBarTabAdapter(FragmentManager fm) {
+    public ImageBottomBarTabAdapter(FragmentManager fm, DerpibooruImageDetailed imageDetailed) {
         super(fm);
+        Bundle imageDetailedArgs = new Bundle();
+        imageDetailedArgs.putParcelable(ImageActivity.EXTRAS_IMAGE_DETAILED, imageDetailed);
+        Bundle imageIdArgs = new Bundle();
+        imageIdArgs.putInt(ImageActivity.EXTRAS_IMAGE_ID, imageDetailed.getThumb().getId());
 
-        mTabs = new ArrayList<>();
-        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.ImageInfo.id(),
-                                          new ImageBottomBarInfoTabFragment()));
-        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Faves.id(),
-                                          new ImageBottomBarFavoritesTabFragment()));
-        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Comments.id(),
-                                          new ImageBottomBarCommentsTabFragment()));
-    }
+        ImageBottomBarInfoTabFragment info = new ImageBottomBarInfoTabFragment();
+        info.setArguments(imageDetailedArgs);
+        ImageBottomBarFavoritesTabFragment faves = new ImageBottomBarFavoritesTabFragment();
+        faves.setArguments(imageDetailedArgs);
+        ImageBottomBarCommentListTabFragment comments = new ImageBottomBarCommentListTabFragment();
+        comments.setArguments(imageIdArgs);
 
-    public void setTabInfo(DerpibooruImageDetailed info) {
-        for (FragmentAdapterItem item : mTabs) {
-            item.getContent().getArguments().putParcelable("info", info);
-            ((ImageBottomBarTabFragment) item.getContent()).onTabInfoFetched(info);
-        }
+        mTabs = new ArrayList<>(3);
+        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.ImageInfo.id(), info));
+        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Faves.id(), faves));
+        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Comments.id(), comments));
     }
 
     @Override

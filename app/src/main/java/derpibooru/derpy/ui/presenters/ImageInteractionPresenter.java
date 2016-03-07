@@ -13,7 +13,7 @@ import derpibooru.derpy.server.requesters.ImageInteractionRequester;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
 /**
- * Provides a layer of abstraction for image interaction requests. Handles server queries and UI presentation.
+ * Presents  image interaction requests. Handles both server requests and UI changes.
  */
 public abstract class ImageInteractionPresenter {
     private ImageInteractionRequester mInteractionRequester;

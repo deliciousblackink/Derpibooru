@@ -1,4 +1,4 @@
-package derpibooru.derpy.ui.presenters;
+package derpibooru.derpy.ui.utils;
 
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 /**
  * Presents HTML layout (links) in TextView.
  */
-public abstract class TextViewHtmlPresenter {
+public abstract class TextViewHtmlDisplayer {
     /**
      * Called when a URL link is selected.
      * @param v TODO: pass URL as a parameter

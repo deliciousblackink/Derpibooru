@@ -38,6 +38,7 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_image_bottom_bar_comments, container, false);
         ButterKnife.bind(this, v);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mCommentListPresenter = new PaginatedListPresenter<DerpibooruComment>(refreshLayout, recyclerView) {
             @Override
             public RecyclerViewPaginationAdapter<DerpibooruComment, ?> getNewInstanceOfListAdapter(List<DerpibooruComment> initialItems) {

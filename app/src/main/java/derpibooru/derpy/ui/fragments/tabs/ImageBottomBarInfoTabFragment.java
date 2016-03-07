@@ -19,18 +19,18 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruTag;
 import derpibooru.derpy.ui.ImageActivity;
-import derpibooru.derpy.ui.presenters.TextViewHtmlPresenter;
+import derpibooru.derpy.ui.utils.TextViewHtmlDisplayer;
 import derpibooru.derpy.ui.views.FlowLayout;
 import derpibooru.derpy.ui.views.ImageTagView;
 
 public class ImageBottomBarInfoTabFragment extends Fragment {
-    private TextViewHtmlPresenter mHtmlPresenter;
+    private TextViewHtmlDisplayer mHtmlPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_image_bottom_bar_info, container, false);
-        mHtmlPresenter = new TextViewHtmlPresenter() {
+        mHtmlPresenter = new TextViewHtmlDisplayer() {
             @Override
             protected void onLinkClick(View view) {
 

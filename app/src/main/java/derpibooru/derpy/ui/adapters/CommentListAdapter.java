@@ -2,8 +2,6 @@ package derpibooru.derpy.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,22 +10,23 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruComment;
+import derpibooru.derpy.ui.utils.RelativeDateConverter;
 
 public class CommentListAdapter extends RecyclerViewPaginationAdapter<DerpibooruComment, CommentListAdapter.ViewHolder> {
+
+    private RelativeDateConverter mDate;
+
     public CommentListAdapter(Context context, List<DerpibooruComment> items) {
         super(context, items);
+        mDate = new RelativeDateConverter(RelativeDateConverter.DATE_FORMAT_RETURNED_BY_DERPIBOORU,
+                                          RelativeDateConverter.TIMEZONE_RETURNED_BY_DERPIBOORU);
     }
 
     @Override
@@ -49,24 +48,8 @@ public class CommentListAdapter extends RecyclerViewPaginationAdapter<Derpibooru
             Glide.with(getContext()).load(R.drawable.no_avatar).dontAnimate().into(holder.imageAvatar);
         }
         holder.textAuthor.setText(getItems().get(position).getAuthor());
-        holder.textPostedAt.setText(getRelativeDate(getItems().get(position).getPostedAt()));
+        holder.textPostedAt.setText(mDate.getRelativeDate(getItems().get(position).getPostedAt()));
         holder.textComment.setText(getItems().get(position).getText());
-    }
-
-    private String getRelativeDate(String date) {
-        /* TODO: decide whether this belongs here or should be moved to the parser class */
-        SimpleDateFormat f = new SimpleDateFormat("HH:mm, MMMM dd, yyyy", Locale.ENGLISH);
-        f.setTimeZone(TimeZone.getTimeZone("UTC")); /* the server returns date in UTC zone */
-        try {
-            long nowInMilliseconds = new Date().getTime();
-            long commentInMilliseconds = f.parse(date).getTime();
-            /* SECOND_IN_MILLIS to display "x seconds ago" */
-            return DateUtils.getRelativeTimeSpanString(commentInMilliseconds,
-                                                       nowInMilliseconds, DateUtils.SECOND_IN_MILLIS).toString();
-        } catch (ParseException e) {
-            Log.e("ImageCommentsAdapter", "error parsing date string", e);
-        }
-        return "";
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

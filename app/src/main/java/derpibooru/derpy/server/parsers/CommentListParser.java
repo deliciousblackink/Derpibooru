@@ -33,10 +33,8 @@ public class CommentListParser implements ServerResponseParser<List<DerpibooruCo
     }
 
     private String parseAuthor(Element commentContent) {
-        Element authorLink = commentContent.select("span.post-author").first().select("a").first();
-        return (authorLink != null) ? authorLink.text()
-                                    /* author is background pony */
-                                    : commentContent.select("span.post-author").first().text();
+        Element authorElement = commentContent.select(".post-author").first();
+        return authorElement.text().trim();
     }
 
     private String parseAvatarUrl(Element commentContent) {

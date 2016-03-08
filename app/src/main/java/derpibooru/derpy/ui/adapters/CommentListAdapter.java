@@ -18,15 +18,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.ui.utils.RelativeDateConverter;
+import derpibooru.derpy.ui.utils.TextViewHtmlDisplayer;
 
 public class CommentListAdapter extends RecyclerViewPaginationAdapter<DerpibooruComment, CommentListAdapter.ViewHolder> {
-
     private RelativeDateConverter mDate;
+    private TextViewHtmlDisplayer mHtmlDisplayer;
 
     public CommentListAdapter(Context context, List<DerpibooruComment> items) {
         super(context, items);
         mDate = new RelativeDateConverter(RelativeDateConverter.DATE_FORMAT_RETURNED_BY_DERPIBOORU,
                                           RelativeDateConverter.TIMEZONE_RETURNED_BY_DERPIBOORU);
+        mHtmlDisplayer = new TextViewHtmlDisplayer() {
+            @Override
+            protected void onLinkClick(View v) {
+
+            }
+        };
     }
 
     @Override
@@ -49,7 +56,8 @@ public class CommentListAdapter extends RecyclerViewPaginationAdapter<Derpibooru
         }
         holder.textAuthor.setText(getItems().get(position).getAuthor());
         holder.textPostedAt.setText(mDate.getRelativeDate(getItems().get(position).getPostedAt()));
-        holder.textComment.setText(getItems().get(position).getText());
+        mHtmlDisplayer.textFromHtml(
+                holder.textComment, getItems().get(position).getText());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

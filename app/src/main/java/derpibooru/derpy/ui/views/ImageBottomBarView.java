@@ -8,16 +8,8 @@ import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 
 public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {
-    public ImageBottomBarView(Context context) {
-        super(context);
-    }
-
     public ImageBottomBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public ImageBottomBarView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
     }
 
     public AccentColorIconButton getFaveButton() {

@@ -71,6 +71,8 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mCommentListPresenter.onSaveInstanceState(outState);
+        if (mCommentListPresenter != null) {
+            mCommentListPresenter.onSaveInstanceState(outState);
+        }
     }
 }

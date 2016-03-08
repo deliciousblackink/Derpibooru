@@ -1,10 +1,10 @@
-package derpibooru.derpy.ui.animations;
+package derpibooru.derpy.ui.animators;
 
 import android.animation.ValueAnimator;
 import android.view.View;
 
 public class ImageListItemAnimator {
-    private static final int ANIMATION_DURATION = 250;
+    private static final long ANIMATION_DURATION = 250L;
 
     public void clearView(View v) {
         animateViewHeight(v, 0, 0);

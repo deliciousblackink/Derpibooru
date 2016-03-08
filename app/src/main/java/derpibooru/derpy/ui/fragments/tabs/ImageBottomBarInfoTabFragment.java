@@ -32,7 +32,7 @@ public class ImageBottomBarInfoTabFragment extends Fragment {
         View v = inflater.inflate(R.layout.tab_image_bottom_bar_info, container, false);
         mHtmlPresenter = new TextViewHtmlDisplayer() {
             @Override
-            protected void onLinkClick(View view) {
+            protected void onLinkClick(String url) {
 
             }
         };

@@ -14,9 +14,8 @@ import android.widget.TextView;
 public abstract class TextViewHtmlDisplayer {
     /**
      * Called when a URL link is selected.
-     * @param v TODO: pass URL as a parameter
      */
-    protected abstract void onLinkClick(View v);
+    protected abstract void onLinkClick(String url);
 
     public void textFromHtml(TextView target, String html) {
         target.setText(getSpannableStringBuilderFromHtml(html));
@@ -36,13 +35,14 @@ public abstract class TextViewHtmlDisplayer {
     }
 
     private void makeLinkClickable(SpannableStringBuilder strBuilder, URLSpan span) {
+        final String url = span.getURL();
         /* http://stackoverflow.com/a/19989677/1726690 */
         int start = strBuilder.getSpanStart(span);
         int end = strBuilder.getSpanEnd(span);
         int flags = strBuilder.getSpanFlags(span);
         ClickableSpan clickable = new ClickableSpan() {
             public void onClick(View view) {
-                onLinkClick(view);
+                onLinkClick(url);
             }
         };
         strBuilder.setSpan(clickable, start, end, flags);

@@ -30,7 +30,7 @@ public class CommentListAdapter extends RecyclerViewPaginationAdapter<Derpibooru
                                           RelativeDateConverter.TIMEZONE_RETURNED_BY_DERPIBOORU);
         mHtmlDisplayer = new TextViewHtmlDisplayer() {
             @Override
-            protected void onLinkClick(View v) {
+            protected void onLinkClick(String url) {
 
             }
         };

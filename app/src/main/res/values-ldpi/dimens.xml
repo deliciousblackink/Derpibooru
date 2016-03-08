@@ -1,0 +1,5 @@
+<resources>
+    <!-- image lists -->
+    <dimen name="image_list_item_min_size">150dp</dimen>
+    <dimen name="image_list_spacing_between_items">10dp</dimen>
+</resources>

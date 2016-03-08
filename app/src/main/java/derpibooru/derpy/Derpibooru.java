@@ -5,7 +5,6 @@ import android.app.Application;
 import java.util.List;
 
 import derpibooru.derpy.storage.CookieStorage;
-import derpibooru.derpy.storage.UserDataStorage;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
@@ -50,10 +49,6 @@ public class Derpibooru extends Application {
                         return mCookieStorage.getCookies(url.host());
                     }
                 }).build();
-        /* FIXME: user data shouldn't be kept in a persistent storage */
-        /* UserDataStorage, as it stands now, is just a disguised global variable. either make it explicitly
-         * global, or look into some alternatives — dependency injection looks quite fitting there */
-        new UserDataStorage(this).clearUserData();
     }
 
     /**

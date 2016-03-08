@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 import derpibooru.derpy.data.internal.FragmentAdapterItem;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
-import derpibooru.derpy.ui.fragments.ImageBottomBarCommentsTabFragment;
-import derpibooru.derpy.ui.fragments.ImageBottomBarFavoritesTabFragment;
-import derpibooru.derpy.ui.fragments.ImageBottomBarInfoTabFragment;
-import derpibooru.derpy.ui.fragments.ImageBottomBarTabFragment;
+import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarCommentsTabFragment;
+import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarFavoritesTabFragment;
+import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarInfoTabFragment;
+import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarTabFragment;
 
 public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
     private ArrayList<FragmentAdapterItem> mTabs;

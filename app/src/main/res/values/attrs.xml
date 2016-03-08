@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- see ui.views -->
-    <declare-styleable name="ImageListRecyclerView">
-        <attr name="imageSize" format="dimension" />
-    </declare-styleable>
     <declare-styleable name="AccentColorIconButton">
         <attr name="buttonIcon" format="integer" />
         <attr name="buttonText" format="string" />

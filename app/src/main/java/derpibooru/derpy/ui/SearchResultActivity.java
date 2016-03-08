@@ -7,10 +7,13 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.ui.adapters.SearchResultActivityTabAdapter;
 import derpibooru.derpy.ui.views.FragmentTabPagerView;
 
 public class SearchResultActivity extends AppCompatActivity {
+    public static final String EXTRAS_SEARCH_QUERY = "derpibooru.derpy.SearchQuery";
+
     /* TODO: should be a singleTop activity
      * http://developer.android.com/reference/android/app/Activity.html#onNewIntent(android.content.Intent)
      */
@@ -21,14 +24,15 @@ public class SearchResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_result);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String searchQuery = getIntent().getStringExtra("derpibooru.derpy.SearchQuery");
+        String searchQuery = getIntent().getStringExtra(EXTRAS_SEARCH_QUERY);
         setTitle(searchQuery);
         initTabPager(searchQuery);
     }
 
     private void initTabPager(String searchQuery) {
         final FragmentTabPagerView tabView = (FragmentTabPagerView) findViewById(R.id.fragmentPagerView);
-        tabView.setFragmentAdapter(new SearchResultActivityTabAdapter(getSupportFragmentManager(), searchQuery));
+        tabView.setFragmentAdapter(new SearchResultActivityTabAdapter(
+                getSupportFragmentManager(), searchQuery, (DerpibooruUser) getIntent().getParcelableExtra(MainActivity.EXTRAS_USER)));
         tabView.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {

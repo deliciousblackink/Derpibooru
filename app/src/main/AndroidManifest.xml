@@ -12,29 +12,24 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.SplashUserLoaderActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.ImageActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".ui.FiltersActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".ui.SearchActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
             android:name=".ui.SearchResultActivity"/>
-        <activity
-            android:name=".ui.UserImageListActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/activity_login"

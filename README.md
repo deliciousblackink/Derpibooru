@@ -23,5 +23,6 @@ The project is distributed under the [revised (3-clause) BSD license](LICENSE).
 * [OkHttp](https://github.com/square/okhttp)
 * [Gson](https://github.com/google/gson), a Java serialization library
 * [jsoup](https://github.com/jhy/jsoup), a Java HTML parser
+* [Butter Knife](https://github.com/JakeWharton/butterknife), an Android view binding library
 * [CircleImageView](https://github.com/hdodenhof/CircleImageView)
 * [PhotoView](https://github.com/chrisbanes/PhotoView)

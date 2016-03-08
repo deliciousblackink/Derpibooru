@@ -9,7 +9,6 @@ import java.util.Set;
 
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.server.QueryHandler;
-import derpibooru.derpy.server.providers.UserDataProvider;
 import derpibooru.derpy.server.requesters.ImageInteractionRequester;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
@@ -19,10 +18,12 @@ import derpibooru.derpy.ui.views.AccentColorIconButton;
 public abstract class ImageInteractionPresenter {
     private ImageInteractionRequester mInteractionRequester;
 
-    protected ImageInteractionPresenter(Context context) {
+    protected ImageInteractionPresenter(Context context, boolean isLoggedIn) {
         mInteractionRequester = new ImageInteractionRequester(context, new InteractionRequestHandler());
-        if (new UserDataProvider(context, null).isLoggedIn()) {
+        if (isLoggedIn) {
             initializeInteractionListeners();
+        } else {
+            /* TODO: display "log in to interact" message */
         }
     }
 

@@ -26,8 +26,8 @@ public class ImageInfoParser implements ServerResponseParser<DerpibooruImageDeta
         ArrayList<DerpibooruTag> imageTags = parseTags(doc);
 
         return new DerpibooruImageDetailed(imageId, imageSourceUrl, imageUploader,
-                                       imageDescription, imageCreatedAt,
-                                       imageTags, imageFavedBy);
+                                           imageDescription, imageCreatedAt,
+                                           imageTags, imageFavedBy);
     }
 
     private int parseImageId(Document doc) {

@@ -7,6 +7,4 @@
     <string name="activity_filters_failed_to_fetch_list">Failed to load available filters</string>
     <string name="activity_filters_failed_to_change_filter">Failed to set the filter. Try tapping refresh in navigation menu</string>
     <string name="fragment_image_list_failed_to_fetch_list">An error occurred</string>
-    <!-- actions -->
-    <string name="snackbar_action_retry">Retry</string>
 </resources>

@@ -1,39 +1,93 @@
 package derpibooru.derpy.ui;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
+import java.util.Arrays;
+import java.util.List;
+
+import butterknife.Bind;
 import derpibooru.derpy.R;
-import derpibooru.derpy.ui.adapters.MainActivityTabAdapter;
-import derpibooru.derpy.ui.views.FragmentTabPagerView;
+import derpibooru.derpy.data.internal.NavigationDrawerItem;
+import derpibooru.derpy.server.providers.UserImageListProvider;
+import derpibooru.derpy.ui.fragments.FilterListFragment;
+import derpibooru.derpy.ui.fragments.HomeFragment;
+import derpibooru.derpy.ui.fragments.SearchFragment;
+import derpibooru.derpy.ui.fragments.UserImageListFragment;
 
-/* TODO: https://github.com/JakeWharton/butterknife */
+public class MainActivity extends NavigationDrawerUserFragmentActivity {
+    private List<NavigationDrawerItem> mFragmentNavigationItems;
 
-public class MainActivity extends NavigationDrawerActivity {
-    private FragmentTabPagerView mTabViewPager;
+    @Bind(R.id.fragmentLayout) FrameLayout mFragmentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mTabViewPager = (FragmentTabPagerView) findViewById(R.id.fragmentPagerView);
-        mTabViewPager.setFragmentAdapter(
-                new MainActivityTabAdapter(this, getSupportFragmentManager(),
-                                           new MainActivityTabAdapter.TabSetChangeHandler() {
-                                               @Override
-                                               public void onTabSetChanged() {
-                                                   mTabViewPager.refreshTabTitles();
-                                               }
-                                           }));
-        super.initializeNavigationDrawer();
+        initializeFragmentNavigationItems();
+        super.initialize(savedInstanceState);
+        if (getSupportFragmentManager().getFragments() == null) {
+            navigateTo(getFragmentNavigationItems().get(0));
+        }
+        setCallbackHandlersFor(super.getCurrentFragment());
+    }
+
+    @NonNull
+    @Override
+    protected List<NavigationDrawerItem> getFragmentNavigationItems() {
+        return mFragmentNavigationItems;
     }
 
     @Override
-    public void onUserDataRefreshed() {
-        if (mTabViewPager != null) {
-            ((MainActivityTabAdapter) mTabViewPager.getFragmentAdapter()).toggleWatchedTab();
+    protected FrameLayout getContentLayout() {
+        return mFragmentLayout;
+    }
+
+    private void initializeFragmentNavigationItems() {
+        /* FIXME: keeping multiple instances of Bundle to store ints is extremely inefficient resource-wise */
+        Bundle userListFaved = new Bundle();
+        userListFaved.putInt("type", UserImageListProvider.UserListType.Faved.toValue());
+        Bundle userListUpvoted = new Bundle();
+        userListUpvoted.putInt("type", UserImageListProvider.UserListType.Upvoted.toValue());
+        Bundle userListUploaded = new Bundle();
+        userListUploaded.putInt("type", UserImageListProvider.UserListType.Uploaded.toValue());
+        mFragmentNavigationItems = Arrays.asList(
+                new NavigationDrawerItem(
+                        R.id.navigationHome, getString(R.string.fragment_home), HomeFragment.class),
+                new NavigationDrawerItem(
+                        R.id.navigationSearch, getString(R.string.fragment_search), SearchFragment.class),
+                new NavigationDrawerItem(
+                        R.id.navigationFilters, getString(R.string.fragment_filters), FilterListFragment.class),
+                new NavigationDrawerItem(
+                        R.id.navigationFaves, getString(R.string.fragment_user_list_faved), UserImageListFragment.class, userListFaved),
+                new NavigationDrawerItem(
+                        R.id.navigationUpvoted, getString(R.string.fragment_user_list_upvoted), UserImageListFragment.class, userListUpvoted),
+                new NavigationDrawerItem(
+                        R.id.navigationUploaded, getString(R.string.fragment_user_list_uploaded), UserImageListFragment.class, userListUploaded)
+        );
+    }
+
+    private void setCallbackHandlersFor(Fragment fragment) {
+        if (fragment instanceof FilterListFragment) {
+            ((FilterListFragment) fragment).setOnFilterChangeListener(new FilterListFragment.OnFilterChangeListener() {
+                @Override
+                public void onFilterChanged() {
+                    MainActivity.super.refreshUser();
+                }
+            });
         }
+    }
+
+    @Override
+    protected Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem)
+            throws IllegalAccessException, InstantiationException {
+        Fragment fragment = super.getFragmentInstance(fragmentMenuItem);
+        setCallbackHandlersFor(fragment);
+        return fragment;
     }
 
     @Override

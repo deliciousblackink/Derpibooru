@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
-import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImage;
+import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
 public class ImageListParser implements ServerResponseParser<List<DerpibooruImage>> {

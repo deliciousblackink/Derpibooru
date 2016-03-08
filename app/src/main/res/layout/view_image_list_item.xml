@@ -1,8 +1,9 @@
 <derpibooru.derpy.ui.views.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                android:layout_width="170dp"
-                                                android:layout_height="170dp">
-    <!-- the real size of the view is set in fragment_image_list_tab due to a measuring limitation for RecycleView grid layout -->
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent">
+    <!-- to accomodate different screen resolutions, the minimum size of the view is set via "image_list_item_min_size" dimension
+    the real size is calculated in the ImageListRecyclerView class -->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"

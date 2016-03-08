@@ -15,25 +15,25 @@ public abstract class RecyclerViewEndlessScrollAdapter<TItem, TViewHolder extend
         mItems = items;
     }
 
-    public void resetItems(List<TItem> newComments) {
+    public List<TItem> getItems() {
+        return mItems;
+    }
+
+    public void resetItems(List<TItem> newItems) {
         super.notifyItemRangeRemoved(0, mItems.size());
-        mItems = newComments;
+        mItems = newItems;
         super.notifyItemRangeInserted(0, mItems.size() - 1);
     }
 
-    public void appendItems(List<TItem> newComments) {
+    public void appendItems(List<TItem> newItems) {
         int oldItemCount = mItems.size();
-        mItems.addAll(newComments);
+        mItems.addAll(newItems);
         int newItemCount = mItems.size() - 1;
         super.notifyItemRangeInserted(oldItemCount, newItemCount);
     }
 
     protected Context getContext() {
         return mContext;
-    }
-
-    protected List<TItem> getItems() {
-        return mItems;
     }
 
     @Override

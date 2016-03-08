@@ -28,7 +28,12 @@ public class ImageListProvider extends Provider<List<DerpibooruImage>> {
         return this;
     }
 
-    protected int getCurrentPage() {
+    public ImageListProvider fromPage(int page) {
+        mCurrentPage = page;
+        return this;
+    }
+
+    public int getCurrentPage() {
         return mCurrentPage;
     }
 

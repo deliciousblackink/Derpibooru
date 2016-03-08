@@ -62,6 +62,30 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
                 transparentOverlay, tabPager, tabPagerHeader, maximumBarHeight);
     }
 
+    protected void initializeTabs(DerpibooruImageDetailed content) {
+        tabPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content));
+        setButtonsEnabled(true);
+        setButtonListeners();
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if ((mRestoredState == null)
+                        || (mRestoredState == ImageBottomBarAnimator.ExtensionState.None)) {
+                    mAnimator.extendViewPagerHeader();
+                } else {
+                    selectButtonAccordingToPageSelected(tabPager.getCurrentItem());
+                    mAnimator.extendViewPagerHeader(0);
+                    mAnimator.doAfter(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAnimator.extendViewPager(mRestoredState);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
     private void toggleButton(View v) {
         if (!v.isSelected()) {
             v.setSelected(true);
@@ -98,7 +122,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
     private void deselectButtonsOtherThan(@Nullable View view) {
         for (int layoutId : TABS.keySet()) {
             AccentColorIconButton button = (AccentColorIconButton) findViewById(layoutId);
-            if (view == null || !button.equals(view)) {
+            if ((view == null) || (!button.equals(view))) {
                 button.setSelected(false);
             }
         }
@@ -112,34 +136,12 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
 
     @OnPageChange(R.id.bottomTabsPager)
     void selectButtonAccordingToPageSelected(int position) {
-        AccentColorIconButton button = (AccentColorIconButton) findViewById(
-                TABS.inverse().get(ImageBottomBarTabAdapter.ImageBottomBarTab.fromId(position)));
-        button.setSelected(true);
-        deselectButtonsOtherThan(button);
-    }
-
-    protected void initializeTabs(DerpibooruImageDetailed content) {
-        tabPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content));
-        setButtonsEnabled(true);
-        setButtonListeners();
-        post(new Runnable() {
-            @Override
-            public void run() {
-                if ((mRestoredState == null)
-                        || (mRestoredState == ImageBottomBarAnimator.ExtensionState.None)) {
-                    mAnimator.extendViewPagerHeader();
-                } else {
-                    selectButtonAccordingToPageSelected(tabPager.getCurrentItem());
-                    mAnimator.extendViewPagerHeader(0);
-                    mAnimator.doAfter(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAnimator.extendViewPager(mRestoredState);
-                        }
-                    });
-                }
-            }
-        });
+        if ((tabPager.getVisibility() == View.VISIBLE) || (mRestoredState != ImageBottomBarAnimator.ExtensionState.None)) {
+            AccentColorIconButton button = (AccentColorIconButton) findViewById(
+                    TABS.inverse().get(ImageBottomBarTabAdapter.ImageBottomBarTab.fromId(position)));
+            button.setSelected(true);
+            deselectButtonsOtherThan(button);
+        }
     }
 
     private void setButtonListeners() {
@@ -179,7 +181,6 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
 
     static class SavedState extends BaseSavedState {
         ImageBottomBarAnimator.ExtensionState extensionState;
-        int selectedTab;
 
         SavedState(Parcelable superState) {
             super(superState);

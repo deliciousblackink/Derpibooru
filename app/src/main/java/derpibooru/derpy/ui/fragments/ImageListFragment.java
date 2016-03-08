@@ -140,6 +140,10 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
     }
 
     private void displayImagesFromProvider(List<DerpibooruImage> images) {
+        if (mImageView == null) {
+            return; /* a quick & dirty fix for the view being destroyed prior to async callback from the provider;
+            the issue is addressed in 'tags' branch, will be merged soon */
+        }
         if (mImageListAdapter == null) {
             initializeImageListAdapter(images);
             mImageRefreshLayout.setRefreshing(false);

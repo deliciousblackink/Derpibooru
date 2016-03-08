@@ -75,6 +75,10 @@ public class FilterListFragment extends NavigationDrawerUserFragment {
     }
 
     private void displayFilters() {
+        if (mFilterListView == null) {
+            return; /* a quick & dirty fix for the view being destroyed prior to async callback from the provider;
+            the issue is addressed in 'tags' branch, will be merged soon */
+        }
         if (mFilterListView.getAdapter() != null) {
             ((FilterListAdapter) mFilterListView.getAdapter())
                     .replaceFilters(mAvailableFilterList, getUser().getCurrentFilter());

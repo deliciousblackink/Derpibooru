@@ -107,7 +107,9 @@ public class ImageActivityMainFragment extends Fragment {
         bottomBar.post(new Runnable() {
             @Override
             public void run() {
-                int bottomBarMaximumHeightWhenExtended = imageView.getMeasuredHeight();
+                /* prevents tabs from overlapping the toolbar when extended */
+                int bottomBarMaximumHeightWhenExtended =
+                        imageView.getMeasuredHeight() - topBar.getMeasuredHeight();
                 bottomBar.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
                 bottomBar.getLayoutParams().height = bottomBarMaximumHeightWhenExtended;
                 bottomBar.requestLayout();

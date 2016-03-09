@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- root view has top margin to prevent the content from overlapping the activity's toolbar
- (the layout fragment is placed inside has neither padding nor margin for that) -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:animateLayoutChanges="true"
-                android:layout_marginTop="?attr/actionBarSize">
+                android:animateLayoutChanges="true">
     <!-- it is important for ImageView to be the first child, otherwise
     other views do not receive onClick events (even despite the
     "clickable=true" attribute set -->
@@ -19,7 +16,9 @@
         android:clickable="true"
         android:id="@+id/imageTopBar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"/>
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="?attr/actionBarSize"/>
+    <!-- the top margin prevents the view from overlapping activity's toolbar -->
     <derpibooru.derpy.ui.views.ImageBottomBarView
         android:id="@+id/imageBottomBar"
         android:layout_width="match_parent"

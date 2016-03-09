@@ -69,18 +69,19 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
         post(new Runnable() {
             @Override
             public void run() {
-                if ((mRestoredState == null)
-                        || (mRestoredState == ImageBottomBarAnimator.ExtensionState.None)) {
+                if (mRestoredState == null) {
                     mAnimator.extendViewPagerHeader();
                 } else {
-                    selectButtonAccordingToPageSelected(tabPager.getCurrentItem());
                     mAnimator.extendViewPagerHeader(0);
-                    mAnimator.doAfter(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAnimator.extendViewPager(mRestoredState);
-                        }
-                    });
+                    if (mRestoredState != ImageBottomBarAnimator.ExtensionState.None) {
+                        selectButtonAccordingToPageSelected(tabPager.getCurrentItem());
+                        mAnimator.doAfter(new Runnable() {
+                            @Override
+                            public void run() {
+                                mAnimator.extendViewPager(mRestoredState, 0);
+                            }
+                        });
+                    }
                 }
             }
         });

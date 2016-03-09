@@ -68,17 +68,22 @@ public class ImageBottomBarAnimator {
                         .animate(mTabPagerHeader,
                                  (getCurrentOverlayHeight() - mHeaderHeight), (mMaximumExtension + mHeaderHeight));
             }
-        }, ANIMATION_DURATION_BASE);
+        }, (long) (ANIMATION_DURATION_BASE * multiplyDurationBy));
     }
 
     public void extendViewPager(ExtensionState target) {
+        extendViewPager(target, 1);
+    }
+
+    public void extendViewPager(ExtensionState target, double multiplyDurationBy) {
         if (target != ExtensionState.None) {
             if (mTabPager.getVisibility() == View.INVISIBLE) {
                 mTabPager.setVisibility(View.VISIBLE);
             }
             new TransparentOverlayHeightAnimator()
                     .to((target == ExtensionState.Max) ? mMaximumExtension
-                                                                : mHalfExtension)
+                                                       : mHalfExtension)
+                    .multiplyDurationBy(multiplyDurationBy)
                     .doOnFinish(new Runnable() {
                         @Override
                         public void run() {

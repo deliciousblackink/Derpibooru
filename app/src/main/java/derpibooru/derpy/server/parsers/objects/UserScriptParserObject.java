@@ -1,20 +1,15 @@
 package derpibooru.derpy.server.parsers.objects;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import derpibooru.derpy.data.server.DerpibooruFilter;
 
 /**
  * Represents a script injected by Derpibooru in every HTML page. It contains basic information

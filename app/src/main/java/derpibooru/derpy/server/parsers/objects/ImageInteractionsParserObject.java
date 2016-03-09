@@ -3,22 +3,15 @@ package derpibooru.derpy.server.parsers.objects;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
-import derpibooru.derpy.data.server.DerpibooruImageThumb;
 
 public class ImageInteractionsParserObject {
     private JSONArray mInteractions;

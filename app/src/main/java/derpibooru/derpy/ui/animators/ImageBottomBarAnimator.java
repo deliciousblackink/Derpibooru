@@ -96,7 +96,7 @@ public class ImageBottomBarAnimator {
                     .animate(mTabPager);
         }
     }
-    
+
     public void collapseViewPager() {
         new TransparentOverlayHeightAnimator()
                 .to(0)

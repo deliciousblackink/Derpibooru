@@ -1,7 +1,6 @@
 package derpibooru.derpy.server.parsers.objects;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.util.regex.Matcher;

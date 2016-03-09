@@ -1,21 +1,13 @@
 package derpibooru.derpy.server.parsers;
 
-import android.support.annotation.Nullable;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.parsers.objects.ImageInteractionsParserObject;
 import derpibooru.derpy.server.parsers.objects.ImageSpoilerParserObject;
@@ -67,5 +59,4 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
     private String getAbsoluteUrl(String relativeUrl) {
         return String.format("https:%s", relativeUrl);
     }
-
 }

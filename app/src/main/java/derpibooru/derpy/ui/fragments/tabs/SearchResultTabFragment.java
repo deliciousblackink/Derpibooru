@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
-import derpibooru.derpy.server.providers.ImageListProvider;
 import derpibooru.derpy.server.providers.SearchProvider;
 import derpibooru.derpy.ui.SearchResultActivity;
 import derpibooru.derpy.ui.fragments.ImageListFragment;

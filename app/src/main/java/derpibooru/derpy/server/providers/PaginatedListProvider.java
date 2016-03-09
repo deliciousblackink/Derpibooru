@@ -4,7 +4,6 @@ import android.content.Context;
 
 import java.util.List;
 
-import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.server.QueryHandler;
 
 public abstract class PaginatedListProvider<TItem> extends Provider<List<TItem>> {

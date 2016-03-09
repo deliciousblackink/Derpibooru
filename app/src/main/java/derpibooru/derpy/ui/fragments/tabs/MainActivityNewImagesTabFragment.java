@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import derpibooru.derpy.server.providers.ImageListProvider;
 import derpibooru.derpy.ui.fragments.ImageListFragment;
-import derpibooru.derpy.ui.presenters.PaginatedListPresenter;
 
 public class MainActivityNewImagesTabFragment extends ImageListFragment {
     @Override

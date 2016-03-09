@@ -3,7 +3,6 @@ package derpibooru.derpy.ui.presenters;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +22,7 @@ import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
  * Presents paginated lists with endless scroll and swipe-to-refresh functionality.
  * Couples {@link PaginatedListProvider} with a {@link RecyclerViewPaginationAdapter} operating on a RecyclerView
  * and a SwipeRefreshLayout set via constructor arguments.
+ *
  * @param <TItem> type of an individual item of a list; must implement Parcelable
  */
 public abstract class PaginatedListPresenter<TItem extends Parcelable> {

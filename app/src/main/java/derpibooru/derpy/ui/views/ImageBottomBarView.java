@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 
 public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {

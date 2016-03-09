@@ -5,26 +5,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruComment;
-import derpibooru.derpy.data.server.DerpibooruImageDetailed;
-import derpibooru.derpy.server.providers.CommentListProvider;
 import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.providers.CommentListProvider;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.CommentListAdapter;
 import derpibooru.derpy.ui.adapters.RecyclerViewPaginationAdapter;
 import derpibooru.derpy.ui.presenters.PaginatedListPresenter;
-import derpibooru.derpy.ui.views.RecyclerViewEndlessScrollListener;
 
 public class ImageBottomBarCommentListTabFragment extends Fragment {
     private PaginatedListPresenter<DerpibooruComment> mCommentListPresenter;

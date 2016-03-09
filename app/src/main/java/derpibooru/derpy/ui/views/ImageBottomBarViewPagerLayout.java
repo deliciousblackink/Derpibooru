@@ -1,7 +1,8 @@
 package derpibooru.derpy.ui.views;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -15,9 +16,13 @@ import com.google.common.collect.ImmutableBiMap;
 
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnPageChange;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
+import derpibooru.derpy.ui.animators.ImageBottomBarAnimator;
 
 class ImageBottomBarViewPagerLayout extends FrameLayout {
     private static final BiMap<Integer, ImageBottomBarTabAdapter.ImageBottomBarTab> TABS =
@@ -26,81 +31,83 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
                     .put(R.id.buttonFave, ImageBottomBarTabAdapter.ImageBottomBarTab.Faves)
                     .put(R.id.buttonComments, ImageBottomBarTabAdapter.ImageBottomBarTab.Comments).build();
 
+    @Bind(R.id.bottomBarHeaderLayout) View tabPagerHeader;
+    @Bind(R.id.transparentOverlay) View transparentOverlay;
+    @Bind(R.id.bottomTabsPager) ViewPager tabPager;
+
+    private ImageBottomBarAnimator mAnimator;
     private FragmentManager mFragmentManager;
-    private ViewPager mPager;
-    private View mTransparentOverlay;
 
-    private int mExtensionHeightOnHeaderButtonClick;
-    private int mMaximumExtension;
-
-    ImageBottomBarViewPagerLayout(Context context) {
-        super(context);
-    }
+    private ImageBottomBarAnimator.ExtensionState mRestoredState;
 
     ImageBottomBarViewPagerLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    ImageBottomBarViewPagerLayout(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public void initializeWithFragmentManager(FragmentManager fm) {
+        mFragmentManager = fm;
+        inflateLayout();
     }
 
-    public void setFragmentManager(FragmentManager fm) {
-        mFragmentManager = fm;
+    protected void inflateLayout() {
+        View view = inflate(getContext(), R.layout.view_image_bottom_bar, null);
+        addView(view);
+        ButterKnife.bind(this, view);
+        deselectButtonsOtherThan(null); /* deselect all buttons */
+        setButtonsEnabled(false); /* until the 'initializeTabs' method is called with tab information */
     }
 
     public void setBarExtensionAttrs(int maximumBarHeight) {
-        int transparentOverlayHeight =
-                maximumBarHeight - findViewById(R.id.bottomBarHeaderLayout).getMeasuredHeight();
-        mTransparentOverlay.getLayoutParams().height = transparentOverlayHeight;
-        mTransparentOverlay.requestLayout();
+        mAnimator = new ImageBottomBarAnimator(
+                transparentOverlay, tabPager, tabPagerHeader, maximumBarHeight);
+    }
 
-        mMaximumExtension = transparentOverlayHeight;
-        mExtensionHeightOnHeaderButtonClick = transparentOverlayHeight / 2;
+    protected void initializeTabs(DerpibooruImageDetailed content) {
+        tabPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content));
+        setButtonsEnabled(true);
+        setButtonListeners();
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (mRestoredState == null) {
+                    mAnimator.extendViewPagerHeader();
+                } else {
+                    mAnimator.extendViewPagerHeader(0);
+                    if (mRestoredState != ImageBottomBarAnimator.ExtensionState.None) {
+                        selectButtonAccordingToPageSelected(tabPager.getCurrentItem());
+                        mAnimator.doAfter(new Runnable() {
+                            @Override
+                            public void run() {
+                                mAnimator.extendViewPager(mRestoredState, 0);
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 
     private void toggleButton(View v) {
         if (!v.isSelected()) {
             v.setSelected(true);
-            extendViewPager(isViewPagerFullyExtended());
+            if (mAnimator.getCurrentExtensionState() == ImageBottomBarAnimator.ExtensionState.None) {
+                mAnimator.extendViewPager(ImageBottomBarAnimator.ExtensionState.HalfSize);
+            }
             navigateViewPagerToTheCurrentlySelectedTab();
-        } else if (!isViewPagerFullyExtended()) {
-            extendViewPager(true);
+        } else if (mAnimator.getCurrentExtensionState() != ImageBottomBarAnimator.ExtensionState.Max) {
+            mAnimator.extendViewPager(ImageBottomBarAnimator.ExtensionState.Max);
         } else {
             v.setSelected(false);
-            collapseViewPager();
+            mAnimator.collapseViewPager();
         }
-    }
-
-    private void extendViewPager(boolean extendToMax) {
-        if (mPager.getVisibility() == View.INVISIBLE) {
-            mPager.setVisibility(View.VISIBLE);
-        }
-        new ViewPagerHeightChange()
-                .to(extendToMax ? mMaximumExtension : mExtensionHeightOnHeaderButtonClick)
-                .animate();
-    }
-
-    private void collapseViewPager() {
-        new ViewPagerHeightChange()
-                .to(0)
-                /* going from fully-extended length to 0 equals twice the usual half-extension */
-                .multiplyDurationBy(2)
-                .doOnFinish(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPager.setVisibility(View.INVISIBLE);
-                    }
-                })
-                .animate();
     }
 
     private void navigateViewPagerToTheCurrentlySelectedTab() {
         if (getCurrentTab() != null) {
-            if (mPager.getVisibility() == View.INVISIBLE) {
-                mPager.setVisibility(View.VISIBLE);
+            if (tabPager.getVisibility() == View.INVISIBLE) {
+                tabPager.setVisibility(View.VISIBLE);
             }
-            mPager.setCurrentItem(getCurrentTab().id(), true);
+            tabPager.setCurrentItem(getCurrentTab().id(), true);
         }
     }
 
@@ -116,20 +123,29 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
     private void deselectButtonsOtherThan(@Nullable View view) {
         for (int layoutId : TABS.keySet()) {
             AccentColorIconButton button = (AccentColorIconButton) findViewById(layoutId);
-            if (view == null || !button.equals(view)) {
+            if ((view == null) || (!button.equals(view))) {
                 button.setSelected(false);
             }
         }
     }
 
-    protected void inflateLayout() {
-        View view = inflate(getContext(), R.layout.view_image_bottom_bar, null);
-        addView(view);
+    private void setButtonsEnabled(boolean enabled) {
+        for (int layoutId : TABS.keySet()) {
+            findViewById(layoutId).setEnabled(enabled);
+        }
+    }
 
-        deselectButtonsOtherThan(null);
+    @OnPageChange(R.id.bottomTabsPager)
+    void selectButtonAccordingToPageSelected(int position) {
+        if ((tabPager.getVisibility() == View.VISIBLE) || (mRestoredState != ImageBottomBarAnimator.ExtensionState.None)) {
+            AccentColorIconButton button = (AccentColorIconButton) findViewById(
+                    TABS.inverse().get(ImageBottomBarTabAdapter.ImageBottomBarTab.fromId(position)));
+            button.setSelected(true);
+            deselectButtonsOtherThan(button);
+        }
+    }
 
-        mTransparentOverlay = findViewById(R.id.transparentOverlay);
-
+    private void setButtonListeners() {
         for (int layoutId : TABS.keySet()) {
             if (layoutId == R.id.buttonFave) continue; /* buttonFave has custom listeners defined outside this class */
             AccentColorIconButton button = (AccentColorIconButton) findViewById(layoutId);
@@ -147,84 +163,50 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
                 }
             });
         }
-
-        mPager = (ViewPager) findViewById(R.id.bottomTabsPager);
-        mPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager));
-        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                /* TODO: insert animated transition for the button color (TabLayout-like) */
-                /* note: value/effort ratio for that is too low, not going to happen */
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (mPager.getVisibility() == View.VISIBLE) {
-                    AccentColorIconButton button = (AccentColorIconButton) findViewById(
-                            TABS.inverse().get(ImageBottomBarTabAdapter.ImageBottomBarTab.fromId(position)));
-                    button.setSelected(true);
-                    deselectButtonsOtherThan(button);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) { }
-        });
     }
 
-    protected void populateViewPagerTabsWithImageInfo(DerpibooruImageDetailed content) {
-        ((ImageBottomBarTabAdapter) mPager.getAdapter()).setTabInfo(content);
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.extensionState = mAnimator.getCurrentExtensionState();
+        return ss;
     }
 
-    private boolean isViewPagerFullyExtended() {
-        return mTransparentOverlay.getMeasuredHeight() == 0;
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        mRestoredState = ss.extensionState;
     }
 
-    private class ViewPagerHeightChange {
-        private int mAnimationDuration = 200;
-        private int mTargetHeight;
-        private Runnable mPostAnimationRunnable;
+    static class SavedState extends BaseSavedState {
+        ImageBottomBarAnimator.ExtensionState extensionState;
 
-        public ViewPagerHeightChange to(int height) {
-            mTargetHeight = height;
-            return this;
+        SavedState(Parcelable superState) {
+            super(superState);
         }
 
-        public ViewPagerHeightChange doOnFinish(Runnable runnable) {
-            mPostAnimationRunnable = runnable;
-            return this;
+        private SavedState(Parcel in) {
+            super(in);
+            extensionState = ImageBottomBarAnimator.ExtensionState.fromValue(in.readInt());
         }
 
-        public ViewPagerHeightChange multiplyDurationBy(int m) {
-            mAnimationDuration *= m;
-            return this;
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(extensionState.toValue());
         }
 
-        private int calculateTargetOverlayHeight() {
-            return mMaximumExtension - mTargetHeight;
-        }
-
-        private int getCurrentOverlayHeight() {
-            return mTransparentOverlay.getMeasuredHeight();
-        }
-
-        private void animate() {
-            ValueAnimator va = ValueAnimator.ofInt(getCurrentOverlayHeight(), calculateTargetOverlayHeight());
-            va.setDuration(mAnimationDuration);
-            va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    int overlayHeight = (Integer) animation.getAnimatedValue();
-                    mTransparentOverlay.getLayoutParams().height = overlayHeight;
-                    mTransparentOverlay.requestLayout();
-                    mPager.getLayoutParams().height = mMaximumExtension - overlayHeight;
-                    mPager.requestLayout();
-                }
-            });
-            va.start();
-            if (mPostAnimationRunnable != null) {
-                mTransparentOverlay.postDelayed(mPostAnimationRunnable, mAnimationDuration);
+        public static final Parcelable.Creator<SavedState> CREATOR
+                = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
             }
-        }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }

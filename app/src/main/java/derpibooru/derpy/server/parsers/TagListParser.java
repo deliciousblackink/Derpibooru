@@ -26,10 +26,11 @@ public class TagListParser implements ServerResponseParser<List<DerpibooruTagDet
         int tagCount = tags.length();
         for (int x = 0; x < tagCount; x++) {
             JSONObject source = tags.getJSONObject(x);
-
+            String spoilerUrl = source.isNull("spoiler_image_uri") ? ""
+                                                                   : ("https:" + source.getString("spoiler_image_uri"));
             DerpibooruTagDetailed tf = new DerpibooruTagDetailed(
                     source.getInt("id"), source.getInt("images"), source.getString("name"),
-                    source.getString("description"), source.getString("spoiler_image_uri"));
+                    source.getString("description"), spoilerUrl);
             output.add(tf);
         }
 

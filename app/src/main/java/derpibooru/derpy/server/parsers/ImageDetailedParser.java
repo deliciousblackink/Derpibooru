@@ -1,23 +1,48 @@
 package derpibooru.derpy.server.parsers;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
+import derpibooru.derpy.data.server.DerpibooruImageInteraction;
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTag;
+import derpibooru.derpy.data.server.DerpibooruTagDetailed;
+import derpibooru.derpy.server.parsers.objects.ImageInteractionsParserObject;
+import derpibooru.derpy.server.parsers.objects.ImageSpoilerParserObject;
+import derpibooru.derpy.server.parsers.objects.UserScriptParserObject;
+import derpibooru.derpy.server.parsers.objects.UserboxParserObject;
 
-public class ImageInfoParser implements ServerResponseParser<DerpibooruImageDetailed> {
+public class ImageDetailedParser implements ServerResponseParser<DerpibooruImageDetailed> {
+    private ImageSpoilerParserObject mSpoilers;
+    private ImageInteractionsParserObject mInteractions;
+
+    public ImageDetailedParser(List<DerpibooruTagDetailed> spoileredTags) {
+        mSpoilers = new ImageSpoilerParserObject(spoileredTags);
+    }
+
     @Override
     public DerpibooruImageDetailed parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
 
-        int imageId = parseImageId(doc);
+        UserboxParserObject box = new UserboxParserObject(doc.select("div.userbox").first().html());
+        if (box.isLoggedIn()) {
+            UserScriptParserObject script =
+                    new UserScriptParserObject(doc.select("script").get(doc.select("script").size() - 2).html());
+            mInteractions = new ImageInteractionsParserObject(script.getInteractions().toString());
+        }
+
         String imageSourceUrl = parseSourceUrl(doc);
         String imageUploader = parseUploader(doc);
         String imageDescription = parseDescription(doc);
@@ -25,16 +50,8 @@ public class ImageInfoParser implements ServerResponseParser<DerpibooruImageDeta
         ArrayList<String> imageFavedBy = parseFavedBy(doc);
         ArrayList<DerpibooruTag> imageTags = parseTags(doc);
 
-        return new DerpibooruImageDetailed(imageId, imageSourceUrl, imageUploader,
-                                           imageDescription, imageCreatedAt,
-                                           imageTags, imageFavedBy);
-    }
-
-    private int parseImageId(Document doc) {
-        String title = doc.select("title").first().text();
-        Matcher m = Pattern.compile("^(?:#)([\\d]*)").matcher(title);
-        /* m.group(0) is '#000000', m.group(1) is '000000' */
-        return m.find() ? Integer.parseInt(m.group(1)) : 0;
+        return new DerpibooruImageDetailed(
+                getImage(doc), imageSourceUrl, imageUploader, imageDescription, imageCreatedAt, imageTags, imageFavedBy);
     }
 
     private String parseSourceUrl(Document doc) {
@@ -111,5 +128,36 @@ public class ImageInfoParser implements ServerResponseParser<DerpibooruImageDeta
             numberOfImages = Integer.parseInt(m.group(m.groupCount() - 1));
         }
         return numberOfImages;
+    }
+
+    private DerpibooruImageThumb getImage(Document doc) throws JSONException {
+        Element imageContainer = doc.select("div.image-show-container").first();
+
+        int imageIdForInteractions = Integer.parseInt(imageContainer.attr("data-image-id"));
+        EnumSet interactions = EnumSet.noneOf(DerpibooruImageInteraction.InteractionType.class);
+        if (mInteractions != null) {
+            interactions = mInteractions.getImageInteractionsForImage(imageIdForInteractions);
+        }
+
+        DerpibooruImageThumb thumb = new DerpibooruImageThumb(
+                parseImageId(doc),
+                imageIdForInteractions,
+                Integer.parseInt(imageContainer.attr("data-upvotes")),
+                Integer.parseInt(imageContainer.attr("data-downvotes")),
+                Integer.parseInt(imageContainer.attr("data-faves")),
+                Integer.parseInt(imageContainer.attr("data-comment-count")),
+                "https:" + new JSONObject(imageContainer.attr("data-uris")).getString("thumb"),
+                "https:" + new JSONObject(imageContainer.attr("data-uris")).getString("large"),
+                mSpoilers.getSpoilerUrl(new JSONArray(imageContainer.attr("data-image-tags"))),
+                interactions
+        );
+        return thumb;
+    }
+
+    private int parseImageId(Document doc) {
+        String title = doc.select("title").first().text();
+        Matcher m = Pattern.compile("^(?:#)([\\d]*)").matcher(title);
+        /* m.group(0) is '#000000', m.group(1) is '000000' */
+        return m.find() ? Integer.parseInt(m.group(1)) : 0;
     }
 }

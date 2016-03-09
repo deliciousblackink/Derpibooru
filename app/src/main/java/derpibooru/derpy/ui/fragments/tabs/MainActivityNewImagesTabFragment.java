@@ -12,13 +12,9 @@ public class MainActivityNewImagesTabFragment extends ImageListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        super.setImageListProvider(new ImageListProvider(getActivity(),
-                                                         new ImageListFragment.ImageListRequestHandler()));
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    protected ImageListProvider getImageListProviderWithParameters(ImageListProvider target) {
-        return target;
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        super.initializeList(
+                new ImageListProvider(getActivity(), super.getNewInstanceOfProviderQueryHandler()));
+        return v;
     }
 }

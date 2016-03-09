@@ -11,7 +11,7 @@ public class DerpibooruComment implements Parcelable {
 
     public DerpibooruComment(String author, String avatarUrl, String text, String postedAt) {
         mAuthor = author;
-        mAuthorAvatarUrl = "https:" + avatarUrl;
+        mAuthorAvatarUrl = avatarUrl;
         mText = text;
         mPostedAt = postedAt;
     }

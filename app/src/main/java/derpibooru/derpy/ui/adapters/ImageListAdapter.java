@@ -15,30 +15,29 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
+import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
-import derpibooru.derpy.data.server.DerpibooruImage;
-import derpibooru.derpy.data.server.DerpibooruUser;
-import derpibooru.derpy.ui.animations.ImageListItemAnimator;
-import derpibooru.derpy.ui.utils.ImageInteractionPresenter;
+import derpibooru.derpy.data.server.DerpibooruImageThumb;
+import derpibooru.derpy.ui.animators.ImageListItemAnimator;
+import derpibooru.derpy.ui.presenters.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
-public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<DerpibooruImage, ImageListAdapter.ViewHolder> {
+public abstract class ImageListAdapter extends RecyclerViewPaginationAdapter<DerpibooruImageThumb, ImageListAdapter.ViewHolder> {
     private ImageListItemAnimator mAnimator;
     private boolean mUserLoggedIn;
 
-    protected ImageListAdapter(Context context, List<DerpibooruImage> items, boolean isUserLoggedIn) {
+    protected ImageListAdapter(Context context, List<DerpibooruImageThumb> items, boolean isUserLoggedIn) {
         super(context, items);
         mAnimator = new ImageListItemAnimator();
         mUserLoggedIn = isUserLoggedIn;
     }
 
-    public abstract void startImageActivity(DerpibooruImage image);
+    public abstract void startImageActivity(DerpibooruImageThumb image);
 
     @Override
     public ImageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -61,15 +60,15 @@ public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<
      * @param newItems new items
      * @param isUserLoggedIn new user interaction state
      */
-    public void resetItems(List<DerpibooruImage> newItems, boolean isUserLoggedIn) {
+    public void resetItems(List<DerpibooruImageThumb> newItems, boolean isUserLoggedIn) {
         mUserLoggedIn = isUserLoggedIn;
         super.resetItems(newItems);
     }
 
-    public void replaceItem(final DerpibooruImage target) {
-        int targetIndex = Iterables.indexOf(getItems(), new Predicate<DerpibooruImage>() {
+    public void replaceItem(final DerpibooruImageThumb target) {
+        int targetIndex = Iterables.indexOf(getItems(), new Predicate<DerpibooruImageThumb>() {
             @Override
-            public boolean apply(DerpibooruImage it) {
+            public boolean apply(DerpibooruImageThumb it) {
                 return it.getId() == target.getId();
             }
         });
@@ -194,13 +193,13 @@ public abstract class ImageListAdapter extends RecyclerViewEndlessScrollAdapter<
             }
 
             @Override
-            protected int getInternalImageId() {
-                return getItems().get(position).getInternalId();
+            protected int getIdForImageInteractions() {
+                return getItems().get(position).getIdForImageInteractions();
             }
 
             @NonNull
             @Override
-            protected Set<DerpibooruImageInteraction.InteractionType> getInteractions() {
+            protected EnumSet<DerpibooruImageInteraction.InteractionType> getInteractions() {
                 return getItems().get(position).getImageInteractions();
             }
 

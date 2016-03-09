@@ -1,0 +1,50 @@
+{
+  "system_filters":[
+    {
+      "id":100073,
+      "name":"Default",
+      "description":"The site's default filter. Hides \"not art\" content, and should hide images that would exceed the show's own rating.",
+      "hidden_tag_ids":[
+        61060,
+        89379
+      ],
+      "spoilered_tag_ids":[
+        41133,
+        41161
+      ],
+      "spoilered_tags":"seizure warning, semi-grimdark",
+      "hidden_tags":"1000 hours in ms paint, background pony strikes again",
+      "hidden_complex":"",
+      "spoilered_complex":"",
+      "public":false,
+      "system":true,
+      "user_count":114000,
+      "user_id":null
+    }
+  ],
+  "user_filters":[
+    {
+    "id":12,
+    "name":"User-Defined Filter",
+    "description":"For those few that may have liked it.",
+    "hidden_tag_ids":[
+      61060,
+      89379
+    ],
+    "spoilered_tag_ids":[
+      41133,
+      41161
+    ],
+    "spoilered_tags":"seizure warning, semi-grimdark",
+    "hidden_tags":"1000 hours in ms paint, background pony strikes again",
+    "hidden_complex":"",
+    "spoilered_complex":"",
+    "public":false,
+    "system":null,
+    "user_count":1,
+    "user_id":12345
+    }
+  ],
+  "search_filters":[
+  ]
+}

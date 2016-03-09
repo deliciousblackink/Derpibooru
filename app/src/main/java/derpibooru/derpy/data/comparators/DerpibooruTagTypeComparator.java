@@ -9,9 +9,9 @@ import derpibooru.derpy.data.server.DerpibooruTag;
  * (TagType.ContentSafety -> other types).
  */
 public class DerpibooruTagTypeComparator implements Comparator<DerpibooruTag> {
-    private final static int LESS_THAN = -1;
-    private final static int EQUAL = 0;
-    private final static int GREATER_THAN = 1;
+    private static final int LESS_THAN = -1;
+    private static final int EQUAL = 0;
+    private static final int GREATER_THAN = 1;
 
     @Override
     public int compare(DerpibooruTag o1, DerpibooruTag o2) {

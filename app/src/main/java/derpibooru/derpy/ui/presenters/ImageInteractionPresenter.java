@@ -1,11 +1,11 @@
-package derpibooru.derpy.ui.utils;
+package derpibooru.derpy.ui.presenters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import java.util.Set;
+import java.util.EnumSet;
 
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.server.QueryHandler;
@@ -13,18 +13,27 @@ import derpibooru.derpy.server.requesters.ImageInteractionRequester;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 
 /**
- * Provides a layer of abstraction for image interaction requests. Handles server queries and UI presentation.
+ * Presents  image interaction requests. Handles both server requests and UI changes.
  */
 public abstract class ImageInteractionPresenter {
     private ImageInteractionRequester mInteractionRequester;
 
-    protected ImageInteractionPresenter(Context context, boolean isLoggedIn) {
+    protected ImageInteractionPresenter(Context context, boolean enableInteractions) {
         mInteractionRequester = new ImageInteractionRequester(context, new InteractionRequestHandler());
-        if (isLoggedIn) {
-            initializeInteractionListeners();
+        if (enableInteractions) {
+            enableInteractions();
         } else {
-            /* TODO: display "log in to interact" message */
+            disableButton(getFaveButton());
+            disableButton(getUpvoteButton());
+            disableButton(getDownvoteButton());
         }
+    }
+
+    public void enableInteractions() {
+        enableButton(getFaveButton());
+        enableButton(getUpvoteButton());
+        enableButton(getDownvoteButton());
+        initializeInteractionListeners();
     }
 
     @Nullable
@@ -39,10 +48,10 @@ public abstract class ImageInteractionPresenter {
     @Nullable
     protected abstract AccentColorIconButton getDownvoteButton();
 
-    protected abstract int getInternalImageId();
+    protected abstract int getIdForImageInteractions();
 
     @NonNull
-    protected abstract Set<DerpibooruImageInteraction.InteractionType> getInteractions();
+    protected abstract EnumSet<DerpibooruImageInteraction.InteractionType> getInteractions();
 
     protected abstract void addInteraction(DerpibooruImageInteraction.InteractionType interaction);
 
@@ -71,6 +80,14 @@ public abstract class ImageInteractionPresenter {
         }
     }
 
+    private void enableButton(@Nullable AccentColorIconButton button) {
+        if (button != null) button.setEnabled(true);
+    }
+
+    private void disableButton(@Nullable AccentColorIconButton button) {
+        if (button != null) button.setEnabled(false);
+    }
+
     private void initializeInteractionListeners() {
         if (getFaveButton() != null) getFaveButton()
                 .setOnClickListener(new OnButtonClickListener(DerpibooruImageInteraction.InteractionType.Fave));
@@ -91,13 +108,13 @@ public abstract class ImageInteractionPresenter {
         public void onClick(View v) {
             if (!getInteractions().contains(mType)) {
                 mInteractionRequester.interaction(mType)
-                        .onImage(getInternalImageId())
+                        .onImage(getIdForImageInteractions())
                         .fetch();
             } else {
                 mInteractionRequester.interaction(
                         mType == DerpibooruImageInteraction.InteractionType.Fave ? DerpibooruImageInteraction.InteractionType.ClearFave
                                                                                  : DerpibooruImageInteraction.InteractionType.ClearVote)
-                        .onImage(getInternalImageId())
+                        .onImage(getIdForImageInteractions())
                         .fetch();
             }
         }

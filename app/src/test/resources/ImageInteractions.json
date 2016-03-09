@@ -1,0 +1,37 @@
+[
+    {
+      "id":1234,
+      "interaction_type":"faved",
+      "value":null,
+      "user_id":1,
+      "image_id":1100009
+    },
+    {
+      "id":1234,
+      "interaction_type":"voted",
+      "value":"up",
+      "user_id":1,
+      "image_id":1100009
+    },
+    {
+      "id":1234,
+      "interaction_type":"voted",
+      "value":"up",
+      "user_id":1,
+      "image_id":1100271
+    },
+    {
+      "id":1234,
+      "interaction_type":"voted",
+      "value":"down",
+      "user_id":1,
+      "image_id":82342
+    },
+    {
+      "id":1234,
+      "interaction_type":"faved",
+      "value":null,
+      "user_id":1,
+      "image_id":50234
+    }
+]

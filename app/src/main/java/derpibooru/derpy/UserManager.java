@@ -55,8 +55,8 @@ public class UserManager {
     private class UserQueryHandler implements QueryHandler<DerpibooruUser> {
         @Override
         public void onQueryExecuted(DerpibooruUser result) {
+            mUser = result;
             if (mRefreshListener != null) {
-                mUser = result;
                 mRefreshListener.onUserRefreshed(result);
             }
         }

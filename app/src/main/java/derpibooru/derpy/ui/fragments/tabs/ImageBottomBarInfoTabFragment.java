@@ -1,6 +1,7 @@
 package derpibooru.derpy.ui.fragments.tabs;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,34 +18,35 @@ import java.util.Locale;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruTag;
+import derpibooru.derpy.ui.ImageActivity;
+import derpibooru.derpy.ui.utils.TextViewHtmlDisplayer;
 import derpibooru.derpy.ui.views.FlowLayout;
 import derpibooru.derpy.ui.views.ImageTagView;
 
-public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
+public class ImageBottomBarInfoTabFragment extends Fragment {
+    private TextViewHtmlDisplayer mHtmlPresenter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_image_bottom_bar_info, container, false);
-        if (getArguments().containsKey("info")) {
-            displayInfoInView(v, (DerpibooruImageDetailed) getArguments().getParcelable("info"));
-        }
+        mHtmlPresenter = new TextViewHtmlDisplayer() {
+            @Override
+            protected void onLinkClick(String url) {
+
+            }
+        };
+        displayInfoInView(v, (DerpibooruImageDetailed) getArguments().getParcelable(ImageActivity.EXTRAS_IMAGE_DETAILED));
         return v;
     }
 
-    @Override
-    protected void displayInfoInView(View target, DerpibooruImageDetailed info) {
+    private void displayInfoInView(View target, DerpibooruImageDetailed info) {
         setImageUploader(info, target);
         setImageDescription(info, target);
         setImageTags(info, target);
-        target.findViewById(R.id.progressBottomBarTab).setVisibility(View.GONE);
         target.findViewById(R.id.textUploaded).setVisibility(View.VISIBLE);
         target.findViewById(R.id.textDescription).setVisibility(View.VISIBLE);
         target.findViewById(R.id.layoutImageTags).setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onLinkClick(View v) {
-        /* TODO: handle profile view/image link/external link */
     }
 
     private void setImageUploader(DerpibooruImageDetailed info, View layout) {
@@ -63,8 +65,7 @@ public class ImageBottomBarInfoTabFragment extends ImageBottomBarTabFragment {
             uploaderHtml = String.format("Uploaded by <a href=\"%s\">%s</a>",
                                          info.getUploader(), info.getUploader());
         }
-        super.setTextViewFromHtml(((TextView) layout.findViewById(R.id.textUploaded)),
-                                  uploaderHtml);
+        mHtmlPresenter.textFromHtml((TextView) layout.findViewById(R.id.textUploaded), uploaderHtml);
     }
 
     private void setImageDescription(DerpibooruImageDetailed info, View layout) {

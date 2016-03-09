@@ -4,10 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class DerpibooruComment implements Parcelable {
-    private String mAuthor;
-    private String mAuthorAvatarUrl;
-    private String mText;
-    private String mPostedAt;
+    private final String mAuthor;
+    private final String mAuthorAvatarUrl;
+    private final String mText;
+    private final String mPostedAt;
 
     public DerpibooruComment(String author, String avatarUrl, String text, String postedAt) {
         mAuthor = author;

@@ -6,17 +6,17 @@ import android.os.Parcelable;
 import java.util.EnumSet;
 
 public class DerpibooruImageThumb implements Parcelable {
-    private int mId;
-    private int mIdUsedForImageInteractions;
+    private final int mId;
+    private final int mIdUsedForImageInteractions;
     private int mUpvotes;
     private int mDownvotes;
     private int mFaves;
     private int mCommentCount;
-    private String mThumbUrl;
-    private String mLargeUrl;
+    private final String mThumbUrl;
+    private final String mLargeUrl;
     private String mSpoilerImageUrl;
 
-    private EnumSet<DerpibooruImageInteraction.InteractionType> mImageInteractions;
+    private final EnumSet<DerpibooruImageInteraction.InteractionType> mImageInteractions;
 
     public DerpibooruImageThumb(DerpibooruImageThumb from) {
         this(from.getId(), from.getIdForImageInteractions(), from.getUpvotes(), from.getDownvotes(),

@@ -3,20 +3,20 @@ package derpibooru.derpy.data.internal;
 import android.support.v4.app.Fragment;
 
 public class FragmentAdapterItem {
-    private int mPosition;
-    private String mTitle;
-    private Fragment mContent;
+    private final int mPosition;
+    private final String mTitle;
+    private final Fragment mContent;
 
     public FragmentAdapterItem(int position, String title, Fragment content) {
-        this.mPosition = position;
-        this.mTitle = title;
-        this.mContent = content;
+        mPosition = position;
+        mTitle = title;
+        mContent = content;
     }
 
     public FragmentAdapterItem(int position, Fragment content) {
-        this.mPosition = position;
-        this.mContent = content;
-        this.mTitle = "";
+        mPosition = position;
+        mContent = content;
+        mTitle = "";
     }
 
     public int getPosition() {

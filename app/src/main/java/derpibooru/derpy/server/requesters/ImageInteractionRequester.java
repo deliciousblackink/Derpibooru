@@ -80,7 +80,7 @@ public class ImageInteractionRequester extends AuthenticatedApiRequester<Derpibo
             mHandler.onQueryFailed();
         } else {
             mApiKey = apiKey;
-            executeQuery(new ImageInteractionResultParser(mInteractionsImageId, mType));
+            executeQuery(new ImageInteractionResultParser(mType));
         }
     }
 }

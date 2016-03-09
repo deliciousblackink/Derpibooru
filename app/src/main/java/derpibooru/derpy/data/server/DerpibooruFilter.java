@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DerpibooruFilter implements Parcelable {
-    private int mId;
-    private String mName;
-    private List<Integer> mSpoileredTags;
+    private final int mId;
+    private final String mName;
+    private final List<Integer> mSpoileredTags;
 
     private String mDescription;
     private List<String> mHiddenTagNames = new ArrayList<>();

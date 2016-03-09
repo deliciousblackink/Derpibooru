@@ -6,9 +6,9 @@ import android.os.Parcelable;
 import com.google.common.primitives.Ints;
 
 public class DerpibooruUser implements Parcelable {
-    private boolean mIsLoggedIn;
-    private String mUsername;
-    private String mAvatarUrl;
+    private final boolean mIsLoggedIn;
+    private final String mUsername;
+    private final String mAvatarUrl;
     private DerpibooruFilter mCurrentFilter;
 
     public DerpibooruUser(String username, String avatarUrl) {

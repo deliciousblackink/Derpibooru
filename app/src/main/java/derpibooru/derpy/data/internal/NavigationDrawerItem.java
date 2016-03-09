@@ -5,9 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 public class NavigationDrawerItem {
-    private int mNavigationViewItemId;
-    private String mToolbarTitle;
-    private Class<? extends Fragment> mFragmentClass;
+    private final int mNavigationViewItemId;
+    private final String mToolbarTitle;
+    private final Class<? extends Fragment> mFragmentClass;
     private Bundle mFragmentArguments;
 
     public NavigationDrawerItem(int navigationViewItemId, String toolbarTitle, Class<? extends Fragment> fragmentClass) {

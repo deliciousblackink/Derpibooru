@@ -39,10 +39,21 @@ public class BrowseOptionsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_browse_options, container, false);
         ButterKnife.bind(this, v);
-        mSelectedOptions = getArguments().getParcelable(BrowseFragment.EXTRAS_SEARCH_OPTIONS);
+        if ((savedInstanceState != null)
+                && (savedInstanceState.containsKey(BrowseFragment.EXTRAS_SEARCH_OPTIONS))) {
+            mSelectedOptions = savedInstanceState.getParcelable(BrowseFragment.EXTRAS_SEARCH_OPTIONS);
+        } else {
+            mSelectedOptions = getArguments().getParcelable(BrowseFragment.EXTRAS_SEARCH_OPTIONS);
+        }
         setSearchActionListenerForSearchQueryView();
         setSpinnerState(mSelectedOptions);
         return v;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(BrowseFragment.EXTRAS_SEARCH_OPTIONS, getSelectedOptions());
     }
 
     public DerpibooruSearchOptions getSelectedOptions() {

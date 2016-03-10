@@ -129,7 +129,9 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mImageListPresenter.onSaveInstanceState(outState);
+        if (mImageListPresenter != null) {
+            mImageListPresenter.onSaveInstanceState(outState);
+        }
     }
 
     @Override

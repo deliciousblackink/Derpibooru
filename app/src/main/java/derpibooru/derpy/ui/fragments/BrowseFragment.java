@@ -19,7 +19,8 @@ import derpibooru.derpy.ui.MainActivity;
 
 public class BrowseFragment extends NavigationDrawerUserFragment {
     public static final String EXTRAS_SEARCH_OPTIONS = "derpibooru.derpy.SearchOptions";
-    private static final String EXTRAS_NESTED_FRAGMENT_STATE = "derpibooru.derpy.NestedState";
+    private static final String EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE = "derpibooru.derpy.OptionsNestedState";
+    private static final String EXTRAS_IMAGE_LIST_FRAGMENT_SAVED_STATE = "derpibooru.derpy.ImageNestedState";
 
     private DerpibooruSearchOptions mCurrentSearchOptions = new DerpibooruSearchOptions();
     private Fragment.SavedState mImageListRetainedState;
@@ -28,11 +29,20 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_browse, container, false);
         ButterKnife.bind(this, v);
-        if ((savedInstanceState != null)
-                && (savedInstanceState.containsKey(EXTRAS_SEARCH_OPTIONS))) {
-            mCurrentSearchOptions = savedInstanceState.getParcelable(EXTRAS_SEARCH_OPTIONS);
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(EXTRAS_SEARCH_OPTIONS)) {
+                mCurrentSearchOptions = savedInstanceState.getParcelable(EXTRAS_SEARCH_OPTIONS);
+            }
+            if (savedInstanceState.containsKey(EXTRAS_IMAGE_LIST_FRAGMENT_SAVED_STATE)) {
+                displayImageListFragment(
+                        (Fragment.SavedState) savedInstanceState.getParcelable(EXTRAS_IMAGE_LIST_FRAGMENT_SAVED_STATE));
+            } else if (savedInstanceState.containsKey(EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE)) {
+                displayOptionsFragment(
+                        (Fragment.SavedState) savedInstanceState.getParcelable(EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE));
+            }
+        } else {
+            displayImageListFragment(null);
         }
-        displayImageListFragment(savedInstanceState);
         return v;
     }
 
@@ -52,19 +62,14 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
         outState.putParcelable(EXTRAS_SEARCH_OPTIONS, mCurrentSearchOptions);
         /* https://code.google.com/p/android/issues/detail?id=197271
          * nested fragments do not retain their instance on configuration changes */
-        if (getCurrentFragment() instanceof BrowseImageListFragment) {
-            mImageListRetainedState =
-                    getChildFragmentManager().saveFragmentInstanceState(getCurrentFragment());
-        }
-        outState.putParcelable(EXTRAS_NESTED_FRAGMENT_STATE, mImageListRetainedState);
-    }
-
-    private void displayImageListFragment(Bundle savedInstanceState) {
-        if ((savedInstanceState != null)
-                && (savedInstanceState.containsKey(EXTRAS_NESTED_FRAGMENT_STATE))) {
-            displayImageListFragment((Fragment.SavedState) savedInstanceState.getParcelable(EXTRAS_NESTED_FRAGMENT_STATE));
+        if (getCurrentFragment() instanceof BrowseOptionsFragment) {
+            outState.putParcelable(EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE,
+                                   getChildFragmentManager().saveFragmentInstanceState(getCurrentFragment()));
         } else {
-            displayImageListFragment((Fragment.SavedState) null);
+            outState.putParcelable(
+                    EXTRAS_IMAGE_LIST_FRAGMENT_SAVED_STATE,
+                    (getCurrentFragment() instanceof BrowseImageListFragment) ? getChildFragmentManager().saveFragmentInstanceState(getCurrentFragment())
+                                                                              : mImageListRetainedState);
         }
     }
 
@@ -74,11 +79,11 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
                 .commit();
     }
 
-    private void displayOptionsFragment() {
+    private void displayOptionsFragment(Fragment.SavedState fragmentSavedState) {
         getChildFragmentManager()
                 .beginTransaction()
                 .addToBackStack(null)
-                .replace(R.id.fragmentLayout, getNewInstanceOfOptionsFragment())
+                .replace(R.id.fragmentLayout, getNewInstanceOfOptionsFragment(fragmentSavedState))
                 .commit();
     }
 
@@ -93,7 +98,7 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
         return fragment;
     }
 
-    private BrowseOptionsFragment getNewInstanceOfOptionsFragment() {
+    private BrowseOptionsFragment getNewInstanceOfOptionsFragment(Fragment.SavedState fragmentSavedState) {
         /* create a deep copy of current search options so
          * that the new object can be compared with the existing one later */
         DerpibooruSearchOptions options = DerpibooruSearchOptions.copyFrom(mCurrentSearchOptions);
@@ -101,6 +106,7 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
         args.putParcelable(EXTRAS_SEARCH_OPTIONS, options);
 
         BrowseOptionsFragment fragment = new BrowseOptionsFragment();
+        fragment.setInitialSavedState(fragmentSavedState);
         fragment.setArguments(args);
         return fragment;
     }
@@ -110,14 +116,14 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
         if (getCurrentFragment() instanceof BrowseImageListFragment) {
             mImageListRetainedState =
                     getChildFragmentManager().saveFragmentInstanceState(getCurrentFragment());
-            displayOptionsFragment();
+            displayOptionsFragment(null);
         } else {
             DerpibooruSearchOptions newOptions =
                     ((BrowseOptionsFragment) getCurrentFragment()).getSelectedOptions();
             getChildFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             if (!Objects.equal(mCurrentSearchOptions, newOptions)) {
                 mCurrentSearchOptions = newOptions;
-                displayImageListFragment((Fragment.SavedState) null);
+                displayImageListFragment(null);
             } else {
                 displayImageListFragment(mImageListRetainedState);
             }
@@ -144,8 +150,8 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            if (getArguments().containsKey(EXTRAS_NESTED_FRAGMENT_STATE)) {
-                savedInstanceState = getArguments().getBundle(EXTRAS_NESTED_FRAGMENT_STATE);
+            if (getArguments().containsKey(EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE)) {
+                savedInstanceState = getArguments().getBundle(EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE);
             }
             View v = super.onCreateView(inflater, container, savedInstanceState);
             super.initializeList(

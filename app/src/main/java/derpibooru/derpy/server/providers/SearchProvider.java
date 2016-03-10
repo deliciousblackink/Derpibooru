@@ -10,19 +10,13 @@ import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 import derpibooru.derpy.server.QueryHandler;
 
 public class SearchProvider extends ImageListProvider {
-    private String mSearchQuery;
     private DerpibooruSearchOptions mSearchOptions;
 
     public SearchProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler) {
         super(context, handler);
     }
 
-    public SearchProvider searching(String query) {
-        mSearchQuery = query;
-        return this;
-    }
-
-    public SearchProvider with(DerpibooruSearchOptions options) {
+    public SearchProvider searching(DerpibooruSearchOptions options) {
         mSearchOptions = options;
         return this;
     }
@@ -33,7 +27,7 @@ public class SearchProvider extends ImageListProvider {
             StringBuilder sb = new StringBuilder();
             sb.append(DERPIBOORU_DOMAIN)
                     .append("search.json?utf8=✓")
-                    .append("&sbq=").append(URLEncoder.encode(mSearchQuery, "UTF-8"))
+                    .append("&sbq=").append(URLEncoder.encode(mSearchOptions.getSearchQuery(), "UTF-8"))
                     .append("&sf=").append(sortByParams())
                     .append("&sd=").append(sortDirectionParams())
                     .append("&faves=").append(filterParams(mSearchOptions.getFavesFilter()))

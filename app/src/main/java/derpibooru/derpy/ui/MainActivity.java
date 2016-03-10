@@ -14,6 +14,7 @@ import butterknife.Bind;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.internal.NavigationDrawerItem;
 import derpibooru.derpy.server.providers.UserImageListProvider;
+import derpibooru.derpy.ui.fragments.BrowseFragment;
 import derpibooru.derpy.ui.fragments.FilterListFragment;
 import derpibooru.derpy.ui.fragments.HomeFragment;
 import derpibooru.derpy.ui.fragments.SearchFragment;
@@ -57,7 +58,7 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
         userListUploaded.putInt("type", UserImageListProvider.UserListType.Uploaded.toValue());
         mFragmentNavigationItems = Arrays.asList(
                 new NavigationDrawerItem(
-                        R.id.navigationHome, getString(R.string.fragment_home), HomeFragment.class),
+                        R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class),
                 new NavigationDrawerItem(
                         R.id.navigationSearch, getString(R.string.fragment_search), SearchFragment.class),
                 new NavigationDrawerItem(
@@ -94,6 +95,15 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        /* https://code.google.com/p/android/issues/detail?id=40323 */
+        if ((getCurrentFragment() instanceof BrowseFragment)
+                && (!((BrowseFragment) getCurrentFragment()).popChildFragmentManagerBackstack())) {
+            super.onBackPressed();
+        }
     }
 
     @Override

@@ -100,8 +100,8 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
     @Override
     public void onBackPressed() {
         /* https://code.google.com/p/android/issues/detail?id=40323 */
-        if ((getCurrentFragment() instanceof BrowseFragment)
-                && (!((BrowseFragment) getCurrentFragment()).popChildFragmentManagerBackstack())) {
+        if (!((getCurrentFragment() instanceof BrowseFragment)
+                && ((BrowseFragment) getCurrentFragment()).popChildFragmentManagerBackstack())) {
             super.onBackPressed();
         }
     }

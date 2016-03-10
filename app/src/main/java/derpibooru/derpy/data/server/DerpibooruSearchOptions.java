@@ -32,8 +32,9 @@ public class DerpibooruSearchOptions implements Parcelable {
         return c;
     }
 
-    public String getSearchQuery() {
-        return mSearchQuery;
+
+    public void setSearchQuery(String query) {
+        mSearchQuery = query;
     }
 
     public void setSortBy(SortBy sortBy) {
@@ -66,6 +67,10 @@ public class DerpibooruSearchOptions implements Parcelable {
 
     public void setMaxScore(Integer maxScore) {
         mMaxScore = maxScore;
+    }
+
+    public String getSearchQuery() {
+        return mSearchQuery;
     }
 
     public SortBy getSortBy() {

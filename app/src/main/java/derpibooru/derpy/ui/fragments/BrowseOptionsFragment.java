@@ -1,122 +1,106 @@
 package derpibooru.derpy.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
+import derpibooru.derpy.ui.views.FloatingSearchView;
 
 public class BrowseOptionsFragment extends Fragment {
+    @Bind(R.id.floatingSearchView) FloatingSearchView searchQuery;
+
+    @Bind(R.id.spinnerSortBy) Spinner sortBy;
+    @Bind(R.id.spinnerSortDirection) Spinner sortDirection;
+    @Bind(R.id.spinnerFavesFilter) Spinner favesFilter;
+    @Bind(R.id.spinnerUpvotesFilter) Spinner upvotesFilter;
+    @Bind(R.id.spinnerUploadsFilter) Spinner uploadsFilter;
+    @Bind(R.id.spinnerWatchedTagsFilter) Spinner watchedTagsFilter;
+
+    @Bind(R.id.textMinScore) EditText minScore;
+    @Bind(R.id.textMaxScore) EditText maxScore;
+
     private DerpibooruSearchOptions mSelectedOptions = new DerpibooruSearchOptions();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_browse_options, container, false);
-        initSpinnerListeners(v);
-        setTextListeners(v);
+        ButterKnife.bind(this, v);
+        mSelectedOptions = getArguments().getParcelable(BrowseFragment.EXTRAS_SEARCH_OPTIONS);
+        setSearchActionListenerForSearchQueryView();
+        setSpinnerState(mSelectedOptions);
         return v;
     }
 
     public DerpibooruSearchOptions getSelectedOptions() {
+        hideSoftKeyboard();
+        mSelectedOptions.setSearchQuery(
+                searchQuery.getText().toString().isEmpty() ? "*" : searchQuery.getText().toString());
+        mSelectedOptions.setSortBy(
+                DerpibooruSearchOptions.SortBy.fromValue(sortBy.getSelectedItemPosition()));
+        mSelectedOptions.setSortDirection(
+                DerpibooruSearchOptions.SortDirection.fromValue(sortDirection.getSelectedItemPosition()));
+        mSelectedOptions.setFavesFilter(
+                DerpibooruSearchOptions.UserPicksFilter.fromValue(favesFilter.getSelectedItemPosition()));
+        mSelectedOptions.setUpvotesFilter(
+                DerpibooruSearchOptions.UserPicksFilter.fromValue(upvotesFilter.getSelectedItemPosition()));
+        mSelectedOptions.setUploadsFilter(
+                DerpibooruSearchOptions.UserPicksFilter.fromValue(uploadsFilter.getSelectedItemPosition()));
+        mSelectedOptions.setWatchedTagsFilter(
+                DerpibooruSearchOptions.UserPicksFilter.fromValue(watchedTagsFilter.getSelectedItemPosition()));
+        mSelectedOptions.setMinScore(
+                getInteger(minScore.getText().toString()));
+        mSelectedOptions.setMaxScore(
+                getInteger(maxScore.getText().toString()));
         return mSelectedOptions;
     }
 
-    private void initSpinnerListeners(View v) {
-        ((Spinner) v.findViewById(R.id.spinnerSortBy)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mSelectedOptions.setSortBy(DerpibooruSearchOptions.SortBy.fromValue(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
-        ((Spinner) v.findViewById(R.id.spinnerSortDirection)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mSelectedOptions.setSortDirection(DerpibooruSearchOptions.SortDirection.fromValue(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
-        ((Spinner) v.findViewById(R.id.spinnerFavesFilter)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mSelectedOptions.setFavesFilter(DerpibooruSearchOptions.UserPicksFilter.fromValue(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
-        ((Spinner) v.findViewById(R.id.spinnerUpvotesFilter)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mSelectedOptions.setUpvotesFilter(DerpibooruSearchOptions.UserPicksFilter.fromValue(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
-        ((Spinner) v.findViewById(R.id.spinnerUploadsFilter)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mSelectedOptions.setUpvotesFilter(DerpibooruSearchOptions.UserPicksFilter.fromValue(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
-        ((Spinner) v.findViewById(R.id.spinnerWatchedTagsFilter)).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mSelectedOptions.setWatchedTagsFilter(DerpibooruSearchOptions.UserPicksFilter.fromValue(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
+    private void setSpinnerState(DerpibooruSearchOptions from) {
+        if (!from.getSearchQuery().equals("*")) searchQuery.setText(from.getSearchQuery());
+        sortBy.setSelection(from.getSortBy().toValue());
+        sortDirection.setSelection(from.getSortDirection().toValue());
+        favesFilter.setSelection(from.getFavesFilter().toValue());
+        upvotesFilter.setSelection(from.getUpvotesFilter().toValue());
+        uploadsFilter.setSelection(from.getUploadsFilter().toValue());
+        watchedTagsFilter.setSelection(from.getWatchedTagsFilter().toValue());
+        if (from.getMinScore() != null) minScore.setText(from.getMinScore().toString());
+        if (from.getMaxScore() != null) maxScore.setText(from.getMaxScore().toString());
     }
 
-    private void setTextListeners(View parent) {
-        ((EditText) parent.findViewById(R.id.textMinScore))
-                .addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        mSelectedOptions.setMinScore(getInt(s.toString()));
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) { }
-                });
-        ((EditText) parent.findViewById(R.id.textMaxScore))
-                .addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        mSelectedOptions.setMaxScore(getInt(s.toString()));
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) { }
-                });
-    }
-
-    private Integer getInt(String text) {
+    private Integer getInteger(String text) {
         return (text.equals("")) ? null : Integer.parseInt(text);
+    }
+
+    private void setSearchActionListenerForSearchQueryView() {
+        /* TODO: start search on keyboard search button press */
+        searchQuery.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    hideSoftKeyboard();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void hideSoftKeyboard() {
+        InputMethodManager imm =
+                (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchQuery.getWindowToken(), 0);
     }
 }

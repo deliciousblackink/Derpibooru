@@ -6,10 +6,6 @@
             android:icon="@drawable/ic_home_black_24dp"
             android:title="@string/navigation_drawer_browse"/>
         <item
-            android:id="@+id/navigationSearch"
-            android:icon="@drawable/ic_search_black_24dp"
-            android:title="@string/navigation_drawer_search"/>
-        <item
             android:id="@+id/navigationFilters"
             android:icon="@drawable/ic_block_black_24dp"
             android:title="@string/navigation_drawer_filters"/>

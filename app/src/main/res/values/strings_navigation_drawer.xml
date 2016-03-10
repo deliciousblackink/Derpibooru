@@ -4,7 +4,6 @@
     <string name="close_drawer">Close navigation drawer</string>
     <!-- menu items -->
     <string name="navigation_drawer_browse">Browse</string>
-    <string name="navigation_drawer_search">Search</string>
     <string name="navigation_drawer_filters">Filters</string>
     <string name="navigation_drawer_group_account">Account</string>
     <string name="navigation_drawer_log_in">Log in</string>

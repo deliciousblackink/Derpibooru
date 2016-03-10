@@ -16,8 +16,6 @@ import derpibooru.derpy.data.internal.NavigationDrawerItem;
 import derpibooru.derpy.server.providers.UserImageListProvider;
 import derpibooru.derpy.ui.fragments.BrowseFragment;
 import derpibooru.derpy.ui.fragments.FilterListFragment;
-import derpibooru.derpy.ui.fragments.HomeFragment;
-import derpibooru.derpy.ui.fragments.SearchFragment;
 import derpibooru.derpy.ui.fragments.UserImageListFragment;
 
 public class MainActivity extends NavigationDrawerUserFragmentActivity {
@@ -59,8 +57,6 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
         mFragmentNavigationItems = Arrays.asList(
                 new NavigationDrawerItem(
                         R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class),
-                new NavigationDrawerItem(
-                        R.id.navigationSearch, getString(R.string.fragment_search), SearchFragment.class),
                 new NavigationDrawerItem(
                         R.id.navigationFilters, getString(R.string.fragment_filters), FilterListFragment.class),
                 new NavigationDrawerItem(

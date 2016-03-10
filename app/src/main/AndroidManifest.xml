@@ -29,8 +29,6 @@
             android:name=".ui.ImageActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".ui.SearchResultActivity"/>
-        <activity
             android:name=".ui.LoginActivity"
             android:label="@string/activity_login"
             android:screenOrientation="portrait">

@@ -49,7 +49,7 @@ public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mTabs.get(position).getTitle();
+        return "";
     }
 
     public enum ImageBottomBarTab {

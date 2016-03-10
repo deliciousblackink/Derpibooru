@@ -106,15 +106,15 @@ public class DerpibooruSearchOptions implements Parcelable {
     public boolean equals(Object o) {
         if (o instanceof DerpibooruSearchOptions) {
             DerpibooruSearchOptions comp = (DerpibooruSearchOptions) o;
-            return (this.getSearchQuery() == comp.getSearchQuery())
-                    && (this.getSortBy() == comp.getSortBy())
-                    && (this.getSortDirection() == comp.getSortDirection())
-                    && (this.getFavesFilter() == comp.getFavesFilter())
-                    && (this.getUpvotesFilter() == comp.getUpvotesFilter())
-                    && (this.getUploadsFilter() == comp.getUploadsFilter())
-                    && (this.getWatchedTagsFilter() == comp.getWatchedTagsFilter())
-                    && (Objects.equal(this.getMinScore(), comp.getMinScore()))
-                    && (Objects.equal(this.getMaxScore(), comp.getMaxScore()));
+            return ((this.getSearchQuery().equals(comp.getSearchQuery()))
+                     && (this.getSortBy() == comp.getSortBy())
+                     && (this.getSortDirection() == comp.getSortDirection())
+                     && (this.getFavesFilter() == comp.getFavesFilter())
+                     && (this.getUpvotesFilter() == comp.getUpvotesFilter())
+                     && (this.getUploadsFilter() == comp.getUploadsFilter())
+                     && (this.getWatchedTagsFilter() == comp.getWatchedTagsFilter())
+                     && (Objects.equal(this.getMinScore(), comp.getMinScore()))
+                     && (Objects.equal(this.getMaxScore(), comp.getMaxScore())));
         }
         return super.equals(o);
     }

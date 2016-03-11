@@ -15,5 +15,4 @@
     <!-- user status labels -->
     <string name="user_filter">Filter: %s</string>
     <string name="user_logged_out">Not logged in</string>
-    <string name="loading">Loading…</string>
 </resources>

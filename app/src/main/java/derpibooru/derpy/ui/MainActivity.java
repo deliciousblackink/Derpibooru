@@ -59,22 +59,16 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
         Bundle uploaded = new Bundle();
         uploaded.putInt(BrowseFragment.EXTRAS_IMAGE_LIST_TYPE, BrowseImageListFragment.Type.UserUploaded.toValue());
         mFragmentNavigationItems = Arrays.asList(
-                new NavigationDrawerItem(
-                        R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class),
-                new NavigationDrawerItem(
-                        R.id.navigationFilters, getString(R.string.fragment_filters), FilterListFragment.class),
-                new NavigationDrawerLinkItem(
-                        R.id.naviationWatched, new NavigationDrawerItem(
-                        R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class, watched)),
-                new NavigationDrawerLinkItem(
-                        R.id.navigationFaves, new NavigationDrawerItem(
-                        R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class, faved)),
-                new NavigationDrawerLinkItem(
-                        R.id.navigationUpvoted, new NavigationDrawerItem(
-                        R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class, upvoted)),
-                new NavigationDrawerLinkItem(
-                        R.id.navigationUploaded, new NavigationDrawerItem(
-                        R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class, uploaded))
+                new NavigationDrawerItem(R.id.navigationBrowse, BrowseFragment.class),
+                new NavigationDrawerItem(R.id.navigationFilters, FilterListFragment.class),
+                new NavigationDrawerLinkItem(R.id.naviationWatched,
+                                             new NavigationDrawerItem(R.id.navigationBrowse, BrowseFragment.class, watched)),
+                new NavigationDrawerLinkItem(R.id.navigationFaves,
+                                             new NavigationDrawerItem(R.id.navigationBrowse, BrowseFragment.class, faved)),
+                new NavigationDrawerLinkItem(R.id.navigationUpvoted,
+                                             new NavigationDrawerItem(R.id.navigationBrowse, BrowseFragment.class, upvoted)),
+                new NavigationDrawerLinkItem(R.id.navigationUploaded,
+                                             new NavigationDrawerItem(R.id.navigationBrowse, BrowseFragment.class, uploaded))
         );
     }
 

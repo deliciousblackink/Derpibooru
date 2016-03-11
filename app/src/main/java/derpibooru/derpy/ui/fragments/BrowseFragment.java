@@ -1,8 +1,10 @@
 package derpibooru.derpy.ui.fragments;
 
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,6 @@ import butterknife.OnClick;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 import derpibooru.derpy.data.server.DerpibooruUser;
-import derpibooru.derpy.server.providers.SearchProvider;
 import derpibooru.derpy.ui.MainActivity;
 
 public class BrowseFragment extends NavigationDrawerUserFragment {
@@ -38,6 +39,28 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
             displayImageListFragment(null);
         }
         return v;
+    }
+
+    private void updateActionBarTitleForImageListFragment() {
+        ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (bar != null) {
+            bar.setTitle(getString(mCurrentSearchOptions.isDisplayingWatchedTagsOnly() ?
+                                   R.string.image_list_watched :
+                                   mCurrentSearchOptions.isDisplayingFavesOnly() ?
+                                   R.string.image_list_faved :
+                                   mCurrentSearchOptions.isDisplayingUpvotesOnly() ?
+                                   R.string.image_list_upvotes :
+                                   mCurrentSearchOptions.isDisplayingUploadsOnly() ?
+                                   R.string.image_list_uploads :
+                                   R.string.image_list));
+        }
+    }
+
+    private void updateActionBarTitleForOptionsFragment() {
+        ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (bar != null) {
+            bar.setTitle(getString(R.string.image_list_options));
+        }
     }
 
     @Override
@@ -89,6 +112,7 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.fragmentLayout, getNewInstanceOfImageListFragment(fragmentSavedState))
                 .commit();
+        updateActionBarTitleForImageListFragment();
     }
 
     private void displayOptionsFragment(Fragment.SavedState fragmentSavedState) {
@@ -97,6 +121,7 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
                 .addToBackStack(null)
                 .replace(R.id.fragmentLayout, getNewInstanceOfOptionsFragment(fragmentSavedState))
                 .commit();
+        updateActionBarTitleForOptionsFragment();
     }
 
     private BrowseImageListFragment getNewInstanceOfImageListFragment(Fragment.SavedState fragmentSavedState) {

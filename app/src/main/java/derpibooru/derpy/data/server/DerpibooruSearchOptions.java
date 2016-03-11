@@ -32,7 +32,6 @@ public class DerpibooruSearchOptions implements Parcelable {
         return c;
     }
 
-
     public void setSearchQuery(String query) {
         mSearchQuery = query;
     }
@@ -105,6 +104,36 @@ public class DerpibooruSearchOptions implements Parcelable {
     @Nullable
     public Integer getMaxScore() {
         return mMaxScore;
+    }
+
+    /* i'm not proud of these */
+
+    public boolean isDisplayingWatchedTagsOnly() {
+        return ((mWatchedTagsFilter == UserPicksFilter.UserPicksOnly)
+                && (mFavesFilter != UserPicksFilter.UserPicksOnly)
+                && (mUpvotesFilter != UserPicksFilter.UserPicksOnly)
+                && (mUploadsFilter != UserPicksFilter.UserPicksOnly));
+    }
+
+    public boolean isDisplayingFavesOnly() {
+        return ((mFavesFilter == UserPicksFilter.UserPicksOnly)
+                && (mWatchedTagsFilter != UserPicksFilter.UserPicksOnly)
+                && (mUpvotesFilter != UserPicksFilter.UserPicksOnly)
+                && (mUploadsFilter != UserPicksFilter.UserPicksOnly));
+    }
+
+    public boolean isDisplayingUpvotesOnly() {
+        return ((mUpvotesFilter == UserPicksFilter.UserPicksOnly)
+                && (mWatchedTagsFilter != UserPicksFilter.UserPicksOnly)
+                && (mFavesFilter != UserPicksFilter.UserPicksOnly)
+                && (mUploadsFilter != UserPicksFilter.UserPicksOnly));
+    }
+
+    public boolean isDisplayingUploadsOnly() {
+        return ((mUploadsFilter == UserPicksFilter.UserPicksOnly)
+                && (mWatchedTagsFilter != UserPicksFilter.UserPicksOnly)
+                && (mFavesFilter != UserPicksFilter.UserPicksOnly)
+                && (mUpvotesFilter != UserPicksFilter.UserPicksOnly));
     }
 
     @Override

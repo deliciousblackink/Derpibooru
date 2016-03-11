@@ -1,7 +1,9 @@
 package derpibooru.derpy.ui.fragments;
 
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,6 +38,8 @@ public class FilterListFragment extends NavigationDrawerUserFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_filter_list, container, false);
         ButterKnife.bind(this, v);
+        ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (bar != null) bar.setTitle(R.string.fragment_filters);
         return v;
     }
 

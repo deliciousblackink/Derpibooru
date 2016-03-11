@@ -120,9 +120,9 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
                 transaction.addToBackStack(null);
             }
             transaction
-                    .replace(getContentLayout().getId(), getFragmentInstance(item), item.getToolbarTitle())
+                    .replace(getContentLayout().getId(), getFragmentInstance(item), item.getFragmentClass().getName())
                     .commit();
-            setMenuItemAndTitleFor(item);
+            selectMenuItem(item);
         } catch (Exception t) {
             Log.e("DrawerFragmentActivity", "failed to initialize a Fragment class", t);
         }
@@ -167,7 +167,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
     /**
      * Looks up a NavigationDrawerItem corresponding to the fragment.
      * <br>
-     * Note: the tag should be equal to the toolbar title of a fragment. Such tag is applied for fragments
+     * Note: the tag is equal to Class.getName(). Such tag is applied for fragments
      * displayed via {@link #navigateTo(NavigationDrawerItem)}.
      */
     protected NavigationDrawerItem findNavigationItemByFragmentTag(final String tag) {
@@ -175,15 +175,14 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
                 getFragmentNavigationItems(), new Predicate<NavigationDrawerItem>() {
                     @Override
                     public boolean apply(NavigationDrawerItem item) {
-                        return item.getToolbarTitle().equals(tag);
+                        return item.getFragmentClass().getName().equals(tag);
                     }
                 });
     }
 
-    private void setMenuItemAndTitleFor(NavigationDrawerItem fragmentItem) {
+    private void selectMenuItem(NavigationDrawerItem fragmentItem) {
         mSelectedMenuItemId = fragmentItem.getNavigationViewItemId();
         mNavigationDrawer.selectMenuItem(mSelectedMenuItemId);
-        mToolbar.setTitle(fragmentItem.getToolbarTitle());
     }
 
     /**
@@ -214,18 +213,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
     public void onBackStackChanged() {
         final Fragment fragment = getCurrentFragment();
         if (fragment != null) {
-            setMenuItemAndTitleFor(findNavigationItemByFragmentTag(fragment.getTag()));
-        }
-    }
-
-    /**
-     * Sets the Toolbar title according to the fragment displayed; called on configuration changes.
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (getCurrentFragment() != null) {
-            mToolbar.setTitle(getCurrentFragment().getTag());
+            selectMenuItem(findNavigationItemByFragmentTag(fragment.getTag()));
         }
     }
 

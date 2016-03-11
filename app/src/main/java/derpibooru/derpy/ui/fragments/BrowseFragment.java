@@ -49,7 +49,7 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
     @Override
     protected void onUserRefreshed(DerpibooruUser newUser) {
         if (getCurrentFragment() instanceof BrowseImageListFragment) {
-            ((BrowseImageListFragment) getCurrentFragment()).onUserRefreshed(newUser);
+            ((NavigationDrawerUserFragment) getCurrentFragment()).setRefreshedUserData(newUser);
         } else {
             /* make the image list refresh when the user returns to it by setting its retained state to null */
             mImageListRetainedState = null;

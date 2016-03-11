@@ -9,7 +9,7 @@ android {
         targetSdkVersion 23
         versionCode 6
         versionName "1.2.1"
-        /* generatedDensities = [] ! uncomment for support library 23.2 */
+        generatedDensities = []
     }
     buildTypes {
         release {
@@ -17,10 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    /* ! uncomment for support library 23.2
-    /*aaptOptions {
+    aaptOptions {
         additionalParameters "--no-version-vectors"
-    }*/
+    }
 }
 
 /* TODO: automate this task */
@@ -50,6 +49,4 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.robolectric:shadows-support-v4:3.0'
     testCompile 'org.json:json:20140107'
-    // unused:
-    //testCompile 'com.squareup.okhttp3:mockwebserver:3.1.1'
 }

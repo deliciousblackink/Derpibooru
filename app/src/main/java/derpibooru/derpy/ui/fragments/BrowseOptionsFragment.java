@@ -20,7 +20,7 @@ import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 import derpibooru.derpy.ui.views.FloatingSearchView;
 
 public class BrowseOptionsFragment extends Fragment {
-    @Bind(R.id.floatingSearchView) FloatingSearchView searchQuery;
+    @Bind(R.id.floatingSearchView) FloatingSearchView searchText;
 
     @Bind(R.id.spinnerSortBy) Spinner sortBy;
     @Bind(R.id.spinnerSortDirection) Spinner sortDirection;
@@ -57,30 +57,32 @@ public class BrowseOptionsFragment extends Fragment {
     }
 
     public DerpibooruSearchOptions getSelectedOptions() {
-        hideSoftKeyboard();
-        mSelectedOptions.setSearchQuery(
-                searchQuery.getText().toString().isEmpty() ? "*" : searchQuery.getText().toString());
-        mSelectedOptions.setSortBy(
-                DerpibooruSearchOptions.SortBy.fromValue(sortBy.getSelectedItemPosition()));
-        mSelectedOptions.setSortDirection(
-                DerpibooruSearchOptions.SortDirection.fromValue(sortDirection.getSelectedItemPosition()));
-        mSelectedOptions.setFavesFilter(
-                DerpibooruSearchOptions.UserPicksFilter.fromValue(favesFilter.getSelectedItemPosition()));
-        mSelectedOptions.setUpvotesFilter(
-                DerpibooruSearchOptions.UserPicksFilter.fromValue(upvotesFilter.getSelectedItemPosition()));
-        mSelectedOptions.setUploadsFilter(
-                DerpibooruSearchOptions.UserPicksFilter.fromValue(uploadsFilter.getSelectedItemPosition()));
-        mSelectedOptions.setWatchedTagsFilter(
-                DerpibooruSearchOptions.UserPicksFilter.fromValue(watchedTagsFilter.getSelectedItemPosition()));
-        mSelectedOptions.setMinScore(
-                getInteger(minScore.getText().toString()));
-        mSelectedOptions.setMaxScore(
-                getInteger(maxScore.getText().toString()));
+        if (searchText != null) {
+            hideSoftKeyboard();
+            mSelectedOptions.setSearchQuery(
+                    searchText.getText().toString().isEmpty() ? "*" : searchText.getText().toString());
+            mSelectedOptions.setSortBy(
+                    DerpibooruSearchOptions.SortBy.fromValue(sortBy.getSelectedItemPosition()));
+            mSelectedOptions.setSortDirection(
+                    DerpibooruSearchOptions.SortDirection.fromValue(sortDirection.getSelectedItemPosition()));
+            mSelectedOptions.setFavesFilter(
+                    DerpibooruSearchOptions.UserPicksFilter.fromValue(favesFilter.getSelectedItemPosition()));
+            mSelectedOptions.setUpvotesFilter(
+                    DerpibooruSearchOptions.UserPicksFilter.fromValue(upvotesFilter.getSelectedItemPosition()));
+            mSelectedOptions.setUploadsFilter(
+                    DerpibooruSearchOptions.UserPicksFilter.fromValue(uploadsFilter.getSelectedItemPosition()));
+            mSelectedOptions.setWatchedTagsFilter(
+                    DerpibooruSearchOptions.UserPicksFilter.fromValue(watchedTagsFilter.getSelectedItemPosition()));
+            mSelectedOptions.setMinScore(
+                    getInteger(minScore.getText().toString()));
+            mSelectedOptions.setMaxScore(
+                    getInteger(maxScore.getText().toString()));
+        }
         return mSelectedOptions;
     }
 
     private void setSpinnerState(DerpibooruSearchOptions from) {
-        if (!from.getSearchQuery().equals("*")) searchQuery.setText(from.getSearchQuery());
+        if (!from.getSearchQuery().equals("*")) searchText.setText(from.getSearchQuery());
         sortBy.setSelection(from.getSortBy().toValue());
         sortDirection.setSelection(from.getSortDirection().toValue());
         favesFilter.setSelection(from.getFavesFilter().toValue());
@@ -97,7 +99,7 @@ public class BrowseOptionsFragment extends Fragment {
 
     private void setSearchActionListenerForSearchQueryView() {
         /* TODO: start search on keyboard search button press */
-        searchQuery.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -112,6 +114,6 @@ public class BrowseOptionsFragment extends Fragment {
     private void hideSoftKeyboard() {
         InputMethodManager imm =
                 (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(searchQuery.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
     }
 }

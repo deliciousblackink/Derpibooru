@@ -1,44 +1,38 @@
 <resources>
     <string name="text_search">Search</string>
-    <string name="search_sort_by">Sort by</string>
     <string-array name="search_sort_by_options">
-        <item>Creation date</item>
-        <item>Score</item>
-        <item>Relevance</item>
-        <item>Width</item>
-        <item>Height</item>
-        <item>Comments</item>
-        <item>Random!</item>
+        <item>Sort by date created</item>
+        <item>Sort by score</item>
+        <item>Sort by relevance</item>
+        <item>Sort by image width</item>
+        <item>Sort by image height</item>
+        <item>Sort by number of comments</item>
+        <item>Sort randomly!</item>
     </string-array>
-    <string name="search_sort_direction">Sorting\ndirection</string>
     <string-array name="search_sort_direction_options">
-        <item>Descending</item>
-        <item>Ascending</item>
+        <item>In descending order</item>
+        <item>In ascending order</item>
     </string-array>
-    <string name="search_faves">Filter my\nfavorites</string>
     <string-array name="search_faves_options">
-        <item>No</item>
-        <item>Show my faves only</item>
-        <item>Don\'t show my faves</item>
+        <item>Without filtering my favorites</item>
+        <item>Showing my favorites only</item>
+        <item>Not including my favorites</item>
     </string-array>
-    <string name="search_upvotes">Filter my\nupvotes</string>
     <string-array name="search_upvotes_options">
-        <item>No</item>
-        <item>Show my upvotes only</item>
-        <item>Don\'t show my upvotes</item>
+        <item>Without filtering my upvotes</item>
+        <item>Showing my upvotes only</item>
+        <item>Not including my upvotes</item>
     </string-array>
-    <string name="search_uploads">Filter my\nuploads</string>
     <string-array name="search_uploads_options">
-        <item>No</item>
-        <item>Show my uploads only</item>
-        <item>Don\'t show my uploads</item>
+        <item>Without filtering my uploads</item>
+        <item>Showing my uploads only</item>
+        <item>Not including my uploads</item>
     </string-array>
-    <string name="search_watched_tags">Filter my\nwatched tags</string>
     <string-array name="search_watched_tags_options">
-        <item>No</item>
-        <item>Show my watched tags only</item>
-        <item>Don\'t show my watched tags</item>
+        <item>Without filtering my watched tags</item>
+        <item>Showing my watched tags only</item>
+        <item>Not including my watched tags</item>
     </string-array>
-    <string name="search_min_score">Minimum\nscore</string>
-    <string name="search_max_score">Maximum\nscore</string>
+    <string name="search_min_score">With score higher than</string>
+    <string name="search_max_score">With score lower than</string>
 </resources>

@@ -44,15 +44,16 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
     private void updateActionBarTitleForImageListFragment() {
         ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (bar != null) {
-            bar.setTitle(getString(mCurrentSearchOptions.isDisplayingWatchedTagsOnly() ?
-                                   R.string.image_list_watched :
-                                   mCurrentSearchOptions.isDisplayingFavesOnly() ?
-                                   R.string.image_list_faved :
-                                   mCurrentSearchOptions.isDisplayingUpvotesOnly() ?
-                                   R.string.image_list_upvotes :
-                                   mCurrentSearchOptions.isDisplayingUploadsOnly() ?
-                                   R.string.image_list_uploads :
-                                   R.string.image_list));
+            if (!mCurrentSearchOptions.getSearchQuery().equals("*")) {
+                bar.setTitle(mCurrentSearchOptions.getSearchQuery());
+            } else {
+                bar.setTitle(getString(
+                        mCurrentSearchOptions.isDisplayingWatchedTagsOnly() ? R.string.image_list_watched :
+                        mCurrentSearchOptions.isDisplayingFavesOnly() ? R.string.image_list_faved :
+                        mCurrentSearchOptions.isDisplayingUpvotesOnly() ? R.string.image_list_upvotes :
+                        mCurrentSearchOptions.isDisplayingUploadsOnly() ? R.string.image_list_uploads :
+                        R.string.image_list));
+            }
         }
     }
 

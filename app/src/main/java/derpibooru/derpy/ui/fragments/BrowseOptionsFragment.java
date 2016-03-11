@@ -9,11 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
@@ -32,6 +34,8 @@ public class BrowseOptionsFragment extends Fragment {
     @Bind(R.id.textMinScore) EditText minScore;
     @Bind(R.id.textMaxScore) EditText maxScore;
 
+    @BindColor(R.color.colorTextDark) int textColor;
+    @BindColor(R.color.colorAccent) int accentColor;
     private DerpibooruSearchOptions mSelectedOptions = new DerpibooruSearchOptions();
 
     @Override
@@ -46,6 +50,7 @@ public class BrowseOptionsFragment extends Fragment {
             mSelectedOptions = getArguments().getParcelable(BrowseFragment.EXTRAS_SEARCH_OPTIONS);
         }
         setSearchActionListenerForSearchQueryView();
+        setSpinnerTintToggleListeners();
         setSpinnerState(mSelectedOptions);
         return v;
     }
@@ -91,6 +96,27 @@ public class BrowseOptionsFragment extends Fragment {
         watchedTagsFilter.setSelection(from.getWatchedTagsFilter().toValue());
         if (from.getMinScore() != null) minScore.setText(from.getMinScore().toString());
         if (from.getMaxScore() != null) maxScore.setText(from.getMaxScore().toString());
+    }
+
+    private void setSpinnerTintToggleListeners() {
+        AdapterView.OnItemSelectedListener toggleListener =
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        if (view != null) {
+                            ((TextView) view).setTextColor((position == 0) ? textColor : accentColor);
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) { }
+                };
+        sortBy.setOnItemSelectedListener(toggleListener);
+        sortDirection.setOnItemSelectedListener(toggleListener);
+        favesFilter.setOnItemSelectedListener(toggleListener);
+        upvotesFilter.setOnItemSelectedListener(toggleListener);
+        uploadsFilter.setOnItemSelectedListener(toggleListener);
+        watchedTagsFilter.setOnItemSelectedListener(toggleListener);
     }
 
     private Integer getInteger(String text) {

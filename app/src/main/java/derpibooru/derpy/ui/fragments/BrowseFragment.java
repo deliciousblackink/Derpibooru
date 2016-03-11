@@ -19,6 +19,7 @@ import derpibooru.derpy.ui.MainActivity;
 
 public class BrowseFragment extends NavigationDrawerUserFragment {
     public static final String EXTRAS_SEARCH_OPTIONS = "derpibooru.derpy.SearchOptions";
+    public static final String EXTRAS_IMAGE_LIST_TYPE = "derpibooru.derpy.BrowseImageListType";
     private static final String EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE = "derpibooru.derpy.OptionsNestedState";
     private static final String EXTRAS_IMAGE_LIST_FRAGMENT_SAVED_STATE = "derpibooru.derpy.ImageNestedState";
 
@@ -29,18 +30,11 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_browse, container, false);
         ButterKnife.bind(this, v);
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(EXTRAS_SEARCH_OPTIONS)) {
-                mCurrentSearchOptions = savedInstanceState.getParcelable(EXTRAS_SEARCH_OPTIONS);
+        if (!isRestoredFromSavedInstance(savedInstanceState)) {
+            if (getArguments().containsKey(EXTRAS_IMAGE_LIST_TYPE)) {
+                setSearchOptionsFromImageListType(BrowseImageListFragment.Type.fromValue(
+                        getArguments().getInt(EXTRAS_IMAGE_LIST_TYPE)));
             }
-            if (savedInstanceState.containsKey(EXTRAS_IMAGE_LIST_FRAGMENT_SAVED_STATE)) {
-                displayImageListFragment(
-                        (Fragment.SavedState) savedInstanceState.getParcelable(EXTRAS_IMAGE_LIST_FRAGMENT_SAVED_STATE));
-            } else if (savedInstanceState.containsKey(EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE)) {
-                displayOptionsFragment(
-                        (Fragment.SavedState) savedInstanceState.getParcelable(EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE));
-            }
-        } else {
             displayImageListFragment(null);
         }
         return v;
@@ -71,6 +65,24 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
                     (getCurrentFragment() instanceof BrowseImageListFragment) ? getChildFragmentManager().saveFragmentInstanceState(getCurrentFragment())
                                                                               : mImageListRetainedState);
         }
+    }
+
+    private boolean isRestoredFromSavedInstance(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(EXTRAS_SEARCH_OPTIONS)) {
+                mCurrentSearchOptions = savedInstanceState.getParcelable(EXTRAS_SEARCH_OPTIONS);
+            }
+            if (savedInstanceState.containsKey(EXTRAS_IMAGE_LIST_FRAGMENT_SAVED_STATE)) {
+                displayImageListFragment(
+                        (Fragment.SavedState) savedInstanceState.getParcelable(EXTRAS_IMAGE_LIST_FRAGMENT_SAVED_STATE));
+                return true;
+            } else if (savedInstanceState.containsKey(EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE)) {
+                displayOptionsFragment(
+                        (Fragment.SavedState) savedInstanceState.getParcelable(EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE));
+                return true;
+            }
+        }
+        return false;
     }
 
     private void displayImageListFragment(Fragment.SavedState fragmentSavedState) {
@@ -111,6 +123,25 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
         return fragment;
     }
 
+    private void setSearchOptionsFromImageListType(BrowseImageListFragment.Type type) {
+        switch (type) {
+            case UserFaved:
+                mCurrentSearchOptions.setFavesFilter(DerpibooruSearchOptions.UserPicksFilter.UserPicksOnly);
+                break;
+            case UserUpvoted:
+                mCurrentSearchOptions.setUpvotesFilter(DerpibooruSearchOptions.UserPicksFilter.UserPicksOnly);
+                break;
+            case UserUploaded:
+                mCurrentSearchOptions.setUploadsFilter(DerpibooruSearchOptions.UserPicksFilter.UserPicksOnly);
+                break;
+            case UserWatched:
+                mCurrentSearchOptions.setWatchedTagsFilter(DerpibooruSearchOptions.UserPicksFilter.UserPicksOnly);
+                break;
+            default:
+                break;
+        }
+    }
+
     @OnClick(R.id.buttonSearch)
     void toggleOptionsFragment() {
         if (getCurrentFragment() instanceof BrowseImageListFragment) {
@@ -144,21 +175,5 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
 
     private Fragment getCurrentFragment() {
         return getChildFragmentManager().findFragmentById(R.id.fragmentLayout);
-    }
-
-    public static class BrowseImageListFragment extends ImageListFragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            if (getArguments().containsKey(EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE)) {
-                savedInstanceState = getArguments().getBundle(EXTRAS_OPTIONS_FRAGMENT_SAVED_STATE);
-            }
-            View v = super.onCreateView(inflater, container, savedInstanceState);
-            super.initializeList(
-                    new SearchProvider(getActivity(), super.getNewInstanceOfProviderQueryHandler())
-                            .searching((DerpibooruSearchOptions)
-                                               getArguments().getParcelable(EXTRAS_SEARCH_OPTIONS)));
-            return v;
-        }
     }
 }

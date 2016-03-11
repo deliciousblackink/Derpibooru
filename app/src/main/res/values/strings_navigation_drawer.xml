@@ -8,6 +8,7 @@
     <string name="navigation_drawer_group_account">Account</string>
     <string name="navigation_drawer_log_in">Log in</string>
     <string name="navigation_drawer_log_out">Log out</string>
+    <string name="navigation_drawer_watched">Watched</string>
     <string name="navigation_drawer_favorites">My favorites</string>
     <string name="navigation_drawer_upvoted">My upvotes</string>
     <string name="navigation_drawer_uploaded">My uploads</string>

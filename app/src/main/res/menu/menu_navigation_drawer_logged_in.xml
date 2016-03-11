@@ -13,6 +13,10 @@
     <group android:id="@+id/groupAccount"
            android:checkableBehavior="single">
         <item
+            android:id="@+id/naviationWatched"
+            android:icon="@drawable/ic_label_outline_black_24dp"
+            android:title="@string/navigation_drawer_watched"/>
+        <item
             android:id="@+id/navigationUploaded"
             android:icon="@drawable/ic_file_upload_black_24dp"
             android:title="@string/navigation_drawer_uploaded"/>

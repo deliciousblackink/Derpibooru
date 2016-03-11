@@ -6,6 +6,7 @@
     <!-- fragment titles -->
     <string name="fragment_home">Derpibooru</string>
     <string name="fragment_filters">Filters</string>
+    <string name="fragment_user_list_watched">Watched Images</string>
     <string name="fragment_user_list_faved">My Favorites</string>
     <string name="fragment_user_list_upvoted">Images I’ve Upvoted</string>
     <string name="fragment_user_list_uploaded">Images I’ve Uploaded</string>

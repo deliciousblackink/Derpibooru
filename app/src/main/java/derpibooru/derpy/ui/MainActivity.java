@@ -15,6 +15,7 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.internal.NavigationDrawerItem;
 import derpibooru.derpy.server.providers.UserImageListProvider;
 import derpibooru.derpy.ui.fragments.BrowseFragment;
+import derpibooru.derpy.ui.fragments.BrowseImageListFragment;
 import derpibooru.derpy.ui.fragments.FilterListFragment;
 import derpibooru.derpy.ui.fragments.UserImageListFragment;
 
@@ -47,24 +48,28 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
     }
 
     private void initializeFragmentNavigationItems() {
-        /* FIXME: keeping multiple instances of Bundle to store ints is extremely inefficient resource-wise */
-        Bundle userListFaved = new Bundle();
-        userListFaved.putInt("type", UserImageListProvider.UserListType.Faved.toValue());
-        Bundle userListUpvoted = new Bundle();
-        userListUpvoted.putInt("type", UserImageListProvider.UserListType.Upvoted.toValue());
-        Bundle userListUploaded = new Bundle();
-        userListUploaded.putInt("type", UserImageListProvider.UserListType.Uploaded.toValue());
+        /* FIXME: keeping multiple instances of Bundle to store ints is inefficient resource-wise */
+        Bundle watched = new Bundle();
+        watched.putInt(BrowseFragment.EXTRAS_IMAGE_LIST_TYPE, BrowseImageListFragment.Type.UserWatched.toValue());
+        Bundle faved = new Bundle();
+        faved.putInt(BrowseFragment.EXTRAS_IMAGE_LIST_TYPE, BrowseImageListFragment.Type.UserFaved.toValue());
+        Bundle upvoted = new Bundle();
+        upvoted.putInt(BrowseFragment.EXTRAS_IMAGE_LIST_TYPE, BrowseImageListFragment.Type.UserUpvoted.toValue());
+        Bundle uploaded = new Bundle();
+        uploaded.putInt(BrowseFragment.EXTRAS_IMAGE_LIST_TYPE, BrowseImageListFragment.Type.UserUploaded.toValue());
         mFragmentNavigationItems = Arrays.asList(
                 new NavigationDrawerItem(
                         R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class),
                 new NavigationDrawerItem(
                         R.id.navigationFilters, getString(R.string.fragment_filters), FilterListFragment.class),
                 new NavigationDrawerItem(
-                        R.id.navigationFaves, getString(R.string.fragment_user_list_faved), UserImageListFragment.class, userListFaved),
+                        R.id.naviationWatched, getString(R.string.fragment_user_list_watched), BrowseFragment.class, watched),
                 new NavigationDrawerItem(
-                        R.id.navigationUpvoted, getString(R.string.fragment_user_list_upvoted), UserImageListFragment.class, userListUpvoted),
+                        R.id.navigationFaves, getString(R.string.fragment_user_list_faved), BrowseFragment.class, faved),
                 new NavigationDrawerItem(
-                        R.id.navigationUploaded, getString(R.string.fragment_user_list_uploaded), UserImageListFragment.class, userListUploaded)
+                        R.id.navigationUpvoted, getString(R.string.fragment_user_list_upvoted), BrowseFragment.class, upvoted),
+                new NavigationDrawerItem(
+                        R.id.navigationUploaded, getString(R.string.fragment_user_list_uploaded), BrowseFragment.class, uploaded)
         );
     }
 

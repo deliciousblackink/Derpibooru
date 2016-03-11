@@ -13,6 +13,7 @@ import java.util.List;
 import butterknife.Bind;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.internal.NavigationDrawerItem;
+import derpibooru.derpy.data.internal.NavigationDrawerLinkItem;
 import derpibooru.derpy.server.providers.UserImageListProvider;
 import derpibooru.derpy.ui.fragments.BrowseFragment;
 import derpibooru.derpy.ui.fragments.BrowseImageListFragment;
@@ -62,14 +63,18 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
                         R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class),
                 new NavigationDrawerItem(
                         R.id.navigationFilters, getString(R.string.fragment_filters), FilterListFragment.class),
-                new NavigationDrawerItem(
-                        R.id.naviationWatched, getString(R.string.fragment_user_list_watched), BrowseFragment.class, watched),
-                new NavigationDrawerItem(
-                        R.id.navigationFaves, getString(R.string.fragment_user_list_faved), BrowseFragment.class, faved),
-                new NavigationDrawerItem(
-                        R.id.navigationUpvoted, getString(R.string.fragment_user_list_upvoted), BrowseFragment.class, upvoted),
-                new NavigationDrawerItem(
-                        R.id.navigationUploaded, getString(R.string.fragment_user_list_uploaded), BrowseFragment.class, uploaded)
+                new NavigationDrawerLinkItem(
+                        R.id.naviationWatched, new NavigationDrawerItem(
+                        R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class, watched)),
+                new NavigationDrawerLinkItem(
+                        R.id.navigationFaves, new NavigationDrawerItem(
+                        R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class, faved)),
+                new NavigationDrawerLinkItem(
+                        R.id.navigationUpvoted, new NavigationDrawerItem(
+                        R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class, upvoted)),
+                new NavigationDrawerLinkItem(
+                        R.id.navigationUploaded, new NavigationDrawerItem(
+                        R.id.navigationBrowse, getString(R.string.fragment_home), BrowseFragment.class, uploaded))
         );
     }
 

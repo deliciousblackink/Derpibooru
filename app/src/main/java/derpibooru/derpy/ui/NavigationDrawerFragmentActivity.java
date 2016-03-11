@@ -23,6 +23,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.internal.NavigationDrawerItem;
+import derpibooru.derpy.data.internal.NavigationDrawerLinkItem;
 
 abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
     private static final String EXTRAS_CURRENT_MENU_ITEM_ID = "derpibooru.derpy.NavDrawerSelectedItemId";
@@ -151,7 +152,9 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
      */
     private boolean isAnotherFragmentItemSelected(int menuId) {
         for (NavigationDrawerItem item : getFragmentNavigationItems()) {
-            if (item.getNavigationViewItemId() == menuId) {
+            if ((item.getNavigationViewItemId() == menuId) ||
+                    ((item instanceof NavigationDrawerLinkItem)
+                            && (((NavigationDrawerLinkItem) item).getLinkNavigationViewItemId() == menuId))) {
                 mNavigationDrawer.deselectMenuItem(mSelectedMenuItemId);
                 mNavigationDrawer.closeDrawer();
                 navigateTo(item);

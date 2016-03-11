@@ -24,6 +24,13 @@ public class NavigationDrawerItem {
         mFragmentArguments = fragmentArguments;
     }
 
+    NavigationDrawerItem(NavigationDrawerItem from) {
+        mNavigationViewItemId = from.getNavigationViewItemId();
+        mToolbarTitle = from.getToolbarTitle();
+        mFragmentClass = from.getFragmentClass();
+        mFragmentArguments = from.getFragmentArguments();
+    }
+
     public int getNavigationViewItemId() {
         return mNavigationViewItemId;
     }

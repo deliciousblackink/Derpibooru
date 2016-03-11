@@ -13,6 +13,8 @@
     <string name="image_list_faved">My Favorites</string>
     <string name="image_list_upvotes">Images I’ve Upvoted</string>
     <string name="image_list_uploads">Images I’ve Uploaded</string>
+    <string name="image_list_top_scoring">Top Scoring in Last 3 Days</string>
+    <string name="image_list_most_commented">Most Commented in Last 3 Days</string>
     <!-- activity titles -->
     <string name="activity_login">Log in</string>
     <!-- errors -->

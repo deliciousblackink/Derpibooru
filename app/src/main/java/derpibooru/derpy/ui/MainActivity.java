@@ -14,11 +14,12 @@ import butterknife.Bind;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.internal.NavigationDrawerItem;
 import derpibooru.derpy.data.internal.NavigationDrawerLinkItem;
+import derpibooru.derpy.server.providers.RankingImageListProvider;
 import derpibooru.derpy.server.providers.UserImageListProvider;
 import derpibooru.derpy.ui.fragments.BrowseFragment;
 import derpibooru.derpy.ui.fragments.BrowseImageListFragment;
 import derpibooru.derpy.ui.fragments.FilterListFragment;
-import derpibooru.derpy.ui.fragments.UserImageListFragment;
+import derpibooru.derpy.ui.fragments.RankingImageListFragment;
 
 public class MainActivity extends NavigationDrawerUserFragmentActivity {
     private List<NavigationDrawerItem> mFragmentNavigationItems;
@@ -50,6 +51,10 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
 
     private void initializeFragmentNavigationItems() {
         /* FIXME: keeping multiple instances of Bundle to store ints is inefficient resource-wise */
+        Bundle topScoring = new Bundle();
+        topScoring.putInt(RankingImageListFragment.EXTRAS_RANKING_LIST_TYPE, RankingImageListProvider.RankingsType.TopScoring.toValue());
+        Bundle mostCommented = new Bundle();
+        mostCommented.putInt(RankingImageListFragment.EXTRAS_RANKING_LIST_TYPE, RankingImageListProvider.RankingsType.MostCommented.toValue());
         Bundle watched = new Bundle();
         watched.putInt(BrowseFragment.EXTRAS_IMAGE_LIST_TYPE, BrowseImageListFragment.Type.UserWatched.toValue());
         Bundle faved = new Bundle();
@@ -61,6 +66,8 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
         mFragmentNavigationItems = Arrays.asList(
                 new NavigationDrawerItem(R.id.navigationBrowse, BrowseFragment.class),
                 new NavigationDrawerItem(R.id.navigationFilters, FilterListFragment.class),
+                new NavigationDrawerItem(R.id.navigationTopScoring, RankingImageListFragment.class, topScoring),
+                new NavigationDrawerItem(R.id.navigationMostCommented, RankingImageListFragment.class, mostCommented),
                 new NavigationDrawerLinkItem(R.id.naviationWatched,
                                              new NavigationDrawerItem(R.id.navigationBrowse, BrowseFragment.class, watched)),
                 new NavigationDrawerLinkItem(R.id.navigationFaves,

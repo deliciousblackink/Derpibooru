@@ -120,7 +120,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
                 transaction.addToBackStack(null);
             }
             transaction
-                    .replace(getContentLayout().getId(), getFragmentInstance(item), item.getFragmentClass().getName())
+                    .replace(getContentLayout().getId(), getFragmentInstance(item), item.getUniqueTag())
                     .commit();
             selectMenuItem(item);
         } catch (Exception t) {
@@ -167,15 +167,15 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
     /**
      * Looks up a NavigationDrawerItem corresponding to the fragment.
      * <br>
-     * Note: the tag is equal to Class.getName(). Such tag is applied for fragments
-     * displayed via {@link #navigateTo(NavigationDrawerItem)}.
+     * Note: the tag can be obtained via {@link NavigationDrawerItem#getUniqueTag()}. Such tag is
+     * applied for fragments displayed via {@link #navigateTo(NavigationDrawerItem)}.
      */
     protected NavigationDrawerItem findNavigationItemByFragmentTag(final String tag) {
         return Iterables.find(
                 getFragmentNavigationItems(), new Predicate<NavigationDrawerItem>() {
                     @Override
                     public boolean apply(NavigationDrawerItem item) {
-                        return item.getFragmentClass().getName().equals(tag);
+                        return item.getUniqueTag().equals(tag);
                     }
                 });
     }

@@ -5,6 +5,8 @@
     <!-- menu items -->
     <string name="navigation_drawer_browse">Browse</string>
     <string name="navigation_drawer_filters">Filters</string>
+    <string name="navigation_drawer_top_scoring">Top Scoring</string>
+    <string name="navigation_drawer_most_commented">Most Commented</string>
     <string name="navigation_drawer_group_account">Account</string>
     <string name="navigation_drawer_log_in">Log in</string>
     <string name="navigation_drawer_log_out">Log out</string>

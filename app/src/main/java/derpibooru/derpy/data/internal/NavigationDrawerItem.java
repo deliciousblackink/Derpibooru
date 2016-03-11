@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import com.google.common.base.Objects;
+
 public class NavigationDrawerItem {
     private final int mNavigationViewItemId;
     private final Class<? extends Fragment> mFragmentClass;
@@ -37,5 +39,9 @@ public class NavigationDrawerItem {
     @Nullable
     public Bundle getFragmentArguments() {
         return mFragmentArguments;
+    }
+
+    public String getUniqueTag() {
+        return Integer.toString(Objects.hashCode(mNavigationViewItemId, mFragmentClass));
     }
 }

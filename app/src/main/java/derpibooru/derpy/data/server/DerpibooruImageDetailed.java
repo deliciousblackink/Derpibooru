@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DerpibooruImageDetailed implements Parcelable {
-    private DerpibooruImageThumb mThumb;
+    private final DerpibooruImageThumb mThumb;
 
-    private String mSourceUrl;
-    private String mUploader;
-    private String mDescription;
-    private String mCreatedAt;
-    private List<DerpibooruTag> mTags = new ArrayList<>();
-    private List<String> mFavedBy = new ArrayList<>();
+    private final String mSourceUrl;
+    private final String mUploader;
+    private final String mDescription;
+    private final String mCreatedAt;
+    private final List<DerpibooruTag> mTags;
+    private final List<String> mFavedBy;
 
     public DerpibooruImageDetailed(DerpibooruImageThumb image, String sourceUrl,
                                    String uploader, String description, String createdAt,
@@ -62,7 +62,10 @@ public class DerpibooruImageDetailed implements Parcelable {
         mUploader = in.readString();
         mDescription = in.readString();
         mCreatedAt = in.readString();
+
+        mTags = new ArrayList<>();
         in.readTypedList(mTags, DerpibooruTag.CREATOR);
+        mFavedBy = new ArrayList<>();
         in.readStringList(mFavedBy);
     }
 

@@ -13,11 +13,12 @@ import java.util.List;
 import butterknife.Bind;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.internal.NavigationDrawerItem;
-import derpibooru.derpy.server.providers.UserImageListProvider;
+import derpibooru.derpy.data.internal.NavigationDrawerLinkItem;
+import derpibooru.derpy.server.providers.RankingImageListProvider;
+import derpibooru.derpy.ui.fragments.BrowseFragment;
+import derpibooru.derpy.ui.fragments.BrowseImageListFragment;
 import derpibooru.derpy.ui.fragments.FilterListFragment;
-import derpibooru.derpy.ui.fragments.HomeFragment;
-import derpibooru.derpy.ui.fragments.SearchFragment;
-import derpibooru.derpy.ui.fragments.UserImageListFragment;
+import derpibooru.derpy.ui.fragments.RankingImageListFragment;
 
 public class MainActivity extends NavigationDrawerUserFragmentActivity {
     private List<NavigationDrawerItem> mFragmentNavigationItems;
@@ -48,26 +49,32 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
     }
 
     private void initializeFragmentNavigationItems() {
-        /* FIXME: keeping multiple instances of Bundle to store ints is extremely inefficient resource-wise */
-        Bundle userListFaved = new Bundle();
-        userListFaved.putInt("type", UserImageListProvider.UserListType.Faved.toValue());
-        Bundle userListUpvoted = new Bundle();
-        userListUpvoted.putInt("type", UserImageListProvider.UserListType.Upvoted.toValue());
-        Bundle userListUploaded = new Bundle();
-        userListUploaded.putInt("type", UserImageListProvider.UserListType.Uploaded.toValue());
+        /* FIXME: keeping multiple instances of Bundle to store ints is inefficient resource-wise */
+        Bundle topScoring = new Bundle();
+        topScoring.putInt(RankingImageListFragment.EXTRAS_RANKING_LIST_TYPE, RankingImageListProvider.RankingsType.TopScoring.toValue());
+        Bundle mostCommented = new Bundle();
+        mostCommented.putInt(RankingImageListFragment.EXTRAS_RANKING_LIST_TYPE, RankingImageListProvider.RankingsType.MostCommented.toValue());
+        Bundle watched = new Bundle();
+        watched.putInt(BrowseFragment.EXTRAS_IMAGE_LIST_TYPE, BrowseImageListFragment.Type.UserWatched.toValue());
+        Bundle faved = new Bundle();
+        faved.putInt(BrowseFragment.EXTRAS_IMAGE_LIST_TYPE, BrowseImageListFragment.Type.UserFaved.toValue());
+        Bundle upvoted = new Bundle();
+        upvoted.putInt(BrowseFragment.EXTRAS_IMAGE_LIST_TYPE, BrowseImageListFragment.Type.UserUpvoted.toValue());
+        Bundle uploaded = new Bundle();
+        uploaded.putInt(BrowseFragment.EXTRAS_IMAGE_LIST_TYPE, BrowseImageListFragment.Type.UserUploaded.toValue());
         mFragmentNavigationItems = Arrays.asList(
-                new NavigationDrawerItem(
-                        R.id.navigationHome, getString(R.string.fragment_home), HomeFragment.class),
-                new NavigationDrawerItem(
-                        R.id.navigationSearch, getString(R.string.fragment_search), SearchFragment.class),
-                new NavigationDrawerItem(
-                        R.id.navigationFilters, getString(R.string.fragment_filters), FilterListFragment.class),
-                new NavigationDrawerItem(
-                        R.id.navigationFaves, getString(R.string.fragment_user_list_faved), UserImageListFragment.class, userListFaved),
-                new NavigationDrawerItem(
-                        R.id.navigationUpvoted, getString(R.string.fragment_user_list_upvoted), UserImageListFragment.class, userListUpvoted),
-                new NavigationDrawerItem(
-                        R.id.navigationUploaded, getString(R.string.fragment_user_list_uploaded), UserImageListFragment.class, userListUploaded)
+                new NavigationDrawerItem(R.id.navigationBrowse, BrowseFragment.class),
+                new NavigationDrawerItem(R.id.navigationFilters, FilterListFragment.class),
+                new NavigationDrawerItem(R.id.navigationTopScoring, RankingImageListFragment.class, topScoring),
+                new NavigationDrawerItem(R.id.navigationMostCommented, RankingImageListFragment.class, mostCommented),
+                new NavigationDrawerLinkItem(R.id.naviationWatched,
+                                             new NavigationDrawerItem(R.id.navigationBrowse, BrowseFragment.class, watched)),
+                new NavigationDrawerLinkItem(R.id.navigationFaves,
+                                             new NavigationDrawerItem(R.id.navigationBrowse, BrowseFragment.class, faved)),
+                new NavigationDrawerLinkItem(R.id.navigationUpvoted,
+                                             new NavigationDrawerItem(R.id.navigationBrowse, BrowseFragment.class, upvoted)),
+                new NavigationDrawerLinkItem(R.id.navigationUploaded,
+                                             new NavigationDrawerItem(R.id.navigationBrowse, BrowseFragment.class, uploaded))
         );
     }
 
@@ -94,6 +101,15 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        /* https://code.google.com/p/android/issues/detail?id=40323 */
+        if (!((getCurrentFragment() instanceof BrowseFragment)
+                && ((BrowseFragment) getCurrentFragment()).popChildFragmentManagerBackstack())) {
+            super.onBackPressed();
+        }
     }
 
     @Override

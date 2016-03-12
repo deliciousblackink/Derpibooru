@@ -23,6 +23,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.internal.NavigationDrawerItem;
+import derpibooru.derpy.data.internal.NavigationDrawerLinkItem;
 
 abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
     private static final String EXTRAS_CURRENT_MENU_ITEM_ID = "derpibooru.derpy.NavDrawerSelectedItemId";
@@ -119,9 +120,9 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
                 transaction.addToBackStack(null);
             }
             transaction
-                    .replace(getContentLayout().getId(), getFragmentInstance(item), item.getToolbarTitle())
+                    .replace(getContentLayout().getId(), getFragmentInstance(item), item.getUniqueTag())
                     .commit();
-            setMenuItemAndTitleFor(item);
+            selectMenuItem(item);
         } catch (Exception t) {
             Log.e("DrawerFragmentActivity", "failed to initialize a Fragment class", t);
         }
@@ -151,7 +152,9 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
      */
     private boolean isAnotherFragmentItemSelected(int menuId) {
         for (NavigationDrawerItem item : getFragmentNavigationItems()) {
-            if (item.getNavigationViewItemId() == menuId) {
+            if ((item.getNavigationViewItemId() == menuId) ||
+                    ((item instanceof NavigationDrawerLinkItem)
+                            && (((NavigationDrawerLinkItem) item).getLinkNavigationViewItemId() == menuId))) {
                 mNavigationDrawer.deselectMenuItem(mSelectedMenuItemId);
                 mNavigationDrawer.closeDrawer();
                 navigateTo(item);
@@ -164,23 +167,22 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
     /**
      * Looks up a NavigationDrawerItem corresponding to the fragment.
      * <br>
-     * Note: the tag should be equal to the toolbar title of a fragment. Such tag is applied for fragments
-     * displayed via {@link #navigateTo(NavigationDrawerItem)}.
+     * Note: the tag can be obtained via {@link NavigationDrawerItem#getUniqueTag()}. Such tag is
+     * applied for fragments displayed via {@link #navigateTo(NavigationDrawerItem)}.
      */
     protected NavigationDrawerItem findNavigationItemByFragmentTag(final String tag) {
         return Iterables.find(
                 getFragmentNavigationItems(), new Predicate<NavigationDrawerItem>() {
                     @Override
                     public boolean apply(NavigationDrawerItem item) {
-                        return item.getToolbarTitle().equals(tag);
+                        return item.getUniqueTag().equals(tag);
                     }
                 });
     }
 
-    private void setMenuItemAndTitleFor(NavigationDrawerItem fragmentItem) {
+    private void selectMenuItem(NavigationDrawerItem fragmentItem) {
         mSelectedMenuItemId = fragmentItem.getNavigationViewItemId();
         mNavigationDrawer.selectMenuItem(mSelectedMenuItemId);
-        mToolbar.setTitle(fragmentItem.getToolbarTitle());
     }
 
     /**
@@ -211,18 +213,7 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
     public void onBackStackChanged() {
         final Fragment fragment = getCurrentFragment();
         if (fragment != null) {
-            setMenuItemAndTitleFor(findNavigationItemByFragmentTag(fragment.getTag()));
-        }
-    }
-
-    /**
-     * Sets the Toolbar title according to the fragment displayed; called on configuration changes.
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (getCurrentFragment() != null) {
-            mToolbar.setTitle(getCurrentFragment().getTag());
+            selectMenuItem(findNavigationItemByFragmentTag(fragment.getTag()));
         }
     }
 

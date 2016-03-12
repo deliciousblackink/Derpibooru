@@ -1,9 +1,9 @@
 package derpibooru.derpy.data.server;
 
 public class DerpibooruLoginForm {
-    private String mEmail;
-    private String mPassword;
-    private boolean mRememberUser;
+    private final String mEmail;
+    private final String mPassword;
+    private final boolean mRememberUser;
 
     public DerpibooruLoginForm(String email, String password,
                                boolean rememberUser) {

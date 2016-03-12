@@ -2,13 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navigationHome"
+            android:id="@+id/navigationBrowse"
             android:icon="@drawable/ic_home_black_24dp"
-            android:title="@string/navigation_drawer_home"/>
+            android:title="@string/navigation_drawer_browse"/>
         <item
-            android:id="@+id/navigationSearch"
-            android:icon="@drawable/ic_search_black_24dp"
-            android:title="@string/navigation_drawer_search"/>
+            android:id="@+id/navigationTopScoring"
+            android:icon="@drawable/ic_list_black_24dp"
+            android:title="@string/navigation_drawer_top_scoring"/>
+        <item
+            android:id="@+id/navigationMostCommented"
+            android:icon="@drawable/ic_list_black_24dp"
+            android:title="@string/navigation_drawer_most_commented"/>
         <item
             android:id="@+id/navigationFilters"
             android:icon="@drawable/ic_block_black_24dp"
@@ -16,6 +20,10 @@
     </group>
     <group android:id="@+id/groupAccount"
            android:checkableBehavior="single">
+        <item
+            android:id="@+id/naviationWatched"
+            android:icon="@drawable/ic_label_outline_black_24dp"
+            android:title="@string/navigation_drawer_watched"/>
         <item
             android:id="@+id/navigationUploaded"
             android:icon="@drawable/ic_file_upload_black_24dp"

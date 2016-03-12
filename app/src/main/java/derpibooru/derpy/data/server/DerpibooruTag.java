@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class DerpibooruTag implements Parcelable {
-    private int mId;
-    private int mImageCount;
-    private String mName;
-    private TagType mType;
+    private final int mId;
+    private final int mImageCount;
+    private final String mName;
+    private final TagType mType;
 
     public DerpibooruTag(int id, int imageCount, String name) {
         mId = id;

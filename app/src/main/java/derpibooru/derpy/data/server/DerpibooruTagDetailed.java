@@ -4,8 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class DerpibooruTagDetailed extends DerpibooruTag {
-    private String mDescription;
-    private String mSpoilerUrl;
+    private final String mDescription;
+    private final String mSpoilerUrl;
 
     public DerpibooruTagDetailed(int id, int imageCount, String name,
                                  String description, String spoilerUrl) {

@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
 
 public class ImageInteractionResultParserTest {
     private static final DerpibooruImageInteraction expected =
-            new DerpibooruImageInteraction(2643, 2005, 2778, 135, 100035, DerpibooruImageInteraction.InteractionType.Upvote);
+            new DerpibooruImageInteraction(2643, 2005, 2778, 135, DerpibooruImageInteraction.InteractionType.Upvote);
 
     private DerpibooruImageInteraction parsed;
 
@@ -21,7 +21,7 @@ public class ImageInteractionResultParserTest {
         TestResourceLoader loader = new TestResourceLoader();
         String interaction = loader.readTestResourceFile("SampleImageInteractionResponse.json");
         ImageInteractionResultParser parser =
-                new ImageInteractionResultParser(100035, DerpibooruImageInteraction.InteractionType.Upvote);
+                new ImageInteractionResultParser(DerpibooruImageInteraction.InteractionType.Upvote);
         parsed = parser.parseResponse(interaction);
     }
 

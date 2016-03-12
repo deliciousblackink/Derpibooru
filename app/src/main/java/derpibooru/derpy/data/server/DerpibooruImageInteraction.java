@@ -1,20 +1,18 @@
 package derpibooru.derpy.data.server;
 
 public class DerpibooruImageInteraction {
-    private int mScore;
-    private int mFavorites;
-    private int mUpvotes;
-    private int mDownvotes;
-    private int mInternalImageId;
-    private InteractionType mInteractionType;
+    private final int mScore;
+    private final int mFavorites;
+    private final int mUpvotes;
+    private final int mDownvotes;
+    private final InteractionType mInteractionType;
 
     public DerpibooruImageInteraction(int score, int faves, int upvotes, int downvotes,
-                                      int internalImageId, InteractionType interactionType) {
+                                      InteractionType interactionType) {
         mScore = score;
         mFavorites = faves;
         mUpvotes = upvotes;
         mDownvotes = downvotes;
-        mInternalImageId = internalImageId;
         mInteractionType = interactionType;
     }
 
@@ -36,10 +34,6 @@ public class DerpibooruImageInteraction {
 
     public InteractionType getInteractionType() {
         return mInteractionType;
-    }
-
-    public int getInternalImageId() {
-        return mInternalImageId;
     }
 
     public enum InteractionType {

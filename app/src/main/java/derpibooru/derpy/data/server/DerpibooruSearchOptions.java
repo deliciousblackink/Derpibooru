@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import com.google.common.base.Objects;
 
 public class DerpibooruSearchOptions implements Parcelable {
+    private String mSearchQuery = "*";
+
     private SortBy mSortBy = SortBy.CreatedAt;
     private SortDirection mSortDirection = SortDirection.Descending;
     private UserPicksFilter mFavesFilter = UserPicksFilter.No;
@@ -19,8 +21,7 @@ public class DerpibooruSearchOptions implements Parcelable {
     /**
      * Returns default search options.
      */
-    public DerpibooruSearchOptions() {
-    }
+    public DerpibooruSearchOptions() { }
 
     public static DerpibooruSearchOptions copyFrom(DerpibooruSearchOptions from) {
         Parcel parcel = Parcel.obtain();
@@ -29,6 +30,10 @@ public class DerpibooruSearchOptions implements Parcelable {
         DerpibooruSearchOptions c = DerpibooruSearchOptions.CREATOR.createFromParcel(parcel);
         parcel.recycle();
         return c;
+    }
+
+    public void setSearchQuery(String query) {
+        mSearchQuery = query;
     }
 
     public void setSortBy(SortBy sortBy) {
@@ -61,6 +66,10 @@ public class DerpibooruSearchOptions implements Parcelable {
 
     public void setMaxScore(Integer maxScore) {
         mMaxScore = maxScore;
+    }
+
+    public String getSearchQuery() {
+        return mSearchQuery;
     }
 
     public SortBy getSortBy() {
@@ -97,25 +106,56 @@ public class DerpibooruSearchOptions implements Parcelable {
         return mMaxScore;
     }
 
+    /* i'm not proud of these */
+
+    public boolean isDisplayingWatchedTagsOnly() {
+        return ((mWatchedTagsFilter == UserPicksFilter.UserPicksOnly)
+                && (mFavesFilter != UserPicksFilter.UserPicksOnly)
+                && (mUpvotesFilter != UserPicksFilter.UserPicksOnly)
+                && (mUploadsFilter != UserPicksFilter.UserPicksOnly));
+    }
+
+    public boolean isDisplayingFavesOnly() {
+        return ((mFavesFilter == UserPicksFilter.UserPicksOnly)
+                && (mWatchedTagsFilter != UserPicksFilter.UserPicksOnly)
+                && (mUpvotesFilter != UserPicksFilter.UserPicksOnly)
+                && (mUploadsFilter != UserPicksFilter.UserPicksOnly));
+    }
+
+    public boolean isDisplayingUpvotesOnly() {
+        return ((mUpvotesFilter == UserPicksFilter.UserPicksOnly)
+                && (mWatchedTagsFilter != UserPicksFilter.UserPicksOnly)
+                && (mFavesFilter != UserPicksFilter.UserPicksOnly)
+                && (mUploadsFilter != UserPicksFilter.UserPicksOnly));
+    }
+
+    public boolean isDisplayingUploadsOnly() {
+        return ((mUploadsFilter == UserPicksFilter.UserPicksOnly)
+                && (mWatchedTagsFilter != UserPicksFilter.UserPicksOnly)
+                && (mFavesFilter != UserPicksFilter.UserPicksOnly)
+                && (mUpvotesFilter != UserPicksFilter.UserPicksOnly));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o instanceof DerpibooruSearchOptions) {
             DerpibooruSearchOptions comp = (DerpibooruSearchOptions) o;
-            return (this.getSortBy() == comp.getSortBy())
+            return ((this.getSearchQuery().equals(comp.getSearchQuery()))
+                    && (this.getSortBy() == comp.getSortBy())
                     && (this.getSortDirection() == comp.getSortDirection())
                     && (this.getFavesFilter() == comp.getFavesFilter())
                     && (this.getUpvotesFilter() == comp.getUpvotesFilter())
                     && (this.getUploadsFilter() == comp.getUploadsFilter())
                     && (this.getWatchedTagsFilter() == comp.getWatchedTagsFilter())
                     && (Objects.equal(this.getMinScore(), comp.getMinScore()))
-                    && (Objects.equal(this.getMaxScore(), comp.getMaxScore()));
+                    && (Objects.equal(this.getMaxScore(), comp.getMaxScore())));
         }
         return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getSortBy(), getSortDirection(), getFavesFilter(), getUpvotesFilter(),
+        return Objects.hashCode(getSearchQuery(), getSortBy(), getSortDirection(), getFavesFilter(), getUpvotesFilter(),
                                 getUploadsFilter(), getWatchedTagsFilter(), getMinScore(), getMaxScore());
     }
 
@@ -198,6 +238,7 @@ public class DerpibooruSearchOptions implements Parcelable {
     }
 
     protected DerpibooruSearchOptions(Parcel in) {
+        mSearchQuery = in.readString();
         mSortBy = SortBy.fromValue(in.readInt());
         mSortDirection = SortDirection.fromValue(in.readInt());
         mFavesFilter = UserPicksFilter.fromValue(in.readInt());
@@ -216,6 +257,7 @@ public class DerpibooruSearchOptions implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mSearchQuery);
         dest.writeInt(getSortBy().toValue());
         dest.writeInt(getSortDirection().toValue());
         dest.writeInt(getFavesFilter().toValue());

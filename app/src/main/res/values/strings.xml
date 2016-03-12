@@ -3,13 +3,18 @@
     <string name="app_name">Derpibooru</string>
     <!-- general labels and messages -->
     <string name="retry">Retry</string>
+    <string name="loading">Loading…</string>
     <!-- fragment titles -->
-    <string name="fragment_home">Derpibooru</string>
-    <string name="fragment_search">Search</string>
     <string name="fragment_filters">Filters</string>
-    <string name="fragment_user_list_faved">My Favorites</string>
-    <string name="fragment_user_list_upvoted">Images I’ve Upvoted</string>
-    <string name="fragment_user_list_uploaded">Images I’ve Uploaded</string>
+    <!-- image lists -->
+    <string name="image_list">Derpibooru</string>
+    <string name="image_list_options">Search Options</string>
+    <string name="image_list_watched">Watched Images</string>
+    <string name="image_list_faved">My Favorites</string>
+    <string name="image_list_upvotes">Images I’ve Upvoted</string>
+    <string name="image_list_uploads">Images I’ve Uploaded</string>
+    <string name="image_list_top_scoring">Top Scoring in Last 3 Days</string>
+    <string name="image_list_most_commented">Most Commented in Last 3 Days</string>
     <!-- activity titles -->
     <string name="activity_login">Log in</string>
     <!-- errors -->

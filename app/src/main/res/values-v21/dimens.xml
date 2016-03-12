@@ -1,0 +1,4 @@
+<resources>
+    <!-- default dimensions -->
+    <dimen name="floating_action_button_margin">16dp</dimen>
+</resources>

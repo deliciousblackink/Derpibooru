@@ -3,8 +3,6 @@ package derpibooru.derpy.data.server;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.common.primitives.Ints;
-
 public class DerpibooruUser implements Parcelable {
     private final boolean mIsLoggedIn;
     private final String mUsername;

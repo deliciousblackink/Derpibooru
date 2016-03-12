@@ -15,7 +15,6 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.internal.NavigationDrawerItem;
 import derpibooru.derpy.data.internal.NavigationDrawerLinkItem;
 import derpibooru.derpy.server.providers.RankingImageListProvider;
-import derpibooru.derpy.server.providers.UserImageListProvider;
 import derpibooru.derpy.ui.fragments.BrowseFragment;
 import derpibooru.derpy.ui.fragments.BrowseImageListFragment;
 import derpibooru.derpy.ui.fragments.FilterListFragment;

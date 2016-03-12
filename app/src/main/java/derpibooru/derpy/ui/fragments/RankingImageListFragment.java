@@ -8,10 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 import derpibooru.derpy.server.providers.RankingImageListProvider;
-import derpibooru.derpy.server.providers.SearchProvider;
-import derpibooru.derpy.ui.fragments.ImageListFragment;
 
 public class RankingImageListFragment extends ImageListFragment {
     public static final String EXTRAS_RANKING_LIST_TYPE = "derpibooru.derpy.RankingListType";
@@ -31,5 +28,4 @@ public class RankingImageListFragment extends ImageListFragment {
                                                                              : R.string.image_list_most_commented);
         return v;
     }
-
 }

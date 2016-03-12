@@ -35,14 +35,16 @@ public class SearchHistoryStorage {
     }
 
     public void addSearchQuery(String searchQuery) {
-        ArrayList<String> storedQueries = new ArrayList<>(getSearchHistory());
-        while (storedQueries.size() > (MAXIMUM_ITEMS_STORED - 1)) {
-            storedQueries.remove(0);
+        List<String> storedQueries = new ArrayList<>(getSearchHistory());
+        if (!storedQueries.contains(searchQuery)) {
+            while (storedQueries.size() > (MAXIMUM_ITEMS_STORED - 1)) {
+                storedQueries.remove(0);
+            }
+            storedQueries.add(searchQuery);
+            String json = mGson.toJson(storedQueries, List.class);
+            mPreferences.edit()
+                    .putString(PREFERENCES_SEARCH_KEY, json)
+                    .apply();
         }
-        storedQueries.add(searchQuery);
-        String json = mGson.toJson(storedQueries, List.class);
-        mPreferences.edit()
-                .putString(PREFERENCES_SEARCH_KEY, json)
-                .apply();
     }
 }

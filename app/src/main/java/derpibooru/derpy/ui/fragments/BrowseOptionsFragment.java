@@ -3,13 +3,13 @@ package derpibooru.derpy.ui.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -19,23 +19,24 @@ import butterknife.BindColor;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
-import derpibooru.derpy.ui.views.FloatingSearchView;
+import derpibooru.derpy.storage.SearchHistoryStorage;
 
 public class BrowseOptionsFragment extends Fragment {
-    @Bind(R.id.floatingSearchView) FloatingSearchView searchText;
+    @BindColor(R.color.colorTextDark) int textColor;
+    @BindColor(R.color.colorAccent) int accentColor;
 
+    @Bind(R.id.textSearch) AutoCompleteTextView searchText;
     @Bind(R.id.spinnerSortBy) Spinner sortBy;
     @Bind(R.id.spinnerSortDirection) Spinner sortDirection;
     @Bind(R.id.spinnerFavesFilter) Spinner favesFilter;
     @Bind(R.id.spinnerUpvotesFilter) Spinner upvotesFilter;
     @Bind(R.id.spinnerUploadsFilter) Spinner uploadsFilter;
     @Bind(R.id.spinnerWatchedTagsFilter) Spinner watchedTagsFilter;
-
     @Bind(R.id.textMinScore) EditText minScore;
     @Bind(R.id.textMaxScore) EditText maxScore;
 
-    @BindColor(R.color.colorTextDark) int textColor;
-    @BindColor(R.color.colorAccent) int accentColor;
+    private SearchHistoryStorage mHistory;
+    
     private DerpibooruSearchOptions mSelectedOptions = new DerpibooruSearchOptions();
 
     @Override
@@ -49,7 +50,7 @@ public class BrowseOptionsFragment extends Fragment {
         } else {
             mSelectedOptions = getArguments().getParcelable(BrowseFragment.EXTRAS_SEARCH_OPTIONS);
         }
-        setSearchActionListenerForSearchQueryView();
+        setSearchTextHistoryAdapter();
         setSpinnerTintToggleListeners();
         setSpinnerState(mSelectedOptions);
         return v;
@@ -82,6 +83,8 @@ public class BrowseOptionsFragment extends Fragment {
                     getInteger(minScore.getText().toString()));
             mSelectedOptions.setMaxScore(
                     getInteger(maxScore.getText().toString()));
+
+            mHistory.addSearchQuery(mSelectedOptions.getSearchQuery());
         }
         return mSelectedOptions;
     }
@@ -123,18 +126,11 @@ public class BrowseOptionsFragment extends Fragment {
         return (text.equals("")) ? null : Integer.parseInt(text);
     }
 
-    private void setSearchActionListenerForSearchQueryView() {
-        /* TODO: start search on keyboard search button press */
-        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    hideSoftKeyboard();
-                    return true;
-                }
-                return false;
-            }
-        });
+    private void setSearchTextHistoryAdapter() {
+        mHistory = new SearchHistoryStorage(getContext());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                getContext(), R.layout.view_search_history_item, mHistory.getSearchHistory());
+        searchText.setAdapter(adapter);
     }
 
     private void hideSoftKeyboard() {

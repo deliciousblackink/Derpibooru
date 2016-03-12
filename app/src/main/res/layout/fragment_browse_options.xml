@@ -2,16 +2,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-    <derpibooru.derpy.ui.views.FloatingSearchView
-        android:id="@+id/floatingSearchView"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+    <!-- focusable and focusableInTouchMode
+    to prevent AutoCompleteTextView from receiving focus on startup -->
+    <AutoCompleteTextView
+        android:id="@+id/textSearch"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="48dp"
+        android:layout_margin="@dimen/search_auto_complete_text_view_margins"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorTextLight"
+        android:hint="@string/text_search"
+        android:textColorHint="@color/colorTextLight"
+        android:drawableLeft="@drawable/ic_search_white_24dp"
+        android:drawablePadding="@dimen/search_auto_complete_text_view_drawable_padding"
+        android:textSize="18sp"
+        android:gravity="center_vertical"
+        android:inputType="text"
+        android:imeOptions="actionDone"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
-        android:layout_below="@id/floatingSearchView">
+        android:layout_below="@id/textSearch">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"

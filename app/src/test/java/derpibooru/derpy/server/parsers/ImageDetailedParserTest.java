@@ -35,7 +35,7 @@ public class ImageDetailedParserTest {
             new DerpibooruImageDetailed(thumb, "", "Background Pony #14C8", "Trixie has no one to blame but herself.", "2014-06-17T22:32:45Z",
                                         tags, Arrays.asList("User1", "User2", "User3"));
     private static final DerpibooruTagDetailed dummySpoilerTag =
-            new DerpibooruTagDetailed(54235, 0, "animated", "", "https://derpicdn.net/dummy_spoiler");
+            new DerpibooruTagDetailed(54235, 0, "animated", "", "", "https://derpicdn.net/dummy_spoiler");
     private static final ArrayList<DerpibooruTagDetailed> dummyFilter = Lists.newArrayList(dummySpoilerTag);
 
     private DerpibooruImageDetailed parsed;

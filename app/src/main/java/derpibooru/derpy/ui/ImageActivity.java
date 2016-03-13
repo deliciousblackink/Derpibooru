@@ -19,6 +19,7 @@ import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.providers.ImageDetailedProvider;
 import derpibooru.derpy.ui.fragments.ImageActivityMainFragment;
+import derpibooru.derpy.ui.fragments.ImageActivityTagFragment;
 import derpibooru.derpy.ui.fragments.ImageListFragment;
 
 public class ImageActivity extends AppCompatActivity {
@@ -45,13 +46,28 @@ public class ImageActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.loading);
         if ((savedInstanceState != null) && (savedInstanceState.containsKey(EXTRAS_IMAGE_DETAILED))) {
             mImage = savedInstanceState.getParcelable(EXTRAS_IMAGE_DETAILED);
-            displayMainFragment(null);
+            toolbar.setTitle("#" + Integer.toString(mImage.getThumb().getId()));
+            restoreCallbackHandlers();
         } else if (getIntent().hasExtra(EXTRAS_IMAGE_ID)) {
             fetchDetailedInformation(getIntent().getIntExtra(EXTRAS_IMAGE_ID, 0));
         } else if (getIntent().hasExtra(ImageListFragment.EXTRAS_IMAGE_THUMB)) {
             DerpibooruImageThumb thumb = getIntent().getParcelableExtra(ImageListFragment.EXTRAS_IMAGE_THUMB);
             displayMainFragment(thumb);
             fetchDetailedInformation(thumb.getId());
+        }
+    }
+
+    private void restoreCallbackHandlers() {
+        if (getCurrentFragment() instanceof ImageActivityMainFragment) {
+            ((ImageActivityMainFragment) getCurrentFragment())
+                    .setActivityCallbacks(new MainFragmentCallbackHandler());
+            /* the fragment's view is not created yet; remove the thumb from arguments so
+             * the fragment will initialize from the detailed image */
+            getCurrentFragment().getArguments()
+                    .remove(ImageListFragment.EXTRAS_IMAGE_THUMB);
+        } else if (getCurrentFragment() instanceof ImageActivityTagFragment) {
+            ((ImageActivityTagFragment) getCurrentFragment())
+                    .setActivityCallbacks(new TagFragmentCallbackHandler());
         }
     }
 
@@ -65,13 +81,24 @@ public class ImageActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mImage != null) {
-            setResult(Activity.RESULT_OK,
-                      new Intent().putExtra(ImageListFragment.EXTRAS_IMAGE_THUMB, mImage.getThumb()));
+        if (!getSupportFragmentManager().popBackStackImmediate()) {
+            if (mImage != null) {
+                setResult(Activity.RESULT_OK,
+                          new Intent().putExtra(ImageListFragment.EXTRAS_IMAGE_THUMB, mImage.getThumb()));
+            } else {
+                setResult(Activity.RESULT_OK);
+            }
+            super.onBackPressed();
         } else {
-            setResult(Activity.RESULT_OK);
+            if ((getCurrentFragment() instanceof ImageActivityMainFragment) && (mImage != null)) {
+                ((ImageActivityMainFragment) getCurrentFragment())
+                        .setActivityCallbacks(new MainFragmentCallbackHandler());
+                ((ImageActivityMainFragment) getCurrentFragment())
+                        .resetView();
+                ((ImageActivityMainFragment) getCurrentFragment())
+                        .onDetailedImageFetched();
+            }
         }
-        super.onBackPressed();
     }
 
     private void fetchDetailedInformation(int imageId) {
@@ -140,12 +167,12 @@ public class ImageActivity extends AppCompatActivity {
     private Bundle getMainFragmentArguments(@Nullable DerpibooruImageThumb thumb) {
         boolean isUserLoggedIn =
                 ((DerpibooruUser) getIntent().getParcelableExtra(MainActivity.EXTRAS_USER)).isLoggedIn();
-        Bundle arguments = new Bundle();
-        arguments.putBoolean(ImageActivityMainFragment.EXTRAS_IS_USER_LOGGED_IN, isUserLoggedIn);
+        Bundle args = new Bundle();
+        args.putBoolean(ImageActivityMainFragment.EXTRAS_IS_USER_LOGGED_IN, isUserLoggedIn);
         if (thumb != null) {
-            arguments.putParcelable(ImageListFragment.EXTRAS_IMAGE_THUMB, thumb);
+            args.putParcelable(ImageListFragment.EXTRAS_IMAGE_THUMB, thumb);
         }
-        return arguments;
+        return args;
     }
 
     @Nullable
@@ -153,7 +180,26 @@ public class ImageActivity extends AppCompatActivity {
         return getSupportFragmentManager().findFragmentById(contentLayout.getId());
     }
 
-    private class MainFragmentCallbackHandler implements ImageActivityMainFragment.ImageActivityMainFragmentListener {
+    private void displayTagFragment(int tagId) {
+        Bundle args = new Bundle();
+        args.putInt(ImageActivityTagFragment.EXTRAS_TAG_ID, tagId);
+
+        ImageActivityTagFragment fragment = new ImageActivityTagFragment();
+        fragment.setActivityCallbacks(new TagFragmentCallbackHandler());
+        fragment.setArguments(args);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.image_activity_tag_enter,
+                                     R.anim.image_activity_tag_exit,
+                                     R.anim.image_activity_tag_back_stack_pop_enter,
+                                     R.anim.image_activity_tag_back_stack_pop_exit)
+                .addToBackStack(null)
+                .replace(contentLayout.getId(), fragment)
+                .commit();
+    }
+
+    private class MainFragmentCallbackHandler implements ImageActivityMainFragment.ImageActivityMainFragmentHandler {
         @Override
         public boolean isToolbarVisible() {
             return toolbarLayout.getVisibility() == View.VISIBLE;
@@ -172,6 +218,23 @@ public class ImageActivity extends AppCompatActivity {
         @Override
         public void hideProgress() {
             findViewById(R.id.progressImage).setVisibility(View.GONE);
+        }
+
+        @Override
+        public void openTagInformation(int tagId) {
+            displayTagFragment(tagId);
+        }
+    }
+
+    private class TagFragmentCallbackHandler implements ImageActivityTagFragment.ImageActivityTagFragmentHandler {
+        @Override
+        public void onTagSearchRequested(String tagName) {
+
+        }
+
+        @Override
+        public void hideProgress() {
+
         }
     }
 }

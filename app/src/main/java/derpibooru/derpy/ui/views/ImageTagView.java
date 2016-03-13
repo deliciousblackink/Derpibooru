@@ -14,6 +14,8 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruTag;
 
 public class ImageTagView extends LinearLayout {
+    private int mTagId;
+
     public ImageTagView(Context context) {
         super(context);
     }
@@ -26,9 +28,20 @@ public class ImageTagView extends LinearLayout {
         super(context, attrs, defStyle);
     }
 
+    public void setOnTagClickListener(final OnTagClickListener listener) {
+        findViewById(R.id.layoutTag).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onTagClicked(mTagId);
+            }
+        });
+    }
+
     public void setTagInfo(DerpibooruTag tag) {
         View view = inflate(getContext(), R.layout.view_image_tag, null);
         addView(view);
+
+        mTagId = tag.getId();
 
         String numberOfImages = " (" + Integer.toString(tag.getNumberOfImages()) + ")";
         Spannable text = new SpannableString(tag.getName() + numberOfImages);
@@ -63,5 +76,9 @@ public class ImageTagView extends LinearLayout {
 
         textView.setBackgroundColor(ContextCompat.getColor(getContext(),
                                                            textViewBackgroundColorId));
+    }
+
+    public interface OnTagClickListener {
+        void onTagClicked(int tagId);
     }
 }

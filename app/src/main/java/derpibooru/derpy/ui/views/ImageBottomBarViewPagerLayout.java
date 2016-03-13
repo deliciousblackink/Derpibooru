@@ -37,6 +37,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
 
     private ImageBottomBarAnimator mAnimator;
     private FragmentManager mFragmentManager;
+    private ImageTagView.OnTagClickListener mTagListener;
 
     private ImageBottomBarAnimator.ExtensionState mRestoredState;
 
@@ -62,8 +63,17 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
                 transparentOverlay, tabPager, tabPagerHeader, maximumBarHeight);
     }
 
+    public void setTagListener(ImageTagView.OnTagClickListener listener) {
+        mTagListener = listener;
+    }
+
     protected void initializeTabs(DerpibooruImageDetailed content) {
-        tabPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content));
+        tabPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content) {
+            @Override
+            public void onTagClicked(int tagId) {
+                mTagListener.onTagClicked(tagId);
+            }
+        });
         setButtonsEnabled(true);
         setButtonListeners();
         post(new Runnable() {

@@ -1,9 +1,10 @@
 package derpibooru.derpy.ui.adapters;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 
@@ -13,8 +14,9 @@ import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarCommentListTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarFavoritesTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarInfoTabFragment;
+import derpibooru.derpy.ui.views.ImageTagView;
 
-public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
+public abstract class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter {
     private ArrayList<FragmentAdapterItem> mTabs;
 
     public ImageBottomBarTabAdapter(FragmentManager fm, DerpibooruImageDetailed imageDetailed) {
@@ -37,14 +39,36 @@ public class ImageBottomBarTabAdapter extends FragmentPagerAdapter {
         mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Comments.id(), comments));
     }
 
+    public abstract void onTagClicked(int tagId);
+
     @Override
     public int getCount() {
         return mTabs.size();
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
+    public Parcelable saveState() {
+        /* ensure getItem(int) is called on restore to reset the ImageBottomBarInfoTabFragment listener */
+        return null;
+    }
+
+    @Override
     public Fragment getItem(int position) {
-        return mTabs.get(position).getContent();
+        Fragment f = mTabs.get(position).getContent();
+        if (f instanceof ImageBottomBarInfoTabFragment) {
+            ((ImageBottomBarInfoTabFragment) f).setOnTagClickListener(new ImageTagView.OnTagClickListener() {
+                @Override
+                public void onTagClicked(int tagId) {
+                    ImageBottomBarTabAdapter.this.onTagClicked(tagId);
+                }
+            });
+        }
+        return f;
     }
 
     @Override

@@ -26,6 +26,8 @@ import derpibooru.derpy.ui.views.ImageTagView;
 public class ImageBottomBarInfoTabFragment extends Fragment {
     private TextViewHtmlDisplayer mHtmlPresenter;
 
+    private ImageTagView.OnTagClickListener mTagListener;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,6 +40,10 @@ public class ImageBottomBarInfoTabFragment extends Fragment {
         };
         displayInfoInView(v, (DerpibooruImageDetailed) getArguments().getParcelable(ImageActivity.EXTRAS_IMAGE_DETAILED));
         return v;
+    }
+
+    public void setOnTagClickListener(ImageTagView.OnTagClickListener listener) {
+        mTagListener = listener;
     }
 
     private void displayInfoInView(View target, DerpibooruImageDetailed info) {
@@ -83,6 +89,7 @@ public class ImageBottomBarInfoTabFragment extends Fragment {
         for (DerpibooruTag tag : info.getTags()) {
             ImageTagView itv = new ImageTagView(getActivity());
             itv.setTagInfo(tag);
+            itv.setOnTagClickListener(mTagListener);
             l.addView(itv);
         }
     }

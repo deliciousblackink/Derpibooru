@@ -15,13 +15,9 @@ public class ImageBottomBarView extends ImageBottomBarViewPagerLayout {
         return (AccentColorIconButton) findViewById(R.id.buttonFave);
     }
 
-    public void setInfoFromThumb(int commentCount) {
-        ((AccentColorIconButton) findViewById(R.id.buttonComments))
-                .setText(Integer.toString(commentCount));
-    }
-
     public void setInfoFromDetailed(DerpibooruImageDetailed image) {
-        setInfoFromThumb(image.getThumb().getCommentCount());
+        ((AccentColorIconButton) findViewById(R.id.buttonComments))
+                .setText(Integer.toString(image.getThumb().getCommentCount()));
         initializeTabs(image);
     }
 }

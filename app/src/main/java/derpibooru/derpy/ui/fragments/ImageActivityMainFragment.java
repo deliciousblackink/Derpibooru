@@ -83,7 +83,6 @@ public class ImageActivityMainFragment extends Fragment {
         /* do not enable image interactions yet, wait for DerpibooruImageDetailed to load */
         initializeInteractionPresenter(thumb, false);
         mInteractionPresenter.refreshInfo(thumb.getFaves(), thumb.getUpvotes(), thumb.getDownvotes());
-        bottomBar.setInfoFromThumb(thumb.getCommentCount());
     }
 
     private void loadImageIfNotShownAlready(String url) {

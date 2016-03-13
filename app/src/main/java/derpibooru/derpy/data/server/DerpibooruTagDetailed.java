@@ -4,14 +4,20 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class DerpibooruTagDetailed extends DerpibooruTag {
+    private final String mShortDescription;
     private final String mDescription;
     private final String mSpoilerUrl;
 
     public DerpibooruTagDetailed(int id, int imageCount, String name,
-                                 String description, String spoilerUrl) {
+                                 String shortDescription, String description, String spoilerUrl) {
         super(id, imageCount, name);
+        mShortDescription = shortDescription;
         mDescription = description;
         mSpoilerUrl = spoilerUrl;
+    }
+
+    public String getShortDescription() {
+        return mShortDescription;
     }
 
     public String getDescription() {
@@ -24,6 +30,7 @@ public class DerpibooruTagDetailed extends DerpibooruTag {
 
     protected DerpibooruTagDetailed(Parcel in) {
         super(in);
+        mShortDescription = in.readString();
         mDescription = in.readString();
         mSpoilerUrl = in.readString();
     }
@@ -31,6 +38,7 @@ public class DerpibooruTagDetailed extends DerpibooruTag {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
+        dest.writeString(mShortDescription);
         dest.writeString(mDescription);
         dest.writeString(mSpoilerUrl);
     }

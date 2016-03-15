@@ -58,9 +58,23 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
         setButtonsEnabled(false); /* until the 'initializeTabs' method is called with tab information */
     }
 
-    public void setBarExtensionAttrs(int maximumBarHeight) {
+    @Override
+    public void onSizeChanged(int w, int h, int oldw, int oldh){
+        super.onSizeChanged(w, h, oldw, oldh);
         mAnimator = new ImageBottomBarAnimator(
-                transparentOverlay, tabPager, tabPagerHeader, maximumBarHeight);
+                transparentOverlay, tabPager, tabPagerHeader, h);
+        if (mRestoredState != null) {
+            if (mRestoredState != ImageBottomBarAnimator.ExtensionState.None) {
+                selectButtonAccordingToPageSelected(tabPager.getCurrentItem());
+                mAnimator.doAfter(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAnimator.extendViewPager(mRestoredState, 0);
+                    }
+                });
+            }
+            mAnimator.extendViewPagerHeader(0);
+        }
     }
 
     public void setTagListener(ImageTagView.OnTagClickListener listener) {
@@ -81,17 +95,6 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
             public void run() {
                 if (mRestoredState == null) {
                     mAnimator.extendViewPagerHeader();
-                } else {
-                    mAnimator.extendViewPagerHeader(0);
-                    if (mRestoredState != ImageBottomBarAnimator.ExtensionState.None) {
-                        selectButtonAccordingToPageSelected(tabPager.getCurrentItem());
-                        mAnimator.doAfter(new Runnable() {
-                            @Override
-                            public void run() {
-                                mAnimator.extendViewPager(mRestoredState, 0);
-                            }
-                        });
-                    }
                 }
             }
         });

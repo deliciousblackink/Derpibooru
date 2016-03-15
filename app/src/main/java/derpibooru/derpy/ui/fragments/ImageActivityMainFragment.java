@@ -47,7 +47,7 @@ public class ImageActivityMainFragment extends Fragment {
         View v = inflater.inflate(R.layout.activity_image_fragment_main, container, false);
         ButterKnife.bind(this, v);
         bottomBar.initializeWithFragmentManager(getChildFragmentManager());
-        resetBottomBarLayout();
+        setBottomBarCallbackHandler();
         if (getArguments().containsKey(ImageListFragment.EXTRAS_IMAGE_THUMB)) {
             displayFromImageThumb();
         } else {
@@ -66,7 +66,7 @@ public class ImageActivityMainFragment extends Fragment {
     }
 
     public void resetView() {
-        resetBottomBarLayout();
+        setBottomBarCallbackHandler();
     }
 
     private void display(boolean isLoggedIn) {
@@ -109,18 +109,7 @@ public class ImageActivityMainFragment extends Fragment {
         }
     }
 
-    private void resetBottomBarLayout() {
-        bottomBar.post(new Runnable() {
-            @Override
-            public void run() {
-                /* prevents tabs from overlapping the toolbar when extended */
-                int bottomBarMaximumHeightWhenExtended =
-                        imageView.getMeasuredHeight() - topBar.getMeasuredHeight();
-                bottomBar.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
-                bottomBar.getLayoutParams().height = bottomBarMaximumHeightWhenExtended;
-                bottomBar.requestLayout();
-            }
-        });
+    private void setBottomBarCallbackHandler() {
         bottomBar.setTagListener(new ImageTagView.OnTagClickListener() {
             @Override
             public void onTagClicked(int tagId) {

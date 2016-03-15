@@ -1,5 +1,6 @@
 package derpibooru.derpy.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +17,7 @@ import butterknife.OnClick;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 import derpibooru.derpy.data.server.DerpibooruUser;
+import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.MainActivity;
 
 public class BrowseFragment extends NavigationDrawerUserFragment {
@@ -133,7 +135,6 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
         args.putParcelable(EXTRAS_SEARCH_OPTIONS, mCurrentSearchOptions);
 
         BrowseImageListFragment fragment = new BrowseImageListFragment();
-        fragment.setTagSearchRequestListener(new TagSearchHandler());
         fragment.setInitialSavedState(fragmentSavedState);
         fragment.setArguments(args);
         return fragment;
@@ -207,6 +208,18 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (getCurrentFragment() instanceof ImageListFragment) {
+            getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+        }
+        if ((requestCode == ImageListFragment.IMAGE_ACTIVITY_REQUEST_CODE)
+                && (data != null) && (data.hasExtra(ImageActivity.EXTRAS_TAG_SEARCH_QUERY))) {
+            mTagSearchRequest = data.getStringExtra(ImageActivity.EXTRAS_TAG_SEARCH_QUERY);
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (!mTagSearchRequest.isEmpty()) {
@@ -214,13 +227,6 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
             mCurrentSearchOptions.setSearchQuery(mTagSearchRequest);
             displayImageListFragment(null);
             mTagSearchRequest = "";
-        }
-    }
-
-    private class TagSearchHandler implements BrowseImageListFragment.TagSearchRequestListener {
-        @Override
-        public void onTagSearchRequested(String tag) {
-            mTagSearchRequest = tag;
         }
     }
 }

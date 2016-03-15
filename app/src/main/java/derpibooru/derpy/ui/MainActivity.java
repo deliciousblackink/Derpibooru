@@ -1,5 +1,6 @@
 package derpibooru.derpy.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import derpibooru.derpy.server.providers.RankingImageListProvider;
 import derpibooru.derpy.ui.fragments.BrowseFragment;
 import derpibooru.derpy.ui.fragments.BrowseImageListFragment;
 import derpibooru.derpy.ui.fragments.FilterListFragment;
+import derpibooru.derpy.ui.fragments.ImageListFragment;
 import derpibooru.derpy.ui.fragments.RankingImageListFragment;
 
 public class MainActivity extends NavigationDrawerUserFragmentActivity {
@@ -109,6 +111,15 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
         if (!((getCurrentFragment() instanceof BrowseFragment)
                 && ((BrowseFragment) getCurrentFragment()).popChildFragmentManagerBackstack())) {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        /* see the docs for ImageListFragment */
+        if ((getCurrentFragment() instanceof BrowseFragment)
+                || (getCurrentFragment() instanceof ImageListFragment)) {
+            getCurrentFragment().onActivityResult(requestCode, resultCode, data);
         }
     }
 

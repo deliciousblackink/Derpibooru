@@ -23,6 +23,7 @@ import derpibooru.derpy.ui.fragments.ImageActivityTagFragment;
 import derpibooru.derpy.ui.fragments.ImageListFragment;
 
 public class ImageActivity extends AppCompatActivity {
+    public static final String EXTRAS_TAG_SEARCH_QUERY = "derpibooru.derpy.SearchTagName";
     public static final String EXTRAS_IMAGE_DETAILED = "derpibooru.derpy.ImageDetailed";
     public static final String EXTRAS_IMAGE_ID = "derpibooru.derpy.ImageId";
 
@@ -92,17 +93,30 @@ public class ImageActivity extends AppCompatActivity {
             }
         }
         if (!getSupportFragmentManager().popBackStackImmediate()) {
-            if (mImage != null) {
-                setResult(Activity.RESULT_OK,
-                          new Intent().putExtra(ImageListFragment.EXTRAS_IMAGE_THUMB, mImage.getThumb()));
-            } else {
-                setResult(Activity.RESULT_OK);
-            }
+            setActivityResult();
             super.onBackPressed();
         } else if ((getCurrentFragment() instanceof ImageActivityMainFragment) && (mImage != null)) {
             ((ImageActivityMainFragment) getCurrentFragment()).resetView();
             ((ImageActivityMainFragment) getCurrentFragment()).onDetailedImageFetched();
         }
+    }
+
+    private void setActivityResult() {
+        setResult(RESULT_OK, getActivityResultIntent());
+    }
+
+    private void setActivityResult(String tagSearch) {
+        Intent intent = getActivityResultIntent();
+        intent.putExtra(EXTRAS_TAG_SEARCH_QUERY, tagSearch);
+        setResult(RESULT_OK, intent);
+    }
+
+    private Intent getActivityResultIntent() {
+        Intent intent = new Intent();
+        if (mImage != null) {
+            intent.putExtra(ImageListFragment.EXTRAS_IMAGE_THUMB, mImage.getThumb());
+        }
+        return intent;
     }
 
     private void fetchDetailedInformation(int imageId) {
@@ -225,7 +239,8 @@ public class ImageActivity extends AppCompatActivity {
     private class TagFragmentCallbackHandler implements ImageActivityTagFragment.ImageActivityTagFragmentHandler {
         @Override
         public void onTagSearchRequested(String tagName) {
-
+            setActivityResult(tagName);
+            ImageActivity.super.finish();
         }
 
         @Override

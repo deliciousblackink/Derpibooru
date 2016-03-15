@@ -27,6 +27,8 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
     private DerpibooruSearchOptions mCurrentSearchOptions = new DerpibooruSearchOptions();
     private Fragment.SavedState mImageListRetainedState;
 
+    private String mTagSearchRequest = "";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_browse, container, false);
@@ -131,6 +133,7 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
         args.putParcelable(EXTRAS_SEARCH_OPTIONS, mCurrentSearchOptions);
 
         BrowseImageListFragment fragment = new BrowseImageListFragment();
+        fragment.setTagSearchRequestListener(new TagSearchHandler());
         fragment.setInitialSavedState(fragmentSavedState);
         fragment.setArguments(args);
         return fragment;
@@ -201,5 +204,23 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
 
     private Fragment getCurrentFragment() {
         return getChildFragmentManager().findFragmentById(R.id.fragmentLayout);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!mTagSearchRequest.isEmpty()) {
+            mCurrentSearchOptions = new DerpibooruSearchOptions();
+            mCurrentSearchOptions.setSearchQuery(mTagSearchRequest);
+            displayImageListFragment(null);
+            mTagSearchRequest = "";
+        }
+    }
+
+    private class TagSearchHandler implements BrowseImageListFragment.TagSearchRequestListener {
+        @Override
+        public void onTagSearchRequested(String tag) {
+            mTagSearchRequest = tag;
+        }
     }
 }

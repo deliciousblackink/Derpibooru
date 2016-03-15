@@ -26,7 +26,7 @@ import derpibooru.derpy.ui.views.ImageListRecyclerView;
 
 public abstract class ImageListFragment extends NavigationDrawerUserFragment {
     public static final String EXTRAS_IMAGE_THUMB = "derpibooru.derpy.Image";
-    private static final int IMAGE_ACTIVITY_REQUEST_CODE = 2;
+    public static final int IMAGE_ACTIVITY_REQUEST_CODE = 2;
 
     private PaginatedListPresenter<DerpibooruImageThumb> mImageListPresenter;
     private Bundle mSavedInstanceState;
@@ -118,7 +118,8 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case (IMAGE_ACTIVITY_REQUEST_CODE):
-                if ((recyclerView != null) && (recyclerView.getAdapter() != null) && (data != null)) {
+                if ((recyclerView != null) && (recyclerView.getAdapter() != null)
+                        && (data != null) && (data.hasExtra(EXTRAS_IMAGE_THUMB))) {
                     ((ImageListAdapter) recyclerView.getAdapter()).replaceItem(
                             (DerpibooruImageThumb) data.getParcelableExtra(EXTRAS_IMAGE_THUMB));
                 }

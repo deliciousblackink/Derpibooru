@@ -44,10 +44,13 @@ public class ImageActivity extends AppCompatActivity {
             }
         });
         toolbar.setTitle(R.string.loading);
+        setFragmentCallbackHandlers(getCurrentFragment());
         if ((savedInstanceState != null) && (savedInstanceState.containsKey(EXTRAS_IMAGE_DETAILED))) {
             mImage = savedInstanceState.getParcelable(EXTRAS_IMAGE_DETAILED);
             toolbar.setTitle("#" + Integer.toString(mImage.getThumb().getId()));
-            restoreCallbackHandlers();
+            if (getCurrentFragment() instanceof ImageActivityMainFragment) {
+                forceMainFragmentToDisplayDetailedImage(getCurrentFragment());
+            }
         } else if (getIntent().hasExtra(EXTRAS_IMAGE_ID)) {
             fetchDetailedInformation(getIntent().getIntExtra(EXTRAS_IMAGE_ID, 0));
         } else if (getIntent().hasExtra(ImageListFragment.EXTRAS_IMAGE_THUMB)) {
@@ -57,18 +60,22 @@ public class ImageActivity extends AppCompatActivity {
         }
     }
 
-    private void restoreCallbackHandlers() {
-        if (getCurrentFragment() instanceof ImageActivityMainFragment) {
-            ((ImageActivityMainFragment) getCurrentFragment())
+    private void setFragmentCallbackHandlers(Fragment target) {
+        if (target instanceof ImageActivityMainFragment) {
+            ((ImageActivityMainFragment) target)
                     .setActivityCallbacks(new MainFragmentCallbackHandler());
-            /* the fragment's view is not created yet; remove the thumb from arguments so
-             * the fragment will initialize from the detailed image */
-            getCurrentFragment().getArguments()
-                    .remove(ImageListFragment.EXTRAS_IMAGE_THUMB);
-        } else if (getCurrentFragment() instanceof ImageActivityTagFragment) {
-            ((ImageActivityTagFragment) getCurrentFragment())
+        } else if (target instanceof ImageActivityTagFragment) {
+            ((ImageActivityTagFragment) target)
                     .setActivityCallbacks(new TagFragmentCallbackHandler());
         }
+    }
+
+    /**
+     * If {@link ImageActivityMainFragment} has not created its view yet, it is forced to
+     * skip the placeholder thumb and call {@link ImageActivityMainFragment.ImageActivityMainFragmentHandler#onDetailedImageFetched()}.
+     */
+    private void forceMainFragmentToDisplayDetailedImage(Fragment mainFragment) {
+       mainFragment.getArguments().remove(ImageListFragment.EXTRAS_IMAGE_THUMB);
     }
 
     @Override
@@ -81,6 +88,11 @@ public class ImageActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                setFragmentCallbackHandlers(fragment);
+            }
+        }
         if (!getSupportFragmentManager().popBackStackImmediate()) {
             if (mImage != null) {
                 setResult(Activity.RESULT_OK,
@@ -89,15 +101,9 @@ public class ImageActivity extends AppCompatActivity {
                 setResult(Activity.RESULT_OK);
             }
             super.onBackPressed();
-        } else {
-            if ((getCurrentFragment() instanceof ImageActivityMainFragment) && (mImage != null)) {
-                ((ImageActivityMainFragment) getCurrentFragment())
-                        .setActivityCallbacks(new MainFragmentCallbackHandler());
-                ((ImageActivityMainFragment) getCurrentFragment())
-                        .resetView();
-                ((ImageActivityMainFragment) getCurrentFragment())
-                        .onDetailedImageFetched();
-            }
+        } else if ((getCurrentFragment() instanceof ImageActivityMainFragment) && (mImage != null)) {
+            ((ImageActivityMainFragment) getCurrentFragment()).resetView();
+            ((ImageActivityMainFragment) getCurrentFragment()).onDetailedImageFetched();
         }
     }
 
@@ -134,9 +140,8 @@ public class ImageActivity extends AppCompatActivity {
         toolbar.setTitle("#" + Integer.toString(mImage.getThumb().getId()));
         if (getCurrentFragment() instanceof ImageActivityMainFragment) {
             /* on configuration change, fragmentmanager restores the fragment — no need to instantiate it again */
-            ((ImageActivityMainFragment) getCurrentFragment())
-                    .setActivityCallbacks(new MainFragmentCallbackHandler());
-            getCurrentFragment().getArguments().remove(ImageListFragment.EXTRAS_IMAGE_THUMB);
+            setFragmentCallbackHandlers(getCurrentFragment());
+            forceMainFragmentToDisplayDetailedImage(getCurrentFragment());
         } else {
             instantiateMainFragment(null);
         }
@@ -144,11 +149,7 @@ public class ImageActivity extends AppCompatActivity {
 
     private void initializeMainFragmentWithPlaceholderThumb(DerpibooruImageThumb thumb) {
         toolbar.setTitle("#" + Integer.toString(thumb.getId()));
-        if (getCurrentFragment() instanceof ImageActivityMainFragment) {
-            /* on configuration change, fragmentmanager restores the fragment — no need to instantiate it again */
-            ((ImageActivityMainFragment) getCurrentFragment())
-                    .setActivityCallbacks(new MainFragmentCallbackHandler());
-        } else {
+        if (!(getCurrentFragment() instanceof ImageActivityMainFragment)) {
             instantiateMainFragment(thumb);
         }
     }

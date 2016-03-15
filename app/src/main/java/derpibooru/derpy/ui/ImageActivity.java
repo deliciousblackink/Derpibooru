@@ -43,11 +43,9 @@ public class ImageActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        toolbar.setTitle(R.string.loading);
         setFragmentCallbackHandlers(getCurrentFragment());
         if ((savedInstanceState != null) && (savedInstanceState.containsKey(EXTRAS_IMAGE_DETAILED))) {
             mImage = savedInstanceState.getParcelable(EXTRAS_IMAGE_DETAILED);
-            toolbar.setTitle("#" + Integer.toString(mImage.getThumb().getId()));
             if (getCurrentFragment() instanceof ImageActivityMainFragment) {
                 forceMainFragmentToDisplayDetailedImage(getCurrentFragment());
             }
@@ -72,7 +70,7 @@ public class ImageActivity extends AppCompatActivity {
 
     /**
      * If {@link ImageActivityMainFragment} has not created its view yet, it is forced to
-     * skip the placeholder thumb and call {@link ImageActivityMainFragment.ImageActivityMainFragmentHandler#onDetailedImageFetched()}.
+     * skip the placeholder thumb and call {@link ImageActivityMainFragment.ImageActivityMainFragmentHandler#getImage()}.
      */
     private void forceMainFragmentToDisplayDetailedImage(Fragment mainFragment) {
        mainFragment.getArguments().remove(ImageListFragment.EXTRAS_IMAGE_THUMB);
@@ -127,19 +125,17 @@ public class ImageActivity extends AppCompatActivity {
     private void displayMainFragment(@Nullable DerpibooruImageThumb placeholderThumb) {
         if (placeholderThumb != null) {
             initializeMainFragmentWithPlaceholderThumb(placeholderThumb);
-        } else if (toolbar.getTitle().equals(getString(R.string.loading))) {
-            initializeMainFragmentWithDetailed();
         } else if (getCurrentFragment() instanceof ImageActivityMainFragment) {
             /* the main fragment has already been instantiated with a placeholder thumb */
             ((ImageActivityMainFragment) getCurrentFragment())
                     .onDetailedImageFetched();
+        } else {
+            initializeMainFragmentWithDetailed();
         }
     }
 
     private void initializeMainFragmentWithDetailed() {
-        toolbar.setTitle("#" + Integer.toString(mImage.getThumb().getId()));
         if (getCurrentFragment() instanceof ImageActivityMainFragment) {
-            /* on configuration change, fragmentmanager restores the fragment — no need to instantiate it again */
             setFragmentCallbackHandlers(getCurrentFragment());
             forceMainFragmentToDisplayDetailedImage(getCurrentFragment());
         } else {
@@ -148,7 +144,6 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     private void initializeMainFragmentWithPlaceholderThumb(DerpibooruImageThumb thumb) {
-        toolbar.setTitle("#" + Integer.toString(thumb.getId()));
         if (!(getCurrentFragment() instanceof ImageActivityMainFragment)) {
             instantiateMainFragment(thumb);
         }
@@ -166,8 +161,8 @@ public class ImageActivity extends AppCompatActivity {
     }
 
     private Bundle getMainFragmentArguments(@Nullable DerpibooruImageThumb thumb) {
-        boolean isUserLoggedIn =
-                ((DerpibooruUser) getIntent().getParcelableExtra(MainActivity.EXTRAS_USER)).isLoggedIn();
+        boolean isUserLoggedIn = ((DerpibooruUser)
+                getIntent().getParcelableExtra(MainActivity.EXTRAS_USER)).isLoggedIn();
         Bundle args = new Bundle();
         args.putBoolean(ImageActivityMainFragment.EXTRAS_IS_USER_LOGGED_IN, isUserLoggedIn);
         if (thumb != null) {
@@ -217,8 +212,8 @@ public class ImageActivity extends AppCompatActivity {
         }
 
         @Override
-        public void hideProgress() {
-            findViewById(R.id.progressImage).setVisibility(View.GONE);
+        public void setToolbarTitle(String title) {
+            toolbar.setTitle(title);
         }
 
         @Override
@@ -234,8 +229,8 @@ public class ImageActivity extends AppCompatActivity {
         }
 
         @Override
-        public void hideProgress() {
-
+        public void setToolbarTitle(String title) {
+            toolbar.setTitle(title);
         }
     }
 }

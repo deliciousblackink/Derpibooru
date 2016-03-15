@@ -25,4 +25,10 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"/>
+    <derpibooru.derpy.ui.views.AccentColorProgressBar
+        android:id="@id/progressImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingTop="?attr/actionBarSize"/>
 </RelativeLayout>

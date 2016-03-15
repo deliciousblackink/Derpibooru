@@ -32,6 +32,7 @@ public class ImageActivityTagFragment extends Fragment {
     @Bind(R.id.textTagDescription) TextView textTagDescription;
 
     @Bind(R.id.layoutRoot) View rootView;
+    @Bind(R.id.progressTag) View progressBar;
     @Bind(R.id.layoutUserActions) View userActions;
 
     private ImageActivityTagFragmentHandler mActivityCallbacks;
@@ -47,6 +48,7 @@ public class ImageActivityTagFragment extends Fragment {
             mFetchedTag = savedInstanceState.getParcelable(EXTRAS_FETCHED_TAG);
             displayFetchedTag();
         } else {
+            progressBar.setVisibility(View.VISIBLE);
             fetchTagInformation();
         }
         return v;
@@ -71,8 +73,9 @@ public class ImageActivityTagFragment extends Fragment {
 
     private void displayFetchedTag() {
         rootView.setVisibility(View.VISIBLE);
-        textTagName.setText(
-                String.format("%s (%d)", mFetchedTag.getName(), mFetchedTag.getNumberOfImages()));
+        String tag = String.format("%s (%d)", mFetchedTag.getName(), mFetchedTag.getNumberOfImages());
+        textTagName.setText(tag);
+        mActivityCallbacks.setToolbarTitle(tag);
         if (!mFetchedTag.getShortDescription().isEmpty()) {
             textTagShortDescription.setText(mFetchedTag.getShortDescription());
         } else {
@@ -103,10 +106,8 @@ public class ImageActivityTagFragment extends Fragment {
     private class TagProviderRequestHandler implements QueryHandler<List<DerpibooruTagDetailed>> {
         @Override
         public void onQueryExecuted(List<DerpibooruTagDetailed> result) {
-            if (mActivityCallbacks != null) {
-                mActivityCallbacks.hideProgress();
-            }
             mFetchedTag = result.get(0);
+            progressBar.setVisibility(View.INVISIBLE);
             displayFetchedTag();
         }
 
@@ -116,6 +117,6 @@ public class ImageActivityTagFragment extends Fragment {
 
     public interface ImageActivityTagFragmentHandler {
         void onTagSearchRequested(String tagName);
-        void hideProgress();
+        void setToolbarTitle(String title);
     }
 }

@@ -70,6 +70,7 @@ public class ImageActivityMainFragment extends Fragment {
     }
 
     private void display(boolean isLoggedIn) {
+        mActivityCallbacks.setToolbarTitle(String.format("#%d", mActivityCallbacks.getImage().getThumb().getId()));
         loadImageIfNotShownAlready(mActivityCallbacks.getImage().getThumb().getLargeImageUrl());
         if (mInteractionPresenter == null) {
             initializeInteractionPresenter(null, isLoggedIn);
@@ -85,6 +86,7 @@ public class ImageActivityMainFragment extends Fragment {
 
     private void displayFromImageThumb() {
         DerpibooruImageThumb thumb = getArguments().getParcelable(ImageListFragment.EXTRAS_IMAGE_THUMB);
+        mActivityCallbacks.setToolbarTitle(String.format("#%d", thumb.getId()));
         loadImageIfNotShownAlready(thumb.getLargeImageUrl());
         /* do not enable image interactions yet, wait for DerpibooruImageDetailed to load */
         initializeInteractionPresenter(thumb, false);
@@ -224,7 +226,7 @@ public class ImageActivityMainFragment extends Fragment {
         @Override
         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
                                        boolean isFromMemoryCache, boolean isFirstResource) {
-            mActivityCallbacks.hideProgress();
+            if (getView() != null) getView().findViewById(R.id.progressImage).setVisibility(View.GONE);
             attachPhotoView(mImageView);
             return false;
         }
@@ -250,8 +252,8 @@ public class ImageActivityMainFragment extends Fragment {
     public interface ImageActivityMainFragmentHandler {
         DerpibooruImageDetailed getImage();
         boolean isToolbarVisible();
+        void setToolbarTitle(String title);
         void setToolbarVisible(boolean visible);
-        void hideProgress();
         void openTagInformation(int tagId);
     }
 }

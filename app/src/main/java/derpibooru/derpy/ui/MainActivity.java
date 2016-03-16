@@ -116,6 +116,7 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         /* see the docs for ImageListFragment */
         if ((getCurrentFragment() instanceof BrowseFragment)
                 || (getCurrentFragment() instanceof ImageListFragment)) {

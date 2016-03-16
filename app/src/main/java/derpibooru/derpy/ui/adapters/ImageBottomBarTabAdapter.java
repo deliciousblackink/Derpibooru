@@ -37,6 +37,10 @@ public abstract class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter
         mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.ImageInfo.id(), info));
         mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Faves.id(), faves));
         mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Comments.id(), comments));
+
+        for (Fragment fragment : fm.getFragments()) {
+            setFragmentCallbackHandler(fragment);
+        }
     }
 
     public abstract void onTagClicked(int tagId);
@@ -47,28 +51,21 @@ public abstract class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter
     }
 
     @Override
-    public int getItemPosition(Object object) {
-        return POSITION_NONE;
-    }
-
-    @Override
-    public Parcelable saveState() {
-        /* ensure getItem(int) is called on restore to reset the ImageBottomBarInfoTabFragment listener */
-        return null;
-    }
-
-    @Override
     public Fragment getItem(int position) {
-        Fragment f = mTabs.get(position).getContent();
-        if (f instanceof ImageBottomBarInfoTabFragment) {
-            ((ImageBottomBarInfoTabFragment) f).setOnTagClickListener(new ImageTagView.OnTagClickListener() {
+        Fragment fragment = mTabs.get(position).getContent();
+        setFragmentCallbackHandler(fragment);
+        return fragment;
+    }
+
+    private void setFragmentCallbackHandler(Fragment fragment) {
+        if (fragment instanceof ImageBottomBarInfoTabFragment) {
+            ((ImageBottomBarInfoTabFragment) fragment).setOnTagClickListener(new ImageTagView.OnTagClickListener() {
                 @Override
                 public void onTagClicked(int tagId) {
                     ImageBottomBarTabAdapter.this.onTagClicked(tagId);
                 }
             });
         }
-        return f;
     }
 
     @Override

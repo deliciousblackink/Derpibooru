@@ -35,7 +35,7 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_browse, container, false);
         ButterKnife.bind(this, v);
-        if (!isRestoredFromSavedInstance(savedInstanceState)) {
+        if ((!isDisplayingTagSearchRequest()) && (!isRestoredFromSavedInstance(savedInstanceState))) {
             if (getArguments().containsKey(EXTRAS_IMAGE_LIST_TYPE)) {
                 setSearchOptionsFromImageListType(BrowseImageListFragment.Type.fromValue(
                         getArguments().getInt(EXTRAS_IMAGE_LIST_TYPE)));
@@ -213,20 +213,45 @@ public class BrowseFragment extends NavigationDrawerUserFragment {
         if (getCurrentFragment() instanceof ImageListFragment) {
             getCurrentFragment().onActivityResult(requestCode, resultCode, data);
         }
-        if ((requestCode == ImageListFragment.IMAGE_ACTIVITY_REQUEST_CODE)
-                && (data != null) && (data.hasExtra(ImageActivity.EXTRAS_TAG_SEARCH_QUERY))) {
+        if (isTagSearchRequested(requestCode, data)) {
             mTagSearchRequest = data.getStringExtra(ImageActivity.EXTRAS_TAG_SEARCH_QUERY);
         }
+    }
+
+    public static boolean isTagSearchRequested(int activityRequestCode, Intent activityResultData) {
+        return (activityRequestCode == ImageListFragment.IMAGE_ACTIVITY_REQUEST_CODE)
+                && (activityResultData != null)
+                && (activityResultData.hasExtra(ImageActivity.EXTRAS_TAG_SEARCH_QUERY));
+    }
+
+    /**
+     * Displays an image list displaying search results for the requested tag, if such a request exists.
+     *
+     * @return {@code true} if the tag search was requested, {@code false} otherwise.
+     */
+    private boolean isDisplayingTagSearchRequest() {
+        if (!mTagSearchRequest.isEmpty()) {
+            displayImageListWithSearchResultsForTag(mTagSearchRequest);
+            mTagSearchRequest = "";
+            return true;
+        } else if ((getArguments() != null) && (getArguments().containsKey(ImageActivity.EXTRAS_TAG_SEARCH_QUERY))) {
+            displayImageListWithSearchResultsForTag(
+                    getArguments().getString(ImageActivity.EXTRAS_TAG_SEARCH_QUERY));
+            getArguments().remove(ImageActivity.EXTRAS_TAG_SEARCH_QUERY);
+            return true;
+        }
+        return false;
+    }
+
+    private void displayImageListWithSearchResultsForTag(String tag) {
+        mCurrentSearchOptions = new DerpibooruSearchOptions();
+        mCurrentSearchOptions.setSearchQuery(tag);
+        displayImageListFragment(null);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!mTagSearchRequest.isEmpty()) {
-            mCurrentSearchOptions = new DerpibooruSearchOptions();
-            mCurrentSearchOptions.setSearchQuery(mTagSearchRequest);
-            displayImageListFragment(null);
-            mTagSearchRequest = "";
-        }
+        isDisplayingTagSearchRequest();
     }
 }

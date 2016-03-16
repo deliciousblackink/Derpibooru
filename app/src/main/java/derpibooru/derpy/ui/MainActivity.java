@@ -21,8 +21,9 @@ import derpibooru.derpy.ui.fragments.BrowseImageListFragment;
 import derpibooru.derpy.ui.fragments.FilterListFragment;
 import derpibooru.derpy.ui.fragments.ImageListFragment;
 import derpibooru.derpy.ui.fragments.RankingImageListFragment;
-
 public class MainActivity extends NavigationDrawerUserFragmentActivity {
+    private static final int BROWSE_FRAGMENT_POSITION = 0;
+
     private List<NavigationDrawerItem> mFragmentNavigationItems;
 
     @Bind(R.id.fragmentLayout) FrameLayout mFragmentLayout;
@@ -34,7 +35,7 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
         initializeFragmentNavigationItems();
         super.initialize(savedInstanceState);
         if (getSupportFragmentManager().getFragments() == null) {
-            navigateTo(getFragmentNavigationItems().get(0));
+            navigateTo(getFragmentNavigationItems().get(BROWSE_FRAGMENT_POSITION));
         }
         setCallbackHandlersFor(super.getCurrentFragment());
     }
@@ -118,8 +119,14 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         /* see the docs for ImageListFragment */
-        if ((getCurrentFragment() instanceof BrowseFragment)
-                || (getCurrentFragment() instanceof ImageListFragment)) {
+        if (getCurrentFragment() instanceof BrowseFragment) {
+            getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+        } else if (BrowseFragment.isTagSearchRequested(requestCode, data)) {
+            Bundle searchArgs = new Bundle();
+            searchArgs.putString(ImageActivity.EXTRAS_TAG_SEARCH_QUERY,
+                             data.getStringExtra(ImageActivity.EXTRAS_TAG_SEARCH_QUERY));
+            navigateTo(getFragmentNavigationItems().get(BROWSE_FRAGMENT_POSITION), searchArgs);
+        } else if (getCurrentFragment() instanceof ImageListFragment) {
             getCurrentFragment().onActivityResult(requestCode, resultCode, data);
         }
     }

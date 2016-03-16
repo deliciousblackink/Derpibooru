@@ -74,6 +74,13 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
         return f;
     }
 
+    private Fragment getFragmentInstance(NavigationDrawerItem fragmentMenuItem, Bundle additionalArgs)
+            throws IllegalAccessException, InstantiationException {
+        Fragment f = getFragmentInstance(fragmentMenuItem);
+        f.getArguments().putAll(additionalArgs);
+        return f;
+    }
+
     @Nullable
     protected Fragment getCurrentFragment() {
         return getSupportFragmentManager().findFragmentById(getContentLayout().getId());
@@ -113,6 +120,14 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
      * Replaces the currently visible fragment with the one specified by a NavigationDrawerItem.
      */
     protected void navigateTo(NavigationDrawerItem item) {
+        navigateTo(item, null);
+    }
+
+    /**
+     * Replaces the currently visible fragment with the one specified by a NavigationDrawerItem,
+     * adding additional arguments to the fragment instance.
+     */
+    protected void navigateTo(NavigationDrawerItem item, @Nullable Bundle additionalArguments) {
         try {
             FragmentTransaction transaction =
                     getSupportFragmentManager().beginTransaction();
@@ -120,7 +135,10 @@ abstract class NavigationDrawerFragmentActivity extends AppCompatActivity implem
                 transaction.addToBackStack(null);
             }
             transaction
-                    .replace(getContentLayout().getId(), getFragmentInstance(item), item.getUniqueTag())
+                    .replace(getContentLayout().getId(),
+                             (additionalArguments != null) ? getFragmentInstance(item, additionalArguments)
+                                                           : getFragmentInstance(item),
+                             item.getUniqueTag())
                     .commit();
             selectMenuItem(item);
         } catch (Exception t) {

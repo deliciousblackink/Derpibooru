@@ -125,6 +125,10 @@ public class ImageActivity extends AppCompatActivity {
             @Override
             public void onQueryExecuted(DerpibooruImageDetailed info) {
                 mImage = info;
+                /* FIXME: java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+                 * commiting fragments -> state loss
+                 * so far i could only reproduce this once — when the activity is closed right after being opened,
+                 * probably before it fetches the detailed image */
                 displayMainFragment(null);
             }
 

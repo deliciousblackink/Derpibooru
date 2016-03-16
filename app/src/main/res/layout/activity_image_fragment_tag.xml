@@ -55,11 +55,13 @@
                 android:gravity="center"
                 android:text="Short description"/>
             <LinearLayout
+                android:orientation="horizontal"
                 android:id="@+id/layoutUserActions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/image_activity_tag_fragment_item_margin"
                 android:gravity="center">
+                <!--to be added soon
                 <Button
                     android:text="Spoiler"
                     android:layout_width="wrap_content"
@@ -71,7 +73,7 @@
                 <Button
                     android:text="Watch"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"/>-->
             </LinearLayout>
             <TextView
                 android:id="@+id/textTagDescription"

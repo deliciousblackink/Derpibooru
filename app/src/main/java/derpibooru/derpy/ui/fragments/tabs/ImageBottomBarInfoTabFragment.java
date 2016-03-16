@@ -50,6 +50,14 @@ public class ImageBottomBarInfoTabFragment extends Fragment {
 
     public void setOnTagClickListener(ImageTagView.OnTagClickListener listener) {
         mTagListener = listener;
+        if ((layoutTags != null) && (layoutTags.getChildCount() > 0)) {
+            for (int i = 0; i < layoutTags.getChildCount(); i++) {
+                View v = layoutTags.getChildAt(i);
+                if (v instanceof ImageTagView) {
+                    ((ImageTagView) v).setOnTagClickListener(mTagListener);
+                }
+            }
+        }
     }
 
     private void display(DerpibooruImageDetailed info) {

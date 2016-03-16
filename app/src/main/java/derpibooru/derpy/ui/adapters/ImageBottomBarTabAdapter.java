@@ -41,7 +41,6 @@ public abstract class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter
             case TAB_INFO_POSITION:
                 fragment = new ImageBottomBarInfoTabFragment();
                 fragment.setArguments(getDetailedImageBundle());
-                setFragmentCallbackHandler(fragment);
                 break;
             case TAB_FAVES_POSITION:
                 fragment = new ImageBottomBarFavoritesTabFragment();

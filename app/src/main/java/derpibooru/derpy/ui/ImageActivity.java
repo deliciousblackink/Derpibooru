@@ -1,6 +1,5 @@
 package derpibooru.derpy.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -74,7 +73,7 @@ public class ImageActivity extends AppCompatActivity {
      * skip the placeholder thumb and call {@link ImageActivityMainFragment.ImageActivityMainFragmentHandler#getImage()}.
      */
     private void forceMainFragmentToDisplayDetailedImage(Fragment mainFragment) {
-       mainFragment.getArguments().remove(ImageListFragment.EXTRAS_IMAGE_THUMB);
+        mainFragment.getArguments().remove(ImageListFragment.EXTRAS_IMAGE_THUMB);
     }
 
     @Override

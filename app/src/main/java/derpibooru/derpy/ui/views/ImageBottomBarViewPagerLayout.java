@@ -59,7 +59,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
     }
 
     @Override
-    public void onSizeChanged(int w, int h, int oldw, int oldh){
+    public void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mAnimator = new ImageBottomBarAnimator(
                 transparentOverlay, tabPager, tabPagerHeader, h);

@@ -1,14 +1,10 @@
 package derpibooru.derpy.ui.adapters;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import java.util.ArrayList;
-
-import derpibooru.derpy.data.internal.FragmentAdapterItem;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarCommentListTabFragment;
@@ -17,44 +13,61 @@ import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarInfoTabFragment;
 import derpibooru.derpy.ui.views.ImageTagView;
 
 public abstract class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter {
-    private ArrayList<FragmentAdapterItem> mTabs;
+    private static final int TAB_INFO_POSITION = 0;
+    private static final int TAB_FAVES_POSITION = 1;
+    private static final int TAB_COMMENTS_POSITION = 2;
+
+    private DerpibooruImageDetailed mImage;
 
     public ImageBottomBarTabAdapter(FragmentManager fm, DerpibooruImageDetailed imageDetailed) {
         super(fm);
-        Bundle imageDetailedArgs = new Bundle();
-        imageDetailedArgs.putParcelable(ImageActivity.EXTRAS_IMAGE_DETAILED, imageDetailed);
-        Bundle imageIdArgs = new Bundle();
-        imageIdArgs.putInt(ImageActivity.EXTRAS_IMAGE_ID, imageDetailed.getThumb().getId());
-
-        ImageBottomBarInfoTabFragment info = new ImageBottomBarInfoTabFragment();
-        info.setArguments(imageDetailedArgs);
-        ImageBottomBarFavoritesTabFragment faves = new ImageBottomBarFavoritesTabFragment();
-        faves.setArguments(imageDetailedArgs);
-        ImageBottomBarCommentListTabFragment comments = new ImageBottomBarCommentListTabFragment();
-        comments.setArguments(imageIdArgs);
-
-        mTabs = new ArrayList<>(3);
-        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.ImageInfo.id(), info));
-        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Faves.id(), faves));
-        mTabs.add(new FragmentAdapterItem(ImageBottomBarTab.Comments.id(), comments));
-
         for (Fragment fragment : fm.getFragments()) {
             setFragmentCallbackHandler(fragment);
         }
+        mImage = imageDetailed;
     }
 
     public abstract void onTagClicked(int tagId);
 
     @Override
     public int getCount() {
-        return mTabs.size();
+        return 3;
     }
 
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = mTabs.get(position).getContent();
+        Fragment fragment;
+        switch (position) {
+            case TAB_INFO_POSITION:
+                fragment = new ImageBottomBarInfoTabFragment();
+                fragment.setArguments(getDetailedImageBundle());
+                setFragmentCallbackHandler(fragment);
+                break;
+            case TAB_FAVES_POSITION:
+                fragment = new ImageBottomBarFavoritesTabFragment();
+                fragment.setArguments(getDetailedImageBundle());
+                break;
+            case TAB_COMMENTS_POSITION:
+                fragment = new ImageBottomBarCommentListTabFragment();
+                fragment.setArguments(getImageIdBundle());
+                break;
+            default:
+                throw new IndexOutOfBoundsException("ImageBottomBarTabAdapter getItem(int): position is out of bounds");
+        }
         setFragmentCallbackHandler(fragment);
         return fragment;
+    }
+
+    private Bundle getDetailedImageBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ImageActivity.EXTRAS_IMAGE_DETAILED, mImage);
+        return bundle;
+    }
+
+    private Bundle getImageIdBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(ImageActivity.EXTRAS_IMAGE_ID, mImage.getThumb().getId());
+        return bundle;
     }
 
     private void setFragmentCallbackHandler(Fragment fragment) {

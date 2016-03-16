@@ -15,6 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruTag;
@@ -25,20 +27,24 @@ import derpibooru.derpy.ui.views.ImageTagView;
 
 public class ImageBottomBarInfoTabFragment extends Fragment {
     private TextViewHtmlDisplayer mHtmlPresenter;
-
     private ImageTagView.OnTagClickListener mTagListener;
+
+    @Bind(R.id.textUploaded) TextView textUploaded;
+    @Bind(R.id.textDescription) TextView textDescription;
+    @Bind(R.id.layoutImageTags) FlowLayout layoutTags;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_image_bottom_bar_info, container, false);
+        ButterKnife.bind(this, v);
         mHtmlPresenter = new TextViewHtmlDisplayer() {
             @Override
             protected void onLinkClick(String url) {
 
             }
         };
-        displayInfoInView(v, (DerpibooruImageDetailed) getArguments().getParcelable(ImageActivity.EXTRAS_IMAGE_DETAILED));
+        display((DerpibooruImageDetailed) getArguments().getParcelable(ImageActivity.EXTRAS_IMAGE_DETAILED));
         return v;
     }
 
@@ -46,16 +52,16 @@ public class ImageBottomBarInfoTabFragment extends Fragment {
         mTagListener = listener;
     }
 
-    private void displayInfoInView(View target, DerpibooruImageDetailed info) {
-        setImageUploader(info, target);
-        setImageDescription(info, target);
-        setImageTags(info, target);
-        target.findViewById(R.id.textUploaded).setVisibility(View.VISIBLE);
-        target.findViewById(R.id.textDescription).setVisibility(View.VISIBLE);
-        target.findViewById(R.id.layoutImageTags).setVisibility(View.VISIBLE);
+    private void display(DerpibooruImageDetailed info) {
+        setImageUploader(info);
+        setImageDescription(info);
+        setImageTags(info);
+        textUploaded.setVisibility(View.VISIBLE);
+        textDescription.setVisibility(View.VISIBLE);
+        layoutTags.setVisibility(View.VISIBLE);
     }
 
-    private void setImageUploader(DerpibooruImageDetailed info, View layout) {
+    private void setImageUploader(DerpibooruImageDetailed info) {
         String uploaderHtml;
         try {
             Date imageCreatedAt;
@@ -71,26 +77,23 @@ public class ImageBottomBarInfoTabFragment extends Fragment {
             uploaderHtml = String.format("Uploaded by <a href=\"%s\">%s</a>",
                                          info.getUploader(), info.getUploader());
         }
-        mHtmlPresenter.textFromHtml((TextView) layout.findViewById(R.id.textUploaded), uploaderHtml);
+        mHtmlPresenter.textFromHtml(textUploaded, uploaderHtml);
     }
 
-    private void setImageDescription(DerpibooruImageDetailed info, View layout) {
-        if (!info.getDescription().equals("")) {
-            ((TextView) layout.findViewById(R.id.textDescription))
-                    .setText(Html.fromHtml(info.getDescription()));
+    private void setImageDescription(DerpibooruImageDetailed info) {
+        if (!info.getDescription().isEmpty()) {
+            textDescription.setText(Html.fromHtml(info.getDescription()));
         } else {
-            layout.findViewById(R.id.textDescription)
-                    .setVisibility(View.GONE);
+            textDescription.setVisibility(View.GONE);
         }
     }
 
-    private void setImageTags(DerpibooruImageDetailed info, View layout) {
-        FlowLayout l = (FlowLayout) layout.findViewById(R.id.layoutImageTags);
+    private void setImageTags(DerpibooruImageDetailed info) {
         for (DerpibooruTag tag : info.getTags()) {
             ImageTagView itv = new ImageTagView(getActivity());
             itv.setTagInfo(tag);
             itv.setOnTagClickListener(mTagListener);
-            l.addView(itv);
+            layoutTags.addView(itv);
         }
     }
 }

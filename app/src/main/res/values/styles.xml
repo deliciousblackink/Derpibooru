@@ -21,14 +21,6 @@
         <item name="android:textColorHighlight">@color/colorTextLight</item>
         <item name="android:textColorLink">@color/colorTextLight</item>
     </style>
-    <style name="TabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabBackground">@color/colorPrimary</item>
-        <item name="tabTextAppearance">@style/TabTextAppearance</item>
-        <item name="tabSelectedTextColor">@color/colorTabTextSelected</item>
-    </style>
-    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="android:textColor">@color/colorTabTextUnselected</item>
-    </style>
     <!-- used in FloatingSearchView -->
     <style name="Divider">
         <!-- http://stackoverflow.com/a/14533085/1726690 -->

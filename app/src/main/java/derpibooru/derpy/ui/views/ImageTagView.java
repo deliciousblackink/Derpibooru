@@ -95,6 +95,18 @@ public class ImageTagView extends LinearLayout {
                 mTextViewBackgroundColorId = R.color.colorImageContentSafetyTag;
                 mTextViewBackgroundActiveColorId = R.color.colorImageContentSafetyTagActive;
                 break;
+            case SpoilerWarning:
+                mTextSpanStyleId = R.style.ImageTagSpoilerWarning;
+                mTextSpanActiveStyleId = R.style.ImageTagSpoilerWarningActive;
+                mTextViewBackgroundColorId = R.color.colorImageSpoilerWarningTag;
+                mTextViewBackgroundActiveColorId = R.color.colorImageSpoilerWarningTagActive;
+                break;
+            case OC:
+                mTextSpanStyleId = R.style.ImageTagOC;
+                mTextSpanActiveStyleId = R.style.ImageTagOCActive;
+                mTextViewBackgroundColorId = R.color.colorImageOCTag;
+                mTextViewBackgroundActiveColorId = R.color.colorImageOCTagActive;
+                break;
             case General:
                 mTextSpanStyleId = R.style.ImageTagGeneral;
                 mTextSpanActiveStyleId = R.style.ImageTagGeneralActive;

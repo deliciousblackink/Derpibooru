@@ -71,9 +71,11 @@ public class DerpibooruTag implements Parcelable {
     };
 
     public enum TagType {
-        Artist(1),
+        Artist(0),
+        SpoilerWarning(1),
         ContentSafety(2),
-        General(3);
+        OC(3),
+        General(4);
 
         private int mValue;
 
@@ -100,6 +102,12 @@ public class DerpibooruTag implements Parcelable {
         if (Pattern.compile("^(artist:)").matcher(mName).find()) {
             return DerpibooruTag.TagType.Artist;
         }
+        if (Pattern.compile("^(spoiler:)").matcher(mName).find()) {
+            return TagType.SpoilerWarning;
+        }
+        if (Pattern.compile("^(oc:)").matcher(mName).find()) {
+            return TagType.OC;
+        }
         for (Map.Entry<String, TagType> tag : SYSTEM_TAGS.entrySet()) {
             if (mName.equals(tag.getKey())) {
                 return tag.getValue();
@@ -113,6 +121,9 @@ public class DerpibooruTag implements Parcelable {
             .put("anonymous artist", TagType.Artist)
             .put("artist needed", TagType.Artist)
             .put("edit", TagType.Artist)
+            /* spoiler warning tags */
+            .put("spoilers for another series", TagType.SpoilerWarning)
+            .put("spoiler", TagType.SpoilerWarning)
              /* content safety tags */
             .put("explicit", TagType.ContentSafety)
             .put("grimdark", TagType.ContentSafety)
@@ -121,5 +132,8 @@ public class DerpibooruTag implements Parcelable {
             .put("safe", TagType.ContentSafety)
             .put("semi-grimdark", TagType.ContentSafety)
             .put("suggestive", TagType.ContentSafety)
+            /* oc tags */
+            .put("oc", TagType.OC)
+            .put("oc only", TagType.OC)
             .build();
 }

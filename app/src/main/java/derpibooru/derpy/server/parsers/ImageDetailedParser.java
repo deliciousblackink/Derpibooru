@@ -9,11 +9,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
@@ -104,9 +106,9 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
             int tagId = Integer.parseInt(tag.attr("data-tag-id"));
             int tagImgCount = parseNumberOfImagesFromTagText(tag.text());
             String tagName = tag.attr("data-tag-name");
-
             imageTags.add(new DerpibooruTag(tagId, tagImgCount, tagName));
         }
+        Collections.sort(imageTags, new DerpibooruTagTypeComparator(false));
         return imageTags;
     }
 

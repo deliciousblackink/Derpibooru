@@ -134,6 +134,12 @@ public class ImageActivityMainFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.actionDownloadImage:
+                if (mActivityCallbacks != null) {
+                    new ImageDownloader(getContext(), mActivityCallbacks.getImage().getThumb().getId(),
+                                        mActivityCallbacks.getImage().getTags(),
+                                        mActivityCallbacks.getImage().getDownloadUrl())
+                            .download();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

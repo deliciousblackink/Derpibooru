@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -37,6 +39,7 @@ public class ImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,10 +127,6 @@ public class ImageActivity extends AppCompatActivity {
             @Override
             public void onQueryExecuted(DerpibooruImageDetailed info) {
                 mImage = info;
-                /* FIXME: java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-                 * commiting fragments -> state loss
-                 * so far i could only reproduce this once — when the activity is closed right after being opened,
-                 * probably before it fetches the detailed image */
                 displayMainFragment(null);
             }
 
@@ -171,10 +170,10 @@ public class ImageActivity extends AppCompatActivity {
         mainFragment.setActivityCallbacks(new MainFragmentCallbackHandler());
         mainFragment.setArguments(getMainFragmentArguments(placeholderThumb));
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(contentLayout.getId(), mainFragment)
-                .commit();
+        safelyCommitFragmentTransaction(
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(contentLayout.getId(), mainFragment));
     }
 
     private Bundle getMainFragmentArguments(@Nullable DerpibooruImageThumb thumb) {
@@ -201,15 +200,33 @@ public class ImageActivity extends AppCompatActivity {
         fragment.setActivityCallbacks(new TagFragmentCallbackHandler());
         fragment.setArguments(args);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setCustomAnimations(R.anim.image_activity_tag_enter,
-                                     R.anim.image_activity_tag_exit,
-                                     R.anim.image_activity_tag_back_stack_pop_enter,
-                                     R.anim.image_activity_tag_back_stack_pop_exit)
-                .addToBackStack(null)
-                .replace(contentLayout.getId(), fragment)
-                .commit();
+        safelyCommitFragmentTransaction(
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .setCustomAnimations(R.anim.image_activity_tag_enter,
+                                             R.anim.image_activity_tag_exit,
+                                             R.anim.image_activity_tag_back_stack_pop_enter,
+                                             R.anim.image_activity_tag_back_stack_pop_exit)
+                        .addToBackStack(null)
+                        .replace(contentLayout.getId(), fragment));
+    }
+
+    /**
+     * Somewhat dirty workaround for the FragmentTransaction
+     * <a href="http://www.androiddesignpatterns.com/2013/08/fragment-transaction-commit-state-loss.html">state loss</a>,
+     * which can occur due to ImageDetailedProvider callback (see {@link #fetchDetailedInformation(int)}) being called when
+     * the activity's view is destroyed.
+     * <br>
+     * Unlike {@link FragmentTransaction#commitAllowingStateLoss()}, the method does <strong>not</strong> commit the
+     * transaction after onSaveInstanceState. Moreover, it logs the exception should it be required for debugging.
+     */
+    private int safelyCommitFragmentTransaction(FragmentTransaction transaction) {
+        try {
+            return transaction.commit();
+        } catch (IllegalStateException e) {
+            Log.e("ImageActivity", "safelyCommitFragmentTransaction: failed to commit transaction", e);
+            return -1;
+        }
     }
 
     private class MainFragmentCallbackHandler implements ImageActivityMainFragment.ImageActivityMainFragmentHandler {

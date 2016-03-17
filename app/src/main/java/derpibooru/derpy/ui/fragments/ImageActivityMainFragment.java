@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,6 +27,7 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
+import derpibooru.derpy.server.ImageDownloader;
 import derpibooru.derpy.ui.presenters.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
@@ -46,6 +50,7 @@ public class ImageActivityMainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_image_fragment_main, container, false);
         ButterKnife.bind(this, v);
+        setHasOptionsMenu(true);
         bottomBar.initializeWithFragmentManager(getChildFragmentManager());
         setBottomBarCallbackHandler();
         if (getArguments().containsKey(ImageListFragment.EXTRAS_IMAGE_THUMB)) {
@@ -116,6 +121,22 @@ public class ImageActivityMainFragment extends Fragment {
                 mActivityCallbacks.openTagInformation(tagId);
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_image_activity_main_fragment, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.actionDownloadImage:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initializeInteractionPresenter(final DerpibooruImageThumb thumbToBeUsedIfDetailedImageIsNotAvailable,

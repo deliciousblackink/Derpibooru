@@ -101,12 +101,6 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main_activity, menu);
-        return true;
-    }
-
-    @Override
     public void onBackPressed() {
         /* https://code.google.com/p/android/issues/detail?id=40323 */
         if (!((getCurrentFragment() instanceof BrowseFragment)
@@ -129,6 +123,12 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
         } else if (getCurrentFragment() instanceof ImageListFragment) {
             getCurrentFragment().onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+        return true;
     }
 
     @Override

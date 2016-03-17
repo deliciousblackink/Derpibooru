@@ -10,17 +10,19 @@ public class DerpibooruImageDetailed implements Parcelable {
     private final DerpibooruImageThumb mThumb;
 
     private final String mSourceUrl;
+    private final String mDownloadUrl;
     private final String mUploader;
     private final String mDescription;
     private final String mCreatedAt;
     private final List<DerpibooruTag> mTags;
     private final List<String> mFavedBy;
 
-    public DerpibooruImageDetailed(DerpibooruImageThumb image, String sourceUrl,
+    public DerpibooruImageDetailed(DerpibooruImageThumb image, String sourceUrl, String downloadUrl,
                                    String uploader, String description, String createdAt,
                                    List<DerpibooruTag> tags, List<String> favedBy) {
         mThumb = image;
         mSourceUrl = sourceUrl;
+        mDownloadUrl = downloadUrl;
         mUploader = uploader;
         mDescription = description;
         mCreatedAt = createdAt;
@@ -34,6 +36,10 @@ public class DerpibooruImageDetailed implements Parcelable {
 
     public String getSourceUrl() {
         return mSourceUrl;
+    }
+
+    public String getDownloadUrl() {
+        return mDownloadUrl;
     }
 
     public String getUploader() {
@@ -59,6 +65,7 @@ public class DerpibooruImageDetailed implements Parcelable {
     protected DerpibooruImageDetailed(Parcel in) {
         mThumb = in.readParcelable(DerpibooruImageThumb.class.getClassLoader());
         mSourceUrl = in.readString();
+        mDownloadUrl = in.readString();
         mUploader = in.readString();
         mDescription = in.readString();
         mCreatedAt = in.readString();
@@ -78,6 +85,7 @@ public class DerpibooruImageDetailed implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(mThumb, flags);
         dest.writeString(mSourceUrl);
+        dest.writeString(mDownloadUrl);
         dest.writeString(mUploader);
         dest.writeString(mDescription);
         dest.writeString(mCreatedAt);

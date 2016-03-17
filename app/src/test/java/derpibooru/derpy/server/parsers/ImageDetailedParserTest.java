@@ -32,7 +32,9 @@ public class ImageDetailedParserTest {
     private static final List<DerpibooruTag> tags = Arrays.asList(new DerpibooruTag(54235, 42181, "animated"),
                                                                   new DerpibooruTag(26668, 3, "excalibur (1981)"));
     private static final DerpibooruImageDetailed expected =
-            new DerpibooruImageDetailed(thumb, "", "Background Pony #14C8", "Trixie has no one to blame but herself.", "2014-06-17T22:32:45Z",
+            new DerpibooruImageDetailed(thumb, "",
+                                        "https://derpicdn.net/img/view/2014/6/17/655777__safe_animated_upvotes+galore_trixie_frown_wide+eyes_car_soldier_thought+bubble_wheel.gif",
+                                        "Background Pony #14C8", "Trixie has no one to blame but herself.", "2014-06-17T22:32:45Z",
                                         tags, Arrays.asList("User1", "User2", "User3"));
     private static final DerpibooruTagDetailed dummySpoilerTag =
             new DerpibooruTagDetailed(54235, 0, "animated", "", "", "https://derpicdn.net/dummy_spoiler");
@@ -56,6 +58,7 @@ public class ImageDetailedParserTest {
     @Test
     public void testDetailedFields() {
         assertThat(parsed.getSourceUrl(), is(expected.getSourceUrl()));
+        assertThat(parsed.getDownloadUrl(), is(expected.getDownloadUrl()));
         assertThat(parsed.getUploader(), is(expected.getUploader()));
         assertThat(parsed.getDescription(), is(expected.getDescription()));
         assertThat(parsed.getCreatedAt(), is(expected.getCreatedAt()));

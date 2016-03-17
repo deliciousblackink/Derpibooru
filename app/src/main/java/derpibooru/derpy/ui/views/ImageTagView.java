@@ -22,10 +22,8 @@ public class ImageTagView extends LinearLayout {
     private DerpibooruTag mTag;
     private int mTextSpanStyleId;
     private int mTextSpanActiveStyleId;
-    private int mTextSpanColorId;
     private int mTextViewBackgroundColorId;
-    private int mTextSpanNumberOfImagesStyleId = R.style.ImageTagNumberOfImages;
-    private int mTextSpanNumberOfImagesActiveStyleId = R.style.ImageTagNumberOfImagesActive;
+    private int mTextViewBackgroundActiveColorId;
 
     @Bind(R.id.textTag) TextView textTag;
 
@@ -63,11 +61,9 @@ public class ImageTagView extends LinearLayout {
     }
 
     private void toggleTagColor(boolean active) {
-        setSpansWithStylesId(active ? mTextSpanActiveStyleId
-                                    : mTextSpanStyleId,
-                             active ? mTextSpanNumberOfImagesActiveStyleId
-                                    : mTextSpanNumberOfImagesStyleId);
-        setBackgroundColorById(active ? mTextSpanColorId
+        setTextSpanStyle(active ? mTextSpanActiveStyleId
+                                : mTextSpanStyleId);
+        setTextBackgroundColor(active ? mTextViewBackgroundActiveColorId
                                       : mTextViewBackgroundColorId);
     }
 
@@ -75,8 +71,8 @@ public class ImageTagView extends LinearLayout {
         mTag = tag;
         inflateView();
         setColorsAccordingToTagType();
-        setSpansWithStylesId(mTextSpanStyleId, mTextSpanNumberOfImagesStyleId);
-        setBackgroundColorById(mTextViewBackgroundColorId);
+        setTextSpanStyle(mTextSpanStyleId);
+        setTextBackgroundColor(mTextViewBackgroundColorId);
     }
 
     private void inflateView() {
@@ -90,37 +86,37 @@ public class ImageTagView extends LinearLayout {
             case Artist:
                 mTextSpanStyleId = R.style.ImageTagArtist;
                 mTextSpanActiveStyleId = R.style.ImageTagArtistActive;
-                mTextSpanColorId = R.color.colorImageArtistTagText;
                 mTextViewBackgroundColorId = R.color.colorImageArtistTag;
+                mTextViewBackgroundActiveColorId = R.color.colorImageArtistTagActive;
                 break;
             case ContentSafety:
                 mTextSpanStyleId = R.style.ImageTagContentSafety;
                 mTextSpanActiveStyleId = R.style.ImageTagContentSafetyActive;
-                mTextSpanColorId = R.color.colorImageContentSafetyTagText;
                 mTextViewBackgroundColorId = R.color.colorImageContentSafetyTag;
+                mTextViewBackgroundActiveColorId = R.color.colorImageContentSafetyTagActive;
                 break;
             case General:
                 mTextSpanStyleId = R.style.ImageTagGeneral;
                 mTextSpanActiveStyleId = R.style.ImageTagGeneralActive;
-                mTextSpanColorId = R.color.colorImageGeneralTagText;
                 mTextViewBackgroundColorId = R.color.colorImageGeneralTag;
+                mTextViewBackgroundActiveColorId = R.color.colorImageGeneralTagActive;
                 break;
         }
     }
 
-    private void setSpansWithStylesId(int tagNameSpanStyle, int numberOfImagesSpanStyle) {
+    private void setTextSpanStyle(int tagNameSpanStyle) {
         String numberOfImages = String.format(" (%d)", mTag.getNumberOfImages());
 
         Spannable text = new SpannableString(mTag.getName() + numberOfImages);
         text.setSpan(new TextAppearanceSpan(getContext(), tagNameSpanStyle), 0,
                      mTag.getName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new TextAppearanceSpan(getContext(), numberOfImagesSpanStyle), mTag.getName().length(),
+        text.setSpan(new TextAppearanceSpan(getContext(), R.style.ImageTagNumberOfImages), mTag.getName().length(),
                      (mTag.getName().length() + numberOfImages.length()), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         textTag.setText(text, TextView.BufferType.SPANNABLE);
     }
 
-    private void setBackgroundColorById(int colorResourceId) {
+    private void setTextBackgroundColor(int colorResourceId) {
         textTag.setBackgroundColor(ContextCompat.getColor(getContext(), colorResourceId));
     }
 

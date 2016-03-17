@@ -37,6 +37,7 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
 
     private ImageBottomBarAnimator mAnimator;
     private FragmentManager mFragmentManager;
+    private ImageTagView.OnTagClickListener mTagListener;
 
     private ImageBottomBarAnimator.ExtensionState mRestoredState;
 
@@ -57,13 +58,36 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
         setButtonsEnabled(false); /* until the 'initializeTabs' method is called with tab information */
     }
 
-    public void setBarExtensionAttrs(int maximumBarHeight) {
+    @Override
+    public void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
         mAnimator = new ImageBottomBarAnimator(
-                transparentOverlay, tabPager, tabPagerHeader, maximumBarHeight);
+                transparentOverlay, tabPager, tabPagerHeader, h);
+        if (mRestoredState != null) {
+            if (mRestoredState != ImageBottomBarAnimator.ExtensionState.None) {
+                selectButtonAccordingToPageSelected(tabPager.getCurrentItem());
+                mAnimator.doAfter(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAnimator.extendViewPager(mRestoredState, 0);
+                    }
+                });
+            }
+            mAnimator.extendViewPagerHeader(0);
+        }
+    }
+
+    public void setTagListener(ImageTagView.OnTagClickListener listener) {
+        mTagListener = listener;
     }
 
     protected void initializeTabs(DerpibooruImageDetailed content) {
-        tabPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content));
+        tabPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content) {
+            @Override
+            public void onTagClicked(int tagId) {
+                mTagListener.onTagClicked(tagId);
+            }
+        });
         setButtonsEnabled(true);
         setButtonListeners();
         post(new Runnable() {
@@ -71,17 +95,6 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
             public void run() {
                 if (mRestoredState == null) {
                     mAnimator.extendViewPagerHeader();
-                } else {
-                    mAnimator.extendViewPagerHeader(0);
-                    if (mRestoredState != ImageBottomBarAnimator.ExtensionState.None) {
-                        selectButtonAccordingToPageSelected(tabPager.getCurrentItem());
-                        mAnimator.doAfter(new Runnable() {
-                            @Override
-                            public void run() {
-                                mAnimator.extendViewPager(mRestoredState, 0);
-                            }
-                        });
-                    }
                 }
             }
         });

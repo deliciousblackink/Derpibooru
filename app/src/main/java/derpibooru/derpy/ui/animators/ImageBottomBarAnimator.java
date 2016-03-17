@@ -49,26 +49,34 @@ public class ImageBottomBarAnimator {
     }
 
     public void extendViewPagerHeader(final double multiplyDurationBy) {
-        /* simple "post(Runnable)" is executed before transparent overlay's layout gets measured */
-        mTransparentOverlay.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                new TransparentOverlayHeightAnimator()
-                        .to(mHeaderHeight)
-                        .multiplyDurationBy(multiplyDurationBy)
-                        .doOnFinish(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mRunAfterAnimation != null) {
-                                    mRunAfterAnimation.run();
-                                    mRunAfterAnimation = null;
+        if (multiplyDurationBy > 0) {
+            mTransparentOverlay.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    new TransparentOverlayHeightAnimator()
+                            .to(mHeaderHeight)
+                            .multiplyDurationBy(multiplyDurationBy)
+                            .doOnFinish(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (mRunAfterAnimation != null) {
+                                        mRunAfterAnimation.run();
+                                        mRunAfterAnimation = null;
+                                    }
                                 }
-                            }
-                        })
-                        .animate(mTabPagerHeader,
-                                 (getCurrentOverlayHeight() - mHeaderHeight), (mMaximumExtension + mHeaderHeight));
+                            })
+                            .animate(mTabPagerHeader,
+                                     (getCurrentOverlayHeight() - mHeaderHeight), (mMaximumExtension + mHeaderHeight));
+                }
+            }, ANIMATION_DURATION_BASE);
+        } else {
+            extendViewByShrinkingTransparentOverlay(
+                    mTabPagerHeader, (getCurrentOverlayHeight() - mHeaderHeight), (mMaximumExtension + mHeaderHeight));
+            if (mRunAfterAnimation != null) {
+                mRunAfterAnimation.run();
+                mRunAfterAnimation = null;
             }
-        }, (long) (ANIMATION_DURATION_BASE * multiplyDurationBy));
+        }
     }
 
     public void extendViewPager(ExtensionState target) {
@@ -186,10 +194,7 @@ public class ImageBottomBarAnimator {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     int overlayHeight = (Integer) animation.getAnimatedValue();
-                    mTransparentOverlay.getLayoutParams().height = overlayHeight;
-                    mTransparentOverlay.requestLayout();
-                    target.getLayoutParams().height = maximumExtension - overlayHeight;
-                    target.requestLayout();
+                    extendViewByShrinkingTransparentOverlay(target, overlayHeight, maximumExtension);
                 }
             });
             va.start();
@@ -197,5 +202,13 @@ public class ImageBottomBarAnimator {
                 mTransparentOverlay.postDelayed(mPostAnimationRunnable, mAnimationDuration);
             }
         }
+    }
+
+    private void extendViewByShrinkingTransparentOverlay(View target,
+                                                         int targetOverlayHeight, int maximumExtension) {
+        mTransparentOverlay.getLayoutParams().height = targetOverlayHeight;
+        mTransparentOverlay.requestLayout();
+        target.getLayoutParams().height = maximumExtension - targetOverlayHeight;
+        target.requestLayout();
     }
 }

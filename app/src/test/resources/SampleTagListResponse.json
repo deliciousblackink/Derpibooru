@@ -28,7 +28,7 @@
       "name":"oc",
       "slug":"oc",
       "description":"Tag for any character that has not appeared in official media or merchandise; that is, a fan-made character, regardless of how popular they may be.",
-      "short_description":"",
+      "short_description":"Short description",
       "spoiler":false,
       "hidden":false,
       "system":false,

@@ -14,13 +14,13 @@ import static org.junit.Assert.assertThat;
 
 public class TagListParserTest {
     private static final DerpibooruTagDetailed expectedTagWithImplications =
-            new DerpibooruTagDetailed(24257, 922, "cutelestia", "", "");
+            new DerpibooruTagDetailed(24257, 922, "cutelestia", "", "", "");
     private static final DerpibooruTagDetailed expectedTagWithSpoilerImage =
-            new DerpibooruTagDetailed(36457, 165700, "oc",
+            new DerpibooruTagDetailed(36457, 165700, "oc", "Short description",
                                       "Tag for any character that has not appeared in official media or merchandise; that is, a fan-made character, regardless of how popular they may be.",
                                       "https://derpicdn.net/media/W1siZiIsIjIwMTMvMTEvMjkvMTVfMDRfNTVfNjM2X29jLnBuZyJdLFsicCIsInRodW1iIiwiMjUweDI1MCJdXQ.png");
     private static final DerpibooruTagDetailed expectedCachedTag =
-            new DerpibooruTagDetailed(1, 32, "test", "Tests tag caching", "https://derpicdn.net/media/something.png");
+            new DerpibooruTagDetailed(1, 32, "test", "Tests tag caching", "Detailed description", "https://derpicdn.net/media/something.png");
 
     private DerpibooruTagDetailed parsedWithImplications;
     private DerpibooruTagDetailed parsedWithSpoilerImage;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/layoutImageInfo"
+            android:id="@+id/scrollImageInfo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical">
@@ -14,9 +14,9 @@
                 android:layout_height="wrap_content"
                 android:text="Uploaded by {} on {}"
                 android:scaleType="fitCenter"
-                android:textSize="20sp"
+                android:textSize="@dimen/image_activity_text_title_size"
                 android:padding="5dp"
-                android:layout_margin="10dp"/>
+                android:layout_margin="@dimen/image_activity_text_title_margin"/>
             <TextView
                 android:id="@+id/textDescription"
                 android:layout_width="wrap_content"

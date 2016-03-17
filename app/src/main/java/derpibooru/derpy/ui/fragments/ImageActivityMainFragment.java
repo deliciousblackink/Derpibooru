@@ -27,6 +27,7 @@ import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.ui.presenters.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
+import derpibooru.derpy.ui.views.ImageTagView;
 import derpibooru.derpy.ui.views.ImageTopBarView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -38,14 +39,15 @@ public class ImageActivityMainFragment extends Fragment {
     @Bind(R.id.imageBottomBar) ImageBottomBarView bottomBar;
 
     private ImageInteractionPresenter mInteractionPresenter;
-    private ImageActivityMainFragmentListener mActivityCallbacks;
+    private ImageActivityMainFragmentHandler mActivityCallbacks;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_image_fragment_main, container, false);
         ButterKnife.bind(this, v);
-        initializeBottomBarLayout();
+        bottomBar.initializeWithFragmentManager(getChildFragmentManager());
+        setBottomBarCallbackHandler();
         if (getArguments().containsKey(ImageListFragment.EXTRAS_IMAGE_THUMB)) {
             displayFromImageThumb();
         } else {
@@ -55,15 +57,20 @@ public class ImageActivityMainFragment extends Fragment {
         return v;
     }
 
-    public void setActivityCallbacks(ImageActivityMainFragmentListener listener) {
-        mActivityCallbacks = listener;
+    public void setActivityCallbacks(ImageActivityMainFragmentHandler handler) {
+        mActivityCallbacks = handler;
     }
 
     public void onDetailedImageFetched() {
         display(getArguments().getBoolean(EXTRAS_IS_USER_LOGGED_IN));
     }
 
+    public void resetView() {
+        setBottomBarCallbackHandler();
+    }
+
     private void display(boolean isLoggedIn) {
+        mActivityCallbacks.setToolbarTitle(String.format("#%d", mActivityCallbacks.getImage().getThumb().getId()));
         loadImageIfNotShownAlready(mActivityCallbacks.getImage().getThumb().getLargeImageUrl());
         if (mInteractionPresenter == null) {
             initializeInteractionPresenter(null, isLoggedIn);
@@ -79,11 +86,11 @@ public class ImageActivityMainFragment extends Fragment {
 
     private void displayFromImageThumb() {
         DerpibooruImageThumb thumb = getArguments().getParcelable(ImageListFragment.EXTRAS_IMAGE_THUMB);
+        mActivityCallbacks.setToolbarTitle(String.format("#%d", thumb.getId()));
         loadImageIfNotShownAlready(thumb.getLargeImageUrl());
         /* do not enable image interactions yet, wait for DerpibooruImageDetailed to load */
         initializeInteractionPresenter(thumb, false);
         mInteractionPresenter.refreshInfo(thumb.getFaves(), thumb.getUpvotes(), thumb.getDownvotes());
-        bottomBar.setInfoFromThumb(thumb.getCommentCount());
     }
 
     private void loadImageIfNotShownAlready(String url) {
@@ -102,17 +109,11 @@ public class ImageActivityMainFragment extends Fragment {
         }
     }
 
-    private void initializeBottomBarLayout() {
-        bottomBar.initializeWithFragmentManager(getFragmentManager());
-        bottomBar.post(new Runnable() {
+    private void setBottomBarCallbackHandler() {
+        bottomBar.setTagListener(new ImageTagView.OnTagClickListener() {
             @Override
-            public void run() {
-                /* prevents tabs from overlapping the toolbar when extended */
-                int bottomBarMaximumHeightWhenExtended =
-                        imageView.getMeasuredHeight() - topBar.getMeasuredHeight();
-                bottomBar.setBarExtensionAttrs(bottomBarMaximumHeightWhenExtended);
-                bottomBar.getLayoutParams().height = bottomBarMaximumHeightWhenExtended;
-                bottomBar.requestLayout();
+            public void onTagClicked(int tagId) {
+                mActivityCallbacks.openTagInformation(tagId);
             }
         });
     }
@@ -214,7 +215,7 @@ public class ImageActivityMainFragment extends Fragment {
         @Override
         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target,
                                        boolean isFromMemoryCache, boolean isFirstResource) {
-            mActivityCallbacks.hideProgress();
+            if (getView() != null) getView().findViewById(R.id.progressImage).setVisibility(View.GONE);
             attachPhotoView(mImageView);
             return false;
         }
@@ -237,10 +238,11 @@ public class ImageActivityMainFragment extends Fragment {
         }
     }
 
-    public interface ImageActivityMainFragmentListener {
+    public interface ImageActivityMainFragmentHandler {
         DerpibooruImageDetailed getImage();
         boolean isToolbarVisible();
+        void setToolbarTitle(String title);
         void setToolbarVisible(boolean visible);
-        void hideProgress();
+        void openTagInformation(int tagId);
     }
 }

@@ -28,7 +28,7 @@ public class ImageListParserTest {
                                      EnumSet.of(DerpibooruImageInteraction.InteractionType.Downvote,
                                                 DerpibooruImageInteraction.InteractionType.Fave));
     private static final DerpibooruTagDetailed dummySpoilerTag =
-            new DerpibooruTagDetailed(67509, 0, "artist:pikapetey", "", "https://derpicdn.net/dummy_spoiler");
+            new DerpibooruTagDetailed(67509, 0, "artist:pikapetey", "", "", "https://derpicdn.net/dummy_spoiler");
     private static final ArrayList<DerpibooruTagDetailed> dummyFilter = Lists.newArrayList(dummySpoilerTag);
 
     private List<DerpibooruImageThumb> parsed;

@@ -18,6 +18,8 @@ public class TagProvider extends Provider<List<DerpibooruTagDetailed>> {
 
     private List<Integer> mRequestedTagIds;
 
+    private boolean mOverrideCache = false;
+
     public TagProvider(Context context, QueryHandler<List<DerpibooruTagDetailed>> handler) {
         super(context, handler);
         mTagStorage = new TagStorage(context);
@@ -25,6 +27,11 @@ public class TagProvider extends Provider<List<DerpibooruTagDetailed>> {
 
     public TagProvider tags(List<Integer> tagIds) {
         mRequestedTagIds = tagIds;
+        return this;
+    }
+
+    public TagProvider overrideCache() {
+        mOverrideCache = true;
         return this;
     }
 
@@ -49,7 +56,7 @@ public class TagProvider extends Provider<List<DerpibooruTagDetailed>> {
 
     @Override
     public void fetch() {
-        if (!areTagsCached()) {
+        if (mOverrideCache || !areTagsCached()) {
             super.executeQuery(new TagListParser(mCachedTags));
         }
     }

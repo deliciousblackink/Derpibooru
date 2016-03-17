@@ -9,12 +9,26 @@
     <color name="colorTextDark">#212121</color>
     <color name="colorTextGray">#8a000000</color>
     <!-- image tags -->
-    <color name="colorImageArtistTag">#a2a6d4</color>
-    <color name="colorImageArtistTagText">#4d4574</color>
-    <color name="colorImageContentSafetyTag">#b1cee2</color>
-    <color name="colorImageContentSafetyTagText">#4c90c0</color>
-    <color name="colorImageGeneralTag">#cde69a</color>
-    <color name="colorImageGeneralTagText">#82ad2b</color>
+    <!-- material deep purple 100 --> <color name="colorImageArtistTag">#d1c4e9</color>
+    <!-- material deep purple 200 --> <color name="colorImageArtistTagActive">#b39ddb</color>
+    <!-- material deep purple 800 --> <color name="colorImageArtistTagText">#4527a0</color>
+    <!-- material deep purple 900 --> <color name="colorImageArtistTagTextActive">#311b92</color>
+    <!-- material deep orange 100 --> <color name="colorImageSpoilerWarningTag">#ffccbc</color>
+    <!-- material deep orange 200 --> <color name="colorImageSpoilerWarningTagActive">#ffab91</color>
+    <!-- material deep orange 800 --> <color name="colorImageSpoilerWarningTagText">#d84315</color>
+    <!-- material deep orange 900 --> <color name="colorImageSpoilerWarningTagTextActive">#bf360c</color>
+    <!-- material blue 100 --> <color name="colorImageContentSafetyTag">#bbdefb</color>
+    <!-- material blue 200 --> <color name="colorImageContentSafetyTagActive">#90caf9</color>
+    <!-- material blue 800 --> <color name="colorImageContentSafetyTagText">#1565c0</color>
+    <!-- material blue 900 --> <color name="colorImageContentSafetyTagTextActive">#0d47a1</color>
+    <!-- material pink 100 --> <color name="colorImageOCTag">#f8bbd0</color>
+    <!-- material pink 200 --> <color name="colorImageOCTagActive">#f48fb1</color>
+    <!-- material pink 800 --> <color name="colorImageOCTagText">#ad1457</color>
+    <!-- material pink 900 --> <color name="colorImageOCTagTextActive">#880e4f</color>
+    <!-- material light green 100 --> <color name="colorImageGeneralTag">#dcedc8</color>
+    <!-- material light green 200 --> <color name="colorImageGeneralTagActive">#c5e1a5</color>
+    <!-- material light green 800 --> <color name="colorImageGeneralTagText">#558b2f</color>
+    <!-- material light green 900 --> <color name="colorImageGeneralTagTextActive">#33691e</color>
     <!-- tab headings -->
     <color name="colorTabTextSelected">#ffffff</color>
     <color name="colorTabTextUnselected">#96ffffff</color>

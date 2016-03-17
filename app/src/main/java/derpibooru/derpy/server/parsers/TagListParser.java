@@ -30,7 +30,7 @@ public class TagListParser implements ServerResponseParser<List<DerpibooruTagDet
                                                                    : ("https:" + source.getString("spoiler_image_uri"));
             DerpibooruTagDetailed tf = new DerpibooruTagDetailed(
                     source.getInt("id"), source.getInt("images"), source.getString("name"),
-                    source.getString("description"), spoilerUrl);
+                    source.getString("short_description"), source.getString("description"), spoilerUrl);
             output.add(tf);
         }
 

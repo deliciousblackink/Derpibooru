@@ -11,7 +11,11 @@
     <dimen name="navigation_drawer_content_padding">8dp</dimen>
     <dimen name="navigation_drawer_avatar_size">64dp</dimen>
     <dimen name="navigation_drawer_header_height">148dp</dimen>
-    <!-- floating search view -->
+    <!-- search text view -->
     <dimen name="search_auto_complete_text_view_margins">20dp</dimen>
     <dimen name="search_auto_complete_text_view_drawable_padding">16dp</dimen>
+    <!-- detailed image view -->
+    <dimen name="image_activity_text_title_size">20sp</dimen>
+    <dimen name="image_activity_text_title_margin">10dp</dimen>
+    <dimen name="image_activity_tag_fragment_item_margin">10dp</dimen>
 </resources>

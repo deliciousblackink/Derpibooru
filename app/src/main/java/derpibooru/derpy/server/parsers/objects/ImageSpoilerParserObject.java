@@ -21,7 +21,7 @@ public class ImageSpoilerParserObject {
         List<Integer> imageTagIds = intListFromArray(spoileredTagIds);
         /* if the image has multiple tags spoilered, it should use
          * the spoiler image for the ContentSafety one (e.g. "suggestive") */
-        Collections.sort(mSpoileredTags, new DerpibooruTagTypeComparator());
+        Collections.sort(mSpoileredTags, new DerpibooruTagTypeComparator(true));
         for (DerpibooruTagDetailed tag : mSpoileredTags) {
             if (imageTagIds.contains(tag.getId())) {
                 return tag.getSpoilerUrl();

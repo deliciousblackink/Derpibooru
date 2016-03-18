@@ -17,23 +17,12 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruComment;
-import derpibooru.derpy.ui.utils.RelativeDateConverter;
-import derpibooru.derpy.ui.utils.TextViewHtmlDisplayer;
+import derpibooru.derpy.ui.representations.ServerDate;
+import derpibooru.derpy.ui.views.HtmlTextView;
 
 public class CommentListAdapter extends RecyclerViewPaginationAdapter<DerpibooruComment, CommentListAdapter.ViewHolder> {
-    private RelativeDateConverter mDate;
-    private TextViewHtmlDisplayer mHtmlDisplayer;
-
     public CommentListAdapter(Context context, List<DerpibooruComment> items) {
         super(context, items);
-        mDate = new RelativeDateConverter(RelativeDateConverter.DATE_FORMAT_RETURNED_BY_DERPIBOORU,
-                                          RelativeDateConverter.TIMEZONE_RETURNED_BY_DERPIBOORU);
-        mHtmlDisplayer = new TextViewHtmlDisplayer() {
-            @Override
-            protected void onLinkClick(String url) {
-
-            }
-        };
     }
 
     @Override
@@ -55,16 +44,23 @@ public class CommentListAdapter extends RecyclerViewPaginationAdapter<Derpibooru
             Glide.with(getContext()).load(R.drawable.no_avatar).dontAnimate().into(holder.imageAvatar);
         }
         holder.textAuthor.setText(getItems().get(position).getAuthor());
-        holder.textPostedAt.setText(mDate.getRelativeDate(getItems().get(position).getPostedAt()));
-        mHtmlDisplayer.textFromHtml(
-                holder.textComment, getItems().get(position).getText());
+        holder.textPostedAt.setText(
+                new ServerDate(getItems().get(position).getPostedAt())
+                        .getRelativeTimeSpanString());
+        holder.textComment.setHtml(getItems().get(position).getText());
+        holder.textComment.setOnLinkClickListener(new HtmlTextView.OnLinkClickListener() {
+            @Override
+            public void onLinkClick(String linkUrl) {
+
+            }
+        });
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.imageAvatar) CircleImageView imageAvatar;
         @Bind(R.id.textAuthor) TextView textAuthor;
         @Bind(R.id.textPostedAt) TextView textPostedAt;
-        @Bind(R.id.textComment) TextView textComment;
+        @Bind(R.id.textComment) HtmlTextView textComment;
 
         ViewHolder(View v) {
             super(v);

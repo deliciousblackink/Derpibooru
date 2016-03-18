@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6eaede</color>
-    <color name="colorPrimaryDark">#519ed7</color>
-    <color name="colorAccent">#ff4081</color>
-    <color name="colorAccentDark">#c51162</color>
+    <!-- material blue 300 --> <color name="colorPrimary">#64b5f6</color>
+    <!-- material blue 500 --> <color name="colorPrimaryDark">#2196f3</color>
+    <!-- material pink accent 200 --> <color name="colorAccent">#ff4081</color>
     <!-- text -->
-    <color name="colorTextLight">#fafafa</color>
-    <color name="colorTextDark">#212121</color>
-    <color name="colorTextGray">#8a000000</color>
+    <!-- material gray 50 --> <color name="colorTextLight">#fafafa</color>
+    <!-- material gray 900 --> <color name="colorTextDark">#212121</color>
+    <!-- alpha-138 pure black --> <color name="colorTextGray">#8a000000</color>
     <!-- image tags -->
     <!-- material deep purple 100 --> <color name="colorImageArtistTag">#d1c4e9</color>
     <!-- material deep purple 200 --> <color name="colorImageArtistTagActive">#b39ddb</color>

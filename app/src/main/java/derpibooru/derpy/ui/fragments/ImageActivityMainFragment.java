@@ -1,9 +1,12 @@
 package derpibooru.derpy.ui.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,11 +26,11 @@ import java.util.EnumSet;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import derpibooru.derpy.ImageDownload;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
-import derpibooru.derpy.server.ImageDownloader;
 import derpibooru.derpy.ui.presenters.ImageInteractionPresenter;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
 import derpibooru.derpy.ui.views.ImageBottomBarView;
@@ -37,6 +40,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageActivityMainFragment extends Fragment {
     public static final String EXTRAS_IS_USER_LOGGED_IN = "derpibooru.derpy.IsLoggedIn";
+    private static final int REQUEST_WRITE_STORAGE = 142;
 
     @Bind(R.id.imageView) ImageView imageView;
     @Bind(R.id.imageTopBar) ImageTopBarView topBar;
@@ -135,14 +139,32 @@ public class ImageActivityMainFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.actionDownloadImage:
                 if (mActivityCallbacks != null) {
-                    new ImageDownloader(getContext(), mActivityCallbacks.getImage().getThumb().getId(),
-                                        mActivityCallbacks.getImage().getTags(),
-                                        mActivityCallbacks.getImage().getDownloadUrl())
-                            .download();
+                    if (ContextCompat.checkSelfPermission(
+                            getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        startImageDownload();
+                    } else {
+                        requestPermissions(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, REQUEST_WRITE_STORAGE);
+                    }
                 }
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if ((requestCode == REQUEST_WRITE_STORAGE)
+                && (grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            startImageDownload();
+        }
+    }
+
+    private void startImageDownload() {
+        new ImageDownload(getContext(), mActivityCallbacks.getImage().getThumb().getId(),
+                          mActivityCallbacks.getImage().getTags(),
+                          mActivityCallbacks.getImage().getDownloadUrl())
+                .start();
     }
 
     private void initializeInteractionPresenter(final DerpibooruImageThumb thumbToBeUsedIfDetailedImageIsNotAvailable,

@@ -22,7 +22,7 @@ public class ImageDownload {
         mContext = context;
         mDownloadTitle = getDownloadTitle(imageId, imageTags);
         mDownloadDescription = getDownloadDescription();
-        mDownloadFileParth = getFilePath(imageId);
+        mDownloadFileParth = getFilePath(imageId, imageUrl);
         mUri = Uri.parse(imageUrl);
     }
 
@@ -47,8 +47,10 @@ public class ImageDownload {
         return mContext.getString(R.string.download_image_notification_description);
     }
 
-    private String getFilePath(int imageId) {
-        return String.format(FILE_PATH_FORMAT, Integer.toString(imageId));
+    private String getFilePath(int imageId, String contentUri) {
+        String extensionSpecifiedInUri = contentUri.contains(".") ? contentUri.substring(contentUri.lastIndexOf('.')) : "";
+        String file = Integer.toString(imageId) + extensionSpecifiedInUri;
+        return String.format(FILE_PATH_FORMAT, file);
     }
 
     private class DownloaderRunnable implements Runnable {

@@ -63,7 +63,7 @@ public class ImageDownload {
     }
 
     private void mkdirs() {
-        new File(getAbsolutePathToFile(mUri)).mkdirs();
+        new File(getAbsolutePathToFile(mUri)).getParentFile().mkdirs();
     }
 
     private class DownloaderRunnable implements Runnable {

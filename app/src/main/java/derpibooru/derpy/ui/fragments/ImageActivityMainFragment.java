@@ -132,7 +132,8 @@ public class ImageActivityMainFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_image_activity_main_fragment, menu);
-        if ((mImageDownload != null) && (hasStoragePermissions()) && (mImageDownload.isDownloaded())) {
+        if ((mImageDownload == null) || ((mImageDownload != null)
+                && (hasStoragePermissions()) && (mImageDownload.isDownloaded()))) {
             menu.findItem(R.id.actionDownloadImage).setVisible(false);
         }
         super.onCreateOptionsMenu(menu, inflater);

@@ -246,8 +246,13 @@ public class ImageActivity extends AppCompatActivity {
         }
 
         @Override
-        public void setToolbarTitle(String title) {
-            toolbar.setTitle(title);
+        public void setToolbarTitle(final String title) {
+            toolbar.post(new Runnable() {
+                @Override
+                public void run() {
+                    setTitle(title);
+                }
+            });
         }
 
         @Override

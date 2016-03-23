@@ -17,83 +17,73 @@ import derpibooru.derpy.ui.views.AccentColorIconButton;
  */
 public abstract class ImageInteractionPresenter {
     private ImageInteractionRequester mInteractionRequester;
+    private int mId;
 
-    protected ImageInteractionPresenter(Context context, boolean enableInteractions) {
+    private AccentColorIconButton mScoreButton;
+    private AccentColorIconButton mFaveButton;
+    private AccentColorIconButton mUpvoteButton;
+    private AccentColorIconButton mDownvoteButton;
+
+    protected ImageInteractionPresenter(int imageIdForInteractions,
+                                        @Nullable AccentColorIconButton scoreButton,
+                                        @Nullable AccentColorIconButton faveButton,
+                                        @Nullable AccentColorIconButton upvoteButton,
+                                        @Nullable AccentColorIconButton downvoteButton) {
+        mId = imageIdForInteractions;
+        mScoreButton = scoreButton;
+        mFaveButton = faveButton;
+        mUpvoteButton = upvoteButton;
+        mDownvoteButton = downvoteButton;
+        toggleInteractionButtons(false);
+        if (mScoreButton != null) mScoreButton.setEnabled(false); /* the score button is not a touchable view */
+    }
+
+    public final void enableInteractions(Context context) {
         mInteractionRequester = new ImageInteractionRequester(context, new InteractionRequestHandler());
-        if (enableInteractions) {
-            enableInteractions();
-        } else {
-            disableButton(getFaveButton());
-            disableButton(getUpvoteButton());
-            disableButton(getDownvoteButton());
-        }
-    }
-
-    public void enableInteractions() {
-        enableButton(getFaveButton());
-        enableButton(getUpvoteButton());
-        enableButton(getDownvoteButton());
         initializeInteractionListeners();
+        toggleInteractionButtons(true);
     }
 
-    @Nullable
-    protected abstract AccentColorIconButton getScoreButton();
-
-    @Nullable
-    protected abstract AccentColorIconButton getFaveButton();
-
-    @Nullable
-    protected abstract AccentColorIconButton getUpvoteButton();
-
-    @Nullable
-    protected abstract AccentColorIconButton getDownvoteButton();
-
-    protected abstract int getIdForImageInteractions();
-
-    @NonNull
-    protected abstract EnumSet<DerpibooruImageInteraction.InteractionType> getInteractions();
-
-    protected abstract void addInteraction(DerpibooruImageInteraction.InteractionType interaction);
-
-    protected abstract void removeInteraction(DerpibooruImageInteraction.InteractionType interaction);
+    private void toggleInteractionButtons(boolean enabled) {
+        if (mFaveButton != null) mFaveButton.setEnabled(enabled);
+        if (mUpvoteButton != null) mUpvoteButton.setEnabled(enabled);
+        if (mDownvoteButton != null) mDownvoteButton.setEnabled(enabled);
+    }
 
     protected abstract void onInteractionFailed();
+
+    @NonNull
+    protected abstract EnumSet<DerpibooruImageInteraction.InteractionType> getInteractionsSet();
 
     protected void onInteractionCompleted(DerpibooruImageInteraction result) {
         refreshInfo(result.getFavorites(), result.getUpvotes(), result.getDownvotes());
     }
 
     public void refreshInfo(int faves, int upvotes, int downvotes) {
-        refreshInteractionButton(getFaveButton(), faves,
-                                 getInteractions().contains(DerpibooruImageInteraction.InteractionType.Fave));
-        refreshInteractionButton(getUpvoteButton(), upvotes,
-                                 getInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote));
-        refreshInteractionButton(getDownvoteButton(), downvotes,
-                                 getInteractions().contains(DerpibooruImageInteraction.InteractionType.Downvote));
-        refreshInteractionButton(getScoreButton(), (upvotes - downvotes), !getInteractions().isEmpty());
-    }
-
-    private void refreshInteractionButton(AccentColorIconButton button, int buttonValue, boolean active) {
-        if (button != null) {
-            button.setText(String.format("%d", buttonValue));
-            button.setActive(active);
+        if (mFaveButton != null) {
+            mFaveButton.setText(String.format("%d", faves));
+            mFaveButton.setActive(getInteractionsSet().contains(DerpibooruImageInteraction.InteractionType.Fave));
+        }
+        if (mUpvoteButton != null) {
+            mUpvoteButton.setText(String.format("%d", upvotes));
+            mUpvoteButton.setActive(getInteractionsSet().contains(DerpibooruImageInteraction.InteractionType.Upvote));
+        }
+        if (mDownvoteButton != null) {
+            mDownvoteButton.setText(String.format("%d", downvotes));
+            mDownvoteButton.setActive(getInteractionsSet().contains(DerpibooruImageInteraction.InteractionType.Downvote));
+        }
+        if (mScoreButton != null) {
+            mScoreButton.setText(String.format("%d", (upvotes - downvotes)));
+            mScoreButton.setActive(!getInteractionsSet().isEmpty());
         }
     }
 
-    private void enableButton(@Nullable AccentColorIconButton button) {
-        if (button != null) button.setEnabled(true);
-    }
-
-    private void disableButton(@Nullable AccentColorIconButton button) {
-        if (button != null) button.setEnabled(false);
-    }
-
     private void initializeInteractionListeners() {
-        if (getFaveButton() != null) getFaveButton()
+        if (mFaveButton != null) mFaveButton
                 .setOnClickListener(new OnButtonClickListener(DerpibooruImageInteraction.InteractionType.Fave));
-        if (getUpvoteButton() != null) getUpvoteButton()
+        if (mUpvoteButton != null) mUpvoteButton
                 .setOnClickListener(new OnButtonClickListener(DerpibooruImageInteraction.InteractionType.Upvote));
-        if (getDownvoteButton() != null) getDownvoteButton()
+        if (mDownvoteButton != null) mDownvoteButton
                 .setOnClickListener(new OnButtonClickListener(DerpibooruImageInteraction.InteractionType.Downvote));
     }
 
@@ -106,17 +96,12 @@ public abstract class ImageInteractionPresenter {
 
         @Override
         public void onClick(View v) {
-            if (!getInteractions().contains(mType)) {
-                mInteractionRequester.interaction(mType)
-                        .onImage(getIdForImageInteractions())
-                        .fetch();
-            } else {
-                mInteractionRequester.interaction(
-                        mType == DerpibooruImageInteraction.InteractionType.Fave ? DerpibooruImageInteraction.InteractionType.ClearFave
-                                                                                 : DerpibooruImageInteraction.InteractionType.ClearVote)
-                        .onImage(getIdForImageInteractions())
-                        .fetch();
-            }
+            mInteractionRequester.interaction(getInteractionsSet().contains(mType)
+                                              ? ((mType == DerpibooruImageInteraction.InteractionType.Fave)
+                                                 ? DerpibooruImageInteraction.InteractionType.ClearFave
+                                                 : DerpibooruImageInteraction.InteractionType.ClearVote)
+                                              : mType)
+                    .onImage(mId).fetch();
         }
     }
 
@@ -125,27 +110,27 @@ public abstract class ImageInteractionPresenter {
         public void onQueryExecuted(DerpibooruImageInteraction result) {
             switch (result.getInteractionType()) {
                 case ClearFave:
-                    removeInteraction(DerpibooruImageInteraction.InteractionType.Fave);
+                    getInteractionsSet().remove(DerpibooruImageInteraction.InteractionType.Fave);
                     break;
                 case ClearVote:
-                    removeInteraction(getInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote)
-                                      ? DerpibooruImageInteraction.InteractionType.Upvote
-                                      : DerpibooruImageInteraction.InteractionType.Downvote);
+                    getInteractionsSet().remove(getInteractionsSet().contains(DerpibooruImageInteraction.InteractionType.Upvote)
+                                                ? DerpibooruImageInteraction.InteractionType.Upvote
+                                                : DerpibooruImageInteraction.InteractionType.Downvote);
                     break;
                 case Downvote:
-                    if (getInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote)) {
-                        removeInteraction(DerpibooruImageInteraction.InteractionType.Upvote);
+                    if (getInteractionsSet().contains(DerpibooruImageInteraction.InteractionType.Upvote)) {
+                        getInteractionsSet().remove(DerpibooruImageInteraction.InteractionType.Upvote);
                     }
-                    addInteraction(DerpibooruImageInteraction.InteractionType.Downvote);
+                    getInteractionsSet().add(DerpibooruImageInteraction.InteractionType.Downvote);
                     break;
                 case Fave:
-                    addInteraction(DerpibooruImageInteraction.InteractionType.Fave);
+                    getInteractionsSet().add(DerpibooruImageInteraction.InteractionType.Fave);
                     /* intentional fall-through (fave = add to favorites _and_ upvote) */
                 case Upvote:
-                    if (getInteractions().contains(DerpibooruImageInteraction.InteractionType.Downvote)) {
-                        removeInteraction(DerpibooruImageInteraction.InteractionType.Downvote);
+                    if (getInteractionsSet().contains(DerpibooruImageInteraction.InteractionType.Downvote)) {
+                        getInteractionsSet().remove(DerpibooruImageInteraction.InteractionType.Downvote);
                     }
-                    addInteraction(DerpibooruImageInteraction.InteractionType.Upvote);
+                    getInteractionsSet().add(DerpibooruImageInteraction.InteractionType.Upvote);
                     break;
             }
             onInteractionCompleted(result);

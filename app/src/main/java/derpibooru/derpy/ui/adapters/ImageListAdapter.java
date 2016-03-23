@@ -167,50 +167,12 @@ public abstract class ImageListAdapter extends RecyclerViewPaginationAdapter<Der
     }
 
     private void initializeImageInteractions(final ViewHolder target, final int position) {
-        target.interactions = new ImageInteractionPresenter(getContext(), mUserLoggedIn) {
-            @Nullable
-            @Override
-            protected AccentColorIconButton getScoreButton() {
-                return target.buttonScore;
-            }
-
-            @Nullable
-            @Override
-            protected AccentColorIconButton getFaveButton() {
-                return target.buttonFave;
-            }
-
-            @Nullable
-            @Override
-            protected AccentColorIconButton getUpvoteButton() {
-                return target.buttonUpvote;
-            }
-
-            @Nullable
-            @Override
-            protected AccentColorIconButton getDownvoteButton() {
-                return null;
-            }
-
-            @Override
-            protected int getIdForImageInteractions() {
-                return getItems().get(position).getIdForImageInteractions();
-            }
-
+        target.interactions = new ImageInteractionPresenter(
+                getItems().get(position).getIdForImageInteractions(), target.buttonScore, target.buttonFave, target.buttonUpvote, null) {
             @NonNull
             @Override
-            protected EnumSet<DerpibooruImageInteraction.InteractionType> getInteractions() {
+            protected EnumSet<DerpibooruImageInteraction.InteractionType> getInteractionsSet() {
                 return getItems().get(position).getImageInteractions();
-            }
-
-            @Override
-            protected void addInteraction(DerpibooruImageInteraction.InteractionType interaction) {
-                getItems().get(position).getImageInteractions().add(interaction);
-            }
-
-            @Override
-            protected void removeInteraction(DerpibooruImageInteraction.InteractionType interaction) {
-                getItems().get(position).getImageInteractions().remove(interaction);
             }
 
             @Override
@@ -224,7 +186,9 @@ public abstract class ImageListAdapter extends RecyclerViewPaginationAdapter<Der
             @Override
             protected void onInteractionFailed() { }
         };
-        target.buttonScore.setEnabled(false); /* the score button is not a touchable view */
+        if (mUserLoggedIn) {
+            target.interactions.enableInteractions(getContext());
+        }
         target.interactions.refreshInfo(
                 getItems().get(position).getFaves(), getItems().get(position).getUpvotes(), getItems().get(position).getDownvotes());
     }

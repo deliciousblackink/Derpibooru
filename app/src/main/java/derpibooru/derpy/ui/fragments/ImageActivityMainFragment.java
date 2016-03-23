@@ -86,7 +86,7 @@ public class ImageActivityMainFragment extends Fragment {
         if (mInteractionPresenter == null) {
             initializeInteractionPresenter(null, isLoggedIn);
         } else if (isLoggedIn) {
-            mInteractionPresenter.enableInteractions();
+            mInteractionPresenter.enableInteractions(getContext());
         }
         mInteractionPresenter.refreshInfo(
                 mActivityCallbacks.getImage().getThumb().getFaves(),
@@ -175,56 +175,20 @@ public class ImageActivityMainFragment extends Fragment {
         getActivity().invalidateOptionsMenu(); /* hide the download button if the image's already been downloaded */
     }
 
-    private void initializeInteractionPresenter(final DerpibooruImageThumb thumbToBeUsedIfDetailedImageIsNotAvailable,
-                                                boolean isUserLoggedIn) {
-        mInteractionPresenter = new ImageInteractionPresenter(getContext(), isUserLoggedIn) {
-            @Nullable
-            @Override
-            protected AccentColorIconButton getScoreButton() {
-                return topBar.getScoreButton();
-            }
-
-            @Nullable
-            @Override
-            protected AccentColorIconButton getFaveButton() {
-                return bottomBar.getFaveButton();
-            }
-
-            @Nullable
-            @Override
-            protected AccentColorIconButton getUpvoteButton() {
-                return topBar.getUpvoteButton();
-            }
-
-            @Nullable
-            @Override
-            protected AccentColorIconButton getDownvoteButton() {
-                return topBar.getDownvoteButton();
-            }
-
-            @Override
-            protected int getIdForImageInteractions() {
-                return mActivityCallbacks.getImage().getThumb().getIdForImageInteractions();
-            }
-
+    private void initializeInteractionPresenter(final DerpibooruImageThumb thumbToBeUsedIfDetailedImageIsNotAvailable, boolean userLoggedIn) {
+        int id = (mActivityCallbacks.getImage() != null)
+                 ? mActivityCallbacks.getImage().getThumb().getIdForImageInteractions()
+                 : thumbToBeUsedIfDetailedImageIsNotAvailable.getIdForImageInteractions();
+        mInteractionPresenter = new ImageInteractionPresenter(
+                id, topBar.getScoreButton(), bottomBar.getFaveButton(), topBar.getUpvoteButton(), topBar.getDownvoteButton()) {
             @NonNull
             @Override
-            protected EnumSet<DerpibooruImageInteraction.InteractionType> getInteractions() {
+            protected EnumSet<DerpibooruImageInteraction.InteractionType> getInteractionsSet() {
                 if (mActivityCallbacks.getImage() == null) {
                     return thumbToBeUsedIfDetailedImageIsNotAvailable.getImageInteractions();
                 } else {
                     return mActivityCallbacks.getImage().getThumb().getImageInteractions();
                 }
-            }
-
-            @Override
-            protected void addInteraction(DerpibooruImageInteraction.InteractionType interaction) {
-                mActivityCallbacks.getImage().getThumb().getImageInteractions().add(interaction);
-            }
-
-            @Override
-            protected void removeInteraction(DerpibooruImageInteraction.InteractionType interaction) {
-                mActivityCallbacks.getImage().getThumb().getImageInteractions().remove(interaction);
             }
 
             @Override
@@ -245,15 +209,18 @@ public class ImageActivityMainFragment extends Fragment {
             public void refreshInfo(int faves, int upvotes, int downvotes) {
                 /* prevent icons from blending into the background by disabling tint toggle on touch
                  * (only in case there was no user interaction) */
-                getFaveButton().setToggleIconTintOnTouch(
-                        getInteractions().contains(DerpibooruImageInteraction.InteractionType.Fave));
-                getUpvoteButton().setToggleIconTintOnTouch(
-                        getInteractions().contains(DerpibooruImageInteraction.InteractionType.Upvote));
-                getDownvoteButton().setToggleIconTintOnTouch(
-                        getInteractions().contains(DerpibooruImageInteraction.InteractionType.Downvote));
+                bottomBar.getFaveButton().setToggleIconTintOnTouch(
+                        getInteractionsSet().contains(DerpibooruImageInteraction.InteractionType.Fave));
+                topBar.getUpvoteButton().setToggleIconTintOnTouch(
+                        getInteractionsSet().contains(DerpibooruImageInteraction.InteractionType.Upvote));
+                topBar.getDownvoteButton().setToggleIconTintOnTouch(
+                        getInteractionsSet().contains(DerpibooruImageInteraction.InteractionType.Downvote));
                 super.refreshInfo(faves, upvotes, downvotes);
             }
         };
+        if (userLoggedIn) {
+            mInteractionPresenter.enableInteractions(getContext());
+        }
     }
 
     private class GlideRequestListener implements RequestListener<String, GlideDrawable> {

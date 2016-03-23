@@ -46,14 +46,15 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
         }
 
         String imageSourceUrl = parseSourceUrl(doc);
+        String imageDownloadUrl = parseDownloadUrl(doc);
         String imageUploader = parseUploader(doc);
         String imageDescription = parseDescription(doc);
         String imageCreatedAt = parseDateCreatedAt(doc);
         ArrayList<String> imageFavedBy = parseFavedBy(doc);
         ArrayList<DerpibooruTag> imageTags = parseTags(doc);
 
-        return new DerpibooruImageDetailed(
-                getImage(doc), imageSourceUrl, imageUploader, imageDescription, imageCreatedAt, imageTags, imageFavedBy);
+        return new DerpibooruImageDetailed(getImage(doc), imageSourceUrl, imageDownloadUrl, imageUploader,
+                                           imageDescription, imageCreatedAt, imageTags, imageFavedBy);
     }
 
     private String parseSourceUrl(Document doc) {
@@ -63,6 +64,11 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
             imageSourceUrl = source.attr("value");
         }
         return imageSourceUrl;
+    }
+
+    private String parseDownloadUrl(Document doc) throws JSONException {
+        Element imageContainer = getImageContainer(doc);
+        return ("https:" + new JSONObject(imageContainer.attr("data-uris")).getString("full"));
     }
 
     private String parseUploader(Document doc) {
@@ -133,7 +139,7 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
     }
 
     private DerpibooruImageThumb getImage(Document doc) throws JSONException {
-        Element imageContainer = doc.select("div.image-show-container").first();
+        Element imageContainer = getImageContainer(doc);
 
         int imageIdForInteractions = Integer.parseInt(imageContainer.attr("data-image-id"));
         EnumSet interactions = EnumSet.noneOf(DerpibooruImageInteraction.InteractionType.class);
@@ -154,6 +160,10 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
                 interactions
         );
         return thumb;
+    }
+
+    private Element getImageContainer(Document doc) {
+        return doc.select("div.image-show-container").first();
     }
 
     private int parseImageId(Document doc) {

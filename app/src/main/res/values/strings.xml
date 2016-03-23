@@ -17,6 +17,11 @@
     <string name="image_list_most_commented">Most Commented in Last 3 Days</string>
     <!-- activity titles -->
     <string name="activity_login">Log in</string>
+    <!-- detailed image info -->
+    <string name="image_info_uploaded">Uploaded by %1$s\non %2$s</string>
+    <!-- downloadmanager -->
+    <string name="download_image_notification_title">#%1$d —%2$s</string>
+    <string name="download_image_notification_description">Downloading an image from Derpibooru…</string>
     <!-- errors -->
     <string name="activity_splash_user_loader_request_failed">Couldn’t reach the server. Check your Internet connection and try again</string>
 </resources>

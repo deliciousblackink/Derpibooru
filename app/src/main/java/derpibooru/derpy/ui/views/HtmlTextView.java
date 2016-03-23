@@ -1,26 +1,38 @@
-package derpibooru.derpy.ui.utils;
+package derpibooru.derpy.ui.views;
 
+import android.content.Context;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-/**
- * Presents HTML layout (links) in TextView.
- */
-public abstract class TextViewHtmlDisplayer {
-    /**
-     * Called when a URL link is selected.
-     */
-    protected abstract void onLinkClick(String url);
+public class HtmlTextView extends TextView {
+    private OnLinkClickListener mLinkListener;
 
-    public void textFromHtml(TextView target, String html) {
-        target.setText(getSpannableStringBuilderFromHtml(html));
+    public HtmlTextView(Context context) {
+        super(context);
+    }
+
+    public HtmlTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public HtmlTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    public void setOnLinkClickListener(OnLinkClickListener listener) {
+        mLinkListener = listener;
+    }
+
+    public void setHtml(String html) {
+        setText(getSpannableStringBuilderFromHtml(html));
         /* http://stackoverflow.com/a/2746708/1726690 */
-        target.setMovementMethod(LinkMovementMethod.getInstance());
+        setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private SpannableStringBuilder getSpannableStringBuilderFromHtml(String html) {
@@ -47,5 +59,15 @@ public abstract class TextViewHtmlDisplayer {
         };
         strBuilder.setSpan(clickable, start, end, flags);
         strBuilder.removeSpan(span);
+    }
+
+    private void onLinkClick(String url) {
+        if (mLinkListener != null) {
+            mLinkListener.onLinkClick(url);
+        }
+    }
+
+    public interface OnLinkClickListener {
+        void onLinkClick(String linkUrl);
     }
 }

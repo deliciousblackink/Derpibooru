@@ -72,8 +72,8 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
                         mAnimator.extendViewPager(mRestoredState, 0);
                     }
                 });
+                mAnimator.extendViewPagerHeader(0);
             }
-            mAnimator.extendViewPagerHeader(0);
         }
     }
 
@@ -93,7 +93,8 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
         post(new Runnable() {
             @Override
             public void run() {
-                if (mRestoredState == null) {
+                if ((mRestoredState == null)
+                        || (mRestoredState == ImageBottomBarAnimator.ExtensionState.None)) {
                     mAnimator.extendViewPagerHeader();
                 }
             }

@@ -62,9 +62,14 @@ public class ImageDownload {
                 .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath(), file);
     }
 
+    private void mkdirs() {
+        new File(getAbsolutePathToFile(mUri)).mkdirs();
+    }
+
     private class DownloaderRunnable implements Runnable {
         @Override
         public void run() {
+            mkdirs();
             DownloadManager manager = (DownloadManager)
                     mContext.getSystemService(Context.DOWNLOAD_SERVICE);
             DownloadManager.Request request = new DownloadManager.Request(mUri);

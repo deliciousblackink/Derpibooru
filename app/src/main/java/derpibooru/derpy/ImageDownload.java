@@ -1,17 +1,16 @@
 package derpibooru.derpy;
 
-import android.os.Environment;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 
+import java.io.File;
 import java.util.List;
 
 import derpibooru.derpy.data.server.DerpibooruTag;
 
 public class ImageDownload {
-    private static final String FILE_PATH_FORMAT = "Derpibooru/%s";
-
     private Context mContext;
     private String mDownloadTitle;
     private String mDownloadDescription;
@@ -20,16 +19,21 @@ public class ImageDownload {
 
     public ImageDownload(Context context, int imageId, List<DerpibooruTag> imageTags, String imageUrl) {
         mContext = context;
+        mUri = Uri.parse(imageUrl);
         mDownloadTitle = getDownloadTitle(imageId, imageTags);
         mDownloadDescription = getDownloadDescription();
-        mDownloadFileParth = getFilePath(imageId, imageUrl);
-        mUri = Uri.parse(imageUrl);
+        mDownloadFileParth = getPathToFile(mUri);
     }
 
     public void start() {
         Thread thread = new Thread(new DownloaderRunnable());
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
+    }
+
+    public boolean isDownloaded() {
+        String path = getAbsolutePathToFile(mUri);
+        return new File(path).exists();
     }
 
     private String getDownloadTitle(int imageId, List<DerpibooruTag> imageTags) {
@@ -47,10 +51,15 @@ public class ImageDownload {
         return mContext.getString(R.string.download_image_notification_description);
     }
 
-    private String getFilePath(int imageId, String contentUri) {
-        String extensionSpecifiedInUri = contentUri.contains(".") ? contentUri.substring(contentUri.lastIndexOf('.')) : "";
-        String file = Integer.toString(imageId) + extensionSpecifiedInUri;
-        return String.format(FILE_PATH_FORMAT, file);
+    private String getPathToFile(Uri contentUri) {
+        String file = contentUri.getLastPathSegment();
+        return String.format("Derpibooru/%s", file);
+    }
+
+    private String getAbsolutePathToFile(Uri contentUri) {
+        String file = contentUri.getLastPathSegment();
+        return String.format("%s/Derpibooru/%s", Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath(), file);
     }
 
     private class DownloaderRunnable implements Runnable {
@@ -62,7 +71,7 @@ public class ImageDownload {
             request.setTitle(mDownloadTitle)
                     .setDescription(mDownloadDescription)
                     .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mDownloadFileParth)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, mDownloadFileParth)
                     .allowScanningByMediaScanner();
             manager.enqueue(request);
         }

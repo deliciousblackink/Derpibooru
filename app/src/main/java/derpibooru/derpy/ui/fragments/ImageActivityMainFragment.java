@@ -46,6 +46,7 @@ public class ImageActivityMainFragment extends Fragment {
     @Bind(R.id.imageTopBar) ImageTopBarView topBar;
     @Bind(R.id.imageBottomBar) ImageBottomBarView bottomBar;
 
+    private ImageDownload mImageDownload;
     private ImageInteractionPresenter mInteractionPresenter;
     private ImageActivityMainFragmentHandler mActivityCallbacks;
 
@@ -81,6 +82,7 @@ public class ImageActivityMainFragment extends Fragment {
     private void display(boolean isLoggedIn) {
         mActivityCallbacks.setToolbarTitle(String.format("#%d", mActivityCallbacks.getImage().getThumb().getId()));
         loadImageIfNotShownAlready(mActivityCallbacks.getImage().getThumb().getLargeImageUrl());
+        initializeImageDownload(mActivityCallbacks.getImage());
         if (mInteractionPresenter == null) {
             initializeInteractionPresenter(null, isLoggedIn);
         } else if (isLoggedIn) {
@@ -130,18 +132,19 @@ public class ImageActivityMainFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_image_activity_main_fragment, menu);
+        if ((mImageDownload != null) && (hasStoragePermissions()) && (mImageDownload.isDownloaded())) {
+            menu.findItem(R.id.actionDownloadImage).setVisible(false);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.actionDownloadImage:
                 if (mActivityCallbacks != null) {
-                    if (ContextCompat.checkSelfPermission(
-                            getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        startImageDownload();
+                    if (hasStoragePermissions()) {
+                        mImageDownload.start();
                     } else {
                         requestPermissions(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, REQUEST_WRITE_STORAGE);
                     }
@@ -156,15 +159,19 @@ public class ImageActivityMainFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if ((requestCode == REQUEST_WRITE_STORAGE)
                 && (grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-            startImageDownload();
+            mImageDownload.start();
         }
     }
 
-    private void startImageDownload() {
-        new ImageDownload(getContext(), mActivityCallbacks.getImage().getThumb().getId(),
-                          mActivityCallbacks.getImage().getTags(),
-                          mActivityCallbacks.getImage().getDownloadUrl())
-                .start();
+    private boolean hasStoragePermissions() {
+        return ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void initializeImageDownload(DerpibooruImageDetailed imageDetailed) {
+        mImageDownload = new ImageDownload(
+                getContext(), imageDetailed.getThumb().getId(), imageDetailed.getTags(), imageDetailed.getDownloadUrl());
+        getActivity().invalidateOptionsMenu(); /* hide the download button if the image's already been downloaded */
     }
 
     private void initializeInteractionPresenter(final DerpibooruImageThumb thumbToBeUsedIfDetailedImageIsNotAvailable,

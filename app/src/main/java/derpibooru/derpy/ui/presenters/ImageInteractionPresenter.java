@@ -39,9 +39,13 @@ public abstract class ImageInteractionPresenter {
     }
 
     public final void enableInteractions(Context context) {
-        mInteractionRequester = new ImageInteractionRequester(context, new InteractionRequestHandler());
+        mInteractionRequester = getNewInstanceOfRequester(context, new InteractionRequestHandler());
         initializeInteractionListeners();
         toggleInteractionButtons(true);
+    }
+
+    protected ImageInteractionRequester getNewInstanceOfRequester(Context context, InteractionRequestHandler handler) {
+        return new ImageInteractionRequester(context, handler);
     }
 
     private void toggleInteractionButtons(boolean enabled) {
@@ -105,7 +109,7 @@ public abstract class ImageInteractionPresenter {
         }
     }
 
-    private class InteractionRequestHandler implements QueryHandler<DerpibooruImageInteraction> {
+    protected class InteractionRequestHandler implements QueryHandler<DerpibooruImageInteraction> {
         @Override
         public void onQueryExecuted(DerpibooruImageInteraction result) {
             switch (result.getInteractionType()) {

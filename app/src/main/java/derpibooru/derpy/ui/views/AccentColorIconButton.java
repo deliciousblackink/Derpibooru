@@ -22,9 +22,19 @@ public class AccentColorIconButton extends RelativeLayout {
 
     private boolean mToggleIconTintOnTouch = true;
 
+    public AccentColorIconButton(Context context) {
+        super(context);
+        mTextViewWithIcon = new TextViewButton(context);
+        init();
+    }
+
     public AccentColorIconButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         mTextViewWithIcon = new TextViewButton(context, attrs);
+        init();
+    }
+
+    private void init() {
         super.addView(mTextViewWithIcon, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         super.setGravity(Gravity.CENTER);
         super.setClickable(true);
@@ -41,9 +51,17 @@ public class AccentColorIconButton extends RelativeLayout {
         mTextViewWithIcon.setText(text);
     }
 
+    public CharSequence getText() {
+        return mTextViewWithIcon.getText();
+    }
+
     public void setActive(boolean active) {
         mTextViewWithIcon.setKeepActive(active);
         mTextViewWithIcon.setActive(active);
+    }
+
+    public boolean isActive() {
+        return mTextViewWithIcon.isActive();
     }
 
     public void setToggleIconTintOnTouch(boolean toggle) {
@@ -91,23 +109,30 @@ public class AccentColorIconButton extends RelativeLayout {
         private static final int ICON_PADDING_IN_DIP = 5;
 
         private int mActiveColorResId;
-        private boolean mKeepColorFilter = false;
-        private boolean mColorFilterSet = false;
+        private boolean mKeepColorFilter;
+        private boolean mColorFilterSet;
+
+        TextViewButton(Context context) {
+            super(context);
+            init(context, null);
+        }
 
         TextViewButton(Context context, AttributeSet attrs) {
             super(context, attrs);
             init(context, attrs);
         }
 
-        private void init(Context context, AttributeSet attrs) {
-            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AccentColorIconButton);
-            try {
-                setButtonText(a.getString(R.styleable.AccentColorIconButton_buttonText));
-                if (a.getDrawable(R.styleable.AccentColorIconButton_buttonIcon) != null) {
-                    setIcon(a.getDrawable(R.styleable.AccentColorIconButton_buttonIcon));
+        private void init(Context context, @Nullable AttributeSet attrs) {
+            if (attrs != null) {
+                TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AccentColorIconButton);
+                try {
+                    setButtonText(a.getString(R.styleable.AccentColorIconButton_buttonText));
+                    if (a.getDrawable(R.styleable.AccentColorIconButton_buttonIcon) != null) {
+                        setIcon(a.getDrawable(R.styleable.AccentColorIconButton_buttonIcon));
+                    }
+                } finally {
+                    a.recycle();
                 }
-            } finally {
-                a.recycle();
             }
             mActiveColorResId = ContextCompat.getColor(context, R.color.colorAccent);
         }
@@ -126,6 +151,10 @@ public class AccentColorIconButton extends RelativeLayout {
                 mColorFilterSet = false;
                 getIcon().clearColorFilter();
             }
+        }
+
+        public boolean isActive() {
+            return mKeepColorFilter;
         }
 
         public void setButtonText(CharSequence text) {

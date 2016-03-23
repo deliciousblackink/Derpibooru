@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
 
 public class ImageInteractionResultParserTest {
     private static final DerpibooruImageInteraction expected =
-            new DerpibooruImageInteraction(2643, 2005, 2778, 135, DerpibooruImageInteraction.InteractionType.Upvote);
+            new DerpibooruImageInteraction(2005, 2778, 135, DerpibooruImageInteraction.InteractionType.Upvote);
 
     private DerpibooruImageInteraction parsed;
 

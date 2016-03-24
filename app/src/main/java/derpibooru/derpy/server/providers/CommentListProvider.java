@@ -16,7 +16,7 @@ public class CommentListProvider extends PaginatedListProvider<DerpibooruComment
     }
 
     /**
-     * Returns an ImageCommentsProvider for the particular image ID.
+     * Returns a CommentListProvider for the particular image ID.
      *
      * @param id image ID
      */

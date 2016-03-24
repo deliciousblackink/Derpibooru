@@ -32,6 +32,11 @@ public abstract class RecyclerViewPaginationAdapter<TItem, TViewHolder extends R
         super.notifyItemRangeInserted(oldItemCount, newItemCount);
     }
 
+    public void appendItemAtPosition(int position, TItem item) {
+        mItems.add(position, item);
+        super.notifyItemInserted(position);
+    }
+
     protected Context getContext() {
         return mContext;
     }

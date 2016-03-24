@@ -17,6 +17,7 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.providers.CommentListProvider;
+import derpibooru.derpy.server.providers.CommentProvider;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.CommentListAdapter;
 import derpibooru.derpy.ui.adapters.RecyclerViewPaginationAdapter;
@@ -61,7 +62,25 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
     }
 
     private CommentListAdapter getNewInstanceOfCommentListAdapter(List<DerpibooruComment> initialItems) {
-        return new CommentListAdapter(getActivity(), initialItems);
+        return new CommentListAdapter(getActivity(), initialItems) {
+            @Override
+            protected void fetchCommentReply(int replyCommentId, final int appendBeforeItem) {
+                new CommentProvider(getContext(), new QueryHandler<DerpibooruComment>() {
+                    @Override
+                    public void onQueryExecuted(DerpibooruComment result) {
+                        if (mCommentListPresenter != null) {
+                            if (mCommentListPresenter.getAdapter() != null) {
+                                mCommentListPresenter.getAdapter()
+                                        .appendItemAtPosition(appendBeforeItem, result);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onQueryFailed() { }
+                }).id(replyCommentId).fetch();
+            }
+        };
     }
 
     @Override

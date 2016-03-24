@@ -11,6 +11,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,7 +22,7 @@ import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.ui.representations.ServerDate;
 import derpibooru.derpy.ui.views.HtmlTextView;
 
-public class CommentListAdapter extends RecyclerViewPaginationAdapter<DerpibooruComment, CommentListAdapter.ViewHolder> {
+public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<DerpibooruComment, CommentListAdapter.ViewHolder> {
     public CommentListAdapter(Context context, List<DerpibooruComment> items) {
         super(context, items);
     }
@@ -31,6 +33,8 @@ public class CommentListAdapter extends RecyclerViewPaginationAdapter<Derpibooru
                 .inflate(R.layout.view_image_bottom_bar_comments_item, parent, false);
         return new ViewHolder(v);
     }
+
+    protected abstract void fetchCommentReply(CommentReplyItem replyItem);
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
@@ -51,7 +55,11 @@ public class CommentListAdapter extends RecyclerViewPaginationAdapter<Derpibooru
         holder.textComment.setOnLinkClickListener(new HtmlTextView.OnLinkClickListener() {
             @Override
             public void onLinkClick(String linkUrl) {
-
+                Matcher commentMatcher = Pattern.compile("(?!#comment_)([\\d*\\.]+)$").matcher(linkUrl);
+                if (commentMatcher.find()) {
+                    int replyId = Integer.parseInt(commentMatcher.group(1));
+                    fetchCommentReply(item);
+                }
             }
         });
     }

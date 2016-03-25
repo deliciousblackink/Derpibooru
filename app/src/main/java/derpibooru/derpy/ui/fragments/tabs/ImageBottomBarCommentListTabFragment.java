@@ -14,6 +14,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.internal.CommentReplyItem;
 import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.providers.CommentListProvider;
@@ -64,21 +65,27 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
     private CommentListAdapter getNewInstanceOfCommentListAdapter(List<DerpibooruComment> initialItems) {
         return new CommentListAdapter(getActivity(), initialItems) {
             @Override
-            protected void fetchCommentReply(int replyCommentId, final int appendBeforeItem) {
+            protected void fetchCommentReply(final CommentReplyItem replyItem) {
                 new CommentProvider(getContext(), new QueryHandler<DerpibooruComment>() {
                     @Override
                     public void onQueryExecuted(DerpibooruComment result) {
                         if (mCommentListPresenter != null) {
                             if (mCommentListPresenter.getAdapter() != null) {
                                 mCommentListPresenter.getAdapter()
-                                        .appendItemAtPosition(appendBeforeItem, result);
+                                        .appendItemAtPosition(replyItem.getAdapterPosition(), result);
+                                recyclerView.smoothScrollToPosition(replyItem.getAdapterPosition());
                             }
                         }
                     }
 
                     @Override
                     public void onQueryFailed() { }
-                }).id(replyCommentId).fetch();
+                }).id(replyItem.getReplyId()).fetch();
+            }
+
+            @Override
+            protected void scrollToPosition(int adapterPosition) {
+                recyclerView.smoothScrollToPosition(adapterPosition);
             }
         };
     }

@@ -1,6 +1,7 @@
 package derpibooru.derpy.ui.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +10,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,11 +23,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.internal.CommentReplyItem;
 import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.ui.representations.ServerDate;
 import derpibooru.derpy.ui.views.HtmlTextView;
 
 public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<DerpibooruComment, CommentListAdapter.ViewHolder> {
+    private List<CommentReplyItem> mCommentReplies = new ArrayList<>(0);
+
     public CommentListAdapter(Context context, List<DerpibooruComment> items) {
         super(context, items);
     }
@@ -35,6 +43,8 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
     }
 
     protected abstract void fetchCommentReply(CommentReplyItem replyItem);
+
+    protected abstract void scrollToPosition(int adapterPosition);
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
@@ -58,10 +68,54 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
                 Matcher commentMatcher = Pattern.compile("(?!#comment_)([\\d*\\.]+)$").matcher(linkUrl);
                 if (commentMatcher.find()) {
                     int replyId = Integer.parseInt(commentMatcher.group(1));
-                    fetchCommentReply(item);
+                    if (!isCommentReplyDisplayed(replyId)) {
+                        CommentReplyItem item = new CommentReplyItem(replyId, position);
+                        addCommentReply(item);
+                        fetchCommentReply(item);
+                    } else {
+                        scrollToPosition(getPositionByReplyId(replyId));
+                    }
                 }
             }
         });
+        ((View) holder.textComment.getParent()).setBackgroundColor(
+                ContextCompat.getColor(getContext(), doesPositionHoldReply(position) ? R.color.colorPrimaryLight : android.R.color.white));
+    }
+
+    private void addCommentReply(CommentReplyItem item) {
+        for (int i = 0; i < mCommentReplies.size(); i++) {
+            if (mCommentReplies.get(i).getAdapterPosition() >= item.getAdapterPosition()) {
+                mCommentReplies.get(i).shiftAdapterPositionForward();
+            }
+        }
+        mCommentReplies.add(item);
+    }
+
+    private boolean doesPositionHoldReply(final int position) {
+        return Iterables.any(mCommentReplies, new Predicate<CommentReplyItem>() {
+            @Override
+            public boolean apply(CommentReplyItem input) {
+                return input.getAdapterPosition() == position;
+            }
+        });
+    }
+
+    private boolean isCommentReplyDisplayed(final int replyId) {
+        return Iterables.any(mCommentReplies, new Predicate<CommentReplyItem>() {
+            @Override
+            public boolean apply(CommentReplyItem input) {
+                return input.getReplyId() == replyId;
+            }
+        });
+    }
+
+    private int getPositionByReplyId(final int replyId) throws NoSuchElementException {
+        return Iterables.find(mCommentReplies, new Predicate<CommentReplyItem>() {
+            @Override
+            public boolean apply(CommentReplyItem input) {
+                return input.getReplyId() == replyId;
+            }
+        }).getAdapterPosition();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

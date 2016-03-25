@@ -3,6 +3,7 @@
     <!-- material blue 300 --> <color name="colorPrimary">#64b5f6</color>
     <!-- material blue 500 --> <color name="colorPrimaryDark">#2196f3</color>
     <!-- material pink accent 200 --> <color name="colorAccent">#ff4081</color>
+    <!-- material blue 50 --> <color name="colorPrimaryLight">#e3f2fd</color>
     <!-- text -->
     <!-- material gray 50 --> <color name="colorTextLight">#fafafa</color>
     <!-- material gray 900 --> <color name="colorTextDark">#212121</color>

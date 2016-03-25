@@ -22,6 +22,7 @@ class GlideImageGetter implements Html.ImageGetter, Drawable.Callback {
     private Context mContext;
 
     GlideImageGetter(Context context, HtmlTextView target) {
+        mContext = context;
         mTargetTextView = target;
     }
 

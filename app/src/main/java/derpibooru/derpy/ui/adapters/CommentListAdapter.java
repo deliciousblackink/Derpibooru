@@ -1,6 +1,8 @@
 package derpibooru.derpy.ui.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,10 +31,19 @@ import derpibooru.derpy.ui.representations.ServerDate;
 import derpibooru.derpy.ui.views.HtmlTextView;
 
 public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<DerpibooruComment, CommentListAdapter.ViewHolder> {
-    private List<CommentReplyItem> mCommentReplies = new ArrayList<>(0);
+    private static final String EXTRAS_COMMENT_REPLIES = "derpibooru.derpy.CommentReplies";
 
-    public CommentListAdapter(Context context, List<DerpibooruComment> items) {
+    private ArrayList<CommentReplyItem> mCommentReplies = new ArrayList<>(0);
+
+    public CommentListAdapter(Context context, List<DerpibooruComment> items, @Nullable Bundle savedInstanceState) {
         super(context, items);
+        if ((savedInstanceState != null) && (savedInstanceState.containsKey(EXTRAS_COMMENT_REPLIES))) {
+            mCommentReplies = savedInstanceState.getParcelableArrayList(EXTRAS_COMMENT_REPLIES);
+        }
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(EXTRAS_COMMENT_REPLIES, mCommentReplies);
     }
 
     @Override
@@ -45,6 +56,12 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
     protected abstract void fetchCommentReply(CommentReplyItem replyItem);
 
     protected abstract void scrollToPosition(int adapterPosition);
+
+    @Override
+    public void resetItems(List<DerpibooruComment> newItems) {
+        mCommentReplies = new ArrayList<>(0);
+        super.resetItems(newItems);
+    }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {

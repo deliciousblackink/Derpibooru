@@ -31,6 +31,8 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
     @Bind(R.id.layoutCommentsRefresh) SwipeRefreshLayout refreshLayout;
     @Bind(R.id.viewComments) RecyclerView recyclerView;
 
+    private Bundle mSavedInstanceState;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,16 +45,21 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
                 return getNewInstanceOfCommentListAdapter(initialItems);
             }
         };
-        if (savedInstanceState == null) {
+        mSavedInstanceState = savedInstanceState;
+        initializeCommentListPresenter();
+        return v;
+    }
+
+    private void initializeCommentListPresenter() {
+        if (mSavedInstanceState == null) {
             mCommentListPresenter.initializeWithProvider(
                     new CommentListProvider(getActivity(), getNewInstanceOfProviderQueryHandler())
                             .id(getArguments().getInt(ImageActivity.EXTRAS_IMAGE_ID)));
         } else {
             mCommentListPresenter.initializeWithProvider(
                     new CommentListProvider(getActivity(), getNewInstanceOfProviderQueryHandler())
-                            .id(getArguments().getInt(ImageActivity.EXTRAS_IMAGE_ID)), savedInstanceState);
+                            .id(getArguments().getInt(ImageActivity.EXTRAS_IMAGE_ID)), mSavedInstanceState);
         }
-        return v;
     }
 
     /**
@@ -63,7 +70,7 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
     }
 
     private CommentListAdapter getNewInstanceOfCommentListAdapter(List<DerpibooruComment> initialItems) {
-        return new CommentListAdapter(getActivity(), initialItems) {
+        return new CommentListAdapter(getActivity(), initialItems, mSavedInstanceState) {
             @Override
             protected void fetchCommentReply(final CommentReplyItem replyItem) {
                 new CommentProvider(getContext(), new QueryHandler<DerpibooruComment>() {
@@ -95,6 +102,9 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
         super.onSaveInstanceState(outState);
         if (mCommentListPresenter != null) {
             mCommentListPresenter.onSaveInstanceState(outState);
+            if (mCommentListPresenter.getAdapter() instanceof CommentListAdapter) {
+                ((CommentListAdapter) mCommentListPresenter.getAdapter()).onSaveInstanceState(outState);
+            }
         }
     }
 }

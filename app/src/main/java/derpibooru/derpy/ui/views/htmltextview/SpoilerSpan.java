@@ -9,28 +9,30 @@ import android.view.View;
 import derpibooru.derpy.R;
 
 class SpoilerSpan extends ClickableSpan {
-    final int pressedColor;
-    final int normalColor;
+    final int spoileredColor;
+    final int unspoileredColor;
+    final int unspoileredBackgroundColor;
 
-    private boolean mIsPressed;
+    private boolean mUnspoilered;
 
     SpoilerSpan(Context context) {
-        pressedColor = ContextCompat.getColor(context, R.color.colorAccent);
-        normalColor = ContextCompat.getColor(context, R.color.colorTextDark);
+        spoileredColor = ContextCompat.getColor(context, R.color.colorAccentLight);
+        unspoileredColor = ContextCompat.getColor(context, R.color.colorTextGray);
+        unspoileredBackgroundColor = ContextCompat.getColor(context, android.R.color.white);
     }
 
     @Override
     public void onClick(View widget) { }
 
-    public void setPressed(boolean isSelected) {
-        mIsPressed = isSelected;
+    public void unspoiler() {
+        mUnspoilered = true;
     }
 
     @Override
     public void updateDrawState(TextPaint ds) {
         super.updateDrawState(ds);
-        ds.setColor(mIsPressed ? pressedColor : normalColor);
-        ds.bgColor = mIsPressed ? normalColor : pressedColor;
+        ds.setColor(mUnspoilered ? unspoileredColor : spoileredColor);
+        ds.bgColor = mUnspoilered ? unspoileredBackgroundColor : spoileredColor;
         ds.setUnderlineText(false);
     }
 }

@@ -34,7 +34,6 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
     private static final String EXTRAS_COMMENT_REPLIES = "derpibooru.derpy.CommentReplies";
 
     private ArrayList<CommentReplyItem> mCommentReplies = new ArrayList<>(0);
-    private boolean mInitializedItems;
 
     public CommentListAdapter(Context context, List<DerpibooruComment> items, @Nullable Bundle savedInstanceState) {
         super(context, items);
@@ -63,11 +62,7 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
     @Override
     public void resetItems(List<DerpibooruComment> newItems) {
         mCommentReplies = new ArrayList<>(0);
-        if (!mInitializedItems) {
-            mInitializedItems = true;
-        } else {
-            checkForNewComments(newItems);
-        }
+        checkForNewComments(newItems);
         super.resetItems(newItems);
     }
 

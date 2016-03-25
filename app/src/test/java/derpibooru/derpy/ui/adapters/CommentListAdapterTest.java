@@ -40,7 +40,7 @@ public class CommentListAdapterTest {
 
     @Test
     public void testInitialization() {
-        adapter = new CommentListAdapter(context, Collections.<DerpibooruComment>emptyList(), null) {
+        adapter = new CommentListAdapter(context, dummyInitialItems, null) {
             @Override
             protected void fetchCommentReply(CommentReplyItem replyItem) { }
 
@@ -77,7 +77,7 @@ public class CommentListAdapterTest {
     private void testItemAddition(final int itemsToAdd) {
         final MethodCallTest callTest = new MethodCallTest();
 
-        adapter = new CommentListAdapter(context, Collections.<DerpibooruComment>emptyList(), null) {
+        adapter = new CommentListAdapter(context, dummyInitialItems, null) {
             @Override
             protected void fetchCommentReply(CommentReplyItem replyItem) { }
 
@@ -109,15 +109,7 @@ public class CommentListAdapterTest {
         return out;
     }
 
-    /*private void initializeRecyclerViewWithAdapter(@Nullable final ArgRunnable fetchCommentReply,
-                                                   @Nullable final ArgRunnable scrollToPosition,
-                                                   @Nullable final ArgRunnable onNewCommentsAdded) {
-
-        bindAdapterToRecyclerView();
-    }*/
-
     private void bindAdapterToRecyclerView() {
-        adapter.resetItems(dummyInitialItems);
         recyclerView = new RecyclerView(context);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);

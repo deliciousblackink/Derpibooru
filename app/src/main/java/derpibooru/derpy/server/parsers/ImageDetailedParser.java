@@ -27,6 +27,10 @@ import derpibooru.derpy.server.parsers.objects.UserScriptParserObject;
 import derpibooru.derpy.server.parsers.objects.UserboxParserObject;
 
 public class ImageDetailedParser implements ServerResponseParser<DerpibooruImageDetailed> {
+    private static final Pattern PATTERN_IMAGE_ID = Pattern.compile("^(?:#)([\\d]*)");
+    private static final Pattern PATTERN_WHITESPACE = Pattern.compile("\\s");
+    private static final Pattern PATTERN_TAG_NUMBER_OF_IMAGES = Pattern.compile("(?!\\()([\\d*\\.]+)(?=\\))");
+
     private ImageSpoilerParserObject mSpoilers;
     private ImageInteractionsParserObject mInteractions;
 
@@ -122,11 +126,11 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
         /* alternate hairstyle (7280) +SH
          * ->
          * alternatehairstyle(7280)+SH */
-        String s = renderedTagText.replaceAll("\\s", "");
+        String s = PATTERN_WHITESPACE.matcher(renderedTagText).replaceAll("");
         /* alternatehairstyle(7280)+SH
          * ->
          * 7280 */
-        Matcher m = Pattern.compile("(?!\\()([\\d*\\.]+)(?=\\))").matcher(s);
+        Matcher m = PATTERN_TAG_NUMBER_OF_IMAGES.matcher(s);
         int numberOfImages = 0;
         while (m.find()) {
              /* handle cases like
@@ -168,7 +172,7 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
 
     private int parseImageId(Document doc) {
         String title = doc.select("title").first().text();
-        Matcher m = Pattern.compile("^(?:#)([\\d]*)").matcher(title);
+        Matcher m = PATTERN_IMAGE_ID.matcher(title);
         /* m.group(0) is '#000000', m.group(1) is '000000' */
         return m.find() ? Integer.parseInt(m.group(1)) : 0;
     }

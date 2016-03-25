@@ -16,6 +16,12 @@ import java.util.regex.Pattern;
  * about the user.
  */
 public class UserScriptParserObject {
+    private static final Pattern PATTERN_USERNAME = Pattern.compile("(?:window.booru.userName = \")(.*)(?:\";)");
+    private static final Pattern PATTERN_AVATAR = Pattern.compile("(?:window.booru.userAvatar = \")(.*)(?:\";)");
+    private static final Pattern PATTERN_FILTER_ID = Pattern.compile("(?:window.booru.filterID = )([\\d]*)");
+    private static final Pattern PATTERN_SPOILERED_TAG_LIST = Pattern.compile("(?:window.booru.spoileredTagList = )(\\[.*\\])");
+    private static final Pattern PATTERN_IMAGE_INTERACTIONS = Pattern.compile("(?:window.booru._interactions = )(\\[.*\\])", Pattern.DOTALL);
+
     private String mHtml;
 
     public UserScriptParserObject(String userScriptHtml) {
@@ -23,7 +29,7 @@ public class UserScriptParserObject {
     }
 
     public String getUsername() {
-        Matcher m = Pattern.compile("(?:window.booru.userName = \")(.*)(?:\";)").matcher(mHtml);
+        Matcher m = PATTERN_USERNAME.matcher(mHtml);
         if (m.find() && (!m.group(1).equals("null"))) {
             return m.group(1);
         }
@@ -31,7 +37,7 @@ public class UserScriptParserObject {
     }
 
     public String getAvatarUrl() {
-        Matcher m = Pattern.compile("(?:window.booru.userAvatar = \")(.*)(?:\";)").matcher(mHtml);
+        Matcher m = PATTERN_AVATAR.matcher(mHtml);
         return m.find() ? getAbsoluteUrl(m.group(1)) : "";
     }
 
@@ -40,12 +46,12 @@ public class UserScriptParserObject {
     }
 
     public int getFilterId() {
-        Matcher m = Pattern.compile("(?:window.booru.filterID = )([\\d]*)").matcher(mHtml);
+        Matcher m = PATTERN_FILTER_ID.matcher(mHtml);
         return m.find() ? Integer.parseInt(m.group(1)) : 0;
     }
 
     public List<Integer> getSpoileredTagIds() throws JSONException {
-        Matcher m = Pattern.compile("(?:window.booru.spoileredTagList = )(\\[.*\\])").matcher(mHtml);
+        Matcher m = PATTERN_SPOILERED_TAG_LIST.matcher(mHtml);
         m.find();
         String tagIdsArray = m.group(1);
         if (!tagIdsArray.equals("")) {
@@ -61,7 +67,7 @@ public class UserScriptParserObject {
 
     @NonNull
     public JSONArray getInteractions() throws JSONException {
-        Matcher m = Pattern.compile("(?:window.booru._interactions = )(\\[.*\\])", Pattern.DOTALL).matcher(mHtml);
+        Matcher m = PATTERN_IMAGE_INTERACTIONS.matcher(mHtml);
         m.find();
         String interactionsArray = m.group(1);
         if (!interactionsArray.equals("[]")) {

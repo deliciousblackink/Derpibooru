@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
  * a served HTML page and contains basic information about the user.
  */
 public class UserboxParserObject {
+    private static final Pattern PATTERN_FILTER_NAME = Pattern.compile("^(?:Filters )(?:\\()(.*)(?:\\))$");
+
     private Element mUserbox;
 
     public UserboxParserObject(String userboxHtml) {
@@ -28,8 +30,7 @@ public class UserboxParserObject {
                     .select("option[selected]").first().text();
         } else {
             String filter = mUserbox.select("a.hide-mobile").text();
-            Matcher m = Pattern.compile("^(?:Filters )(?:\\()(.*)(?:\\))$")
-                    .matcher(filter);
+            Matcher m = PATTERN_FILTER_NAME.matcher(filter);
             m.find();
             return m.group(1);
         }

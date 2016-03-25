@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
 import derpibooru.derpy.data.server.DerpibooruComment;
 
 public class CommentParser implements ServerResponseParser<DerpibooruComment> {
+    private static final Pattern PATTERN_COMMENT_ID = Pattern.compile("^(?:comment_)([\\d]*)");
+
     @Override
     public DerpibooruComment parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
@@ -25,7 +27,7 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     }
 
     private int parseId(Element article) {
-        Matcher m = Pattern.compile("^(?:comment_)([\\d]*)").matcher(article.attr("id"));
+        Matcher m = PATTERN_COMMENT_ID.matcher(article.attr("id"));
         return m.find() ? Integer.parseInt(m.group(1)) : 0;
     }
 

@@ -92,7 +92,7 @@ public class ImageActivityMainFragment extends Fragment {
                 mActivityCallbacks.getImage().getThumb().getFaves(),
                 mActivityCallbacks.getImage().getThumb().getUpvotes(),
                 mActivityCallbacks.getImage().getThumb().getDownvotes());
-        bottomBar.setInfoFromDetailed(mActivityCallbacks.getImage());
+        bottomBar.setInfoFromDetailed(mActivityCallbacks.getImage(), new BottomBarDataRefreshHandler());
     }
 
     private void displayFromImageThumb() {
@@ -220,6 +220,14 @@ public class ImageActivityMainFragment extends Fragment {
         };
         if (userLoggedIn) {
             mInteractionPresenter.enableInteractions(getContext());
+        }
+    }
+
+    private class BottomBarDataRefreshHandler implements ImageBottomBarView.DataRefreshHandler {
+        @Override
+        public void onNewCommentsAdded(int numberOfNewComments) {
+            mActivityCallbacks.getImage().getThumb().increaseCommentCount(numberOfNewComments);
+            bottomBar.refreshCommentCount(mActivityCallbacks.getImage().getThumb().getCommentCount());
         }
     }
 

@@ -81,8 +81,8 @@ class ImageBottomBarViewPagerLayout extends FrameLayout {
         mTagListener = listener;
     }
 
-    protected void initializeTabs(DerpibooruImageDetailed content) {
-        tabPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content) {
+    protected void initializeTabs(DerpibooruImageDetailed content, ImageBottomBarView.DataRefreshHandler dataRefreshHandler) {
+        tabPager.setAdapter(new ImageBottomBarTabAdapter(mFragmentManager, content, dataRefreshHandler) {
             @Override
             public void onTagClicked(int tagId) {
                 mTagListener.onTagClicked(tagId);

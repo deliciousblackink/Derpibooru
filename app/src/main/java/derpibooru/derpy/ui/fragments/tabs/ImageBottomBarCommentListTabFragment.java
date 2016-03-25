@@ -23,6 +23,7 @@ import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.CommentListAdapter;
 import derpibooru.derpy.ui.adapters.RecyclerViewPaginationAdapter;
 import derpibooru.derpy.ui.presenters.PaginatedListPresenter;
+import derpibooru.derpy.ui.views.ImageBottomBarView;
 
 public class ImageBottomBarCommentListTabFragment extends Fragment {
     private PaginatedListPresenter<DerpibooruComment> mCommentListPresenter;
@@ -31,6 +32,7 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
     @Bind(R.id.layoutCommentsRefresh) SwipeRefreshLayout refreshLayout;
     @Bind(R.id.viewComments) RecyclerView recyclerView;
 
+    private ImageBottomBarView.DataRefreshHandler mHandler;
     private Bundle mSavedInstanceState;
 
     @Override
@@ -48,6 +50,10 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
         mSavedInstanceState = savedInstanceState;
         initializeCommentListPresenter();
         return v;
+    }
+
+    public void setDataRefreshHandler(ImageBottomBarView.DataRefreshHandler handler) {
+        mHandler = handler;
     }
 
     private void initializeCommentListPresenter() {
@@ -93,6 +99,13 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
             @Override
             protected void scrollToPosition(int adapterPosition) {
                 recyclerView.smoothScrollToPosition(adapterPosition);
+            }
+
+            @Override
+            protected void onNewCommentsAdded(int commentsAdded) {
+                if (mHandler != null) {
+                    mHandler.onNewCommentsAdded(commentsAdded);
+                }
             }
         };
     }

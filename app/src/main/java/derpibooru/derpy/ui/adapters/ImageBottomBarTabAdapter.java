@@ -10,6 +10,7 @@ import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarCommentListTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarFavoritesTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarInfoTabFragment;
+import derpibooru.derpy.ui.views.ImageBottomBarView;
 import derpibooru.derpy.ui.views.ImageTagView;
 
 public abstract class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter {
@@ -18,13 +19,16 @@ public abstract class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter
     private static final int TAB_COMMENTS_POSITION = 2;
 
     private DerpibooruImageDetailed mImage;
+    private ImageBottomBarView.DataRefreshHandler mDataRefreshHandler;
 
-    public ImageBottomBarTabAdapter(FragmentManager fm, DerpibooruImageDetailed imageDetailed) {
+    public ImageBottomBarTabAdapter(FragmentManager fm, DerpibooruImageDetailed imageDetailed,
+                                    ImageBottomBarView.DataRefreshHandler dataRefreshHandler) {
         super(fm);
+        mDataRefreshHandler = dataRefreshHandler;
+        mImage = imageDetailed;
         for (Fragment fragment : fm.getFragments()) {
             setFragmentCallbackHandler(fragment);
         }
-        mImage = imageDetailed;
     }
 
     public abstract void onTagClicked(int tagId);
@@ -77,6 +81,8 @@ public abstract class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter
                     ImageBottomBarTabAdapter.this.onTagClicked(tagId);
                 }
             });
+        } else if (fragment instanceof ImageBottomBarCommentListTabFragment) {
+            ((ImageBottomBarCommentListTabFragment) fragment).setDataRefreshHandler(mDataRefreshHandler);
         }
     }
 

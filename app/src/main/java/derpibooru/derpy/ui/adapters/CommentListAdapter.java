@@ -57,10 +57,29 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
 
     protected abstract void scrollToPosition(int adapterPosition);
 
+    protected abstract void onNewCommentsAdded(int commentsAdded);
+
     @Override
     public void resetItems(List<DerpibooruComment> newItems) {
         mCommentReplies = new ArrayList<>(0);
+        if (!getItems().isEmpty()) {
+            checkForNewComments(newItems);
+        }
         super.resetItems(newItems);
+    }
+
+    private void checkForNewComments(List<DerpibooruComment> newComments) {
+        int commentsAdded = 0;
+        for (int i = 0; i < newComments.size(); i++) {
+            if (newComments.get(i).getId() != getItems().get(0).getId()) {
+                commentsAdded++;
+            } else {
+                break;
+            }
+        }
+        if (commentsAdded > 0) {
+            onNewCommentsAdded(commentsAdded);
+        }
     }
 
     @Override

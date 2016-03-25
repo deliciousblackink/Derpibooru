@@ -79,6 +79,10 @@ public class DerpibooruImageThumb implements Parcelable {
         return mCommentCount;
     }
 
+    public void increaseCommentCount(int by) {
+        mCommentCount += by;
+    }
+
     public String getThumbUrl() {
         return mThumbUrl;
     }

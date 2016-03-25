@@ -34,7 +34,7 @@
                 android:textSize="16sp"/>
         </LinearLayout>
     </LinearLayout>
-    <derpibooru.derpy.ui.views.HtmlTextView
+    <derpibooru.derpy.ui.views.htmltextview.CustomFormattingHtmlTextView
         android:id="@+id/textComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

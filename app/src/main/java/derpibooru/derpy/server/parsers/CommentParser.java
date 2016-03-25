@@ -41,7 +41,9 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     }
 
     private String parseCommentBody(Element commentContent) {
-        return commentContent.select("div.post-text").first().html();
+        Element post = commentContent.select("div.post-text").first();
+        post.select("span.spoiler").tagName("spoiler").removeAttr("class");
+        return post.html();
     }
 
     private String parsePostedAt(Element commentOptions) {

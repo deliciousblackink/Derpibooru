@@ -15,7 +15,7 @@ public class CommentListParserTest {
                                   "<a href=\"#comment_2588558\">@PwnyPony</a> \n<br> The look on his face says, \"I don’t think that went as planned. Let me step back.\" XD",
                                   "2014-06-17T22:49:26Z");
     private static final DerpibooruComment expectedAnon =
-            new DerpibooruComment(2622311, "Background Pony #DD72", "https://derpicdn.net/assets/no_avatar.svg", "The guy next to Trixie tried to throw a tactical rock at it.",
+            new DerpibooruComment(2622311, "Background Pony #DD72", "https://derpicdn.net/assets/no_avatar.svg", "The guy next to Trixie tried to throw a tactical rock at it. \n<spoiler>\n han solo does something in tfa\n</spoiler>",
                                   "2014-06-26T21:01:36Z");
 
     private DerpibooruComment[] parsed = new DerpibooruComment[2];

@@ -1,7 +1,6 @@
 package derpibooru.derpy.ui.adapters;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -41,12 +40,19 @@ public class CommentListAdapterTest {
 
     @Test
     public void testInitialization() {
-        initializeRecyclerViewWithAdapter(null, null, new ArgRunnable() {
+        adapter = new CommentListAdapter(context, Collections.<DerpibooruComment>emptyList(), null) {
             @Override
-            public void run(Object... args) {
+            protected void fetchCommentReply(CommentReplyItem replyItem) { }
+
+            @Override
+            protected void scrollToPosition(int adapterPosition) { }
+
+            @Override
+            protected void onNewCommentsAdded(int commentsAdded) {
                 fail("when the adapter is initialized and the items are first added, onNewCommentsAdded(int) is not expected to be called");
             }
-        });
+        };
+        bindAdapterToRecyclerView();
     }
 
     @Test
@@ -61,15 +67,29 @@ public class CommentListAdapterTest {
         testItemAddition(newItems);
     }
 
-    private void testItemAddition(int itemsToAdd) {
-        OnNewCommentsAddedRunnable testRunnable = new OnNewCommentsAddedRunnable(itemsToAdd);
-        initializeRecyclerViewWithAdapter(null, null, testRunnable);
+    private void testItemAddition(final int itemsToAdd) {
+        final MethodCallTest callTest = new MethodCallTest();
+
+        adapter = new CommentListAdapter(context, Collections.<DerpibooruComment>emptyList(), null) {
+            @Override
+            protected void fetchCommentReply(CommentReplyItem replyItem) { }
+
+            @Override
+            protected void scrollToPosition(int adapterPosition) { }
+
+            @Override
+            protected void onNewCommentsAdded(int commentsAdded) {
+                assertThat(commentsAdded, is(itemsToAdd));
+                callTest.called();
+            }
+        };
+        bindAdapterToRecyclerView();
 
         List<DerpibooruComment> newItems = new ArrayList<>(dummyInitialItems);
         newItems.addAll(0, getDummyItems(itemsToAdd, (dummyInitialItems.size())));
         adapter.resetItems(newItems);
 
-        if (!testRunnable.wasCalled) {
+        if (!callTest.wasCalled) {
             fail("onNewCommentsAdded(int) was not called");
         }
     }
@@ -87,47 +107,25 @@ public class CommentListAdapterTest {
         return out;
     }
 
-    private void initializeRecyclerViewWithAdapter(@Nullable final ArgRunnable fetchCommentReply,
+    /*private void initializeRecyclerViewWithAdapter(@Nullable final ArgRunnable fetchCommentReply,
                                                    @Nullable final ArgRunnable scrollToPosition,
                                                    @Nullable final ArgRunnable onNewCommentsAdded) {
-        adapter = new CommentListAdapter(context, Collections.<DerpibooruComment>emptyList(), null) {
-            @Override
-            protected void fetchCommentReply(CommentReplyItem replyItem) {
-                if (fetchCommentReply != null) fetchCommentReply.run(replyItem);
-            }
 
-            @Override
-            protected void scrollToPosition(int adapterPosition) {
-                if (scrollToPosition != null) scrollToPosition.run(adapterPosition);
-            }
+        bindAdapterToRecyclerView();
+    }*/
 
-            @Override
-            protected void onNewCommentsAdded(int commentsAdded) {
-                if (onNewCommentsAdded != null) onNewCommentsAdded.run(commentsAdded);
-            }
-        };
+    private void bindAdapterToRecyclerView() {
         adapter.resetItems(dummyInitialItems);
         recyclerView = new RecyclerView(context);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
     }
 
-    private class OnNewCommentsAddedRunnable implements ArgRunnable {
-        int expected;
+    private class MethodCallTest {
         boolean wasCalled;
 
-        OnNewCommentsAddedRunnable(int commentsAdded) {
-            expected = commentsAdded;
-        }
-
-        @Override
-        public void run(Object... args) {
+        public void called() {
             wasCalled = true;
-            assertThat((int) args[0], is(expected));
         }
-    }
-
-    private interface ArgRunnable {
-        void run(Object... args);
     }
 }

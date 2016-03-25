@@ -4,6 +4,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import derpibooru.derpy.data.server.DerpibooruComment;
 
 public class CommentParser implements ServerResponseParser<DerpibooruComment> {
@@ -13,11 +16,17 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
         Element comment = doc.select("div.post-content").first();
         Element commentOptions = doc.select("div.post-options").first();
 
+        int id = parseId(doc.select("article").first());
         String author = parseAuthor(comment);
         String avatarUrl = parseAvatarUrl(comment);
         String text = parseCommentBody(comment);
         String postedAt = parsePostedAt(commentOptions);
-        return new DerpibooruComment(author, avatarUrl, text, postedAt);
+        return new DerpibooruComment(id, author, avatarUrl, text, postedAt);
+    }
+
+    private int parseId(Element article) {
+        Matcher m = Pattern.compile("^(?:comment_)([\\d]*)").matcher(article.attr("id"));
+        return m.find() ? Integer.parseInt(m.group(1)) : 0;
     }
 
     private String parseAuthor(Element commentContent) {

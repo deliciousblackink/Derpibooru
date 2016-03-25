@@ -23,9 +23,8 @@ public class CommentListParser implements ServerResponseParser<List<DerpibooruCo
 
         CommentParser parser = new CommentParser();
         for (int i = 0; i < commentCount; i++) {
-            commentList.add(parser.parseResponse(commentsRaw.get(i).html()));
+            commentList.add(parser.parseResponse(commentsRaw.get(i).outerHtml()));
         }
         return commentList;
     }
-
 }

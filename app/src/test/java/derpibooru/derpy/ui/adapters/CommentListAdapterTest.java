@@ -35,7 +35,7 @@ public class CommentListAdapterTest {
     @Before
     public void setUp() {
         context = RuntimeEnvironment.application.getApplicationContext();
-        fillInitialItems();
+        dummyInitialItems = getDummyItems(10, 0);
     }
 
     @Test
@@ -58,6 +58,13 @@ public class CommentListAdapterTest {
     @Test
     public void testAddingNewComments() {
         int newItems = 2;
+        testItemAddition(newItems);
+    }
+
+    @Test
+    public void testAddingNewCommentsToEmptyList() {
+        int newItems = 2;
+        dummyInitialItems = getDummyItems(0, 0);
         testItemAddition(newItems);
     }
 
@@ -92,11 +99,6 @@ public class CommentListAdapterTest {
         if (!callTest.wasCalled) {
             fail("onNewCommentsAdded(int) was not called");
         }
-    }
-
-    private void fillInitialItems() {
-        dummyInitialItems = new ArrayList<>(10);
-        dummyInitialItems.addAll(getDummyItems(10, 0));
     }
 
     private List<DerpibooruComment> getDummyItems(int items, int startWithIndex) {

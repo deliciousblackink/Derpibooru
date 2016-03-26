@@ -13,17 +13,15 @@ import static org.junit.Assert.assertThat;
 
 public class FilterListParserTest {
     private static final DerpibooruFilter expectedSystemFilter =
-            new DerpibooruFilter(100073, "Default", Arrays.asList(41133, 41161))
-                    .setAdditionalInfo("The site's default filter. Hides \"not art\" content, and should hide images that would exceed the show's own rating.",
-                                       Arrays.asList("1000 hours in ms paint", "background pony strikes again"),
-                                       Arrays.asList("seizure warning", "semi-grimdark"),
-                                       true, 114000);
+            new DerpibooruFilter(100073, "Default", Arrays.asList(61060, 89379), Arrays.asList(41133, 41161),
+                                 "The site's default filter. Hides \"not art\" content, and should hide images that would exceed the show's own rating.",
+                                 Arrays.asList("1000 hours in ms paint", "background pony strikes again"),
+                                 Arrays.asList("seizure warning", "semi-grimdark"), true, 114000);
     private static final DerpibooruFilter expectedUserFilter =
-            new DerpibooruFilter(12, "User-Defined Filter", Arrays.asList(41133, 41161))
-                    .setAdditionalInfo("For those few that may have liked it.",
-                                       Arrays.asList("1000 hours in ms paint", "background pony strikes again"),
-                                       Arrays.asList("seizure warning", "semi-grimdark"),
-                                       false, 1);
+            new DerpibooruFilter(12, "User-Defined Filter", Arrays.asList(61060, 89379), Arrays.asList(41133, 41161),
+                                 "For those few that may have liked it.",
+                                 Arrays.asList("1000 hours in ms paint", "background pony strikes again"),
+                                 Arrays.asList("seizure warning", "semi-grimdark"), false, 1);
 
     private DerpibooruFilter parsedSystem;
     private DerpibooruFilter parsedUser;

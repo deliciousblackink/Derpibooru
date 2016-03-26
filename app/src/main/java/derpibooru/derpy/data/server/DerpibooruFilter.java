@@ -12,6 +12,7 @@ import java.util.List;
 public class DerpibooruFilter implements Parcelable {
     private final int mId;
     private final String mName;
+    private final List<Integer> mHiddenTags;
     private final List<Integer> mSpoileredTags;
 
     private String mDescription;
@@ -20,21 +21,26 @@ public class DerpibooruFilter implements Parcelable {
     private boolean mSystemFilter;
     private int mUserCount;
 
-    public DerpibooruFilter(int filterId, String filterName, List<Integer> spoileredTags) {
+    public DerpibooruFilter(int filterId, String filterName,
+                            List<Integer> hiddenTags, List<Integer> spoileredTags) {
         mId = filterId;
         mName = filterName;
+        mHiddenTags = hiddenTags;
         mSpoileredTags = spoileredTags;
     }
 
-    public DerpibooruFilter setAdditionalInfo(String description, List<String> hiddenTagNames,
-                                              List<String> spoileredTagNames, boolean isSystemFilter,
-                                              int userCount) {
+    public DerpibooruFilter(int filterId, String filterName,
+                            List<Integer> hiddenTags, List<Integer> spoileredTags,
+                            String description, List<String> hiddenTagNames,
+                            List<String> spoileredTagNames, boolean isSystemFilter,
+                            int userCount) {
+        this(filterId, filterName, hiddenTags, spoileredTags);
+
         mDescription = description;
         mHiddenTagNames = hiddenTagNames;
         mSpoileredTagNames = spoileredTagNames;
         mSystemFilter = isSystemFilter;
         mUserCount = userCount;
-        return this;
     }
 
     @Override
@@ -58,12 +64,12 @@ public class DerpibooruFilter implements Parcelable {
         return mName;
     }
 
-    public List<Integer> getSpoileredTags() {
-        return mSpoileredTags;
+    public List<Integer> getHiddenTags() {
+        return mHiddenTags;
     }
 
-    public boolean isTagSpoilered(int tagId) {
-        return mSpoileredTags.contains(tagId);
+    public List<Integer> getSpoileredTags() {
+        return mSpoileredTags;
     }
 
     public String getDescription() {
@@ -90,6 +96,9 @@ public class DerpibooruFilter implements Parcelable {
         mId = in.readInt();
         mName = in.readString();
 
+        int[] hiddenTags = in.createIntArray();
+        mHiddenTags = Ints.asList(hiddenTags);
+
         int[] spoileredTags = in.createIntArray();
         mSpoileredTags = Ints.asList(spoileredTags);
 
@@ -109,6 +118,7 @@ public class DerpibooruFilter implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mId);
         dest.writeString(mName);
+        dest.writeIntArray(Ints.toArray(mHiddenTags));
         dest.writeIntArray(Ints.toArray(mSpoileredTags));
         dest.writeString(mDescription);
         dest.writeStringList(mHiddenTagNames);

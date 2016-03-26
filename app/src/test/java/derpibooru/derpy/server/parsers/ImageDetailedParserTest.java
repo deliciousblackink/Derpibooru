@@ -25,8 +25,7 @@ public class ImageDetailedParserTest {
     private static final DerpibooruImageThumb thumb =
             new DerpibooruImageThumb(655777, 607986, 240, 3, 154, 32,
                                      "https://derpicdn.net/img/2014/6/17/655777/thumb.gif",
-                                     "https://derpicdn.net/img/2014/6/17/655777/large.gif",
-                                     "https://derpicdn.net/dummy_spoiler",
+                                     "https://derpicdn.net/img/2014/6/17/655777/large.gif", "",
                                      EnumSet.of(DerpibooruImageInteraction.InteractionType.Upvote,
                                                 DerpibooruImageInteraction.InteractionType.Fave));
     private static final List<DerpibooruTag> tags = Arrays.asList(new DerpibooruTag(54235, 42181, "animated"),
@@ -36,9 +35,6 @@ public class ImageDetailedParserTest {
                                         "https://derpicdn.net/img/view/2014/6/17/655777__safe_animated_upvotes+galore_trixie_frown_wide+eyes_car_soldier_thought+bubble_wheel.gif",
                                         "Background Pony #14C8", "Trixie has no one to blame but herself.", "2014-06-17T22:32:45Z",
                                         tags, Arrays.asList("User1", "User2", "User3"));
-    private static final DerpibooruTagDetailed dummySpoilerTag =
-            new DerpibooruTagDetailed(54235, 0, "animated", "", "", "https://derpicdn.net/dummy_spoiler");
-    private static final ArrayList<DerpibooruTagDetailed> dummyFilter = Lists.newArrayList(dummySpoilerTag);
 
     private DerpibooruImageDetailed parsed;
 
@@ -46,7 +42,7 @@ public class ImageDetailedParserTest {
     public void setUp() throws Exception {
         TestResourceLoader loader = new TestResourceLoader();
         String list = loader.readTestResourceFile("SampleImageDetailedResponse.html");
-        ImageDetailedParser parser = new ImageDetailedParser(dummyFilter);
+        ImageDetailedParser parser = new ImageDetailedParser();
         parsed = parser.parseResponse(list);
     }
 

@@ -31,12 +31,7 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
     private static final Pattern PATTERN_WHITESPACE = Pattern.compile("\\s");
     private static final Pattern PATTERN_TAG_NUMBER_OF_IMAGES = Pattern.compile("(?!\\()([\\d*\\.]+)(?=\\))");
 
-    private ImageSpoilerParserObject mSpoilers;
     private ImageInteractionsParserObject mInteractions;
-
-    public ImageDetailedParser(List<DerpibooruTagDetailed> spoileredTags) {
-        mSpoilers = new ImageSpoilerParserObject(spoileredTags);
-    }
 
     @Override
     public DerpibooruImageDetailed parseResponse(String rawResponse) throws Exception {
@@ -160,8 +155,7 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
                 Integer.parseInt(imageContainer.attr("data-comment-count")),
                 "https:" + new JSONObject(imageContainer.attr("data-uris")).getString("thumb"),
                 "https:" + new JSONObject(imageContainer.attr("data-uris")).getString("large"),
-                mSpoilers.getSpoilerUrl(new JSONArray(imageContainer.attr("data-image-tags"))),
-                interactions
+                "", interactions
         );
         return thumb;
     }

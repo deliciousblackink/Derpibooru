@@ -5,6 +5,7 @@ import android.content.Context;
 import java.net.URLEncoder;
 import java.util.List;
 
+import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruSearchOptions;
 import derpibooru.derpy.server.QueryHandler;
@@ -12,8 +13,9 @@ import derpibooru.derpy.server.QueryHandler;
 public class SearchProvider extends ImageListProvider {
     private DerpibooruSearchOptions mSearchOptions;
 
-    public SearchProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler) {
-        super(context, handler);
+    public SearchProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler,
+                          DerpibooruFilter imageListFilter) {
+        super(context, handler, imageListFilter);
     }
 
     public SearchProvider searching(DerpibooruSearchOptions options) {

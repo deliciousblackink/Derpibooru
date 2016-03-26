@@ -20,7 +20,7 @@ public class RankingImageListFragment extends ImageListFragment {
         RankingImageListProvider.RankingsType listType =
                 RankingImageListProvider.RankingsType.fromValue(getArguments().getInt(EXTRAS_RANKING_LIST_TYPE));
         super.initializeList(
-                new RankingImageListProvider(getActivity(), super.getNewInstanceOfProviderQueryHandler())
+                new RankingImageListProvider(getActivity(), super.getNewInstanceOfProviderQueryHandler(), getUser().getCurrentFilter())
                         .type(listType).inDays(3));
         ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (bar != null) bar.setTitle(

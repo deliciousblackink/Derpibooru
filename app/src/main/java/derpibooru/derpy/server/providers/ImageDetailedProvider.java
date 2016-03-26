@@ -32,20 +32,6 @@ public class ImageDetailedProvider extends Provider<DerpibooruImageDetailed> {
 
     @Override
     public void fetch() {
-        new SpoileredTagsProvider(mContext, new QueryHandler<List<DerpibooruTagDetailed>>() {
-            @Override
-            public void onQueryExecuted(List<DerpibooruTagDetailed> spoileredTags) {
-                fetchDetailed(spoileredTags);
-            }
-
-            @Override
-            public void onQueryFailed() {
-                mHandler.onQueryFailed();
-            }
-        }).fetch();
-    }
-
-    private void fetchDetailed(List<DerpibooruTagDetailed> spoileredTags) {
-        super.executeQuery(new ImageDetailedParser(spoileredTags));
+        super.executeQuery(new ImageDetailedParser());
     }
 }

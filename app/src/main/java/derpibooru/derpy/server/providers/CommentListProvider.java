@@ -2,6 +2,7 @@ package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
+import java.util.Collections;
 import java.util.List;
 
 import derpibooru.derpy.data.server.DerpibooruComment;
@@ -39,6 +40,6 @@ public class CommentListProvider extends PaginatedListProvider<DerpibooruComment
 
     @Override
     public void fetch() {
-        super.executeQuery(new CommentListParser());
+        super.executeQuery(new CommentListParser(Collections.<Integer>emptyList(), Collections.<Integer>emptyList()));
     }
 }

@@ -7,6 +7,8 @@ import android.text.method.LinkMovementMethod;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import com.google.common.base.Objects;
+
 /**
  * @author http://stackoverflow.com/a/20905824/1726690
  */
@@ -24,7 +26,7 @@ class CustomFormattingMovementMethod extends LinkMovementMethod {
             }
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             SpoilerSpan touchedSpan = getPressedSpan(textView, spannable, event);
-            if ((mPressedSpan != null) && (touchedSpan != mPressedSpan)) {
+            if (!Objects.equal(touchedSpan, mPressedSpan)) {
                 mPressedSpan = null;
                 Selection.removeSelection(spannable);
             }
@@ -36,7 +38,6 @@ class CustomFormattingMovementMethod extends LinkMovementMethod {
     }
 
     private SpoilerSpan getPressedSpan(TextView textView, Spannable spannable, MotionEvent event) {
-
         int x = (int) event.getX();
         int y = (int) event.getY();
 

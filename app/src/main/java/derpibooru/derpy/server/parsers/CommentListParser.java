@@ -10,6 +10,14 @@ import java.util.List;
 import derpibooru.derpy.data.server.DerpibooruComment;
 
 public class CommentListParser implements ServerResponseParser<List<DerpibooruComment>> {
+    private final List<Integer> mHiddenTagIds;
+    private final List<Integer> mSpoileredTagIds;
+
+    public CommentListParser(List<Integer> hiddenTagIds, List<Integer> spoileredTagIds) {
+        mHiddenTagIds = hiddenTagIds;
+        mSpoileredTagIds = spoileredTagIds;
+    }
+
     @Override
     public List<DerpibooruComment> parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
@@ -21,7 +29,7 @@ public class CommentListParser implements ServerResponseParser<List<DerpibooruCo
         int commentCount = commentsRaw.size();
         List<DerpibooruComment> commentList = new ArrayList<>(commentCount);
 
-        CommentParser parser = new CommentParser();
+        CommentParser parser = new CommentParser(mHiddenTagIds, mSpoileredTagIds);
         for (int i = 0; i < commentCount; i++) {
             commentList.add(parser.parseResponse(commentsRaw.get(i).outerHtml()));
         }

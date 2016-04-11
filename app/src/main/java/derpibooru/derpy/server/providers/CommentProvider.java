@@ -2,6 +2,7 @@ package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class CommentProvider extends Provider<DerpibooruComment> {
 
     @Override
     public void fetch() {
-        super.executeQuery(new CommentParser());
+        super.executeQuery(new CommentParser(Collections.<Integer>emptyList(), Collections.<Integer>emptyList()));
     }
 }
 

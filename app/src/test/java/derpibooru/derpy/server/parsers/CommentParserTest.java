@@ -3,6 +3,8 @@ package derpibooru.derpy.server.parsers;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
+
 import derpibooru.derpy.TestResourceLoader;
 import derpibooru.derpy.data.server.DerpibooruComment;
 
@@ -21,7 +23,7 @@ public class CommentParserTest {
     public void setUp() throws Exception {
         TestResourceLoader loader = new TestResourceLoader();
         String comments = loader.readTestResourceFile("SampleImageCommentAJAXCallResponse.html");
-        CommentParser parser = new CommentParser();
+        CommentParser parser = new CommentParser(Collections.<Integer>emptyList(), Collections.<Integer>emptyList());
         parsed = parser.parseResponse(comments);
     }
 

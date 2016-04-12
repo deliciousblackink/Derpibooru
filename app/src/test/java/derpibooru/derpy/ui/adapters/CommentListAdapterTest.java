@@ -40,17 +40,17 @@ public class CommentListAdapterTest {
 
     @Test
     public void testInitialization() {
-        adapter = new CommentListAdapter(context, dummyInitialItems, null) {
+        adapter = new CommentListAdapter(context, new CommentListAdapter.OnCommentCountChangeListener() {
+            @Override
+            public void onNewCommentsAdded(int commentsAdded) {
+                fail("when the adapter is initialized and the items are first added, onNewCommentsAdded(int) is not expected to be called");
+            }
+        }, dummyInitialItems, null) {
             @Override
             protected void fetchCommentReply(CommentReplyItem replyItem) { }
 
             @Override
             protected void scrollToPosition(int adapterPosition) { }
-
-            @Override
-            protected void onNewCommentsAdded(int commentsAdded) {
-                fail("when the adapter is initialized and the items are first added, onNewCommentsAdded(int) is not expected to be called");
-            }
         };
         bindAdapterToRecyclerView();
     }
@@ -77,18 +77,18 @@ public class CommentListAdapterTest {
     private void testItemAddition(final int itemsToAdd) {
         final MethodCallTest callTest = new MethodCallTest();
 
-        adapter = new CommentListAdapter(context, dummyInitialItems, null) {
+        adapter = new CommentListAdapter(context, new CommentListAdapter.OnCommentCountChangeListener() {
+            @Override
+            public void onNewCommentsAdded(int commentsAdded) {
+                assertThat(commentsAdded, is(itemsToAdd));
+                callTest.called();
+            }
+        }, dummyInitialItems, null) {
             @Override
             protected void fetchCommentReply(CommentReplyItem replyItem) { }
 
             @Override
             protected void scrollToPosition(int adapterPosition) { }
-
-            @Override
-            protected void onNewCommentsAdded(int commentsAdded) {
-                assertThat(commentsAdded, is(itemsToAdd));
-                callTest.called();
-            }
         };
         bindAdapterToRecyclerView();
 

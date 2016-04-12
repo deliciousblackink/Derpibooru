@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:animateLayoutChanges="true">
+                android:layout_height="match_parent">
     <!-- it is important for ImageView to be the first child, otherwise
     other views do not receive onClick events (even despite the
     "clickable=true" attribute set -->
@@ -10,25 +9,14 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         android:clickable="true"/>
     <derpibooru.derpy.ui.views.AccentColorProgressBar
-        android:id="@id/progressImage"
+        android:id="@+id/progressImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
-    <derpibooru.derpy.ui.views.ImageTopBarView
-        android:clickable="true"
-        android:id="@+id/imageTopBar"
+        android:layout_gravity="center"/>
+    <derpibooru.derpy.ui.views.imagedetailedview.ImageDetailedView
+        android:id="@+id/imageDetailedView"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginTop="?attr/actionBarSize"/>
-    <!-- the top margin prevents the view from overlapping activity's toolbar -->
-    <derpibooru.derpy.ui.views.ImageBottomBarView
-        android:id="@+id/imageBottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="?attr/actionBarSize"/>
-</RelativeLayout>
+        android:layout_height="match_parent" />
+</FrameLayout>

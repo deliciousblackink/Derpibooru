@@ -3,20 +3,14 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/transparentOverlay"
-        android:background="@android:color/transparent"/>
     <include
-        layout="@layout/view_image_bottom_bar_header"
+        layout="@layout/view_image_detailed_bottom_bar_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/bottomTabsPager"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@android:color/white"
-        android:visibility="invisible"/>
+        android:layout_height="0dp"
+        android:background="@android:color/white"/>
 </LinearLayout>

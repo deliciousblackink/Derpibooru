@@ -6,12 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,7 +20,6 @@ import com.bumptech.glide.request.target.Target;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import derpibooru.derpy.ImageDownload;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.ui.views.ImageTagView;
@@ -38,7 +33,6 @@ public class ImageActivityMainFragment extends Fragment {
     @Bind(R.id.imageView) ImageView imageView;
     @Bind(R.id.imageDetailedView) ImageDetailedView imageDetailedView;
 
-    private ImageDownload mImageDownload;
     private ImageActivityMainFragmentHandler mActivityCallbacks;
 
     private int mImageId;
@@ -50,7 +44,12 @@ public class ImageActivityMainFragment extends Fragment {
         ButterKnife.bind(this, v);
         setHasOptionsMenu(true);
         setImageId(mImageId);
-        displayToolbar();
+        imageDetailedView.displayToolbar(mImageId, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
         if (mActivityCallbacks.getImage() != null) {
             v.post(new Runnable() {
                 @Override
@@ -70,15 +69,6 @@ public class ImageActivityMainFragment extends Fragment {
         mImageId = imageId;
     }
 
-    private void displayToolbar() {
-        imageDetailedView.displayToolbar(mImageId, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-    }
-
     public void onDetailedImageFetched() {
         if (getView() != null) {
             displayImageInRootView(null);
@@ -94,12 +84,11 @@ public class ImageActivityMainFragment extends Fragment {
     }
 
     private void displayImageInRootView(@Nullable Bundle savedInstanceState) {
-        initializeDetailedView(savedInstanceState);
-        initializeImageDownload();
+        showDetailedView(savedInstanceState);
         loadImage();
     }
 
-    private void initializeDetailedView(@Nullable Bundle savedInstanceState) {
+    private void showDetailedView(@Nullable Bundle savedInstanceState) {
         imageDetailedView.displayDetailedView(
                 getChildFragmentManager(),
                 getArguments().getBoolean(EXTRAS_IS_USER_LOGGED_IN),
@@ -112,6 +101,11 @@ public class ImageActivityMainFragment extends Fragment {
                     @Override
                     public DerpibooruImageDetailed getImage() {
                         return mActivityCallbacks.getImage();
+                    }
+
+                    @Override
+                    public void requestImageDownloadPermissions() {
+                        requestPermissions(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, REQUEST_WRITE_STORAGE);
                     }
                 },
                 savedInstanceState);
@@ -132,49 +126,14 @@ public class ImageActivityMainFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_image_activity_main_fragment, menu);
-        if ((mImageDownload == null) || (hasStoragePermissions() && mImageDownload.isDownloaded())) {
-            menu.findItem(R.id.actionDownloadImage).setVisible(false);
-        }
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.actionDownloadImage:
-                if (mActivityCallbacks != null) {
-                    if (hasStoragePermissions()) {
-                        mImageDownload.start();
-                    } else {
-                        requestPermissions(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, REQUEST_WRITE_STORAGE);
-                    }
-                }
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if ((requestCode == REQUEST_WRITE_STORAGE)
                 && (grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-            mImageDownload.start();
+            if (imageDetailedView != null) {
+                imageDetailedView.onImageDownloadPermissionsGranted();
+            }
         }
-    }
-
-    private boolean hasStoragePermissions() {
-        return ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void initializeImageDownload() {
-        mImageDownload = new ImageDownload(getContext(), mImageId,
-                                           mActivityCallbacks.getImage().getTags(),
-                                           mActivityCallbacks.getImage().getDownloadUrl());
-        getActivity().invalidateOptionsMenu(); /* hide the download button if the image's already been downloaded */
     }
 
     private class GlideRequestListener implements RequestListener<String, GlideDrawable> {

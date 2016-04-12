@@ -1,4 +1,4 @@
-package derpibooru.derpy.ui.fragments.tabs;
+package derpibooru.derpy.ui.fragments.imageactivity.tabs;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,7 +18,7 @@ import derpibooru.derpy.data.server.DerpibooruTag;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.representations.ServerDate;
 import derpibooru.derpy.ui.views.FlowLayout;
-import derpibooru.derpy.ui.views.ImageTagView;
+import derpibooru.derpy.ui.views.imagedetailedview.ImageTagView;
 
 public class ImageBottomBarInfoTabFragment extends Fragment {
     private ImageTagView.OnTagClickListener mTagListener;

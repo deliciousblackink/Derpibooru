@@ -7,10 +7,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.ui.ImageActivity;
-import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarCommentListTabFragment;
-import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarFavoritesTabFragment;
-import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarInfoTabFragment;
-import derpibooru.derpy.ui.views.ImageTagView;
+import derpibooru.derpy.ui.fragments.imageactivity.tabs.ImageBottomBarCommentListTabFragment;
+import derpibooru.derpy.ui.fragments.imageactivity.tabs.ImageBottomBarFavoritesTabFragment;
+import derpibooru.derpy.ui.fragments.imageactivity.tabs.ImageBottomBarInfoTabFragment;
+import derpibooru.derpy.ui.views.imagedetailedview.ImageTagView;
 
 public class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter {
     private static final int TAB_INFO_POSITION = 0;

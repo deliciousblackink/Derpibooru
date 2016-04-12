@@ -1,4 +1,4 @@
-package derpibooru.derpy.ui.fragments.tabs;
+package derpibooru.derpy.ui.fragments.imageactivity.tabs;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

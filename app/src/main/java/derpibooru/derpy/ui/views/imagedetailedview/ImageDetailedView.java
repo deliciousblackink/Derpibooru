@@ -25,7 +25,6 @@ import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.ui.animators.ImageDetailedViewAnimator;
 import derpibooru.derpy.ui.presenters.ImageInteractionPresenter;
-import derpibooru.derpy.ui.views.ImageTagView;
 
 public class ImageDetailedView extends LinearLayout {
     @Bind(R.id.toolbar) Toolbar toolbar;

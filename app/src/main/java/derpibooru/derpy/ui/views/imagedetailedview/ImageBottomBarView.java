@@ -24,7 +24,6 @@ import derpibooru.derpy.ui.adapters.CommentListAdapter;
 import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
 import derpibooru.derpy.ui.animators.ImageDetailedViewAnimator;
 import derpibooru.derpy.ui.views.AccentColorIconButton;
-import derpibooru.derpy.ui.views.ImageTagView;
 
 import static derpibooru.derpy.ui.animators.ImageDetailedViewAnimator.BottomBarExtensionState;
 

@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.ui.fragments.ImageActivityMainFragment;
-import derpibooru.derpy.ui.fragments.ImageActivityTagFragment;
+import derpibooru.derpy.ui.fragments.imageactivity.ImageActivityMainFragment;
+import derpibooru.derpy.ui.fragments.imageactivity.ImageActivityTagFragment;
 
 public abstract class ImageActivityFragmentAdapter extends FragmentAdapter {
     public ImageActivityFragmentAdapter(FragmentManager fragmentManager, int fragmentLayoutId) {

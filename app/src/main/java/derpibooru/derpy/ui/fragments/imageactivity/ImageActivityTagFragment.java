@@ -1,4 +1,4 @@
-package derpibooru.derpy.ui.fragments;
+package derpibooru.derpy.ui.fragments.imageactivity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

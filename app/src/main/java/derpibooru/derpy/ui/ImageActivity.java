@@ -15,8 +15,8 @@ import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.providers.ImageDetailedProvider;
 import derpibooru.derpy.ui.adapters.ImageActivityFragmentAdapter;
-import derpibooru.derpy.ui.fragments.ImageActivityMainFragment;
-import derpibooru.derpy.ui.fragments.ImageActivityTagFragment;
+import derpibooru.derpy.ui.fragments.imageactivity.ImageActivityMainFragment;
+import derpibooru.derpy.ui.fragments.imageactivity.ImageActivityTagFragment;
 import derpibooru.derpy.ui.fragments.ImageListFragment;
 
 public class ImageActivity extends AppCompatActivity {

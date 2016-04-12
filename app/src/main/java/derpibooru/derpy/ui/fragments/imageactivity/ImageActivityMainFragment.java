@@ -1,4 +1,4 @@
-package derpibooru.derpy.ui.fragments;
+package derpibooru.derpy.ui.fragments.imageactivity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -22,7 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
-import derpibooru.derpy.ui.views.ImageTagView;
+import derpibooru.derpy.ui.views.imagedetailedview.ImageTagView;
 import derpibooru.derpy.ui.views.imagedetailedview.ImageDetailedView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 

@@ -1,4 +1,4 @@
-package derpibooru.derpy.ui.views;
+package derpibooru.derpy.ui.views.imagedetailedview;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;

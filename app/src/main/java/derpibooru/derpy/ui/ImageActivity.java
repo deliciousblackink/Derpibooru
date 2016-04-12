@@ -114,7 +114,7 @@ public class ImageActivity extends AppCompatActivity {
 
             @Override
             public void onQueryFailed() {
-            /* TODO: handle failed request */
+                /* TODO: handle failed request */
             }
         });
         provider.id(imageId).fetch();
@@ -137,11 +137,6 @@ public class ImageActivity extends AppCompatActivity {
         public void onTagSearchRequested(String tagName) {
             setActivityResult(tagName);
             ImageActivity.super.finish();
-        }
-
-        @Override
-        public void setToolbarTitle(String title) {
-            /* TODO: there's no shared toolbar anymore; add one to the tag fragment */
         }
     }
 }

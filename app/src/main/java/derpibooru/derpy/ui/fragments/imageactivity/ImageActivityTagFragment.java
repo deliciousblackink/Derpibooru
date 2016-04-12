@@ -3,6 +3,7 @@ package derpibooru.derpy.ui.fragments.imageactivity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ public class ImageActivityTagFragment extends Fragment {
     public static final String EXTRAS_TAG_ID = "derpibooru.derpy.TagId";
     private static final String EXTRAS_FETCHED_TAG = "derpibooru.derpy.FetchedTag";
 
+    @Bind(R.id.toolbar) Toolbar toolbar;
+
     @Bind(R.id.textTag) TextView textTagName;
     @Bind(R.id.viewTagImage) ImageView viewTagImage;
     @Bind(R.id.textTagShortDescription) TextView textTagShortDescription;
@@ -43,6 +46,12 @@ public class ImageActivityTagFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_image_fragment_tag, container, false);
         ButterKnife.bind(this, v);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
         if ((savedInstanceState != null)
                 && (savedInstanceState.getParcelable(EXTRAS_FETCHED_TAG) != null)) {
             mFetchedTag = savedInstanceState.getParcelable(EXTRAS_FETCHED_TAG);
@@ -75,7 +84,7 @@ public class ImageActivityTagFragment extends Fragment {
         rootView.setVisibility(View.VISIBLE);
         String tag = String.format("%s (%d)", mFetchedTag.getName(), mFetchedTag.getNumberOfImages());
         textTagName.setText(tag);
-        mActivityCallbacks.setToolbarTitle(tag);
+        toolbar.setTitle(tag);
         if (!mFetchedTag.getShortDescription().isEmpty()) {
             textTagShortDescription.setText(mFetchedTag.getShortDescription());
         } else {
@@ -117,6 +126,5 @@ public class ImageActivityTagFragment extends Fragment {
 
     public interface ImageActivityTagFragmentHandler {
         void onTagSearchRequested(String tagName);
-        void setToolbarTitle(String title);
     }
 }

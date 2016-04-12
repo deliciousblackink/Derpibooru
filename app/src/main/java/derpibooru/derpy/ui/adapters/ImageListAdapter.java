@@ -37,7 +37,7 @@ public abstract class ImageListAdapter extends RecyclerViewPaginationAdapter<Der
         mUserLoggedIn = isUserLoggedIn;
     }
 
-    public abstract void startImageActivity(DerpibooruImageThumb image);
+    public abstract void startImageActivity(int imageId);
 
     @Override
     public ImageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -86,7 +86,7 @@ public abstract class ImageListAdapter extends RecyclerViewPaginationAdapter<Der
             @Override
             public void onClick(View v) {
                 Glide.get(getContext()).clearMemory();
-                startImageActivity(getItems().get(position));
+                startImageActivity(getItems().get(position).getId());
             }
         });
     }

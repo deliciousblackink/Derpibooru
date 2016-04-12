@@ -29,8 +29,6 @@ public class ImageActivity extends AppCompatActivity {
     public static final String EXTRAS_IMAGE_DETAILED = "derpibooru.derpy.ImageDetailed";
     public static final String EXTRAS_IMAGE_ID = "derpibooru.derpy.ImageId";
 
-    @Bind(R.id.toolbar) Toolbar toolbar;
-    @Bind(R.id.toolbarLayout) View toolbarLayout;
     @Bind(R.id.fragmentLayout) FrameLayout contentLayout;
 
     private DerpibooruImageDetailed mImage;
@@ -42,26 +40,14 @@ public class ImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-        DerpibooruImageThumb placeholderThumb = null;
-
+        initializeAdapter();
         if ((savedInstanceState != null) && (savedInstanceState.containsKey(EXTRAS_IMAGE_DETAILED))) {
             mImage = savedInstanceState.getParcelable(EXTRAS_IMAGE_DETAILED);
+            mFragmentAdapter.displayMainFragmentWithToolbar(mImage.getThumb().getId());
         } else if (getIntent().hasExtra(EXTRAS_IMAGE_ID)) {
             fetchDetailedInformation(getIntent().getIntExtra(EXTRAS_IMAGE_ID, 0));
-        } else if (getIntent().hasExtra(ImageListFragment.EXTRAS_IMAGE_THUMB)) {
-            placeholderThumb = getIntent().getParcelableExtra(ImageListFragment.EXTRAS_IMAGE_THUMB);
-            fetchDetailedInformation(placeholderThumb.getId());
+            mFragmentAdapter.displayMainFragmentWithToolbar(getIntent().getIntExtra(EXTRAS_IMAGE_ID, 0));
         }
-
-        initializeAdapter(savedInstanceState, placeholderThumb);
     }
 
     @Override
@@ -75,11 +61,7 @@ public class ImageActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (mFragmentAdapter.restoreFragmentFromBackStack()) {
-            if ((mImage != null)
-                    && (mFragmentAdapter.getCurrentFragment() instanceof ImageActivityMainFragment)) {
-                ((ImageActivityMainFragment) mFragmentAdapter.getCurrentFragment()).resetView();
-                ((ImageActivityMainFragment) mFragmentAdapter.getCurrentFragment()).onDetailedImageFetched();
-            }
+            /* FIXME: NPE when restoring the main fragment from the back stack */
         } else {
             setActivityResult();
             super.onBackPressed();
@@ -104,10 +86,8 @@ public class ImageActivity extends AppCompatActivity {
         return intent;
     }
 
-    private void initializeAdapter(@Nullable Bundle savedInstanceState,
-                                   @Nullable DerpibooruImageThumb placeholderThumb) {
-        mFragmentAdapter = new ImageActivityFragmentAdapter(
-                getSupportFragmentManager(), contentLayout.getId(), savedInstanceState, placeholderThumb) {
+    private void initializeAdapter() {
+        mFragmentAdapter = new ImageActivityFragmentAdapter(getSupportFragmentManager(), contentLayout.getId()) {
             @Override
             protected boolean isUserLoggedIn() {
                 return ((DerpibooruUser) getIntent().getParcelableExtra(MainActivity.EXTRAS_USER)).isLoggedIn();
@@ -133,7 +113,7 @@ public class ImageActivity extends AppCompatActivity {
             public void onQueryExecuted(DerpibooruImageDetailed info) {
                 mImage = info;
                 if (mFragmentAdapter != null) {
-                    mFragmentAdapter.onDetailedImageFetched();
+                    mFragmentAdapter.onImageDetailedFetched();
                 }
             }
 
@@ -147,28 +127,8 @@ public class ImageActivity extends AppCompatActivity {
 
     private class MainFragmentCallbackHandler implements ImageActivityMainFragment.ImageActivityMainFragmentHandler {
         @Override
-        public boolean isToolbarVisible() {
-            return toolbarLayout.getVisibility() == View.VISIBLE;
-        }
-
-        @Override
-        public void setToolbarVisible(boolean visible) {
-            toolbarLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
-        }
-
-        @Override
         public DerpibooruImageDetailed getImage() {
             return mImage;
-        }
-
-        @Override
-        public void setToolbarTitle(final String title) {
-            toolbar.post(new Runnable() {
-                @Override
-                public void run() {
-                    setTitle(title);
-                }
-            });
         }
 
         @Override
@@ -186,7 +146,7 @@ public class ImageActivity extends AppCompatActivity {
 
         @Override
         public void setToolbarTitle(String title) {
-            toolbar.setTitle(title);
+            /* TODO: there's no shared toolbar anymore; add one to the tag fragment */
         }
     }
 }

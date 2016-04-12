@@ -23,7 +23,7 @@ public class ImageBottomBarFavoritesTabFragment extends Fragment {
     }
 
     protected void displayInfoInView(View target, DerpibooruImageDetailed info) {
-        ArrayAdapter<String> aa = new ArrayAdapter<>(getActivity(), R.layout.view_image_bottom_bar_favorites_item,
+        ArrayAdapter<String> aa = new ArrayAdapter<>(getActivity(), R.layout.view_image_detailed_bottom_bar_favorites_item,
                                                      info.getFavedBy());
         ((GridView) target.findViewById(R.id.gridFavedBy)).setAdapter(aa);
         target.findViewById(R.id.textFavedBy).setVisibility(View.VISIBLE);

@@ -35,8 +35,12 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
 
     private ArrayList<CommentReplyItem> mCommentReplies = new ArrayList<>(0);
 
-    public CommentListAdapter(Context context, List<DerpibooruComment> items, @Nullable Bundle savedInstanceState) {
+    private OnCommentCountChangeListener mCommentCountChangeListener;
+
+    public CommentListAdapter(Context context, OnCommentCountChangeListener commentCountChangeListener,
+                              List<DerpibooruComment> items, @Nullable Bundle savedInstanceState) {
         super(context, items);
+        mCommentCountChangeListener = commentCountChangeListener;
         if ((savedInstanceState != null) && (savedInstanceState.containsKey(EXTRAS_COMMENT_REPLIES))) {
             mCommentReplies = savedInstanceState.getParcelableArrayList(EXTRAS_COMMENT_REPLIES);
         }
@@ -49,15 +53,13 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
     @Override
     public CommentListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.view_image_bottom_bar_comments_item, parent, false);
+                .inflate(R.layout.view_image_detailed_bottom_bar_comments_item, parent, false);
         return new ViewHolder(v);
     }
 
     protected abstract void fetchCommentReply(CommentReplyItem replyItem);
 
     protected abstract void scrollToPosition(int adapterPosition);
-
-    protected abstract void onNewCommentsAdded(int commentsAdded);
 
     @Override
     public void resetItems(List<DerpibooruComment> newItems) {
@@ -76,7 +78,7 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
             }
         }
         if (commentsAdded > 0) {
-            onNewCommentsAdded(commentsAdded);
+            mCommentCountChangeListener.onNewCommentsAdded(commentsAdded);
         }
     }
 
@@ -150,6 +152,10 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
                 return input.getReplyId() == replyId;
             }
         }).getAdapterPosition();
+    }
+
+    public interface OnCommentCountChangeListener {
+        void onNewCommentsAdded(int commentsAdded);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

@@ -21,9 +21,10 @@ import derpibooru.derpy.server.providers.CommentListProvider;
 import derpibooru.derpy.server.providers.CommentProvider;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.CommentListAdapter;
+import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
 import derpibooru.derpy.ui.adapters.RecyclerViewPaginationAdapter;
 import derpibooru.derpy.ui.presenters.PaginatedListPresenter;
-import derpibooru.derpy.ui.views.ImageBottomBarView;
+import derpibooru.derpy.ui.views.imagedetailedview.ImageBottomBarView;
 
 public class ImageBottomBarCommentListTabFragment extends Fragment {
     private PaginatedListPresenter<DerpibooruComment> mCommentListPresenter;
@@ -32,7 +33,7 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
     @Bind(R.id.layoutCommentsRefresh) SwipeRefreshLayout refreshLayout;
     @Bind(R.id.viewComments) RecyclerView recyclerView;
 
-    private ImageBottomBarView.DataRefreshHandler mHandler;
+    private CommentListAdapter.OnCommentCountChangeListener mCommentCountChangeListener;
     private Bundle mSavedInstanceState;
 
     @Override
@@ -52,8 +53,8 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
         return v;
     }
 
-    public void setDataRefreshHandler(ImageBottomBarView.DataRefreshHandler handler) {
-        mHandler = handler;
+    public void setCommentCountChangeListener(CommentListAdapter.OnCommentCountChangeListener commentCountChangeListener) {
+        mCommentCountChangeListener = commentCountChangeListener;
     }
 
     private void initializeCommentListPresenter() {
@@ -76,7 +77,8 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
     }
 
     private CommentListAdapter getNewInstanceOfCommentListAdapter(List<DerpibooruComment> initialItems) {
-        return new CommentListAdapter(getActivity(), initialItems, mSavedInstanceState) {
+        return new CommentListAdapter(getActivity(), mCommentCountChangeListener,
+                                      initialItems, mSavedInstanceState) {
             @Override
             protected void fetchCommentReply(final CommentReplyItem replyItem) {
                 new CommentProvider(getContext(), new QueryHandler<DerpibooruComment>() {
@@ -99,13 +101,6 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
             @Override
             protected void scrollToPosition(int adapterPosition) {
                 recyclerView.smoothScrollToPosition(adapterPosition);
-            }
-
-            @Override
-            protected void onNewCommentsAdded(int commentsAdded) {
-                if (mHandler != null) {
-                    mHandler.onNewCommentsAdded(commentsAdded);
-                }
             }
         };
     }

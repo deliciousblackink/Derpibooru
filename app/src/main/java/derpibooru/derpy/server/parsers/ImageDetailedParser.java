@@ -1,6 +1,5 @@
 package derpibooru.derpy.server.parsers;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -11,7 +10,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,9 +18,7 @@ import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTag;
-import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.parsers.objects.ImageInteractionsParserObject;
-import derpibooru.derpy.server.parsers.objects.ImageSpoilerParserObject;
 import derpibooru.derpy.server.parsers.objects.UserScriptParserObject;
 import derpibooru.derpy.server.parsers.objects.UserboxParserObject;
 

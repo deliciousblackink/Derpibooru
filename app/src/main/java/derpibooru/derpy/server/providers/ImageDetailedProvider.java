@@ -2,10 +2,7 @@ package derpibooru.derpy.server.providers;
 
 import android.content.Context;
 
-import java.util.List;
-
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
-import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.ImageDetailedParser;
 

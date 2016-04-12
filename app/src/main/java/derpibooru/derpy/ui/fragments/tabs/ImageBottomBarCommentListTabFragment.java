@@ -21,10 +21,8 @@ import derpibooru.derpy.server.providers.CommentListProvider;
 import derpibooru.derpy.server.providers.CommentProvider;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.CommentListAdapter;
-import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
 import derpibooru.derpy.ui.adapters.RecyclerViewPaginationAdapter;
 import derpibooru.derpy.ui.presenters.PaginatedListPresenter;
-import derpibooru.derpy.ui.views.imagedetailedview.ImageBottomBarView;
 
 public class ImageBottomBarCommentListTabFragment extends Fragment {
     private PaginatedListPresenter<DerpibooruComment> mCommentListPresenter;

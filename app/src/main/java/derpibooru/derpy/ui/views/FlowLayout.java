@@ -14,9 +14,9 @@ import derpibooru.derpy.R;
  * @author http://stackoverflow.com/a/4474533/1726690
  */
 public class FlowLayout extends ViewGroup {
-    private int mHorizontalSpacing;
-    private int mVerticalSpacing;
-    private Paint mPaint;
+    private final int mHorizontalSpacing;
+    private final int mVerticalSpacing;
+    private final Paint mPaint;
 
     public FlowLayout(Context context, AttributeSet attrs) {
         super(context, attrs);

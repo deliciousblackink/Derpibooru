@@ -10,7 +10,6 @@ import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarCommentListTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarFavoritesTabFragment;
 import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarInfoTabFragment;
-import derpibooru.derpy.ui.views.imagedetailedview.ImageBottomBarView;
 import derpibooru.derpy.ui.views.ImageTagView;
 
 public class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter {

@@ -116,9 +116,9 @@ public abstract class ImageListFragment extends NavigationDrawerUserFragment {
     private ImageListAdapter getNewInstanceOfImageListAdapter(List<DerpibooruImageThumb> initialItems) {
         return new ImageListAdapter(getActivity(), initialItems, getUser().isLoggedIn()) {
             @Override
-            public void startImageActivity(DerpibooruImageThumb image) {
+            public void startImageActivity(int imageId) {
                 Intent intent = new Intent(getContext(), ImageActivity.class);
-                intent.putExtra(EXTRAS_IMAGE_THUMB, image);
+                intent.putExtra(ImageActivity.EXTRAS_IMAGE_ID, imageId);
                 intent.putExtra(MainActivity.EXTRAS_USER, getUser());
                 getActivity().startActivityForResult(intent, IMAGE_ACTIVITY_REQUEST_CODE);
             }

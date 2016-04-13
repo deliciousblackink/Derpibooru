@@ -21,6 +21,7 @@ import com.bumptech.glide.request.target.Target;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.ui.views.imagedetailedview.ImageTagView;
 import derpibooru.derpy.ui.views.imagedetailedview.ImageDetailedView;
@@ -28,6 +29,8 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageActivityMainFragment extends Fragment {
     public static final String EXTRAS_IS_USER_LOGGED_IN = "derpibooru.derpy.IsLoggedIn";
+    public static final String EXTRAS_USER_FILTER = "derpibooru.derpy.UserFilter";
+
     private static final int REQUEST_WRITE_STORAGE = 142;
 
     @Bind(R.id.imageView) ImageView imageView;
@@ -98,6 +101,11 @@ public class ImageActivityMainFragment extends Fragment {
                         mActivityCallbacks.openTagInformation(tagId);
                     }
                 }, new ImageDetailedView.ImageDetailedViewHandler() {
+                    @Override
+                    public DerpibooruFilter getUserFilter() {
+                        return getArguments().getParcelable(EXTRAS_USER_FILTER);
+                    }
+
                     @Override
                     public DerpibooruImageDetailed getImage() {
                         return mActivityCallbacks.getImage();

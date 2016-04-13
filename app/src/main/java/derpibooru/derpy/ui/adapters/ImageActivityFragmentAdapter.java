@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.ui.fragments.imageactivity.ImageActivityMainFragment;
 import derpibooru.derpy.ui.fragments.imageactivity.ImageActivityTagFragment;
 
@@ -26,7 +27,7 @@ public abstract class ImageActivityFragmentAdapter extends FragmentAdapter {
         }
     }
 
-    protected abstract boolean isUserLoggedIn();
+    protected abstract DerpibooruUser getUser();
 
     public void displayMainFragmentWithToolbar(int imageId) {
         if (getCurrentFragment() instanceof ImageActivityMainFragment) {
@@ -64,7 +65,8 @@ public abstract class ImageActivityFragmentAdapter extends FragmentAdapter {
 
     private Bundle getMainFragmentArguments() {
         Bundle args = new Bundle();
-        args.putBoolean(ImageActivityMainFragment.EXTRAS_IS_USER_LOGGED_IN, isUserLoggedIn());
+        args.putBoolean(ImageActivityMainFragment.EXTRAS_IS_USER_LOGGED_IN, getUser().isLoggedIn());
+        args.putParcelable(ImageActivityMainFragment.EXTRAS_USER_FILTER, getUser().getCurrentFilter());
         return args;
     }
 }

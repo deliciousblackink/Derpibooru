@@ -5,8 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.ui.ImageActivity;
+import derpibooru.derpy.ui.fragments.imageactivity.ImageActivityMainFragment;
 import derpibooru.derpy.ui.fragments.imageactivity.tabs.ImageBottomBarCommentListTabFragment;
 import derpibooru.derpy.ui.fragments.imageactivity.tabs.ImageBottomBarFavoritesTabFragment;
 import derpibooru.derpy.ui.fragments.imageactivity.tabs.ImageBottomBarInfoTabFragment;
@@ -17,14 +19,19 @@ public class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter {
     private static final int TAB_FAVES_POSITION = 1;
     private static final int TAB_COMMENTS_POSITION = 2;
 
-    private DerpibooruImageDetailed mImage;;
+    private DerpibooruFilter mUserFilter;
+    private DerpibooruImageDetailed mImage;
+
     private ImageTagView.OnTagClickListener mTagClickListener;
     private CommentListAdapter.OnCommentCountChangeListener mCommentCountChangeListener;
 
-    public ImageBottomBarTabAdapter(FragmentManager fm, DerpibooruImageDetailed imageDetailed,
+    public ImageBottomBarTabAdapter(FragmentManager fm,
+                                    DerpibooruFilter userFilter,
+                                    DerpibooruImageDetailed imageDetailed,
                                     ImageTagView.OnTagClickListener tagClickListener,
                                     CommentListAdapter.OnCommentCountChangeListener commentCountChangeListener) {
         super(fm);
+        mUserFilter = userFilter;
         mImage = imageDetailed;
         mTagClickListener = tagClickListener;
         mCommentCountChangeListener = commentCountChangeListener;
@@ -54,7 +61,7 @@ public class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter {
                 break;
             case TAB_COMMENTS_POSITION:
                 fragment = new ImageBottomBarCommentListTabFragment();
-                fragment.setArguments(getImageIdBundle());
+                fragment.setArguments(getCommentsTabBundle());
                 break;
             default:
                 throw new IndexOutOfBoundsException("ImageBottomBarTabAdapter getItem(int): position is out of bounds");
@@ -69,9 +76,10 @@ public class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter {
         return bundle;
     }
 
-    private Bundle getImageIdBundle() {
+    private Bundle getCommentsTabBundle() {
         Bundle bundle = new Bundle();
         bundle.putInt(ImageActivity.EXTRAS_IMAGE_ID, mImage.getThumb().getId());
+        bundle.putParcelable(ImageActivityMainFragment.EXTRAS_USER_FILTER, mUserFilter);
         return bundle;
     }
 

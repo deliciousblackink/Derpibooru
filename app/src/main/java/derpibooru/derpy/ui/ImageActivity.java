@@ -84,8 +84,8 @@ public class ImageActivity extends AppCompatActivity {
     private void initializeAdapter() {
         mFragmentAdapter = new ImageActivityFragmentAdapter(getSupportFragmentManager(), contentLayout.getId()) {
             @Override
-            protected boolean isUserLoggedIn() {
-                return ((DerpibooruUser) getIntent().getParcelableExtra(MainActivity.EXTRAS_USER)).isLoggedIn();
+            protected DerpibooruUser getUser() {
+                return ((DerpibooruUser) getIntent().getParcelableExtra(MainActivity.EXTRAS_USER));
             }
 
             @Override

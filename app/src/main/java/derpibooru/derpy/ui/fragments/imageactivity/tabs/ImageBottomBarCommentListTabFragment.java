@@ -16,12 +16,14 @@ import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.internal.CommentReplyItem;
 import derpibooru.derpy.data.server.DerpibooruComment;
+import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.providers.CommentListProvider;
 import derpibooru.derpy.server.providers.CommentProvider;
 import derpibooru.derpy.ui.ImageActivity;
 import derpibooru.derpy.ui.adapters.CommentListAdapter;
 import derpibooru.derpy.ui.adapters.RecyclerViewPaginationAdapter;
+import derpibooru.derpy.ui.fragments.imageactivity.ImageActivityMainFragment;
 import derpibooru.derpy.ui.presenters.PaginatedListPresenter;
 
 public class ImageBottomBarCommentListTabFragment extends Fragment {
@@ -33,6 +35,9 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
 
     private CommentListAdapter.OnCommentCountChangeListener mCommentCountChangeListener;
     private Bundle mSavedInstanceState;
+
+    private DerpibooruFilter mUserFilter;
+    private int mImageId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +52,8 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
             }
         };
         mSavedInstanceState = savedInstanceState;
+        mUserFilter = getArguments().getParcelable(ImageActivityMainFragment.EXTRAS_USER_FILTER);
+        mImageId = getArguments().getInt(ImageActivity.EXTRAS_IMAGE_ID);
         initializeCommentListPresenter();
         return v;
     }
@@ -56,14 +63,12 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
     }
 
     private void initializeCommentListPresenter() {
+        CommentListProvider provider =
+                new CommentListProvider(getActivity(), getNewInstanceOfProviderQueryHandler(), mUserFilter).id(mImageId);
         if (mSavedInstanceState == null) {
-            mCommentListPresenter.initializeWithProvider(
-                    new CommentListProvider(getActivity(), getNewInstanceOfProviderQueryHandler())
-                            .id(getArguments().getInt(ImageActivity.EXTRAS_IMAGE_ID)));
+            mCommentListPresenter.initializeWithProvider(provider);
         } else {
-            mCommentListPresenter.initializeWithProvider(
-                    new CommentListProvider(getActivity(), getNewInstanceOfProviderQueryHandler())
-                            .id(getArguments().getInt(ImageActivity.EXTRAS_IMAGE_ID)), mSavedInstanceState);
+            mCommentListPresenter.initializeWithProvider(provider, mSavedInstanceState);
         }
     }
 
@@ -93,7 +98,7 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
 
                     @Override
                     public void onQueryFailed() { }
-                }).id(replyItem.getReplyId()).fetch();
+                }, mUserFilter).id(replyItem.getReplyId()).fetch();
             }
 
             @Override

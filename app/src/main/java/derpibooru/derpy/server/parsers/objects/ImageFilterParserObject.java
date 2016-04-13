@@ -7,15 +7,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import derpibooru.derpy.R;
 import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
 public class ImageFilterParserObject {
-    private List<DerpibooruTagDetailed> mSpoileredTags;
-    private List<Integer> mHiddenTags;
+
+    private final List<DerpibooruTagDetailed> mSpoileredTags;
+    private final List<Integer> mHiddenTags;
 
     public ImageFilterParserObject(List<DerpibooruTagDetailed> spoileredTags) {
         mSpoileredTags = spoileredTags;
+        mHiddenTags = Collections.emptyList();
     }
 
     public ImageFilterParserObject(List<DerpibooruTagDetailed> spoileredTags, List<Integer> hiddenTags) {
@@ -24,7 +27,7 @@ public class ImageFilterParserObject {
     }
 
     /**
-     * @return an empty string if the image is not spoilered; an url string otherwise.
+     * @return an empty string if the image is not spoilered; an url to the corresponding spoiler image otherwise.
      */
     public String getImageSpoilerUrl(JSONArray spoileredTagIds) throws JSONException {
         List<Integer> imageTagIds = intListFromArray(spoileredTagIds);
@@ -33,15 +36,18 @@ public class ImageFilterParserObject {
         Collections.sort(mSpoileredTags, new DerpibooruTagTypeComparator(true));
         for (DerpibooruTagDetailed tag : mSpoileredTags) {
             if (imageTagIds.contains(tag.getId())) {
-                return tag.getSpoilerUrl();
+                return (!tag.getSpoilerUrl().isEmpty()) ? tag.getSpoilerUrl() : HIDDEN_TAG_IMAGE_URL;
             }
         }
         return "";
     }
 
-    public boolean isImageHidden(JSONArray hiddenTagIds) throws JSONException, IllegalStateException {
+    /**
+     * @return an empty string if the image is not hidden; an url to the hidden tag image otherwise.
+     */
+    public String getImageHiddenUrl(JSONArray hiddenTagIds) throws JSONException, IllegalStateException {
         if (mHiddenTags == null) throw new IllegalStateException("ImageFilterParserObject did not receive a list of hidden tags on initialization. Use the appropriate constructor.");
-        return !Collections.disjoint(intListFromArray(hiddenTagIds), mHiddenTags);
+        return (Collections.disjoint(intListFromArray(hiddenTagIds), mHiddenTags)) ? "" : HIDDEN_TAG_IMAGE_URL;
     }
 
     private List<Integer> intListFromArray(JSONArray array) throws JSONException {

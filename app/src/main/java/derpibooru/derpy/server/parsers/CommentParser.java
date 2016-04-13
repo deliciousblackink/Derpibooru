@@ -78,16 +78,11 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     private Element processEmbeddedImages(Element postBody) throws JSONException {
         while (!postBody.select(IMAGE_CONTAINER_SELECTOR).isEmpty()) {
             Element imageContainer = postBody.select(IMAGE_CONTAINER_SELECTOR).get(0);
-            String hiddenTagImage = "";
-            String spoileredTagImage = "";
-            String mainImage = getImageInContainer(imageContainer, "div.image-show");
-
             JSONArray imageTags = new JSONArray(imageContainer.attr("data-image-tags"));
-            if (mFilter.isImageHidden(imageTags)) {
-                hiddenTagImage = getImageInContainer(imageContainer, "div.image-hidden");
-            } else {
-                spoileredTagImage = mFilter.getImageSpoilerUrl(imageTags);
-            }
+
+            String hiddenTagImage = mFilter.getImageHiddenUrl(imageTags);
+            String spoileredTagImage = mFilter.getImageSpoilerUrl(imageTags);
+            String mainImage = getImageInContainer(imageContainer, "div.image-show");
 
             postBody.select(IMAGE_CONTAINER_SELECTOR).get(0).replaceWith(
                     getEmbeddedImageElement(hiddenTagImage, spoileredTagImage, mainImage));

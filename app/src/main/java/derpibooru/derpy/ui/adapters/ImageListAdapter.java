@@ -54,16 +54,6 @@ public abstract class ImageListAdapter extends RecyclerViewPaginationAdapter<Der
         holder.buttonComments.setEnabled(false);
     }
 
-    /**
-     * Resets items and configures image interactions according to the user authentication state.
-     * @param newItems new items
-     * @param isUserLoggedIn new user interaction state
-     */
-    public void resetItems(List<DerpibooruImageThumb> newItems, boolean isUserLoggedIn) {
-        mUserLoggedIn = isUserLoggedIn;
-        super.resetItems(newItems);
-    }
-
     public void replaceItem(final DerpibooruImageThumb target) {
         int targetIndex = Iterables.indexOf(getItems(), new Predicate<DerpibooruImageThumb>() {
             @Override

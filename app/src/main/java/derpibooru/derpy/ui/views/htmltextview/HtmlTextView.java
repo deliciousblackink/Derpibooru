@@ -34,6 +34,13 @@ public class HtmlTextView extends TextView {
         setHtmlMovementMethod();
     }
 
+    /**
+     * @return {@code true} if the action is consumed, {@code false} if the action needs to be dispatched to the listener.
+     */
+    protected boolean onLinkClicked(String url) {
+        return false;
+    }
+
     protected void setHtmlMovementMethod() {
         /* http://stackoverflow.com/a/2746708/1726690 */
         setMovementMethod(LinkMovementMethod.getInstance());
@@ -53,6 +60,7 @@ public class HtmlTextView extends TextView {
         }
         return strBuilder;
     }
+
     private void makeLinkClickable(SpannableStringBuilder strBuilder, URLSpan span) {
         final String url = span.getURL();
         /* http://stackoverflow.com/a/19989677/1726690 */
@@ -61,17 +69,13 @@ public class HtmlTextView extends TextView {
         int flags = strBuilder.getSpanFlags(span);
         ClickableSpan clickable = new ClickableSpan() {
             public void onClick(View view) {
-                onLinkClick(url);
+                if ((!onLinkClicked(url)) && (mLinkListener != null)) {
+                    mLinkListener.onLinkClick(url);
+                }
             }
         };
         strBuilder.setSpan(clickable, start, end, flags);
         strBuilder.removeSpan(span);
-    }
-
-    private void onLinkClick(String url) {
-        if (mLinkListener != null) {
-            mLinkListener.onLinkClick(url);
-        }
     }
 
     public interface OnLinkClickListener {

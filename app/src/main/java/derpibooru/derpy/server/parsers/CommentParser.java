@@ -1,13 +1,9 @@
 package derpibooru.derpy.server.parsers;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Attribute;
-import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
@@ -21,9 +17,12 @@ import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.parsers.objects.ImageFilterParserObject;
 
 public class CommentParser implements ServerResponseParser<DerpibooruComment> {
+    public static final Pattern PATTERN_EMBEDDED_IMAGE = Pattern.compile("(?:\\\\main\\\\)(.*)");
+    public static final Pattern PATTERN_HIDDEN_IMAGE_LINK = Pattern.compile("^(?:\\\\hidden\\\\)(.*)(?:\\\\main\\\\)(.*)");
+    public static final Pattern PATTERN_SPOILERED_IMAGE_LINK = Pattern.compile("^(?:\\\\spoilered\\\\)(.*)(?:\\\\main\\\\)(.*)");
     private static final String HIDDEN_TAG_LINK = "\\hidden\\%s\\main\\%s";
-    private static final String SPOILERED_TAG_LINK = "spoilered\\%s\\main\\%s";
-    private static final String IMAGE_LINK = "main\\%s";
+    private static final String SPOILERED_TAG_LINK = "\\spoilered\\%s\\main\\%s";
+    private static final String IMAGE_LINK = "\\main\\%s";
 
     private static final Pattern PATTERN_COMMENT_ID = Pattern.compile("^(?:comment_)([\\d]*)");
     private static final String IMAGE_CONTAINER_SELECTOR = "div.image-show-container";
@@ -113,6 +112,6 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     @NonNull
     private String getImageInContainer(Element imageContainer, String elementSelector) {
         Element hiddenContainer = imageContainer.select(elementSelector).first();
-        return hiddenContainer.select("img").attr("src");
+        return "https:" + hiddenContainer.select("img").attr("src");
     }
 }

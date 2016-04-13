@@ -21,6 +21,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import derpibooru.derpy.ImageDownload;
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.ui.animators.ImageDetailedViewAnimator;
@@ -178,6 +179,11 @@ public class ImageDetailedView extends LinearLayout {
 
     private class BottomBarCallbackHandler implements ImageBottomBarView.BottomBarHandler {
         @Override
+        public DerpibooruFilter getUserFilter() {
+            return mCallbackHandler.getUserFilter();
+        }
+
+        @Override
         public DerpibooruImageDetailed getImage() {
             return mCallbackHandler.getImage();
         }
@@ -194,6 +200,7 @@ public class ImageDetailedView extends LinearLayout {
     }
 
     public interface ImageDetailedViewHandler {
+        DerpibooruFilter getUserFilter();
         DerpibooruImageDetailed getImage();
         void requestImageDownloadPermissions();
     }

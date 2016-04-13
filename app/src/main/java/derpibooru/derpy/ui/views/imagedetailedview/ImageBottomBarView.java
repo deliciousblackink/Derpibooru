@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnPageChange;
 import derpibooru.derpy.R;
+import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.ui.adapters.CommentListAdapter;
 import derpibooru.derpy.ui.adapters.ImageBottomBarTabAdapter;
@@ -76,6 +77,7 @@ public class ImageBottomBarView extends LinearLayout {
     private ImageBottomBarTabAdapter getNewInstanceOfTabAdapter(FragmentManager tabFragmentManager,
                                                                 ImageTagView.OnTagClickListener tagClickListener) {
         return new ImageBottomBarTabAdapter(tabFragmentManager,
+                                            mHandler.getUserFilter(),
                                             mHandler.getImage(),
                                             tagClickListener,
                                             new CommentListAdapter.OnCommentCountChangeListener() {
@@ -143,6 +145,7 @@ public class ImageBottomBarView extends LinearLayout {
     }
 
     public interface BottomBarHandler {
+        DerpibooruFilter getUserFilter();
         DerpibooruImageDetailed getImage();
         ImageDetailedViewAnimator.BottomBarExtensionState getExtensionState();
         void changeExtensionState(ImageDetailedViewAnimator.BottomBarExtensionState newState);

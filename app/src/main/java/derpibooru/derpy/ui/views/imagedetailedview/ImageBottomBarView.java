@@ -46,9 +46,6 @@ public class ImageBottomBarView extends LinearLayout {
 
     public ImageBottomBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public void inflateLayout() {
         View view = inflate(getContext(), R.layout.view_image_detailed_bottom_bar, null);
         addView(view);
         ButterKnife.bind(this, view);

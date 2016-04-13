@@ -17,9 +17,6 @@ public class ImageTopBarView extends FrameLayout {
 
     public ImageTopBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public void inflateLayout() {
         View view = inflate(getContext(), R.layout.view_image_detailed_top_bar, null);
         ButterKnife.bind(this, view);
         addView(view);

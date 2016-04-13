@@ -80,8 +80,6 @@ public class ImageDetailedView extends LinearLayout {
     }
 
     private void initializeAnimator(@Nullable Bundle savedInstanceState) {
-        topBar.inflateLayout();
-        bottomBar.inflateLayout();
         mAnimator = new ImageDetailedViewAnimator(
                 transparentOverlay, toolbar, topBar, bottomBar.tabPagerHeader, bottomBar.tabPager);
         if (savedInstanceState != null) {

@@ -48,7 +48,21 @@ public class Derpibooru extends Application {
                     public List<Cookie> loadForRequest(HttpUrl url) {
                         return mCookieStorage.getCookies(url.host());
                     }
-                }).build();
+                })
+                /* OkHttp Request Logging (Debug)
+                 *
+                 * note: the code, if left uncommented, will break release build (HttpLoggingInterceptor is debugCompile in Gradle script)
+                 *       using comments because BuildConfig.DEBUG always returns false (I use AS2.0) and other build type checks are too hacky to go into production */
+                /*
+                .addInterceptor(new okhttp3.logging.HttpLoggingInterceptor(
+                        new okhttp3.logging.HttpLoggingInterceptor.Logger() {
+                    @Override
+                    public void log(String s) {
+                        android.util.Log.e("okhttp request", s);
+                    }
+                }).setLevel(okhttp3.logging.HttpLoggingInterceptor.Level.BASIC))
+                */
+                .build();
     }
 
     /**

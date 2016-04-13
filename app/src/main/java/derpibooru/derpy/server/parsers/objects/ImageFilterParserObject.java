@@ -12,6 +12,7 @@ import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
 public class ImageFilterParserObject {
+    private static final String HIDDEN_TAG_IMAGE_RESOURCE_URI = ("android.resource://derpibooru.derpy/" + R.drawable.hidden_tag);
 
     private final List<DerpibooruTagDetailed> mSpoileredTags;
     private final List<Integer> mHiddenTags;
@@ -36,7 +37,7 @@ public class ImageFilterParserObject {
         Collections.sort(mSpoileredTags, new DerpibooruTagTypeComparator(true));
         for (DerpibooruTagDetailed tag : mSpoileredTags) {
             if (imageTagIds.contains(tag.getId())) {
-                return (!tag.getSpoilerUrl().isEmpty()) ? tag.getSpoilerUrl() : HIDDEN_TAG_IMAGE_URL;
+                return (!tag.getSpoilerUrl().isEmpty()) ? tag.getSpoilerUrl() : HIDDEN_TAG_IMAGE_RESOURCE_URI;
             }
         }
         return "";
@@ -47,7 +48,7 @@ public class ImageFilterParserObject {
      */
     public String getImageHiddenUrl(JSONArray hiddenTagIds) throws JSONException, IllegalStateException {
         if (mHiddenTags == null) throw new IllegalStateException("ImageFilterParserObject did not receive a list of hidden tags on initialization. Use the appropriate constructor.");
-        return (Collections.disjoint(intListFromArray(hiddenTagIds), mHiddenTags)) ? "" : HIDDEN_TAG_IMAGE_URL;
+        return (Collections.disjoint(intListFromArray(hiddenTagIds), mHiddenTags)) ? "" : HIDDEN_TAG_IMAGE_RESOURCE_URI;
     }
 
     private List<Integer> intListFromArray(JSONArray array) throws JSONException {

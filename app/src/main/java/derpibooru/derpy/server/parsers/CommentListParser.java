@@ -8,14 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import derpibooru.derpy.data.server.DerpibooruComment;
+import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
 public class CommentListParser implements ServerResponseParser<List<DerpibooruComment>> {
-    private final List<Integer> mHiddenTagIds;
-    private final List<Integer> mSpoileredTagIds;
+    private final CommentParser mCommentParser;
 
-    public CommentListParser(List<Integer> hiddenTagIds, List<Integer> spoileredTagIds) {
-        mHiddenTagIds = hiddenTagIds;
-        mSpoileredTagIds = spoileredTagIds;
+    public CommentListParser(List<DerpibooruTagDetailed> spoileredTags, List<Integer> hiddenTagIds) {
+        mCommentParser = new CommentParser(spoileredTags, hiddenTagIds);
     }
 
     @Override
@@ -29,9 +28,8 @@ public class CommentListParser implements ServerResponseParser<List<DerpibooruCo
         int commentCount = commentsRaw.size();
         List<DerpibooruComment> commentList = new ArrayList<>(commentCount);
 
-        CommentParser parser = new CommentParser(mHiddenTagIds, mSpoileredTagIds);
         for (int i = 0; i < commentCount; i++) {
-            commentList.add(parser.parseResponse(commentsRaw.get(i).outerHtml()));
+            commentList.add(mCommentParser.parseResponse(commentsRaw.get(i).outerHtml()));
         }
         return commentList;
     }

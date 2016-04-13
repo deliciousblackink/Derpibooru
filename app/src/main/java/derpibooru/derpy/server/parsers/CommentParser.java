@@ -3,6 +3,8 @@ package derpibooru.derpy.server.parsers;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
@@ -15,20 +17,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import derpibooru.derpy.data.server.DerpibooruComment;
+import derpibooru.derpy.data.server.DerpibooruTagDetailed;
+import derpibooru.derpy.server.parsers.objects.ImageFilterParserObject;
 
 public class CommentParser implements ServerResponseParser<DerpibooruComment> {
+    private static final String HIDDEN_TAG_LINK = "\\hidden\\%s\\main\\%s";
+    private static final String SPOILERED_TAG_LINK = "spoilered\\%s\\main\\%s";
+    private static final String IMAGE_LINK = "main\\%s";
+
     private static final Pattern PATTERN_COMMENT_ID = Pattern.compile("^(?:comment_)([\\d]*)");
-    private static final String HIDDEN_TAG_LINK = "hidden_%s_main_%s";
-    private static final String SPOILERED_TAG_LINK = "spoilered_%s_main_%s";
-    private static final String IMAGE_LINK = "main_%s";
     private static final String IMAGE_CONTAINER_SELECTOR = "div.image-show-container";
 
-    private final List<Integer> mHiddenTagIds;
-    private final List<Integer> mSpoileredTagIds;
+    private final ImageFilterParserObject mFilter;
 
-    public CommentParser(List<Integer> hiddenTagIds, List<Integer> spoileredTagIds) {
-        mHiddenTagIds = hiddenTagIds;
-        mSpoileredTagIds = spoileredTagIds;
+    public CommentParser(List<DerpibooruTagDetailed> spoileredTags, List<Integer> hiddenTagIds) {
+        mFilter = new ImageFilterParserObject(spoileredTags, hiddenTagIds);
     }
 
     @Override
@@ -60,7 +63,7 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
         return "https:" + commentContent.select("img").first().attr("src");
     }
 
-    private String parseCommentBody(Element commentContent) {
+    private String parseCommentBody(Element commentContent) throws JSONException {
         Element post = commentContent.select("div.post-text").first();
         post.select("span.spoiler").tagName("spoiler").removeAttr("class");
         processEmbeddedImages(post);
@@ -72,26 +75,33 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
         return time.attr("datetime");
     }
 
-    private Element processEmbeddedImages(Element postBody) {
+    private Element processEmbeddedImages(Element postBody) throws JSONException {
         while (!postBody.select(IMAGE_CONTAINER_SELECTOR).isEmpty()) {
             Element imageContainer = postBody.select(IMAGE_CONTAINER_SELECTOR).get(0);
-
-            String hidden = getImageInContainerIfDisplayed(imageContainer, "div.image-hidden");
-            String spoilered = getImageInContainerIfDisplayed(imageContainer, "div.image-spoilered");
+            String hiddenTagImage = "";
+            String spoileredTagImage = "";
             String mainImage = getImageInContainer(imageContainer, "div.image-show");
 
-            postBody.select(IMAGE_CONTAINER_SELECTOR).get(0).replaceWith(getEmbeddedImageElement(hidden, spoilered, mainImage));
+            JSONArray imageTags = new JSONArray(imageContainer.attr("data-image-tags"));
+            if (mFilter.isImageHidden(imageTags)) {
+                hiddenTagImage = getImageInContainer(imageContainer, "div.image-hidden");
+            } else {
+                spoileredTagImage = mFilter.getImageSpoilerUrl(imageTags);
+            }
+
+            postBody.select(IMAGE_CONTAINER_SELECTOR).get(0).replaceWith(
+                    getEmbeddedImageElement(hiddenTagImage, spoileredTagImage, mainImage));
         }
         return postBody;
     }
 
-    private Element getEmbeddedImageElement(String hidden, String spoilered, String mainImage) {
+    private Element getEmbeddedImageElement(@NonNull String hidden, @NonNull String spoilered, @NonNull String mainImage) {
         String link;
         String source;
-        if (hidden != null) {
+        if (!hidden.isEmpty()) {
             link = String.format(HIDDEN_TAG_LINK, hidden, mainImage);
             source = "https:" + hidden;
-        } else if (spoilered != null) {
+        } else if (!spoilered.isEmpty()) {
             link = String.format(SPOILERED_TAG_LINK, spoilered, mainImage);
             source = "https:" + spoilered;
         } else {
@@ -105,26 +115,9 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
                                 .attr("src", source));
     }
 
-    @Nullable
-    private String getImageInContainerIfDisplayed(Element imageContainer, String elementSelector) {
-        Element hiddenContainer = imageContainer.select(elementSelector).first();
-        if (!hiddenContainer.attr("style").equals("display: none;")) {
-            return hiddenContainer.select("img").attr("src");
-        }
-        return null;
-    }
-
     @NonNull
     private String getImageInContainer(Element imageContainer, String elementSelector) {
         Element hiddenContainer = imageContainer.select(elementSelector).first();
         return hiddenContainer.select("img").attr("src");
-    }
-
-    private Element removeAttrs(Element target) {
-        Attributes at = target.attributes();
-        for (Attribute a : at) {
-            target.removeAttr(a.getKey());
-        }
-        return target;
     }
 }

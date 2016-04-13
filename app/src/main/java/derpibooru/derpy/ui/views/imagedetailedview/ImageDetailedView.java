@@ -132,7 +132,7 @@ public class ImageDetailedView extends LinearLayout {
     }
 
     private void initializeInteractionPresenter() {
-        int id = mCallbackHandler.getImage().getThumb().getId();
+        int id = mCallbackHandler.getImage().getThumb().getIdForImageInteractions();
         ImageInteractionPresenter presenter =
                 new ImageInteractionPresenter(id, topBar.buttonScore, bottomBar.buttonFave,
                                               topBar.buttonUpvote, topBar.buttonDownvote) {
@@ -155,7 +155,6 @@ public class ImageDetailedView extends LinearLayout {
                 super.onInteractionCompleted(result);
             }
 
-            @SuppressWarnings("ConstantConditions")
             @Override
             public void refreshInfo(int faves, int upvotes, int downvotes) {
                 /* prevent icons from blending into the background by disabling tint toggle on touch

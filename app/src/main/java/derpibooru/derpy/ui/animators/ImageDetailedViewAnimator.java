@@ -9,6 +9,7 @@ public class ImageDetailedViewAnimator {
     private static final String EXTRAS_BOTTOM_BAR_EXTENSION_STATE = "derpibooru.derpy.BottomBarExtensionState";
     private static final String EXTRAS_IS_BOTTOM_BAR_HIDDEN = "derpibooru.derpy.IsBottomBarHidden";
 
+    private static final long ANIMATION_HEADER_DELAY = 150L;
     private static final long ANIMATION_DURATION_HEADER = 100L;
     private static final long ANIMATION_DURATION_DETAILED_VIEW_TOGGLE = 200L;
     private static final long ANIMATION_DURATION_BOTTOM_BAR = 200L;
@@ -43,7 +44,13 @@ public class ImageDetailedViewAnimator {
     }
 
     public void animate(TransparentOverlayAnimationRunnable animation) {
-        animation.run();
+        if (animation instanceof HeadersExtensionAnimation) {
+            /* without delay, the animation appears extremely jerky, probably due to the expensive initializations running at the same time.
+             * TODO: there may be a more elegant solution without delay */
+            mTransparentOverlay.postDelayed(animation, ANIMATION_HEADER_DELAY);
+        } else {
+            mTransparentOverlay.post(animation);
+        }
     }
 
     public void restoreInstanceState(@NonNull Bundle savedInstanceState) {

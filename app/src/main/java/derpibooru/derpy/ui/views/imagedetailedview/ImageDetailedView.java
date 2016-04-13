@@ -55,15 +55,20 @@ public class ImageDetailedView extends LinearLayout {
                                     boolean isUserLoggedIn,
                                     ImageTagView.OnTagClickListener tagClickListener,
                                     ImageDetailedViewHandler handler,
-                                    @Nullable Bundle savedInstanceState) {
+                                    final @Nullable Bundle savedInstanceState) {
         mIsUserLoggedIn = isUserLoggedIn;
         mCallbackHandler = handler;
-
+        /* bottom bar needs to access Animator's state on initialization, don't change the order of the calls */
         initializeAnimator(savedInstanceState);
         bottomBar.initialize(childFragmentManager, tagClickListener,
                              new BottomBarCallbackHandler(), savedInstanceState);
+        /* from here on the order of initialization does not matter */
         initializeInteractionPresenter();
         initializeImageDownload();
+        /* show the header extension animation after everything's been initialized */
+        if (savedInstanceState == null) {
+            mAnimator.animate(mAnimator.new HeadersExtensionAnimation());
+        }
     }
 
     public void toggleView() {
@@ -84,13 +89,6 @@ public class ImageDetailedView extends LinearLayout {
                 transparentOverlay, toolbar, topBar, bottomBar.tabPagerHeader, bottomBar.tabPager);
         if (savedInstanceState != null) {
             mAnimator.restoreInstanceState(savedInstanceState);
-        } else {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    mAnimator.animate(mAnimator.new HeadersExtensionAnimation());
-                }
-            });
         }
     }
 

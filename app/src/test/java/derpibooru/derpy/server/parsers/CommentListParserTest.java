@@ -7,6 +7,7 @@ import java.util.Collections;
 
 import derpibooru.derpy.TestResourceLoader;
 import derpibooru.derpy.data.server.DerpibooruComment;
+import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
 import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
 import static org.junit.Assert.assertThat;
@@ -26,7 +27,7 @@ public class CommentListParserTest {
     public void setUp() throws Exception {
         TestResourceLoader loader = new TestResourceLoader();
         String comments = loader.readTestResourceFile("SampleImageCommentsResponse.html");
-        CommentListParser parser = new CommentListParser(Collections.<Integer>emptyList(), Collections.<Integer>emptyList());
+        CommentListParser parser = new CommentListParser(Collections.<DerpibooruTagDetailed>emptyList(), Collections.<Integer>emptyList());
         parsed[0] = parser.parseResponse(comments).get(0);
         parsed[1] = parser.parseResponse(comments).get(1);
     }

@@ -95,13 +95,13 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
         String source;
         if (!hidden.isEmpty()) {
             link = String.format(HIDDEN_TAG_LINK, hidden, mainImage);
-            source = "https:" + hidden;
+            source = hidden;
         } else if (!spoilered.isEmpty()) {
             link = String.format(SPOILERED_TAG_LINK, spoilered, mainImage);
-            source = "https:" + spoilered;
+            source = spoilered;
         } else {
             link = String.format(IMAGE_LINK, mainImage);
-            source = "https:" + mainImage;
+            source = mainImage;
         }
         return new Element(Tag.valueOf("a"), "")
                 .attr("href", link)

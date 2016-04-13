@@ -49,6 +49,10 @@ public class ImageBottomBarView extends LinearLayout {
         View view = inflate(getContext(), R.layout.view_image_detailed_bottom_bar, null);
         addView(view);
         ButterKnife.bind(this, view);
+        for (int layoutId : TABS.keySet()) {
+            /* prevent icons from blending into the background by disabling tint toggle on touch */
+            ((AccentColorIconButton) findViewById(layoutId)).setToggleIconTintOnTouch(false);
+        }
     }
 
     public void initialize(FragmentManager tabFragmentManager,

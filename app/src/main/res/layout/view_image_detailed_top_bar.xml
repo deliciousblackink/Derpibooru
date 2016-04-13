@@ -5,6 +5,7 @@
     android:layout_height="?attr/actionBarSize"
     android:gravity="center_vertical|center_horizontal"
     android:background="@color/colorPrimary"
+    android:clickable="true"
     android:weightSum="3">
     <!-- score -->
     <derpibooru.derpy.ui.views.AccentColorIconButton

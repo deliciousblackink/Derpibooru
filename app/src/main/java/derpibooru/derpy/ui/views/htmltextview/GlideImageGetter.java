@@ -14,6 +14,8 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 
+import derpibooru.derpy.ui.animators.DrawableBoundAnimator;
+
 /**
  * @author https://gist.github.com/AndroidT/97bf92f94cadf8f7af72
  */
@@ -52,13 +54,13 @@ class GlideImageGetter implements Html.ImageGetter, Drawable.Callback {
             float height;
             if (resource.getIntrinsicWidth() >= getView().getWidth()) {
                 float downScale = (float) resource.getIntrinsicWidth() / getView().getWidth();
-                width = (float) resource.getIntrinsicWidth() / (float) downScale;
-                height = (float) resource.getIntrinsicHeight() / (float) downScale;
+                width = (float) resource.getIntrinsicWidth() / downScale;
+                height = (float) resource.getIntrinsicHeight() / downScale;
             } else {
-                    /* float multiplier = (float) getView().getWidth() / resource.getIntrinsicWidth();
-                    width = (float) resource.getIntrinsicWidth() * (float) multiplier;
-                    height = (float) resource.getIntrinsicHeight() * (float) multiplier;*/
-                width = (float) resource.getIntrinsicWidth() ;
+                /* float multiplier = (float) getView().getWidth() / resource.getIntrinsicWidth();
+                width = (float) resource.getIntrinsicWidth() * (float) multiplier;
+                height = (float) resource.getIntrinsicHeight() * (float) multiplier;*/
+                width = (float) resource.getIntrinsicWidth();
                 height = (float) resource.getIntrinsicHeight();
             }
 
@@ -66,7 +68,9 @@ class GlideImageGetter implements Html.ImageGetter, Drawable.Callback {
 
             resource.setBounds(rect);
 
-            mDrawable.setBounds(rect);
+            DrawableBoundAnimator boundAnimator = new DrawableBoundAnimator(mDrawable, getView());
+            boundAnimator.animateRightBottom(Math.round(width), Math.round(height));
+
             mDrawable.setDrawable(resource);
 
             if (resource.isAnimated()) {
@@ -74,9 +78,6 @@ class GlideImageGetter implements Html.ImageGetter, Drawable.Callback {
                 resource.setLoopCount(GlideDrawable.LOOP_FOREVER);
                 resource.start();
             }
-
-            getView().setText(getView().getText());
-            getView().invalidate();
         }
     }
 

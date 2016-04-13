@@ -59,7 +59,10 @@ public class CustomFormattingHtmlTextView extends HtmlTextView {
         String filterImageSource = filterMatcher.group(1);
         String mainImageSource = filterMatcher.group(2);
         Drawable mainImage = new GlideImageGetter(getContext(), this).getDrawable(mainImageSource);
-        replaceImageSpan(getImageSpanWithSource(filterImageSource), mainImage, mainImageSource);
+
+        ImageSpan oldSpan = getImageSpanWithSource(filterImageSource);
+        mainImage.setBounds(oldSpan.getDrawable().getBounds()); /* prevent the span from "jumping" to 0 size */
+        replaceImageSpan(oldSpan, mainImage, mainImageSource);
     }
 
     @Nullable

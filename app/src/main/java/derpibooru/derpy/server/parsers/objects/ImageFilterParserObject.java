@@ -10,14 +10,23 @@ import java.util.List;
 import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
-public class ImageSpoilerParserObject {
+public class ImageFilterParserObject {
     private List<DerpibooruTagDetailed> mSpoileredTags;
+    private List<Integer> mHiddenTags;
 
-    public ImageSpoilerParserObject(List<DerpibooruTagDetailed> spoileredTags) {
+    public ImageFilterParserObject(List<DerpibooruTagDetailed> spoileredTags) {
         mSpoileredTags = spoileredTags;
     }
 
-    public String getSpoilerUrl(JSONArray spoileredTagIds) throws JSONException {
+    public ImageFilterParserObject(List<DerpibooruTagDetailed> spoileredTags, List<Integer> hiddenTags) {
+        mSpoileredTags = spoileredTags;
+        mHiddenTags = hiddenTags;
+    }
+
+    /**
+     * @return an empty string if the image is not spoilered; an url string otherwise.
+     */
+    public String getImageSpoilerUrl(JSONArray spoileredTagIds) throws JSONException {
         List<Integer> imageTagIds = intListFromArray(spoileredTagIds);
         /* if the image has multiple tags spoilered, it should use
          * the spoiler image for the ContentSafety one (e.g. "suggestive") */
@@ -28,6 +37,11 @@ public class ImageSpoilerParserObject {
             }
         }
         return "";
+    }
+
+    public boolean isImageHidden(JSONArray hiddenTagIds) throws JSONException, IllegalStateException {
+        if (mHiddenTags == null) throw new IllegalStateException("ImageFilterParserObject did not receive a list of hidden tags on initialization. Use the appropriate constructor.");
+        return !Collections.disjoint(intListFromArray(hiddenTagIds), mHiddenTags);
     }
 
     private List<Integer> intListFromArray(JSONArray array) throws JSONException {

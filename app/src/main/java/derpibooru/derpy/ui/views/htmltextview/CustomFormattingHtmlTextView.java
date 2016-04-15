@@ -58,11 +58,9 @@ public class CustomFormattingHtmlTextView extends HtmlTextView {
     private void unfilterImage(Matcher filterMatcher) {
         String filterImageSource = filterMatcher.group(1);
         String mainImageSource = filterMatcher.group(2);
-        Drawable mainImage = new GlideImageGetter(getContext(), this).getDrawable(mainImageSource);
-
         ImageSpan oldSpan = getImageSpanWithSource(filterImageSource);
-        mainImage.setBounds(oldSpan.getDrawable().getBounds()); /* prevent the span from "jumping" to 0 size */
-        replaceImageSpan(oldSpan, mainImage, mainImageSource);
+        EmbeddedImageDrawableWrapper wrapper = ((EmbeddedImageDrawableWrapper) oldSpan.getDrawable());
+        new GlideImageGetter(getContext(), this).loadDrawableIntoWrapper(mainImageSource, wrapper);
     }
 
     @Nullable
@@ -74,13 +72,5 @@ public class CustomFormattingHtmlTextView extends HtmlTextView {
             }
         }
         return null;
-    }
-
-    private void replaceImageSpan(ImageSpan oldSpan, Drawable newDrawable, String newSource) {
-        SpannableString text = (SpannableString) getText();
-        int start = text.getSpanStart(oldSpan);
-        int end = text.getSpanEnd(oldSpan);
-        int flags = text.getSpanFlags(oldSpan);
-        text.setSpan(new ImageSpan(newDrawable, newSource), start, end, flags);
     }
 }

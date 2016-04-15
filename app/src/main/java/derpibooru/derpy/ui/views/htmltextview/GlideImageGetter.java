@@ -38,6 +38,14 @@ class GlideImageGetter implements Html.ImageGetter, Drawable.Callback {
         return wrapper;
     }
 
+    public Drawable loadDrawableIntoWrapper(String source, EmbeddedImageDrawableWrapper existingWrapper) {
+        Glide.with(mContext)
+                .load(source)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(new GlideViewTarget(existingWrapper));
+        return existingWrapper;
+    }
+
     private class GlideViewTarget extends ViewTarget<TextView, GlideDrawable> {
         private final EmbeddedImageDrawableWrapper mWrapper;
 

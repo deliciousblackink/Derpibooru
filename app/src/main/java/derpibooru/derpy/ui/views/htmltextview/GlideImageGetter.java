@@ -1,9 +1,6 @@
 package derpibooru.derpy.ui.views.htmltextview;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.widget.TextView;
@@ -14,14 +11,12 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 
-import derpibooru.derpy.ui.animators.DrawableBoundAnimator;
-
 /**
  * @author https://gist.github.com/AndroidT/97bf92f94cadf8f7af72
  */
 class GlideImageGetter implements Html.ImageGetter, Drawable.Callback {
-    private HtmlTextView mTargetTextView;
-    private Context mContext;
+    private final HtmlTextView mTargetTextView;
+    private final Context mContext;
 
     GlideImageGetter(Context context, HtmlTextView target) {
         mContext = context;
@@ -30,101 +25,30 @@ class GlideImageGetter implements Html.ImageGetter, Drawable.Callback {
 
     @Override
     public Drawable getDrawable(String source) {
-        GlideDrawableWrapper drawable = new GlideDrawableWrapper();
+        EmbeddedImageDrawableWrapper wrapper = new EmbeddedImageDrawableWrapper() {
+            @Override
+            protected TextView getDrawableHolder() {
+                return mTargetTextView;
+            }
+        };
         Glide.with(mContext)
                 .load(source)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(new GlideViewTarget(drawable));
-        return drawable;
+                .into(new GlideViewTarget(wrapper));
+        return wrapper;
     }
 
     private class GlideViewTarget extends ViewTarget<TextView, GlideDrawable> {
-        private final GlideDrawableWrapper mDrawable;
+        private final EmbeddedImageDrawableWrapper mWrapper;
 
-        private GlideViewTarget(GlideDrawableWrapper drawable) {
+        private GlideViewTarget(EmbeddedImageDrawableWrapper wrapper) {
             super(mTargetTextView);
-            mDrawable = drawable;
+            mWrapper = wrapper;
         }
 
         @Override
         public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-            Rect rect;
-
-            float width;
-            float height;
-            if (resource.getIntrinsicWidth() >= getView().getWidth()) {
-                float downScale = (float) resource.getIntrinsicWidth() / getView().getWidth();
-                width = (float) resource.getIntrinsicWidth() / downScale;
-                height = (float) resource.getIntrinsicHeight() / downScale;
-            } else {
-                /* float multiplier = (float) getView().getWidth() / resource.getIntrinsicWidth();
-                width = (float) resource.getIntrinsicWidth() * (float) multiplier;
-                height = (float) resource.getIntrinsicHeight() * (float) multiplier;*/
-                width = (float) resource.getIntrinsicWidth();
-                height = (float) resource.getIntrinsicHeight();
-            }
-
-            rect = new Rect(0, 0, Math.round(width), Math.round(height));
-
-            resource.setBounds(rect);
-
-            DrawableBoundAnimator boundAnimator = new DrawableBoundAnimator(mDrawable, getView());
-            boundAnimator.animateRightBottom(Math.round(width), Math.round(height));
-
-            mDrawable.setDrawable(resource);
-
-            if (resource.isAnimated()) {
-                mDrawable.setCallback(GlideImageGetter.this);
-                resource.setLoopCount(GlideDrawable.LOOP_FOREVER);
-                resource.start();
-            }
-        }
-    }
-
-    private class GlideDrawableWrapper extends Drawable implements Drawable.Callback {
-        private GlideDrawable mDrawable;
-
-        @Override
-        public void draw(Canvas canvas) {
-            if (mDrawable != null) mDrawable.draw(canvas);
-        }
-
-        @Override
-        public void setAlpha(int alpha) {
-            if (mDrawable != null) mDrawable.setAlpha(alpha);
-        }
-
-        @Override
-        public void setColorFilter(ColorFilter cf) {
-            if (mDrawable != null) mDrawable.setColorFilter(cf);
-        }
-
-        @Override
-        public int getOpacity() {
-            return (mDrawable != null) ? mDrawable.getOpacity() : 0;
-        }
-
-        public void setDrawable(GlideDrawable drawable) {
-            if (mDrawable != null) {
-                mDrawable.setCallback(null);
-            }
-            drawable.setCallback(this);
-            mDrawable = drawable;
-        }
-
-        @Override
-        public void invalidateDrawable(Drawable who) {
-            if (getCallback() != null) getCallback().invalidateDrawable(who);
-        }
-
-        @Override
-        public void scheduleDrawable(Drawable who, Runnable what, long when) {
-            if (getCallback() != null) getCallback().scheduleDrawable(who, what, when);
-        }
-
-        @Override
-        public void unscheduleDrawable(Drawable who, Runnable what) {
-            if (getCallback() != null) getCallback().unscheduleDrawable(who, what);
+            mWrapper.setResource(resource);
         }
     }
 

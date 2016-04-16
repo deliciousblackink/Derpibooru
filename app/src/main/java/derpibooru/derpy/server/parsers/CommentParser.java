@@ -1,6 +1,8 @@
 package derpibooru.derpy.server.parsers;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
@@ -15,15 +17,9 @@ import java.util.regex.Pattern;
 import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.parsers.objects.ImageFilterParserObject;
+import derpibooru.derpy.ui.views.htmltextview.ImageActionLink;
 
 public class CommentParser implements ServerResponseParser<DerpibooruComment> {
-    public static final Pattern PATTERN_EMBEDDED_IMAGE = Pattern.compile("(?:\\\\main\\\\)(.*)");
-    public static final Pattern PATTERN_HIDDEN_IMAGE_LINK = Pattern.compile("^(?:\\\\hidden\\\\)(.*)(?:\\\\main\\\\)(.*)");
-    public static final Pattern PATTERN_SPOILERED_IMAGE_LINK = Pattern.compile("^(?:\\\\spoilered\\\\)(.*)(?:\\\\main\\\\)(.*)");
-    private static final String HIDDEN_TAG_LINK = "\\hidden\\%s\\main\\%s";
-    private static final String SPOILERED_TAG_LINK = "\\spoilered\\%s\\main\\%s";
-    private static final String IMAGE_LINK = "\\main\\%s";
-
     private static final Pattern PATTERN_COMMENT_ID = Pattern.compile("^(?:comment_)([\\d]*)");
     private static final String IMAGE_CONTAINER_SELECTOR = "div.image-show-container";
 
@@ -65,7 +61,7 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     private String parseCommentBody(Element commentContent) throws JSONException {
         Element post = commentContent.select("div.post-text").first();
         post.select("span.spoiler").tagName("spoiler").removeAttr("class");
-        processEmbeddedImages(post);
+        processCommentImages(post);
         return post.html();
     }
 
@@ -74,39 +70,43 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
         return time.attr("datetime");
     }
 
-    private Element processEmbeddedImages(Element postBody) throws JSONException {
+    private void processCommentImages(Element postBody) throws JSONException {
+        processEmbeddedImages(postBody);
+        processExternalImages(postBody);
+    }
+
+    private void processEmbeddedImages(Element postBody) throws JSONException {
         while (!postBody.select(IMAGE_CONTAINER_SELECTOR).isEmpty()) {
             Element imageContainer = postBody.select(IMAGE_CONTAINER_SELECTOR).get(0);
             JSONArray imageTags = new JSONArray(imageContainer.attr("data-image-tags"));
 
-            String hiddenTagImage = mFilter.getImageHiddenUrl(imageTags);
-            String spoileredTagImage = mFilter.getImageSpoilerUrl(imageTags);
             String mainImage = getImageInContainer(imageContainer, "div.image-show");
+            String filterImage = mFilter.getImageHiddenUrl(imageTags);
+            if (filterImage.isEmpty()) {
+                filterImage = mFilter.getImageSpoilerUrl(imageTags);
+                if (filterImage.isEmpty()) {
+                    filterImage = null;
+                }
+            }
 
             postBody.select(IMAGE_CONTAINER_SELECTOR).get(0).replaceWith(
-                    getEmbeddedImageElement(hiddenTagImage, spoileredTagImage, mainImage));
+                    getEmbeddedImageElement(filterImage, mainImage));
         }
-        return postBody;
     }
 
-    private Element getEmbeddedImageElement(@NonNull String hidden, @NonNull String spoilered, @NonNull String mainImage) {
-        String link;
-        String source;
-        if (!hidden.isEmpty()) {
-            link = String.format(HIDDEN_TAG_LINK, hidden, mainImage);
-            source = hidden;
-        } else if (!spoilered.isEmpty()) {
-            link = String.format(SPOILERED_TAG_LINK, spoilered, mainImage);
-            source = spoilered;
-        } else {
-            link = String.format(IMAGE_LINK, mainImage);
-            source = mainImage;
+    private void processExternalImages(Element postBody) {
+        /* select all GIF images that are not embedded (do not have "data-image-id" attribute) */
+        for (Element image : postBody.select("img:not([data-image-id])[src~=([^/]*(gif.*))$]")) {
+            ImageActionLink.LinkInserter.wrapGifImage(image);
         }
-        return new Element(Tag.valueOf("a"), "")
-                .attr("href", link)
-                .appendChild(
-                        new Element(Tag.valueOf("img"), "")
-                                .attr("src", source));
+    }
+
+    private Element getEmbeddedImageElement(@Nullable String filterImage, @NonNull String mainImage) {
+        if (filterImage != null) {
+            return ImageActionLink.LinkInserter.getWrappedEmbeddedImage(filterImage, mainImage);
+        } else {
+            return ImageActionLink.LinkInserter.getWrappedEmbeddedImage(mainImage);
+        }
     }
 
     @NonNull

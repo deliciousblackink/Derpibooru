@@ -9,10 +9,15 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 
 import derpibooru.derpy.ui.animators.DrawableBoundAnimator;
 
-public abstract class EmbeddedImageDrawableWrapper extends Drawable implements Drawable.Callback {
+abstract class EmbeddedImageDrawableWrapper extends Drawable implements Drawable.Callback {
     private GlideDrawable mGlideResource;
+    private String mSource;
 
     protected abstract TextView getDrawableHolder();
+
+    public String getSource() {
+        return mSource;
+    }
 
     public boolean isAnimated() {
         return mGlideResource.isAnimated();
@@ -24,10 +29,12 @@ public abstract class EmbeddedImageDrawableWrapper extends Drawable implements D
     }
 
     /**
-     * Sets the drawable resource ({@link GlideDrawable} and sets the drawable bounds
-     * according to both the size of the resource and the size of the holder view.
+     * Sets the drawable resource ({@link GlideDrawable} and its bounds
+     * according to both the size of the resource and the size of the holder view,
+     * refreshes the source.
      */
-    public void setResource(GlideDrawable resource) {
+    public void setResource(GlideDrawable resource, String resourceSource) {
+        mSource = resourceSource;
         if (mGlideResource != null) {
             mGlideResource.setCallback(null);
         }
@@ -50,7 +57,9 @@ public abstract class EmbeddedImageDrawableWrapper extends Drawable implements D
         int roundedWidth = Math.round(width);
         int roundedHeight = Math.round(height);
         mGlideResource.setBounds(0, 0, roundedWidth, roundedHeight);
-        animateBoundsChange(roundedWidth, roundedHeight);
+        setBounds(0, 0, roundedWidth, roundedHeight);
+        getDrawableHolder().setText(getDrawableHolder().getText());
+        getDrawableHolder().requestLayout();
     }
 
     public void animateBoundsChange(int right, int bottom) {

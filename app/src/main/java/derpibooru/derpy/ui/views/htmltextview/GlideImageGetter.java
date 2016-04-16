@@ -24,39 +24,37 @@ class GlideImageGetter implements Html.ImageGetter, Drawable.Callback {
     }
 
     @Override
-    public Drawable getDrawable(String source) {
-        EmbeddedImageDrawableWrapper wrapper = new EmbeddedImageDrawableWrapper() {
+    public Drawable getDrawable(String imageSource) {
+        EmbeddedImageDrawableWrapper imageWrapper = new EmbeddedImageDrawableWrapper() {
             @Override
             protected TextView getDrawableHolder() {
                 return mTargetTextView;
             }
         };
-        Glide.with(mContext)
-                .load(source)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(new GlideViewTarget(wrapper));
-        return wrapper;
+        loadIntoWrapper(imageSource, imageWrapper);
+        return imageWrapper;
     }
 
-    public Drawable loadDrawableIntoWrapper(String source, EmbeddedImageDrawableWrapper existingWrapper) {
+    public void loadIntoWrapper(String imageSource, EmbeddedImageDrawableWrapper existingWrapper) {
         Glide.with(mContext)
-                .load(source)
+                .load(imageSource)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(new GlideViewTarget(existingWrapper));
-        return existingWrapper;
+                .into(new GlideViewTarget(existingWrapper, imageSource));
     }
 
     private class GlideViewTarget extends ViewTarget<TextView, GlideDrawable> {
         private final EmbeddedImageDrawableWrapper mWrapper;
+        private final String mSource;
 
-        private GlideViewTarget(EmbeddedImageDrawableWrapper wrapper) {
+        private GlideViewTarget(EmbeddedImageDrawableWrapper wrapper, String source) {
             super(mTargetTextView);
             mWrapper = wrapper;
+            mSource = source;
         }
 
         @Override
         public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-            mWrapper.setResource(resource);
+            mWrapper.setResource(resource, mSource);
         }
     }
 

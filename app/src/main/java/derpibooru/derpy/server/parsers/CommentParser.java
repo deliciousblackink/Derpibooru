@@ -8,7 +8,6 @@ import org.json.JSONException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -71,8 +70,8 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     }
 
     private void processCommentImages(Element postBody) throws JSONException {
-        processEmbeddedImages(postBody);
         processExternalImages(postBody);
+        processEmbeddedImages(postBody);
     }
 
     private void processEmbeddedImages(Element postBody) throws JSONException {

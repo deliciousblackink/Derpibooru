@@ -20,19 +20,16 @@ import static org.junit.Assert.assertThat;
 public class ImageActionLinkTest {
     Context context;
 
-    ImageActionLink.LinkInserter linkInserter;
-
     @Before
     public void setUp() {
         context = RuntimeEnvironment.application.getApplicationContext();
-        linkInserter = new ImageActionLink.LinkInserter();
     }
 
     @Test
     public void testGifActionLink() {
         String gifSource = "image.gif";
         Element image = Jsoup.parse("<img src=\"" + gifSource + "\" />").select("img").first();
-        linkInserter.wrapGifImage(image);
+        ImageActionLink.LinkInserter.wrapGifImage(image);
         String linkWrap = image.parent().select("a").attr("href");
         ImageActionLink actionLink = new ImageActionLink(linkWrap);
         assertThat(actionLink.containsAction(), is(true));
@@ -44,10 +41,10 @@ public class ImageActionLinkTest {
         String filterSource = "filter.png";
         String mainSource = "main.gif";
 
-        Element wrappedFiltered = linkInserter.getWrappedEmbeddedImage(filterSource, mainSource);
+        Element wrappedFiltered = ImageActionLink.LinkInserter.getWrappedEmbeddedImage(filterSource, mainSource);
         testEmbeddedImageActionLink(wrappedFiltered.parent().select("a").attr("href"), filterSource, mainSource);
 
-        Element wrapped = linkInserter.getWrappedEmbeddedImage(mainSource);
+        Element wrapped = ImageActionLink.LinkInserter.getWrappedEmbeddedImage(mainSource);
         testEmbeddedImageActionLink(wrapped.parent().select("a").attr("href"), "", mainSource);
     }
 

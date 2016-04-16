@@ -1,5 +1,7 @@
 package derpibooru.derpy.server.parsers.objects;
 
+import android.support.annotation.VisibleForTesting;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -12,7 +14,8 @@ import derpibooru.derpy.data.comparators.DerpibooruTagTypeComparator;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
 public class ImageFilterParserObject {
-    private static final String HIDDEN_TAG_IMAGE_RESOURCE_URI = ("android.resource://derpibooru.derpy/" + R.drawable.hidden_tag);
+    @VisibleForTesting
+    public static final String HIDDEN_TAG_IMAGE_RESOURCE_URI = ("android.resource://derpibooru.derpy/" + R.drawable.hidden_tag);
 
     private final List<DerpibooruTagDetailed> mSpoileredTags;
     private final List<Integer> mHiddenTags;

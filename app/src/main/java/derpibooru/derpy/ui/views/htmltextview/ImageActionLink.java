@@ -131,7 +131,7 @@ public class ImageActionLink {
         /**
          * Wraps the {@code <img>} {@link Element} in an action link ({@code <a>}) for GIF images.
          */
-        public void wrapGifImage(Element img) {
+        public static void wrapGifImage(Element img) {
             img.wrap(String.format("<a href=\"%s\"></a>",
                                    String.format(ACTION_LINK_TEMPLATE_GIF, img.attr("src"))));
         }
@@ -143,7 +143,7 @@ public class ImageActionLink {
          * @param filterImage filter image source
          * @param sourceImage main image source
          */
-        public Element getWrappedEmbeddedImage(String filterImage, String sourceImage) {
+        public static Element getWrappedEmbeddedImage(String filterImage, String sourceImage) {
             String link = String.format(ACTION_LINK_TEMPLATE_EMBEDDED_FILTERED_IMAGE, filterImage, sourceImage);
             String element = String.format(DOM_ELEMENT_TEMPLATE, link, filterImage);
             return Jsoup.parse(element).select("a").first();
@@ -155,7 +155,7 @@ public class ImageActionLink {
          *
          * @param sourceImage main image source
          */
-        public Element getWrappedEmbeddedImage(String sourceImage) {
+        public static Element getWrappedEmbeddedImage(String sourceImage) {
             String link = String.format(ACTION_LINK_TEMPLATE_EMBEDDED_IMAGE, sourceImage);
             String element = String.format(DOM_ELEMENT_TEMPLATE, link, sourceImage);
             return Jsoup.parse(element).select("a").first();

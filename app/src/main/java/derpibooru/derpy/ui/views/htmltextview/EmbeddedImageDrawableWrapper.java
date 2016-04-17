@@ -47,12 +47,18 @@ abstract class EmbeddedImageDrawableWrapper extends Drawable implements Drawable
         /* testing on JB, I've noticed that if resource's width matches that of the view, the right side gets chopped off.
          * I think it may be related to padding or something; until that's fixed, a 90% limit will do. */
         int maxResourceWidth = (int) (getDrawableHolder().getWidth() * 0.9);
+        /* on high-density screens, embedded images end up tiny since they are all ~300px in width, hence upscaling */
+        int minResourceWidth = (int) (getDrawableHolder().getWidth() * 0.5);
         float width = mGlideResource.getIntrinsicWidth();
         float height = mGlideResource.getIntrinsicHeight();
-        if (width >= maxResourceWidth) {
+        if (width > maxResourceWidth) {
             float downScale = width / maxResourceWidth;
             width /= downScale;
             height /= downScale;
+        } else if (width < minResourceWidth) {
+            float upScale = minResourceWidth / width;
+            width *= upScale;
+            height *= upScale;
         }
         int roundedWidth = Math.round(width);
         int roundedHeight = Math.round(height);

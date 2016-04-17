@@ -28,7 +28,7 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.internal.CommentReplyItem;
 import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.ui.representations.ServerDate;
-import derpibooru.derpy.ui.views.htmltextview.CustomFormattingHtmlTextView;
+import derpibooru.derpy.ui.views.htmltextview.HtmlPostBodyTextView;
 
 public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<DerpibooruComment, CommentListAdapter.ViewHolder> {
     private static final String EXTRAS_COMMENT_REPLIES = "derpibooru.derpy.CommentReplies";
@@ -98,7 +98,7 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
                 new ServerDate(getItems().get(position).getPostedAt())
                         .getRelativeTimeSpanString());
         holder.textComment.setHtml(getItems().get(position).getText());
-        holder.textComment.setOnLinkClickListener(new CustomFormattingHtmlTextView.OnLinkClickListener() {
+        holder.textComment.setOnLinkClickListener(new HtmlPostBodyTextView.OnLinkClickListener() {
             @Override
             public void onLinkClick(String linkUrl) {
                 Matcher commentMatcher = Pattern.compile("(?!#comment_)([\\d*\\.]+)$").matcher(linkUrl);
@@ -162,7 +162,7 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
         @Bind(R.id.imageAvatar) CircleImageView imageAvatar;
         @Bind(R.id.textAuthor) TextView textAuthor;
         @Bind(R.id.textPostedAt) TextView textPostedAt;
-        @Bind(R.id.textComment) CustomFormattingHtmlTextView textComment;
+        @Bind(R.id.textComment) HtmlPostBodyTextView textComment;
 
         ViewHolder(View v) {
             super(v);

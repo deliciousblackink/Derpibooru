@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * An action link used in {@link CustomFormattingHtmlTextView}.
+ * An action link used in {@link HtmlPostBodyTextView}.
  * <p>
  * {@link android.text.Html.ImageGetter} places images inside {@link android.text.style.ImageSpan},
  * which is not clickable, hence not allowing user to interact with the image.

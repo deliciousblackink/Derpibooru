@@ -17,6 +17,7 @@ import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.parsers.objects.ImageFilterParserObject;
 import derpibooru.derpy.ui.views.htmltextview.ImageActionLink;
+import derpibooru.derpy.ui.views.htmltextview.ImageActionSource;
 
 public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     private static final Pattern PATTERN_COMMENT_ID = Pattern.compile("^(?:comment_)([\\d]*)");
@@ -70,11 +71,12 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     }
 
     private void processCommentImages(Element postBody) throws JSONException {
-        processExternalImages(postBody);
-        processEmbeddedImages(postBody);
+        ImageActionSource.SourceBuilder actionSourceBuilder = new ImageActionSource.SourceBuilder();
+        processExternalImages(postBody, actionSourceBuilder);
+        processEmbeddedImages(postBody, actionSourceBuilder);
     }
 
-    private void processEmbeddedImages(Element postBody) throws JSONException {
+    private void processEmbeddedImages(Element postBody, ImageActionSource.SourceBuilder sourceBuilder) throws JSONException {
         while (!postBody.select(IMAGE_CONTAINER_SELECTOR).isEmpty()) {
             Element imageContainer = postBody.select(IMAGE_CONTAINER_SELECTOR).get(0);
             JSONArray imageTags = new JSONArray(imageContainer.attr("data-image-tags"));
@@ -89,22 +91,28 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
             }
 
             postBody.select(IMAGE_CONTAINER_SELECTOR).get(0).replaceWith(
-                    getEmbeddedImageElement(filterImage, mainImage));
+                    getEmbeddedImageElement(filterImage, mainImage, sourceBuilder));
         }
     }
 
-    private void processExternalImages(Element postBody) {
+    private void processExternalImages(Element postBody, ImageActionSource.SourceBuilder sourceBuilder) {
         /* select all GIF images that are not embedded (do not have "data-image-id" attribute) */
         for (Element image : postBody.select("img:not([data-image-id])[src~=([^/]*(gif.*))$]")) {
-            ImageActionLink.LinkInserter.wrapGifImage(image);
+            int sourceId = sourceBuilder.getSourceId();
+            image.replaceWith(ImageActionLink.LinkInserter.getWrappedExternalGifImage(
+                    sourceId, sourceBuilder.getImageActionSource(sourceId, image.attr("src"))));
         }
     }
 
-    private Element getEmbeddedImageElement(@Nullable String filterImage, @NonNull String mainImage) {
+    private Element getEmbeddedImageElement(@Nullable String filterImage, @NonNull String mainImage,
+                                            ImageActionSource.SourceBuilder sourceBuilder) {
+        int sourceId = sourceBuilder.getSourceId();
+        mainImage = sourceBuilder.getImageActionSource(sourceId, mainImage);
         if (filterImage != null) {
-            return ImageActionLink.LinkInserter.getWrappedEmbeddedImage(filterImage, mainImage);
+            filterImage = sourceBuilder.getImageActionSource(sourceId, filterImage);
+            return ImageActionLink.LinkInserter.getWrappedEmbeddedImage(sourceId, filterImage, mainImage);
         } else {
-            return ImageActionLink.LinkInserter.getWrappedEmbeddedImage(mainImage);
+            return ImageActionLink.LinkInserter.getWrappedEmbeddedImage(sourceId, mainImage);
         }
     }
 

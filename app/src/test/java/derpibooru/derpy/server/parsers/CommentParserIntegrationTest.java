@@ -15,12 +15,17 @@ import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.parsers.objects.ImageFilterParserObject;
 import derpibooru.derpy.ui.views.htmltextview.ImageActionLink;
+import derpibooru.derpy.ui.views.htmltextview.ImageActionSource;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
 import static org.junit.Assert.assertThat;
 
 /**
- * An integration test for {@link CommentParser}, (partly) {@link ImageFilterParserObject} and {@link ImageActionLink}.
+ * An integration test for {@link CommentParser}, (partly) {@link ImageFilterParserObject}, {@link ImageActionLink} and {@link ImageActionSource}.
+ * <p>
+ * <strong>Warning:</strong> relies on a specific implementation of {@link derpibooru.derpy.ui.views.htmltextview.ImageActionSource.SourceBuilder} that
+ * uses sequential IDs (0, 1, 2 ...)
  */
 public class CommentParserIntegrationTest {
     private static final DerpibooruComment expected =
@@ -45,18 +50,18 @@ public class CommentParserIntegrationTest {
 
     @Test
     public void testUnfilteredEmbeddedImage() throws Exception {
-        testEmbeddedWithoutFilter(expectedImageSource, loader.readTestResourceFile("SampleImageCommentAJAXCallResponse.html"));
+        testEmbeddedLinkWithoutFilter(expectedImageSource, loader.readTestResourceFile("SampleImageCommentAJAXCallResponse.html"));
     }
 
     @Test
     public void testFilteredEmbeddedImage() throws Exception {
         CommentParser parser = new CommentParser(Collections.<DerpibooruTagDetailed>emptyList(), Collections.singletonList(oneOfImageTagIds));
         DerpibooruComment parsedHidden = parser.parseResponse(loader.readTestResourceFile("SampleImageCommentAJAXCallResponse.html"));
-        String expectedHiddenLink = ImageActionLink.LinkInserter.getWrappedEmbeddedImage(expectedHiddenFilterImage, expectedImageSource).outerHtml();
+        String expectedHiddenLink = getEmbeddedImageExpectedLink(expectedHiddenFilterImage, expectedImageSource);
 
         parser = new CommentParser(spoileredTagList, Collections.<Integer>emptyList());
         DerpibooruComment parsedSpoilered = parser.parseResponse(loader.readTestResourceFile("SampleImageCommentAJAXCallResponse.html"));
-        String expectedSpoileredLink = ImageActionLink.LinkInserter.getWrappedEmbeddedImage(expectedSpoileredFilterImage, expectedImageSource).outerHtml();
+        String expectedSpoileredLink = getEmbeddedImageExpectedLink(expectedSpoileredFilterImage, expectedImageSource);
 
         assertExpected(parsedHidden, expectedHiddenLink);
         assertExpected(parsedSpoilered, expectedSpoileredLink);
@@ -64,36 +69,49 @@ public class CommentParserIntegrationTest {
 
     @Test
     public void testWithoutEmbeddedImage() throws Exception {
-        testWithoutFilter(expected, getResourceWithoutEmbeddedImage());
+        CommentParser parser = new CommentParser(Collections.<DerpibooruTagDetailed>emptyList(), Collections.<Integer>emptyList());
+        DerpibooruComment parsed = parser.parseResponse(getResourceWithoutEmbeddedImage());
+        assertExpected(parsed);
     }
 
     @Test
     public void testExternalGif() throws Exception {
         String resource = getResourceWithExternalGif();
         Element el = Jsoup.parse(resource).select("div.post-text").first().select("img").last();
-        ImageActionLink.LinkInserter.wrapGifImage(el);
-        testLinkWithoutFilter(el.parent().outerHtml(), resource);
+
+        ImageActionSource.SourceBuilder sourceBuilder = new ImageActionSource.SourceBuilder();
+        int id = sourceBuilder.getSourceId();
+        String expectedLink = ImageActionLink.LinkInserter.getWrappedExternalGifImage(id, sourceBuilder.getImageActionSource(id, el.attr("src"))).outerHtml();
+        testLinkWithoutFilter(expectedLink, resource);
     }
 
     @Test
     public void testEmbeddedGifNotProcessed() throws Exception {
-        testEmbeddedWithoutFilter(expectedImageSource + ".gif", getResourceWithEmbeddedGif());
+        testEmbeddedLinkWithoutFilter(expectedImageSource + ".gif", getResourceWithEmbeddedGif());
     }
 
-    private void testWithoutFilter(DerpibooruComment expectedComment, String resource) throws Exception {
-        CommentParser parser = new CommentParser(Collections.<DerpibooruTagDetailed>emptyList(), Collections.<Integer>emptyList());
-        DerpibooruComment parsed = parser.parseResponse(resource);
-        assertThat(parsed, samePropertyValuesAs(expectedComment));
+    private String getEmbeddedImageExpectedLink(String expectedFilteredSource, String expectedMainSource) {
+        ImageActionSource.SourceBuilder sourceBuilder = new ImageActionSource.SourceBuilder();
+        int id = sourceBuilder.getSourceId();
+        return ImageActionLink.LinkInserter.getWrappedEmbeddedImage(
+                id, sourceBuilder.getImageActionSource(id, expectedFilteredSource),
+                sourceBuilder.getImageActionSource(id, expectedMainSource)).outerHtml();
+    }
+
+    private String getEmbeddedImageExpectedLink(String expectedMainSource) {
+        ImageActionSource.SourceBuilder sourceBuilder = new ImageActionSource.SourceBuilder();
+        int id = sourceBuilder.getSourceId();
+        return ImageActionLink.LinkInserter.getWrappedEmbeddedImage(id, sourceBuilder.getImageActionSource(id, expectedMainSource)).outerHtml();
+    }
+
+    private void testEmbeddedLinkWithoutFilter(String imageSource, String resource) throws Exception {
+        testLinkWithoutFilter(getEmbeddedImageExpectedLink(imageSource), resource);
     }
 
     private void testLinkWithoutFilter(String expectedLink, String resource) throws Exception {
         CommentParser parser = new CommentParser(Collections.<DerpibooruTagDetailed>emptyList(), Collections.<Integer>emptyList());
         DerpibooruComment parsed = parser.parseResponse(resource);
         assertExpected(parsed, expectedLink);
-    }
-
-    private void testEmbeddedWithoutFilter(String imageSource, String resource) throws Exception {
-        testLinkWithoutFilter(ImageActionLink.LinkInserter.getWrappedEmbeddedImage(imageSource).outerHtml(), resource);
     }
 
     private String getResourceWithEmbeddedGif() {
@@ -122,7 +140,16 @@ public class CommentParserIntegrationTest {
 
     private void assertExpected(DerpibooruComment parsedComment, String expectedActionLink) {
         /* it is an expected behavior that a line break is added in front of the image */
-        assertThat(parsedComment, samePropertyValuesAs(expectedCommentWithTextAppended(" \n" + expectedActionLink)));
+        DerpibooruComment expectedComment = expectedCommentWithTextAppended(" \n" + expectedActionLink);
+        /* samePropertyValuesAs doesn't provide diffs, which complicates visual assertion of the comment text */
+        assertThat(parsedComment.getText(), is(expectedComment.getText()));
+        assertThat(parsedComment, samePropertyValuesAs(expectedComment));
+    }
+
+    private void assertExpected(DerpibooruComment parsedComment) {
+        /* samePropertyValuesAs doesn't provide diffs, which complicates visual assertion of the comment text */
+        assertThat(parsedComment.getText(), is(expected.getText()));
+        assertThat(parsedComment, samePropertyValuesAs(expected));
     }
 
     private DerpibooruComment expectedCommentWithTextAppended(String appendToCommentBody) {

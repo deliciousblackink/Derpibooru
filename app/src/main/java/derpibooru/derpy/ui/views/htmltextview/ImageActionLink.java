@@ -1,7 +1,5 @@
 package derpibooru.derpy.ui.views.htmltextview;
 
-import android.support.annotation.Nullable;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
@@ -16,36 +14,36 @@ import java.util.regex.Pattern;
  * It is possible to such interactions by wrapping an {@code <a>} tag around {@code <img>}
  * and assigning a custom link to the {@code href} attribute.
  * <p>
- * This class provides a number of basic links for embedded images in comments.
+ * {@link ImageActionSource} is used in conjunction with this class to provide means to determine
+ * what image each {@code <a>} link is associated with.
  */
 public class ImageActionLink {
-    private static final char ACTION_LINK_DELIMITER = '\\';
+    private static final char DELIMITER = '\\';
 
-    private static final String ACTION_LINK_START_MODIFIER = "action";
-    private static final String ACTION_LINK_MODIFIER_GIF_IMAGE = "gif";
-    private static final String ACTION_LINK_MODIFIER_EMBEDDED_MAIN_IMAGE = "main";
-    private static final String ACTION_LINK_MODIFIER_EMBEDDED_FILTERED_IMAGE = "filtered";
+    private static final String MODIFIER_ACTION_LINK = "action";
+    private static final String MODIFIER_GIF_IMAGE = "gif";
+    private static final String MODIFIER_EMBEDDED_MAIN_IMAGE = "main";
+    private static final String MODIFIER_EMBEDDED_FILTERED_IMAGE = "filtered";
 
-    private static final Pattern PATTERN_IMAGE_ACTION_LINK = Pattern.compile(
-            "^(?:\\\\" + ACTION_LINK_START_MODIFIER + "\\\\)(.*)");
+    private static final Pattern PATTERN_IMAGE_ACTION_TYPE = Pattern.compile(
+            "^(?:\\\\" + MODIFIER_ACTION_LINK + "\\\\\\d*\\\\)(.*?)(?:\\\\)");
     private static final Pattern PATTERN_GIF_IMAGE_LINK = Pattern.compile(
-            "^(?:\\\\" + ACTION_LINK_START_MODIFIER + "\\\\" + ACTION_LINK_MODIFIER_GIF_IMAGE + "\\\\)(.*)");
+            "^(?:\\\\" + MODIFIER_ACTION_LINK + "\\\\)(\\d*)(?:\\\\" + MODIFIER_GIF_IMAGE + "\\\\)(.*)");
     private static final Pattern PATTERN_EMBEDDED_IMAGE_ACTION_TYPE = Pattern.compile(
-            "^(?:\\\\" + ACTION_LINK_START_MODIFIER + "\\\\)(" + ACTION_LINK_MODIFIER_EMBEDDED_MAIN_IMAGE + "|" + ACTION_LINK_MODIFIER_EMBEDDED_FILTERED_IMAGE + ")");
+            "^(?:\\\\" + MODIFIER_ACTION_LINK + "\\\\\\d*\\\\)(" + MODIFIER_EMBEDDED_MAIN_IMAGE + "|" + MODIFIER_EMBEDDED_FILTERED_IMAGE + ")");
     private static final Pattern PATTERN_EMBEDDED_MAIN_IMAGE_LINK = Pattern.compile(
-            "^(?:\\\\" + ACTION_LINK_START_MODIFIER + "\\\\" + ACTION_LINK_MODIFIER_EMBEDDED_MAIN_IMAGE + "\\\\)(.*)");
+            "^(?:\\\\" + MODIFIER_ACTION_LINK + "\\\\)(\\d*)(?:\\\\" + MODIFIER_EMBEDDED_MAIN_IMAGE + "\\\\)(.*)");
     private static final Pattern PATTERN_EMBEDDED_FILTERED_IMAGE_LINK = Pattern.compile(
-            "^(?:\\\\" + ACTION_LINK_START_MODIFIER + "\\\\" + ACTION_LINK_MODIFIER_EMBEDDED_FILTERED_IMAGE + "\\\\)(.*)(?:\\\\" + ACTION_LINK_MODIFIER_EMBEDDED_MAIN_IMAGE + "\\\\)(.*)");
+            "^(?:\\\\" + MODIFIER_ACTION_LINK + "\\\\)(\\d*)(?:\\\\" + MODIFIER_EMBEDDED_FILTERED_IMAGE + "\\\\)(.*)(?:\\\\" + MODIFIER_EMBEDDED_MAIN_IMAGE + "\\\\)(.*)");
 
-    private static final String ACTION_LINK_TEMPLATE_GIF = ACTION_LINK_DELIMITER + ACTION_LINK_START_MODIFIER + ACTION_LINK_DELIMITER
-            + ACTION_LINK_MODIFIER_GIF_IMAGE + ACTION_LINK_DELIMITER + "%s";
-    private static final String ACTION_LINK_TEMPLATE_EMBEDDED_IMAGE = ACTION_LINK_DELIMITER + ACTION_LINK_START_MODIFIER + ACTION_LINK_DELIMITER
-            + ACTION_LINK_MODIFIER_EMBEDDED_MAIN_IMAGE + ACTION_LINK_DELIMITER + "%s";
-    private static final String ACTION_LINK_TEMPLATE_EMBEDDED_FILTERED_IMAGE = ACTION_LINK_DELIMITER + ACTION_LINK_START_MODIFIER
-            + ACTION_LINK_DELIMITER + ACTION_LINK_MODIFIER_EMBEDDED_FILTERED_IMAGE + ACTION_LINK_DELIMITER
-            + "%s" + ACTION_LINK_DELIMITER + ACTION_LINK_MODIFIER_EMBEDDED_MAIN_IMAGE + ACTION_LINK_DELIMITER + "%s";
+    private static final String TEMPLATE_GIF_IMAGE_LINK =
+            DELIMITER + MODIFIER_ACTION_LINK + DELIMITER + "%d"+ DELIMITER + MODIFIER_GIF_IMAGE + DELIMITER + "%s";
+    private static final String TEMPLATE_EMBEDDED_IMAGE =
+            DELIMITER + MODIFIER_ACTION_LINK + DELIMITER + "%d"+ DELIMITER + MODIFIER_EMBEDDED_MAIN_IMAGE + DELIMITER + "%s";
+    private static final String TEMPLATE_EMBEDDED_FILTERED_IMAGE =
+            DELIMITER + MODIFIER_ACTION_LINK + DELIMITER + "%d"+ DELIMITER + MODIFIER_EMBEDDED_FILTERED_IMAGE + DELIMITER + "%s" + DELIMITER + MODIFIER_EMBEDDED_MAIN_IMAGE + DELIMITER + "%s";
 
-    private static final String DOM_ELEMENT_TEMPLATE = "<a href=\"%s\"><img src=\"%s\" /></a>";
+    private static final String TEMPLATE_HTML_DOM_ELEMENT = "<a href=\"%s\"><img src=\"%s\" /></a>";
 
     private final String mLink;
 
@@ -54,26 +52,63 @@ public class ImageActionLink {
     }
 
     /**
-     * Determines if the link contains an image action.
+     * Determines the image action corresponding to the link.
+     *
+     * @return {@link ImageActionType#None} if the link does not contain an image action,
+     * a corresponding image action otherwise.
      */
-    public boolean containsAction() {
-        Matcher action = PATTERN_IMAGE_ACTION_LINK.matcher(mLink);
-        return action.find();
+    public ImageActionType getImageActionType() {
+        Matcher actionType = PATTERN_IMAGE_ACTION_TYPE.matcher(mLink);
+        if (actionType.find()) {
+            switch (actionType.group(1)) {
+                case MODIFIER_GIF_IMAGE:
+                    return ImageActionType.ExternalGif;
+                case MODIFIER_EMBEDDED_MAIN_IMAGE:
+                case MODIFIER_EMBEDDED_FILTERED_IMAGE:
+                    return ImageActionType.EmbeddedImage;
+            }
+        }
+        return ImageActionType.None;
     }
 
-    /**
-     * Returns a source link for a GIF image.
-     * @return an URL <strong>if the action link is associated with a GIF image</strong>; {@code null} otherwise.
-     */
-    @Nullable
-    public String getGifImageSource() {
-        Matcher gif = PATTERN_GIF_IMAGE_LINK.matcher(mLink);
-        return gif.find() ? gif.group(1) : null;
+    public enum ImageActionType {
+        /**
+         * Use {@link ExternalGifAction}.
+         */
+        ExternalGif,
+        /**
+         * Use {@link EmbeddedImageActions#forLink(ImageActionLink)})}
+         */
+        EmbeddedImage,
+        /**
+         * The link does not contain an image action.
+         */
+        None
+    }
+
+    public static class ExternalGifAction {
+        private final Matcher mMatcher;
+
+        /**
+         * @throws IllegalArgumentException the link does not match external GIF image action
+         */
+        public ExternalGifAction(ImageActionLink actionLink) throws IllegalArgumentException {
+            mMatcher = PATTERN_GIF_IMAGE_LINK.matcher(actionLink.mLink);
+            if (!mMatcher.find()) throw new IllegalArgumentException();
+        }
+
+        public int getImageActionId() {
+            return Integer.parseInt(mMatcher.group(1));
+        }
+
+        public String getGifImageSource() {
+            return mMatcher.group(2);
+        }
     }
 
     public enum EmbeddedImageActions {
-        FilteredImage(PATTERN_EMBEDDED_FILTERED_IMAGE_LINK, ACTION_LINK_MODIFIER_EMBEDDED_FILTERED_IMAGE),
-        Image(PATTERN_EMBEDDED_MAIN_IMAGE_LINK, ACTION_LINK_MODIFIER_EMBEDDED_MAIN_IMAGE) {
+        FilteredImage(PATTERN_EMBEDDED_FILTERED_IMAGE_LINK, MODIFIER_EMBEDDED_FILTERED_IMAGE),
+        Image(PATTERN_EMBEDDED_MAIN_IMAGE_LINK, MODIFIER_EMBEDDED_MAIN_IMAGE) {
             @Override
             String getFilterImage() {
                 return "";
@@ -81,11 +116,12 @@ public class ImageActionLink {
 
             @Override
             String getSourceImage() {
-                return mMatcher.group(1);
+                return mMatcher.group(2);
             }
         };
 
         private final Pattern mPattern;
+
         protected Matcher mMatcher;
         protected final String mActionLinkModifier;
 
@@ -100,12 +136,12 @@ public class ImageActionLink {
          *
          * @throws IllegalArgumentException the link does not match any embedded image action
          */
-        public static EmbeddedImageActions forLink(String link) throws IllegalArgumentException {
-            Matcher m = PATTERN_EMBEDDED_IMAGE_ACTION_TYPE.matcher(link);
+        public static EmbeddedImageActions forLink(ImageActionLink actionLink) throws IllegalArgumentException {
+            Matcher m = PATTERN_EMBEDDED_IMAGE_ACTION_TYPE.matcher(actionLink.mLink);
             if (m.find()) {
                 for (EmbeddedImageActions action : values()) {
                     if (m.group(1).equals(action.mActionLinkModifier)) {
-                        action.mMatcher = action.mPattern.matcher(link);
+                        action.mMatcher = action.mPattern.matcher(actionLink.mLink);
                         if (action.mMatcher.find()) {
                             return action;
                         }
@@ -115,12 +151,16 @@ public class ImageActionLink {
             throw new IllegalArgumentException();
         }
 
+        int getImageActionId() {
+            return Integer.parseInt(mMatcher.group(1));
+        }
+
         String getFilterImage() {
-            return mMatcher.group(1);
+            return mMatcher.group(2);
         }
 
         String getSourceImage() {
-            return mMatcher.group(2);
+            return mMatcher.group(3);
         }
     }
 
@@ -130,22 +170,27 @@ public class ImageActionLink {
     public static class LinkInserter {
         /**
          * Wraps the {@code <img>} {@link Element} in an action link ({@code <a>}) for GIF images.
+         *
+         * @param imageActionSourceId {@link ImageActionSource} ID to be assigned to the action link
+         * @param gifSource GIF image action source (obtainable via {@link derpibooru.derpy.ui.views.htmltextview.ImageActionSource.SourceBuilder})
          */
-        public static void wrapGifImage(Element img) {
-            img.wrap(String.format("<a href=\"%s\"></a>",
-                                   String.format(ACTION_LINK_TEMPLATE_GIF, img.attr("src"))));
+        public static Element getWrappedExternalGifImage(int imageActionSourceId, String gifSource) {
+            String link = String.format(TEMPLATE_GIF_IMAGE_LINK, imageActionSourceId, gifSource);
+            String element = String.format(TEMPLATE_HTML_DOM_ELEMENT, link, gifSource);
+            return Jsoup.parse(element).select("a").first();
         }
 
         /**
          * Returns an {@link Element} consisting of a <strong>filtered</strong> embedded image action
          * link ({@code <a>}) wrapped around {@code <img>}.
          *
-         * @param filterImage filter image source
-         * @param sourceImage main image source
+         * @param imageActionSourceId {@link ImageActionSource} ID to be assigned to the action link
+         * @param filterImage filter image action source (obtainable via {@link derpibooru.derpy.ui.views.htmltextview.ImageActionSource.SourceBuilder})
+         * @param sourceImage main image action source (obtainable via {@link derpibooru.derpy.ui.views.htmltextview.ImageActionSource.SourceBuilder})
          */
-        public static Element getWrappedEmbeddedImage(String filterImage, String sourceImage) {
-            String link = String.format(ACTION_LINK_TEMPLATE_EMBEDDED_FILTERED_IMAGE, filterImage, sourceImage);
-            String element = String.format(DOM_ELEMENT_TEMPLATE, link, filterImage);
+        public static Element getWrappedEmbeddedImage(int imageActionSourceId, String filterImage, String sourceImage) {
+            String link = String.format(TEMPLATE_EMBEDDED_FILTERED_IMAGE, imageActionSourceId, filterImage, sourceImage);
+            String element = String.format(TEMPLATE_HTML_DOM_ELEMENT, link, filterImage);
             return Jsoup.parse(element).select("a").first();
         }
 
@@ -153,11 +198,12 @@ public class ImageActionLink {
          * Returns an {@link Element} consisting of an embedded image action link ({@code <a>})
          * wrapped around {@code <img>}.
          *
-         * @param sourceImage main image source
+         * @param imageActionSourceId {@link ImageActionSource} ID to be assigned to the action link
+         * @param sourceImage main image action source (obtainable via {@link derpibooru.derpy.ui.views.htmltextview.ImageActionSource.SourceBuilder})
          */
-        public static Element getWrappedEmbeddedImage(String sourceImage) {
-            String link = String.format(ACTION_LINK_TEMPLATE_EMBEDDED_IMAGE, sourceImage);
-            String element = String.format(DOM_ELEMENT_TEMPLATE, link, sourceImage);
+        public static Element getWrappedEmbeddedImage(int imageActionSourceId, String sourceImage) {
+            String link = String.format(TEMPLATE_EMBEDDED_IMAGE, imageActionSourceId, sourceImage);
+            String element = String.format(TEMPLATE_HTML_DOM_ELEMENT, link, sourceImage);
             return Jsoup.parse(element).select("a").first();
         }
     }

@@ -69,6 +69,15 @@ public class ImageActionTest {
         testEmbeddedImageActionLink(new ImageActionLink(wrappedFiltered.parent().select("a").attr("href")), sourceId, filterSource, mainSource);
     }
 
+    @Test
+    public void testSourceBuilderFormat() {
+        String originalSource = "https://somedomain.com/somesource.png";
+        assertThat(ImageActionSource.isImageActionSource(originalSource), is(false));
+        int sourceId = sourceBuilder.getSourceId();
+        String source = sourceBuilder.getImageActionSource(sourceId, originalSource);
+        assertThat(ImageActionSource.isImageActionSource(source), is(true));
+    }
+
     private void testEmbeddedImageActionLink(ImageActionLink actionLink, int actionSourceId, String filterSource, String mainSource) {
         ImageActionLink.ImageActionType linkType = actionLink.getImageActionType();
         assertThat(linkType, is(ImageActionLink.ImageActionType.EmbeddedImage));

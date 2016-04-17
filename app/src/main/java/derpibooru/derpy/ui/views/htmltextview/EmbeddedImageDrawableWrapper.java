@@ -10,10 +10,17 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import derpibooru.derpy.ui.animators.DrawableBoundAnimator;
 
 abstract class EmbeddedImageDrawableWrapper extends Drawable implements Drawable.Callback {
+    static final int NOT_LINKED_TO_IMAGE_ACTION = -1;
+
     private GlideDrawable mGlideResource;
+    private int mImageActionId;
     private String mSource;
 
     protected abstract TextView getDrawableHolder();
+
+    public int getImageActionId() {
+        return mImageActionId;
+    }
 
     public String getSource() {
         return mSource;
@@ -29,12 +36,13 @@ abstract class EmbeddedImageDrawableWrapper extends Drawable implements Drawable
     }
 
     /**
-     * Sets the drawable resource ({@link GlideDrawable} and its bounds
+     * Adds an image action ID, sets the drawable resource ({@link GlideDrawable} and its bounds
      * according to both the size of the resource and the size of the holder view,
      * refreshes the source.
      */
-    public void setResource(GlideDrawable resource, String resourceSource) {
+    public void setResource(GlideDrawable resource, String resourceSource, int imageActionId) {
         mSource = resourceSource;
+        mImageActionId = imageActionId;
         if (mGlideResource != null) {
             mGlideResource.setCallback(null);
         }

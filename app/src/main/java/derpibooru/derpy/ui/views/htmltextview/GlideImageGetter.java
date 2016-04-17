@@ -36,25 +36,42 @@ class GlideImageGetter implements Html.ImageGetter, Drawable.Callback {
     }
 
     public void loadIntoWrapper(String imageSource, EmbeddedImageDrawableWrapper existingWrapper) {
+        GlideViewTarget target;
+        if (ImageActionSource.isImageActionSource(imageSource)) {
+            ImageActionSource imageActionSource = new ImageActionSource(imageSource);
+            imageSource = imageActionSource.getImageSource();
+            target = new GlideViewTarget(existingWrapper, imageActionSource);
+        } else {
+            target = new GlideViewTarget(existingWrapper, imageSource);
+        }
         Glide.with(mContext)
                 .load(imageSource)
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(new GlideViewTarget(existingWrapper, imageSource));
+                .into(target);
     }
 
     private class GlideViewTarget extends ViewTarget<TextView, GlideDrawable> {
         private final EmbeddedImageDrawableWrapper mWrapper;
         private final String mSource;
+        private final int mImageSourceId;
 
         private GlideViewTarget(EmbeddedImageDrawableWrapper wrapper, String source) {
             super(mTargetTextView);
             mWrapper = wrapper;
             mSource = source;
+            mImageSourceId = EmbeddedImageDrawableWrapper.NOT_LINKED_TO_IMAGE_ACTION;
+        }
+
+        private GlideViewTarget(EmbeddedImageDrawableWrapper wrapper, ImageActionSource actionSource) {
+            super(mTargetTextView);
+            mWrapper = wrapper;
+            mSource = actionSource.getImageSource();
+            mImageSourceId = actionSource.getActionLinkId();
         }
 
         @Override
         public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-            mWrapper.setResource(resource, mSource);
+            mWrapper.setResource(resource, mSource, mImageSourceId);
         }
     }
 

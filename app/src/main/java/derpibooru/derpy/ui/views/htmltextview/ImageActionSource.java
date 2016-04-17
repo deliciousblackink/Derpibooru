@@ -20,13 +20,18 @@ public class ImageActionSource {
 
     /**
      * @param source {@code <img> src} attribute of an element created using {@link SourceBuilder}.
-     * @throws IllegalArgumentException the attribute does not match the {@link SourceBuilder} format
+     * @throws IllegalArgumentException the source does not match the {@link SourceBuilder} format (use {@link #isImageActionSource(String)} to determine if it does)
      */
     public ImageActionSource(String source) throws IllegalArgumentException {
         mSourceMatcher = PATTERN_ACTION_SOURCE.matcher(source);
         if (!mSourceMatcher.find()) {
             throw new IllegalArgumentException();
         }
+    }
+
+    public static boolean isImageActionSource(String source) {
+        Matcher m = PATTERN_ACTION_SOURCE.matcher(source);
+        return m.find();
     }
 
     public int getActionLinkId() {

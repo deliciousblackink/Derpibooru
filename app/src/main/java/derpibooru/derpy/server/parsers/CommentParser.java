@@ -16,8 +16,10 @@ import java.util.regex.Pattern;
 import derpibooru.derpy.data.server.DerpibooruComment;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.parsers.objects.ImageFilterParserObject;
-import derpibooru.derpy.ui.views.htmltextview.ImageActionLink;
-import derpibooru.derpy.ui.views.htmltextview.ImageActionSource;
+import derpibooru.derpy.ui.views.htmltextview.imageactions.EmbeddedFilteredImageAction;
+import derpibooru.derpy.ui.views.htmltextview.imageactions.EmbeddedImageAction;
+import derpibooru.derpy.ui.views.htmltextview.imageactions.ExternalGifImageAction;
+import derpibooru.derpy.ui.views.htmltextview.imageactions.HtmlImageActionCreator;
 
 public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     private static final Pattern PATTERN_COMMENT_ID = Pattern.compile("^(?:comment_)([\\d]*)");
@@ -71,17 +73,19 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     }
 
     private void processCommentImages(Element postBody) throws JSONException {
-        ImageActionSource.SourceBuilder actionSourceBuilder = new ImageActionSource.SourceBuilder();
-        processExternalImages(postBody, actionSourceBuilder);
-        processEmbeddedImages(postBody, actionSourceBuilder);
+        processExternalImages(postBody);
+        processEmbeddedImages(postBody);
     }
 
-    private void processEmbeddedImages(Element postBody, ImageActionSource.SourceBuilder sourceBuilder) throws JSONException {
+    private void processEmbeddedImages(Element postBody) throws JSONException {
         while (!postBody.select(IMAGE_CONTAINER_SELECTOR).isEmpty()) {
             Element imageContainer = postBody.select(IMAGE_CONTAINER_SELECTOR).get(0);
+            Element imageShow = imageContainer.select("div.image-show").first();
             JSONArray imageTags = new JSONArray(imageContainer.attr("data-image-tags"));
 
-            String mainImage = getImageInContainer(imageContainer, "div.image-show");
+            int imageId = Integer.parseInt(
+                    imageShow.select("a").first().attr("href").substring(1));
+            String mainImage = "https:" + imageShow.select("img").attr("src");
             String filterImage = mFilter.getImageHiddenUrl(imageTags);
             if (filterImage.isEmpty()) {
                 filterImage = mFilter.getImageSpoilerUrl(imageTags);
@@ -91,34 +95,25 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
             }
 
             postBody.select(IMAGE_CONTAINER_SELECTOR).get(0).replaceWith(
-                    getEmbeddedImageElement(filterImage, mainImage, sourceBuilder));
+                    getEmbeddedImageElement(imageId, mainImage, filterImage));
         }
     }
 
-    private void processExternalImages(Element postBody, ImageActionSource.SourceBuilder sourceBuilder) {
+    private void processExternalImages(Element postBody) {
         /* select all GIF images that are not embedded (do not have "data-image-id" attribute) */
         for (Element image : postBody.select("img:not([data-image-id])[src~=([^/]*(gif.*))$]")) {
-            int sourceId = sourceBuilder.getSourceId();
-            image.replaceWith(ImageActionLink.LinkInserter.getWrappedExternalGifImage(
-                    sourceId, sourceBuilder.getImageActionSource(sourceId, image.attr("src"))));
+            String actionLink = new ExternalGifImageAction(image.attr("src"), "").toStringRepresentation();
+            image.replaceWith(HtmlImageActionCreator.getImageActionElement(actionLink));
         }
     }
 
-    private Element getEmbeddedImageElement(@Nullable String filterImage, @NonNull String mainImage,
-                                            ImageActionSource.SourceBuilder sourceBuilder) {
-        int sourceId = sourceBuilder.getSourceId();
-        mainImage = sourceBuilder.getImageActionSource(sourceId, mainImage);
+    private Element getEmbeddedImageElement(int imageId, @NonNull String mainImage, @Nullable String filterImage) {
+        String imageLink;
         if (filterImage != null) {
-            filterImage = sourceBuilder.getImageActionSource(sourceId, filterImage);
-            return ImageActionLink.LinkInserter.getWrappedEmbeddedImage(sourceId, filterImage, mainImage);
+            imageLink = new EmbeddedFilteredImageAction(imageId, mainImage, filterImage).toStringRepresentation();
         } else {
-            return ImageActionLink.LinkInserter.getWrappedEmbeddedImage(sourceId, mainImage);
+            imageLink = new EmbeddedImageAction(imageId, mainImage).toStringRepresentation();
         }
-    }
-
-    @NonNull
-    private String getImageInContainer(Element imageContainer, String elementSelector) {
-        Element hiddenContainer = imageContainer.select(elementSelector).first();
-        return "https:" + hiddenContainer.select("img").attr("src");
+        return HtmlImageActionCreator.getImageActionElement(imageLink);
     }
 }

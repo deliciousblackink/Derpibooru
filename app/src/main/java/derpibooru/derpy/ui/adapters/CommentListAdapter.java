@@ -3,6 +3,7 @@ package derpibooru.derpy.ui.adapters;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -61,6 +62,8 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
 
     protected abstract void scrollToPosition(int adapterPosition);
 
+    protected abstract FragmentManager getCommentItemFragmentManager();
+
     @Override
     public void resetItems(List<DerpibooruComment> newItems) {
         mCommentReplies = new ArrayList<>(0);
@@ -114,6 +117,7 @@ public abstract class CommentListAdapter extends RecyclerViewPaginationAdapter<D
                 }
             }
         });
+        holder.textComment.setDialogFragmentManager(getCommentItemFragmentManager());
         ((View) holder.textComment.getParent()).setBackgroundColor(
                 ContextCompat.getColor(getContext(), doesPositionHoldReply(position) ? R.color.colorPrimaryLight : android.R.color.white));
     }

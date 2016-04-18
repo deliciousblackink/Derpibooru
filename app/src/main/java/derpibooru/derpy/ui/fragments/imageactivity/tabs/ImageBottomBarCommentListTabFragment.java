@@ -2,6 +2,7 @@ package derpibooru.derpy.ui.fragments.imageactivity.tabs;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -104,6 +105,11 @@ public class ImageBottomBarCommentListTabFragment extends Fragment {
             @Override
             protected void scrollToPosition(int adapterPosition) {
                 recyclerView.smoothScrollToPosition(adapterPosition);
+            }
+
+            @Override
+            protected FragmentManager getCommentItemFragmentManager() {
+                return getChildFragmentManager();
             }
         };
     }

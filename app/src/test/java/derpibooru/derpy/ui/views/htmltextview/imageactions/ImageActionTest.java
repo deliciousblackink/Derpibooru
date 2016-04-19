@@ -11,12 +11,22 @@ public class ImageActionTest {
         String gifSource = "https://sometotallyunknowndomain.org/hey.gif";
         String title = "";
 
-        ExternalGifImageAction action = new ExternalGifImageAction(gifSource, title);
-        String representation = action.toStringRepresentation();
-        action = new ExternalGifImageAction(representation);
+        ExternalGifImageAction action = (ExternalGifImageAction)
+                getSerializedDeserialized(new ExternalGifImageAction(gifSource, title));
 
         assertThat(action.getImageSource(), is(gifSource));
         assertThat(action.getTitle(), is(title));
+    }
+
+    private ImageAction getSerializedDeserialized(ImageAction sourceObject) {
+        String serializedRepresentation = "random_string";
+        assertThat(ImageAction.doesStringRepresentImageAction(serializedRepresentation), is(false));
+        serializedRepresentation = sourceObject.toStringRepresentation();
+        assertThat(ImageAction.doesStringRepresentImageAction(serializedRepresentation), is(true));
+
+        ImageAction deserializedObject = ImageAction.fromStringRepresentation(serializedRepresentation);
+        assertThat(deserializedObject.getClass().getName(), is(sourceObject.getClass().getName()));
+        return deserializedObject;
     }
 
     @Test
@@ -24,9 +34,8 @@ public class ImageActionTest {
         int imageId = 110;
         String imageSource = "https://sometotallyunknowndomain.org/embedded.png";
 
-        EmbeddedImageAction action = new EmbeddedImageAction(imageId, imageSource);
-        String representation = action.toStringRepresentation();
-        action = new EmbeddedImageAction(representation);
+        EmbeddedImageAction action = (EmbeddedImageAction)
+                getSerializedDeserialized(new EmbeddedImageAction(imageId, imageSource));
 
         assertThat(action.getImageId(), is(imageId));
         assertThat(action.getImageSource(), is(imageSource));
@@ -38,9 +47,8 @@ public class ImageActionTest {
         String imageSource = "https://sometotallyunknowndomain.org/embedded.png";
         String filterSource =  "https://sometotallyunknowndomain.org/filter/filter.png";
 
-        EmbeddedFilteredImageAction action = new EmbeddedFilteredImageAction(imageId, imageSource, filterSource);
-        String representation = action.toStringRepresentation();
-        action = new EmbeddedFilteredImageAction(representation);
+        EmbeddedFilteredImageAction action = (EmbeddedFilteredImageAction)
+                getSerializedDeserialized(new EmbeddedFilteredImageAction(imageId, imageSource, filterSource));
 
         assertThat(action.getImageId(), is(imageId));
         assertThat(action.getImageSource(), is(filterSource));

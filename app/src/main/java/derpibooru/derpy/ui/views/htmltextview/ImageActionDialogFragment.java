@@ -1,12 +1,15 @@
 package derpibooru.derpy.ui.views.htmltextview;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -18,7 +21,6 @@ import com.bumptech.glide.request.target.ViewTarget;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import derpibooru.derpy.R;
 import derpibooru.derpy.ui.views.htmltextview.imageactions.EmbeddedImageAction;
 import derpibooru.derpy.ui.views.htmltextview.imageactions.ImageAction;
@@ -30,6 +32,14 @@ public class ImageActionDialogFragment extends DialogFragment {
     @Bind(R.id.buttonViewImage) AppCompatButton buttonViewImage;
 
     private ImageAction mImageAction;
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog d = super.onCreateDialog(savedInstanceState);
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        return d;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

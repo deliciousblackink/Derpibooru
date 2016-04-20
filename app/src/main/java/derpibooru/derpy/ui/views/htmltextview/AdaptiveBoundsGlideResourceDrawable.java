@@ -40,6 +40,10 @@ class AdaptiveBoundsGlideResourceDrawable extends Drawable implements Drawable.C
         setDrawableInHolder(holder, widthHeight);
     }
 
+    protected GlideDrawable getResource() {
+        return mGlideResource;
+    }
+
     protected int[] determineWidthHeightBounds(int holderMaxWidth, int holderMaxHeight) {
         /* testing on JB, I've noticed that if resource's width matches that of the view, the right side gets chopped off.
          * I think it may be related to padding or something; until that's fixed, a 90% limit will do. */

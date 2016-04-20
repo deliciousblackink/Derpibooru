@@ -9,6 +9,8 @@
     <!-- material gray 50 --> <color name="colorTextLight">#fafafa</color>
     <!-- material gray 900 --> <color name="colorTextDark">#212121</color>
     <!-- alpha-138 pure black --> <color name="colorTextGray">#8a000000</color>
+    <!-- detailed image view -->
+    <!-- alpha-150 pure black --> <color name="colorDarkSemiTransparentOverlay">#96000000</color>
     <!-- image tags -->
     <!-- material deep purple 100 --> <color name="colorImageArtistTag">#d1c4e9</color>
     <!-- material deep purple 200 --> <color name="colorImageArtistTagActive">#b39ddb</color>

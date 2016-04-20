@@ -34,6 +34,11 @@ class GlideImageGetter implements Html.ImageGetter, Drawable.Callback {
             protected TextView getDrawableHolder() {
                 return mTargetTextView;
             }
+
+            @Override
+            protected Context getContext() {
+                return mContext;
+            }
         };
         loadIntoWrapper(rawSource, imageWrapper);
         return imageWrapper;

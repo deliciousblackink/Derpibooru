@@ -68,7 +68,7 @@ abstract class ImageActionDrawableWrapper extends AdaptiveBoundsGlideResourceDra
             }
             if (mImageAction instanceof EmbeddedFilteredImageAction) {
                 mTextPaint.setTextSize((float) (getResource().getBounds().width() * 0.1));
-                drawTextCentered("spoilered", canvas);
+                drawTextCentered(((EmbeddedFilteredImageAction) mImageAction).getFilteredTagName(), canvas);
             }
         }
     }

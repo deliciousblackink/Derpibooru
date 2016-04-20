@@ -74,8 +74,8 @@ public class HtmlPostBodyTextView extends HtmlTextView {
 
     private void openImageDialog(String imageActionRepresentation) {
         Bundle args = new Bundle();
-        args.putString(EmbeddedImageDialogFragment.EXTRAS_IMAGE_ACTION_REPRESENTATION, imageActionRepresentation);
-        EmbeddedImageDialogFragment dialog = new EmbeddedImageDialogFragment();
+        args.putString(ImageActionDialogFragment.EXTRAS_IMAGE_ACTION_REPRESENTATION, imageActionRepresentation);
+        ImageActionDialogFragment dialog = new ImageActionDialogFragment();
         dialog.setArguments(args);
         dialog.show(mDialogFragmentManager, "imagedialog");
     }

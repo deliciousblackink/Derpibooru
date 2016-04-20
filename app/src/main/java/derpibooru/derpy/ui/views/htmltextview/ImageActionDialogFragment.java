@@ -20,7 +20,7 @@ import butterknife.OnClick;
 import derpibooru.derpy.R;
 import derpibooru.derpy.ui.views.htmltextview.imageactions.ImageAction;
 
-public class EmbeddedImageDialogFragment extends DialogFragment {
+public class ImageActionDialogFragment extends DialogFragment {
     public static final String EXTRAS_IMAGE_ACTION_REPRESENTATION = "derpibooru.derpy.ImageActionStringRepresentation";
 
     @Bind(R.id.imageView) ImageView imageView;

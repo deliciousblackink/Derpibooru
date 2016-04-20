@@ -3,64 +3,54 @@ package derpibooru.derpy.ui.views.htmltextview;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 
-import derpibooru.derpy.ui.animators.DrawableBoundAnimator;
-
-abstract class EmbeddedImageDrawableWrapper extends Drawable implements Drawable.Callback {
-    static final int NOT_LINKED_TO_IMAGE_ACTION = -1;
-
+class AdaptiveBoundsGlideResourceDrawable extends Drawable implements Drawable.Callback {
     private GlideDrawable mGlideResource;
-    private int mImageActionId;
-    private String mSource;
-
-    protected abstract TextView getDrawableHolder();
-
-    public int getImageActionId() {
-        return mImageActionId;
-    }
-
-    public String getSource() {
-        return mSource;
-    }
 
     public boolean isAnimated() {
         return mGlideResource.isAnimated();
     }
 
-    public void playAnimatedDrawable() {
-        mGlideResource.setLoopCount(1);
+    public void playAnimated(boolean loop) {
+        mGlideResource.setLoopCount(loop ? GlideDrawable.LOOP_FOREVER : 1);
         mGlideResource.start();
     }
 
     /**
-     * Adds an image action ID, sets the drawable resource ({@link GlideDrawable} and its bounds
+     * Sets the drawable resource ({@link GlideDrawable} and its bounds
      * according to both the size of the resource and the size of the holder view,
      * refreshes the source.
+     *
+     * @param holder the view the drawable is placed inside
+     * @param holderMaxWidth max width of the drawable holder view
+     * @param holderMaxHeight max height of the drawable holder view
      */
-    public void setResource(GlideDrawable resource, String resourceSource, int imageActionId) {
-        mSource = resourceSource;
-        mImageActionId = imageActionId;
+    public void setResource(GlideDrawable resource, View holder, int holderMaxWidth, int holderMaxHeight) {
         if (mGlideResource != null) {
             mGlideResource.setCallback(null);
         }
         mGlideResource = resource;
         mGlideResource.setCallback(this);
-        determineResourceBounds();
+        int[] widthHeight = determineWidthHeightBounds(holderMaxWidth, holderMaxHeight);
+        setDrawableBounds(widthHeight);
+        setDrawableInHolder(holder, widthHeight);
     }
 
-    private void determineResourceBounds() {
+    protected int[] determineWidthHeightBounds(int holderMaxWidth, int holderMaxHeight) {
         /* testing on JB, I've noticed that if resource's width matches that of the view, the right side gets chopped off.
          * I think it may be related to padding or something; until that's fixed, a 90% limit will do. */
-        int maxResourceWidth = (int) (getDrawableHolder().getWidth() * 0.9);
+        int maxResourceWidth = (int) (holderMaxWidth * 0.9);
+        int maxResourceHeight = (int) (holderMaxHeight * 0.9);
         /* on high-density screens, embedded images end up tiny since they are all ~300px in width, hence upscaling */
-        int minResourceWidth = (int) (getDrawableHolder().getWidth() * 0.5);
+        int minResourceWidth = (int) (holderMaxWidth * 0.6);
         float width = mGlideResource.getIntrinsicWidth();
         float height = mGlideResource.getIntrinsicHeight();
-        if (width > maxResourceWidth) {
-            float downScale = width / maxResourceWidth;
+        if ((width > maxResourceWidth) || (height > maxResourceHeight)) {
+            float downScale = Math.max((width / maxResourceWidth), (height / maxResourceHeight));
             width /= downScale;
             height /= downScale;
         } else if (width < minResourceWidth) {
@@ -68,17 +58,21 @@ abstract class EmbeddedImageDrawableWrapper extends Drawable implements Drawable
             width *= upScale;
             height *= upScale;
         }
-        int roundedWidth = Math.round(width);
-        int roundedHeight = Math.round(height);
-        mGlideResource.setBounds(0, 0, roundedWidth, roundedHeight);
-        setBounds(0, 0, roundedWidth, roundedHeight);
-        getDrawableHolder().setText(getDrawableHolder().getText());
-        getDrawableHolder().requestLayout();
+        return new int[] { Math.round(width), Math.round(height) }; /* android.util.Size is much more preferable, but it's only available in API 21+ */
     }
 
-    public void animateBoundsChange(int right, int bottom) {
-        new DrawableBoundAnimator(this, getDrawableHolder())
-                .animateRightBottom(right, bottom);
+    protected void setDrawableBounds(int[] widthHeight) {
+        mGlideResource.setBounds(0, 0, widthHeight[0], widthHeight[1]);
+        setBounds(0, 0, widthHeight[0], widthHeight[1]);
+    }
+
+    protected void setDrawableInHolder(View drawableHolder, int[] widthHeight) {
+        drawableHolder.getLayoutParams().width = widthHeight[0];
+        drawableHolder.getLayoutParams().height = widthHeight[1];
+        drawableHolder.requestLayout();
+        if (drawableHolder instanceof ImageView) {
+            ((ImageView) drawableHolder).setImageDrawable(mGlideResource);
+        }
     }
 
     @Override
@@ -103,11 +97,7 @@ abstract class EmbeddedImageDrawableWrapper extends Drawable implements Drawable
 
     @Override
     public void invalidateDrawable(Drawable who) {
-        if (getCallback() != null) {
-            getCallback().invalidateDrawable(who);
-        } else {
-            getDrawableHolder().invalidate();
-        }
+        if (getCallback() != null) getCallback().invalidateDrawable(who);
     }
 
     @Override

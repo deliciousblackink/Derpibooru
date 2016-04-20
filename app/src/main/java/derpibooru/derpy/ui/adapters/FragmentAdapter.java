@@ -56,7 +56,7 @@ public abstract class FragmentAdapter {
     /**
      * Replaces the currently displayed fragment with a new one, adding the transaction to the back stack.
      *
-     * @param fragment new fragment to be displayed
+     * @param fragment     new fragment to be displayed
      * @param backStackTag an optional tag for the transaction in the back stack
      */
     protected void display(Fragment fragment, @Nullable String backStackTag) {
@@ -70,7 +70,7 @@ public abstract class FragmentAdapter {
      * Replaces the currently displayed fragment with a new one, adding the transaction to the back stack.
      * Binds corresponding animation resources to the fragment transcation.
      *
-     * @param fragment new fragment to be displayed
+     * @param fragment     new fragment to be displayed
      * @param backStackTag an optional tag for the transaction in the back stack
      */
     protected void display(Fragment fragment, @Nullable String backStackTag,

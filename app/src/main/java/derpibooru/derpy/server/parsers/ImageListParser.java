@@ -9,8 +9,8 @@ import java.util.List;
 
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
-import derpibooru.derpy.server.parsers.objects.ImageInteractionsParserObject;
 import derpibooru.derpy.server.parsers.objects.ImageFilterParserObject;
+import derpibooru.derpy.server.parsers.objects.ImageInteractionsParserObject;
 
 public class ImageListParser implements ServerResponseParser<List<DerpibooruImageThumb>> {
     private ImageFilterParserObject mSpoilers;

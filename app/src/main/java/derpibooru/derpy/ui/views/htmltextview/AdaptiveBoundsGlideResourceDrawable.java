@@ -25,8 +25,8 @@ class AdaptiveBoundsGlideResourceDrawable extends Drawable implements Drawable.C
      * according to both the size of the resource and the size of the holder view,
      * refreshes the source.
      *
-     * @param holder the view the drawable is placed inside
-     * @param holderMaxWidth max width of the drawable holder view
+     * @param holder          the view the drawable is placed inside
+     * @param holderMaxWidth  max width of the drawable holder view
      * @param holderMaxHeight max height of the drawable holder view
      */
     public void setResource(GlideDrawable resource, View holder, int holderMaxWidth, int holderMaxHeight) {

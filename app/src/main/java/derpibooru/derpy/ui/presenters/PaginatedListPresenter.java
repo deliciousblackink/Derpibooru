@@ -90,6 +90,7 @@ public abstract class PaginatedListPresenter<TItem extends Parcelable> {
 
     /**
      * Returns the adapter currently in use.
+     *
      * @return current adapter or {@code null} if the adapter is not instantiated yet.
      */
     @Nullable

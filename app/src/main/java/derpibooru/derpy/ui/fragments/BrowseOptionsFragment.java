@@ -36,7 +36,7 @@ public class BrowseOptionsFragment extends Fragment {
     @Bind(R.id.textMaxScore) EditText maxScore;
 
     private SearchHistoryStorage mHistory;
-    
+
     private DerpibooruSearchOptions mSelectedOptions = new DerpibooruSearchOptions();
 
     @Override

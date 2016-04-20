@@ -12,7 +12,6 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 
-import derpibooru.derpy.R;
 import derpibooru.derpy.ui.views.htmltextview.imageactions.ImageAction;
 
 /**

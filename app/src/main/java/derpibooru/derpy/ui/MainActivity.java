@@ -21,6 +21,7 @@ import derpibooru.derpy.ui.fragments.BrowseImageListFragment;
 import derpibooru.derpy.ui.fragments.FilterListFragment;
 import derpibooru.derpy.ui.fragments.ImageListFragment;
 import derpibooru.derpy.ui.fragments.RankingImageListFragment;
+
 public class MainActivity extends NavigationDrawerUserFragmentActivity {
     private static final int BROWSE_FRAGMENT_POSITION = 0;
 
@@ -118,7 +119,7 @@ public class MainActivity extends NavigationDrawerUserFragmentActivity {
         } else if (BrowseFragment.isTagSearchRequested(requestCode, data)) {
             Bundle searchArgs = new Bundle();
             searchArgs.putString(ImageActivity.EXTRAS_TAG_SEARCH_QUERY,
-                             data.getStringExtra(ImageActivity.EXTRAS_TAG_SEARCH_QUERY));
+                                 data.getStringExtra(ImageActivity.EXTRAS_TAG_SEARCH_QUERY));
             navigateTo(getFragmentNavigationItems().get(BROWSE_FRAGMENT_POSITION), searchArgs);
         } else if (getCurrentFragment() instanceof ImageListFragment) {
             getCurrentFragment().onActivityResult(requestCode, resultCode, data);

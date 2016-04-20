@@ -1,6 +1,7 @@
 package derpibooru.derpy.ui.views.htmltextview;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.text.Html;
@@ -8,7 +9,12 @@ import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
 
-import derpibooru.derpy.ui.views.htmltextview.fragments.EmbeddedImageDialogFragment;
+import com.google.common.base.Objects;
+
+import derpibooru.derpy.ui.views.htmltextview.imageactions.EmbeddedFilteredImageAction;
+import derpibooru.derpy.ui.views.htmltextview.imageactions.EmbeddedImageAction;
+import derpibooru.derpy.ui.views.htmltextview.imageactions.ExternalGifImageAction;
+import derpibooru.derpy.ui.views.htmltextview.imageactions.ImageAction;
 
 public class HtmlPostBodyTextView extends HtmlTextView {
     private FragmentManager mDialogFragmentManager;
@@ -42,40 +48,44 @@ public class HtmlPostBodyTextView extends HtmlTextView {
 
     @Override
     protected boolean onLinkClicked(String url) {
-        ImageActionLink actionLink = new ImageActionLink(url);
-        ImageActionLink.ImageActionType linkType = actionLink.getImageActionType();
-        switch (linkType) {
-            case None:
-                return super.onLinkClicked(url);
-            case ExternalGif:
-                return true;
-            case EmbeddedImage:
-                ImageActionLink.EmbeddedImageActions embeddedImage =
-                        ImageActionLink.EmbeddedImageActions.forLink(actionLink);
-                EmbeddedImageDrawableWrapper wrapper =
-                        getWrapperByImageActionId(embeddedImage.getImageActionId());
-                if (embeddedImage.getFilterImage().equals(wrapper.getSource())) {
-                    new GlideImageGetter(getContext(), this)
-                            .loadIntoWrapper(embeddedImage.getSourceImage(), wrapper);
+        if (ImageAction.doesStringRepresentImageAction(url)) {
+            ImageActionDrawableWrapper drawableWrapper =
+                    getWrapperByImageAction(ImageAction.fromStringRepresentation(url));
+            ImageAction wrapperAction = drawableWrapper.getImageAction(); /* the link contains ImageAction in its initial state; the wrapper updates the object as it changes */
+            if (wrapperAction instanceof EmbeddedFilteredImageAction) {
+                EmbeddedFilteredImageAction filteredImageAction = (EmbeddedFilteredImageAction) wrapperAction;
+                if (filteredImageAction.isSpoilered()) {
+                    filteredImageAction.unspoiler();
+                    new GlideImageGetter(getContext(), this).loadImageActionIntoWrapper(wrapperAction, drawableWrapper);
+                    return true;
                 } else {
-                    openImageDialog();
+                    openImageDialog(wrapperAction.toStringRepresentation());
+                    return true;
                 }
+            }
+            if ((wrapperAction instanceof EmbeddedImageAction)
+                    || (wrapperAction instanceof ExternalGifImageAction)) {
+                openImageDialog(url);
                 return true;
+            }
         }
         return super.onLinkClicked(url);
     }
 
-    private void openImageDialog() {
-        EmbeddedImageDialogFragment dialogFragment = new EmbeddedImageDialogFragment();
-        dialogFragment.show(mDialogFragmentManager, "Sample Fragment");
+    private void openImageDialog(String imageActionRepresentation) {
+        Bundle args = new Bundle();
+        args.putString(EmbeddedImageDialogFragment.EXTRAS_IMAGE_ACTION_REPRESENTATION, imageActionRepresentation);
+        EmbeddedImageDialogFragment dialog = new EmbeddedImageDialogFragment();
+        dialog.setArguments(args);
+        dialog.show(mDialogFragmentManager, "imagedialog");
     }
 
     @Nullable
-    private EmbeddedImageDrawableWrapper getWrapperByImageActionId(int imageActionId) {
+    private ImageActionDrawableWrapper getWrapperByImageAction(ImageAction action) {
         ImageSpan[] imageSpans = ((SpannableString) getText()).getSpans(0, getText().length(), ImageSpan.class);
         for (ImageSpan span : imageSpans) {
-            EmbeddedImageDrawableWrapper wrapper = (EmbeddedImageDrawableWrapper) span.getDrawable();
-            if (wrapper.getImageActionId() == imageActionId) {
+            ImageActionDrawableWrapper wrapper = (ImageActionDrawableWrapper) span.getDrawable();
+            if (Objects.equal(wrapper.getImageAction(), action)) {
                 return wrapper;
             }
         }

@@ -2,6 +2,8 @@ package derpibooru.derpy.ui.views.htmltextview;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,18 +20,39 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import derpibooru.derpy.R;
+import derpibooru.derpy.ui.views.htmltextview.imageactions.EmbeddedImageAction;
 import derpibooru.derpy.ui.views.htmltextview.imageactions.ImageAction;
 
 public class ImageActionDialogFragment extends DialogFragment {
     public static final String EXTRAS_IMAGE_ACTION_REPRESENTATION = "derpibooru.derpy.ImageActionStringRepresentation";
 
     @Bind(R.id.imageView) ImageView imageView;
+    @Bind(R.id.buttonViewImage) AppCompatButton buttonViewImage;
+
+    private ImageAction mImageAction;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_image_fragment_embedded_image_dialog, container, false);
         ButterKnife.bind(this, v);
+        mImageAction = ImageAction.fromStringRepresentation(
+                getArguments().getString(EXTRAS_IMAGE_ACTION_REPRESENTATION));
         loadImage();
+        if (mImageAction instanceof EmbeddedImageAction) {
+            buttonViewImage.setText(String.format(getString(R.string.embedded_image_view_image),
+                                                  ((EmbeddedImageAction) mImageAction).getImageId()));
+            buttonViewImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new AlertDialog.Builder(getContext())
+                            .setMessage("Coming soon! Stay tuned for the application updates.")
+                            .create().show();
+                }
+            });
+        } else {
+            ((ViewGroup) v).removeView(buttonViewImage);
+            buttonViewImage = null;
+        }
         return v;
     }
 
@@ -37,18 +60,11 @@ public class ImageActionDialogFragment extends DialogFragment {
         int maxWidth = getResources().getDisplayMetrics().widthPixels;
         int maxHeight = getResources().getDisplayMetrics().heightPixels;
         GlideViewTarget target = new GlideViewTarget(imageView, maxWidth, maxHeight);
-        ImageAction action = ImageAction.fromStringRepresentation(
-                getArguments().getString(EXTRAS_IMAGE_ACTION_REPRESENTATION));
         Glide.with(this)
-                .load(action.getImageSource())
+                .load(mImageAction.getImageSource())
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .into(target);
-    }
-
-    @OnClick(R.id.buttonDismiss)
-    void dismissDialog() {
-        dismiss();
     }
 
     private class GlideViewTarget extends ViewTarget<ImageView, GlideDrawable> {

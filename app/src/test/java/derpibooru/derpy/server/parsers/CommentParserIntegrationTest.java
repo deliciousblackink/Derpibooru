@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import derpibooru.derpy.TestResourceLoader;
 import derpibooru.derpy.data.server.DerpibooruComment;
@@ -39,8 +40,12 @@ public class CommentParserIntegrationTest {
     private static final String expectedSpoileredFilterImage = "https://derpicdn.net/media/W1siZiIsIjIwMTQvMDEvMDcvMjFfMTBfNTZfMjkxX3NlbWlfZ3JpbWRhcmsucG5nIl0sWyJwIiwidGh1bWIiLCIyNTB4MjUwIl1d.png";
     private static final String expectedHiddenFilterImage = ImageFilterParserObject.HIDDEN_TAG_IMAGE_RESOURCE_URI;
 
-    private static final ArrayList<DerpibooruTagDetailed> spoileredTagList =
-            new ArrayList<DerpibooruTagDetailed>() {{ add(new DerpibooruTagDetailed(oneOfImageTagIds, 0, "", "", "", expectedSpoileredFilterImage)); }};
+    private static final String expectedSpoileredTagName = "firefly";
+    private static final List<DerpibooruTagDetailed> spoileredTagList = new ArrayList<DerpibooruTagDetailed>() {{
+        add(new DerpibooruTagDetailed(oneOfImageTagIds, 0, expectedSpoileredTagName, "", "", expectedSpoileredFilterImage)); }};
+    private static final String expectedHiddenTagName = "feast";
+    private static final List<DerpibooruTagDetailed> hiddenTagList =  new ArrayList<DerpibooruTagDetailed>() {{
+        add(new DerpibooruTagDetailed(oneOfImageTagIds, 0, expectedHiddenTagName, "", "", /* the spoiler image does not matter for hidden tags */ "")); }};
 
     TestResourceLoader loader;
 
@@ -56,21 +61,21 @@ public class CommentParserIntegrationTest {
 
     @Test
     public void testHiddenEmbeddedImage() throws Exception {
-        CommentParser parser = new CommentParser(Collections.<DerpibooruTagDetailed>emptyList(), Collections.singletonList(oneOfImageTagIds));
+        CommentParser parser = new CommentParser(Collections.<DerpibooruTagDetailed>emptyList(), hiddenTagList);
         DerpibooruComment parsedHidden = parser.parseResponse(loader.readTestResourceFile("SampleImageCommentAJAXCallResponse.html"));
-        assertExpected(parsedHidden, new EmbeddedFilteredImageAction(embeddedImageId, expectedImageSource, expectedHiddenFilterImage));
+        assertExpected(parsedHidden, new EmbeddedFilteredImageAction(embeddedImageId, expectedImageSource, expectedHiddenFilterImage, expectedHiddenTagName));
     }
 
     @Test
     public void testSpoileredEmbeddedImage() throws Exception {
-        CommentParser parser = new CommentParser(spoileredTagList, Collections.<Integer>emptyList());
+        CommentParser parser = new CommentParser(spoileredTagList, Collections.<DerpibooruTagDetailed>emptyList());
         DerpibooruComment parsedSpoilered = parser.parseResponse(loader.readTestResourceFile("SampleImageCommentAJAXCallResponse.html"));
-        assertExpected(parsedSpoilered, new EmbeddedFilteredImageAction(embeddedImageId, expectedImageSource, expectedSpoileredFilterImage));
+        assertExpected(parsedSpoilered, new EmbeddedFilteredImageAction(embeddedImageId, expectedImageSource, expectedSpoileredFilterImage, expectedSpoileredTagName));
     }
 
     @Test
     public void testWithoutEmbeddedImage() throws Exception {
-        CommentParser parser = new CommentParser(Collections.<DerpibooruTagDetailed>emptyList(), Collections.<Integer>emptyList());
+        CommentParser parser = new CommentParser(Collections.<DerpibooruTagDetailed>emptyList(), Collections.<DerpibooruTagDetailed>emptyList());
         DerpibooruComment parsed = parser.parseResponse(getResourceWithoutEmbeddedImage());
         assertExpected(parsed);
     }
@@ -92,7 +97,7 @@ public class CommentParserIntegrationTest {
     }
 
     private void testLinkWithoutFilter(ImageAction expectedLink, String resource) throws Exception {
-        CommentParser parser = new CommentParser(Collections.<DerpibooruTagDetailed>emptyList(), Collections.<Integer>emptyList());
+        CommentParser parser = new CommentParser(Collections.<DerpibooruTagDetailed>emptyList(), Collections.<DerpibooruTagDetailed>emptyList());
         DerpibooruComment parsed = parser.parseResponse(resource);
         assertExpected(parsed, expectedLink);
     }

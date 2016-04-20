@@ -13,7 +13,7 @@ import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 public class CommentListParser implements ServerResponseParser<List<DerpibooruComment>> {
     private final CommentParser mCommentParser;
 
-    public CommentListParser(List<DerpibooruTagDetailed> spoileredTags, List<Integer> hiddenTagIds) {
+    public CommentListParser(List<DerpibooruTagDetailed> spoileredTags, List<DerpibooruTagDetailed> hiddenTagIds) {
         mCommentParser = new CommentParser(spoileredTags, hiddenTagIds);
     }
 

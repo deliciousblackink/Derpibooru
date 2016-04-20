@@ -45,10 +45,22 @@ public class CommentListProvider extends PaginatedListProvider<DerpibooruComment
 
     @Override
     public void fetch() {
+        /* TODO: shorten & clean this up */
+        /* FIXME: code dupe see CommentProvider */
         new TagProvider(mContext, new QueryHandler<List<DerpibooruTagDetailed>>() {
             @Override
-            public void onQueryExecuted(List<DerpibooruTagDetailed> spoileredTags) {
-                fetchComments(spoileredTags);
+            public void onQueryExecuted(final List<DerpibooruTagDetailed> spoileredTags) {
+                new TagProvider(mContext, new QueryHandler<List<DerpibooruTagDetailed>>() {
+                    @Override
+                    public void onQueryExecuted(List<DerpibooruTagDetailed> hiddenTags) {
+                        fetchWithTags(spoileredTags, hiddenTags);
+                    }
+
+                    @Override
+                    public void onQueryFailed() {
+                        mHandler.onQueryFailed();
+                    }
+                }).tags(mFilter.getHiddenTags()).fetch();
             }
 
             @Override
@@ -58,7 +70,7 @@ public class CommentListProvider extends PaginatedListProvider<DerpibooruComment
         }).tags(mFilter.getSpoileredTags()).fetch();
     }
 
-    private void fetchComments(List<DerpibooruTagDetailed> spoileredTags) {
-        super.executeQuery(new CommentListParser(spoileredTags, mFilter.getHiddenTags()));
+    private void fetchWithTags(List<DerpibooruTagDetailed> spoileredTags, List<DerpibooruTagDetailed> hiddenTags) {
+        super.executeQuery(new CommentListParser(spoileredTags, hiddenTags));
     }
 }

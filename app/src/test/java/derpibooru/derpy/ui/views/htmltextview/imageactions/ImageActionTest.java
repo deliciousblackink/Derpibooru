@@ -44,13 +44,15 @@ public class ImageActionTest {
         int imageId = 110;
         String imageSource = "https://sometotallyunknowndomain.org/embedded.png";
         String filterSource =  "https://sometotallyunknowndomain.org/filter/filter.png";
+        String tagName = "trixie is best pony";
 
         EmbeddedFilteredImageAction action = (EmbeddedFilteredImageAction)
-                getSerializedDeserialized(new EmbeddedFilteredImageAction(imageId, imageSource, filterSource));
+                getSerializedDeserialized(new EmbeddedFilteredImageAction(imageId, imageSource, filterSource, tagName));
 
         assertThat(action.getImageId(), is(imageId));
         assertThat(action.getImageSource(), is(filterSource));
         action.unspoiler();
         assertThat(action.getImageSource(), is(imageSource));
+        assertThat(action.getFilteredTagName(), is(tagName));
     }
 }

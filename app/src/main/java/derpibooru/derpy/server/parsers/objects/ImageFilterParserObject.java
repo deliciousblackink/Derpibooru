@@ -18,28 +18,39 @@ public class ImageFilterParserObject {
     public static final String HIDDEN_TAG_IMAGE_RESOURCE_URI = ("android.resource://derpibooru.derpy/" + R.drawable.hidden_tag);
 
     private final List<DerpibooruTagDetailed> mSpoileredTags;
-    private final List<Integer> mHiddenTags;
+    private final List<DerpibooruTagDetailed> mHiddenTags;
 
     public ImageFilterParserObject(List<DerpibooruTagDetailed> spoileredTags) {
         mSpoileredTags = spoileredTags;
         mHiddenTags = Collections.emptyList();
+        sortTagList(mSpoileredTags);
     }
 
-    public ImageFilterParserObject(List<DerpibooruTagDetailed> spoileredTags, List<Integer> hiddenTags) {
+    public ImageFilterParserObject(List<DerpibooruTagDetailed> spoileredTags, List<DerpibooruTagDetailed> hiddenTags) {
         mSpoileredTags = spoileredTags;
         mHiddenTags = hiddenTags;
+        sortTagList(mSpoileredTags);
+        sortTagList(mHiddenTags);
+    }
+
+    private void sortTagList(List<DerpibooruTagDetailed> list) {
+        /* if the image has multiple tags spoilered, it should use
+         * the spoiler image for the ContentSafety one (e.g. "suggestive") */
+        Collections.sort(list, new DerpibooruTagTypeComparator(true));
     }
 
     /**
-     * @return an empty string if the image is not spoilered; an url to the corresponding spoiler image otherwise.
+     * Returns the URL pointing to the spoilered tag's image.
+     * <p>
+     * <strong>Note:</strong> if the image has multiple tags spoilered, the method picks the one corresponding
+     * to {@link derpibooru.derpy.data.server.DerpibooruTag.TagType#ContentSafety}.
+     *
+     * @return an empty string if the image is not spoilered; the URL to the corresponding spoiler image otherwise.
      */
-    public String getImageSpoilerUrl(JSONArray spoileredTagIds) throws JSONException {
-        List<Integer> imageTagIds = intListFromArray(spoileredTagIds);
-        /* if the image has multiple tags spoilered, it should use
-         * the spoiler image for the ContentSafety one (e.g. "suggestive") */
-        Collections.sort(mSpoileredTags, new DerpibooruTagTypeComparator(true));
+    public String getSpoileredTagImageUrl(JSONArray imageTagIds) throws JSONException {
+        List<Integer> tagIds = integerListFromJson(imageTagIds);
         for (DerpibooruTagDetailed tag : mSpoileredTags) {
-            if (imageTagIds.contains(tag.getId())) {
+            if (tagIds.contains(tag.getId())) {
                 return (!tag.getSpoilerUrl().isEmpty()) ? tag.getSpoilerUrl() : HIDDEN_TAG_IMAGE_RESOURCE_URI;
             }
         }
@@ -47,14 +58,58 @@ public class ImageFilterParserObject {
     }
 
     /**
-     * @return an empty string if the image is not hidden; an url to the hidden tag image otherwise.
+     * Returns the URL pointing to the hidden tag's image.
+     *
+     * @return an empty string if the image is not hidden; the URL to the hidden tag image otherwise.
      */
-    public String getImageHiddenUrl(JSONArray hiddenTagIds) throws JSONException, IllegalStateException {
+    public String getHiddenTagImageUrl(JSONArray imageTagIds) throws JSONException, IllegalStateException {
         if (mHiddenTags == null) throw new IllegalStateException("ImageFilterParserObject did not receive a list of hidden tags on initialization. Use the appropriate constructor.");
-        return (Collections.disjoint(intListFromArray(hiddenTagIds), mHiddenTags)) ? "" : HIDDEN_TAG_IMAGE_RESOURCE_URI;
+        List<Integer> tagIds = integerListFromJson(imageTagIds);
+        for (DerpibooruTagDetailed tag : mHiddenTags) {
+            if (tagIds.contains(tag.getId())) {
+                return HIDDEN_TAG_IMAGE_RESOURCE_URI;
+            }
+        }
+        return "";
     }
 
-    private List<Integer> intListFromArray(JSONArray array) throws JSONException {
+    /**
+     * Returns the name of the spoilered tag.
+     * <p>
+     * <strong>Note:</strong> if the image has multiple tags spoilered, the method picks the one corresponding
+     * to {@link derpibooru.derpy.data.server.DerpibooruTag.TagType#ContentSafety}.
+     *
+     * @return an empty string if the image is not spoilered; the name of the spoilered tag otherwise.
+     */
+    public String getSpoileredTagName(JSONArray imageTagIds) throws JSONException {
+        List<Integer> tagIds = integerListFromJson(imageTagIds);
+        for (DerpibooruTagDetailed tag : mSpoileredTags) {
+            if (tagIds.contains(tag.getId())) {
+                return tag.getName();
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Returns the name of the hidden tag.
+     * <p>
+     * <strong>Note:</strong> if the image has multiple tags hidden, the method picks the one corresponding
+     * to {@link derpibooru.derpy.data.server.DerpibooruTag.TagType#ContentSafety}.
+     *
+     * @return an empty string if the image is not hidden; the name of the hidden tag otherwise.
+     */
+    public String getHiddenTagName(JSONArray imageTagIds) throws JSONException {
+        List<Integer> tagIds = integerListFromJson(imageTagIds);
+        for (DerpibooruTagDetailed tag : mHiddenTags) {
+            if (tagIds.contains(tag.getId())) {
+                return tag.getName();
+            }
+        }
+        return "";
+    }
+
+    private List<Integer> integerListFromJson(JSONArray array) throws JSONException {
         List<Integer> out = new ArrayList<>();
         for (int x = 0; x < array.length(); x++) {
             out.add(array.getInt(x));

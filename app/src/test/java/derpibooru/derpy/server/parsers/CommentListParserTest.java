@@ -27,7 +27,7 @@ public class CommentListParserTest {
     public void setUp() throws Exception {
         TestResourceLoader loader = new TestResourceLoader();
         String comments = loader.readTestResourceFile("SampleImageCommentsResponse.html");
-        CommentListParser parser = new CommentListParser(Collections.<DerpibooruTagDetailed>emptyList(), Collections.<Integer>emptyList());
+        CommentListParser parser = new CommentListParser(Collections.<DerpibooruTagDetailed>emptyList(), Collections.<DerpibooruTagDetailed>emptyList());
         parsed[0] = parser.parseResponse(comments).get(0);
         parsed[1] = parser.parseResponse(comments).get(1);
     }

@@ -56,10 +56,22 @@ public class CommentProvider extends Provider<DerpibooruComment> {
 
     @Override
     public void fetch() {
+        /* TODO: shorten & clean this up */
+        /* FIXME: code dupe see CommentListProvider */
         new TagProvider(mContext, new QueryHandler<List<DerpibooruTagDetailed>>() {
             @Override
-            public void onQueryExecuted(List<DerpibooruTagDetailed> spoileredTags) {
-                fetchComment(spoileredTags);
+            public void onQueryExecuted(final List<DerpibooruTagDetailed> spoileredTags) {
+                new TagProvider(mContext, new QueryHandler<List<DerpibooruTagDetailed>>() {
+                    @Override
+                    public void onQueryExecuted(List<DerpibooruTagDetailed> hiddenTags) {
+                        fetchWithTags(spoileredTags, hiddenTags);
+                    }
+
+                    @Override
+                    public void onQueryFailed() {
+                        mHandler.onQueryFailed();
+                    }
+                }).tags(mFilter.getHiddenTags()).fetch();
             }
 
             @Override
@@ -69,8 +81,8 @@ public class CommentProvider extends Provider<DerpibooruComment> {
         }).tags(mFilter.getSpoileredTags()).fetch();
     }
 
-    private void fetchComment(List<DerpibooruTagDetailed> spoileredTags) {
-        super.executeQuery(new CommentParser(spoileredTags, mFilter.getHiddenTags()));
+    private void fetchWithTags(List<DerpibooruTagDetailed> spoileredTags, List<DerpibooruTagDetailed> hiddenTags) {
+        super.executeQuery(new CommentParser(spoileredTags, hiddenTags));
     }
 }
 

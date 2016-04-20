@@ -27,7 +27,7 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
 
     private final ImageFilterParserObject mFilter;
 
-    public CommentParser(List<DerpibooruTagDetailed> spoileredTags, List<Integer> hiddenTagIds) {
+    public CommentParser(List<DerpibooruTagDetailed> spoileredTags, List<DerpibooruTagDetailed> hiddenTagIds) {
         mFilter = new ImageFilterParserObject(spoileredTags, hiddenTagIds);
     }
 
@@ -86,16 +86,21 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
             int imageId = Integer.parseInt(
                     imageShow.select("a").first().attr("href").substring(1));
             String mainImage = "https:" + imageShow.select("img").attr("src");
-            String filterImage = mFilter.getImageHiddenUrl(imageTags);
+            String filterImage = mFilter.getHiddenTagImageUrl(imageTags);
+            String filteredTagName = null;
             if (filterImage.isEmpty()) {
-                filterImage = mFilter.getImageSpoilerUrl(imageTags);
+                filterImage = mFilter.getSpoileredTagImageUrl(imageTags);
                 if (filterImage.isEmpty()) {
                     filterImage = null;
+                } else {
+                    filteredTagName = mFilter.getSpoileredTagName(imageTags);
                 }
+            } else {
+                filteredTagName = mFilter.getHiddenTagName(imageTags);
             }
 
             postBody.select(IMAGE_CONTAINER_SELECTOR).get(0).replaceWith(
-                    getEmbeddedImageElement(imageId, mainImage, filterImage));
+                    getEmbeddedImageElement(imageId, mainImage, filterImage, filteredTagName));
         }
     }
 
@@ -107,10 +112,11 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
         }
     }
 
-    private Element getEmbeddedImageElement(int imageId, @NonNull String mainImage, @Nullable String filterImage) {
+    private Element getEmbeddedImageElement(int imageId, @NonNull String mainImage,
+                                            @Nullable String filterImage, @Nullable String filteredTagName) {
         String imageLink;
         if (filterImage != null) {
-            imageLink = new EmbeddedFilteredImageAction(imageId, mainImage, filterImage).toStringRepresentation();
+            imageLink = new EmbeddedFilteredImageAction(imageId, mainImage, filterImage, filteredTagName).toStringRepresentation();
         } else {
             imageLink = new EmbeddedImageAction(imageId, mainImage).toStringRepresentation();
         }

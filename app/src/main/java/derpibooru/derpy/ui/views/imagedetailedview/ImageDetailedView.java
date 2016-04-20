@@ -27,6 +27,8 @@ import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.ui.animators.ImageDetailedViewAnimator;
 import derpibooru.derpy.ui.presenters.ImageInteractionPresenter;
 
+import static derpibooru.derpy.ui.animators.ImageDetailedViewAnimator.BottomBarExtensionState;
+
 public class ImageDetailedView extends LinearLayout {
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.topBar) ImageTopBarView topBar;
@@ -83,6 +85,10 @@ public class ImageDetailedView extends LinearLayout {
 
     public void onImageDownloadPermissionsGranted() {
         mImageDownload.start();
+    }
+
+    public BottomBarExtensionState getBottomBarExtensionState() {
+        return (mAnimator != null) ? mAnimator.getBottomBarExtensionState() : BottomBarExtensionState.None;
     }
 
     private void initializeAnimator(@Nullable Bundle savedInstanceState) {
@@ -189,12 +195,13 @@ public class ImageDetailedView extends LinearLayout {
         }
 
         @Override
-        public ImageDetailedViewAnimator.BottomBarExtensionState getExtensionState() {
-            return mAnimator.getBottomBarExtensionState();
+        public BottomBarExtensionState getExtensionState() {
+            return getBottomBarExtensionState();
         }
 
         @Override
-        public void changeExtensionState(ImageDetailedViewAnimator.BottomBarExtensionState newState) {
+        public void changeExtensionState(BottomBarExtensionState newState) {
+            mCallbackHandler.onBottomBarExtensionStateChanged(newState);
             mAnimator.animate(mAnimator.new BottomBarExtensionStateAnimation(newState));
         }
     }
@@ -203,5 +210,6 @@ public class ImageDetailedView extends LinearLayout {
         DerpibooruFilter getUserFilter();
         DerpibooruImageDetailed getImage();
         void requestImageDownloadPermissions();
+        void onBottomBarExtensionStateChanged(BottomBarExtensionState newState);
     }
 }

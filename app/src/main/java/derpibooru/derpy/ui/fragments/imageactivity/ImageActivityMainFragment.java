@@ -2,6 +2,7 @@ package derpibooru.derpy.ui.fragments.imageactivity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import butterknife.ButterKnife;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
+import derpibooru.derpy.ui.animators.ImageDetailedViewAnimator;
 import derpibooru.derpy.ui.views.imagedetailedview.ImageTagView;
 import derpibooru.derpy.ui.views.imagedetailedview.ImageDetailedView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -115,6 +117,18 @@ public class ImageActivityMainFragment extends Fragment {
                     public void requestImageDownloadPermissions() {
                         requestPermissions(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, REQUEST_WRITE_STORAGE);
                     }
+
+                    @Override
+                    public void onBottomBarExtensionStateChanged(ImageDetailedViewAnimator.BottomBarExtensionState newState) {
+                        if (imageView.getDrawable() != null) {
+                            GlideDrawable glideWrapper = (GlideDrawable) imageView.getDrawable();
+                            if (newState != ImageDetailedViewAnimator.BottomBarExtensionState.None) {
+                                glideWrapper.stop();
+                            } else {
+                                glideWrapper.start();
+                            }
+                        }
+                    }
                 },
                 savedInstanceState);
     }
@@ -162,6 +176,15 @@ public class ImageActivityMainFragment extends Fragment {
                                        boolean isFromMemoryCache, boolean isFirstResource) {
             if (getView() != null) getView().findViewById(R.id.progressImage).setVisibility(View.GONE);
             attachPhotoView(mImageView);
+            if ((imageDetailedView != null)
+                    && (imageDetailedView.getBottomBarExtensionState() != ImageDetailedViewAnimator.BottomBarExtensionState.None)) {
+                mImageView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((GlideDrawable) imageView.getDrawable()).stop();
+                    }
+                });
+            }
             return false;
         }
 

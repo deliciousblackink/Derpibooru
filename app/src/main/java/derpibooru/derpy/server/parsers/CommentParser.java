@@ -102,7 +102,7 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     private void processExternalImages(Element postBody) {
         /* select all GIF images that are not embedded (do not have "data-image-id" attribute) */
         for (Element image : postBody.select("img:not([data-image-id])[src~=([^/]*(gif.*))$]")) {
-            String actionLink = new ExternalGifImageAction(image.attr("src"), "").toStringRepresentation();
+            String actionLink = new ExternalGifImageAction(image.attr("src")).toStringRepresentation();
             image.replaceWith(HtmlImageActionCreator.getImageActionElement(actionLink));
         }
     }

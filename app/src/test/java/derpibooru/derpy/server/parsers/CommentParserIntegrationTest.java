@@ -79,7 +79,7 @@ public class CommentParserIntegrationTest {
     public void testExternalGif() throws Exception {
         String resource = getResourceWithExternalGif();
         String gifSource = Jsoup.parse(resource).select("div.post-text").first().select("img").last().attr("src");
-        testLinkWithoutFilter(new ExternalGifImageAction(gifSource, ""), resource);
+        testLinkWithoutFilter(new ExternalGifImageAction(gifSource), resource);
     }
 
     @Test

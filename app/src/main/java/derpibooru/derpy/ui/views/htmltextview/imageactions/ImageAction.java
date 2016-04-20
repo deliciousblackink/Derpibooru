@@ -58,12 +58,20 @@ public abstract class ImageAction {
      * @param representation a string representation of an object
      * @throws IllegalArgumentException the string is not a valid representation of an object
      */
-    protected static ImageAction fromStringRepresentation(String representation) throws IllegalArgumentException {
+    public static ImageAction fromStringRepresentation(String representation) throws IllegalArgumentException {
         try {
             return getGsonInstance().fromJson(representation, ImageAction.class);
         } catch (JsonSyntaxException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ImageAction) {
+            return ((ImageAction) o).getImageSource().equals(this.getImageSource());
+        }
+        return super.equals(o);
     }
 
     private static Gson getGsonInstance() {

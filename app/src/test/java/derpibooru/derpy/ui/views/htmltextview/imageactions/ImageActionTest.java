@@ -9,13 +9,11 @@ public class ImageActionTest {
     @Test
     public void testExternalGifImageAction() {
         String gifSource = "https://sometotallyunknowndomain.org/hey.gif";
-        String title = "";
 
         ExternalGifImageAction action = (ExternalGifImageAction)
-                getSerializedDeserialized(new ExternalGifImageAction(gifSource, title));
+                getSerializedDeserialized(new ExternalGifImageAction(gifSource));
 
         assertThat(action.getImageSource(), is(gifSource));
-        assertThat(action.getTitle(), is(title));
     }
 
     private ImageAction getSerializedDeserialized(ImageAction sourceObject) {

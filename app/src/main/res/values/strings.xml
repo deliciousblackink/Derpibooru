@@ -21,8 +21,8 @@
     <string name="image_info_uploaded">Uploaded by %1$s\non %2$s</string>
     <string name="embedded_image_view_image">View #%1$d</string>
     <!-- downloadmanager -->
-    <string name="download_image_notification_title">#%1$d —%2$s</string>
-    <string name="download_image_notification_description">Downloading an image from Derpibooru…</string>
+    <string name="download_image_notification_title">#%1$d — %2$s</string>
+    <string name="download_image_notification_description">Downloading image from Derpibooru…</string>
     <!-- errors -->
-    <string name="activity_splash_user_loader_request_failed">Couldn’t reach the server. Check your Internet connection and try again</string>
+    <string name="activity_splash_user_loader_request_failed">Yikes! Couldn’t reach the server. Is your Internet connection all right?</string>
 </resources>

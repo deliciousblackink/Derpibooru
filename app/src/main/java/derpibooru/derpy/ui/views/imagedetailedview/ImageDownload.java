@@ -1,4 +1,4 @@
-package derpibooru.derpy;
+package derpibooru.derpy.ui.views.imagedetailedview;
 
 import android.app.DownloadManager;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.os.Environment;
 import java.io.File;
 import java.util.List;
 
+import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruTag;
 
 public class ImageDownload {
@@ -17,10 +18,10 @@ public class ImageDownload {
     private String mDownloadFileParth;
     private Uri mUri;
 
-    public ImageDownload(Context context, int imageId, List<DerpibooruTag> imageTags, String imageUrl) {
+    public ImageDownload(Context context, int imageId, String imageTagNames, String imageUrl) {
         mContext = context;
         mUri = Uri.parse(imageUrl);
-        mDownloadTitle = getDownloadTitle(imageId, imageTags);
+        mDownloadTitle = getDownloadTitle(imageId, imageTagNames);
         mDownloadDescription = getDownloadDescription();
         mDownloadFileParth = getPathToFile(mUri);
     }
@@ -36,15 +37,8 @@ public class ImageDownload {
         return new File(path).exists();
     }
 
-    private String getDownloadTitle(int imageId, List<DerpibooruTag> imageTags) {
-        StringBuilder tagListBuilder = new StringBuilder();
-        for (DerpibooruTag tag : imageTags) {
-            tagListBuilder.append(' ');
-            tagListBuilder.append(tag.getName());
-            tagListBuilder.append(',');
-        }
-        tagListBuilder.deleteCharAt(tagListBuilder.length() - 1); /* remove the ',' */
-        return String.format(mContext.getString(R.string.download_image_notification_title), imageId, tagListBuilder.toString());
+    private String getDownloadTitle(int imageId, String imageTagNames) {
+        return String.format(mContext.getString(R.string.download_image_notification_title), imageId, imageTagNames);
     }
 
     private String getDownloadDescription() {

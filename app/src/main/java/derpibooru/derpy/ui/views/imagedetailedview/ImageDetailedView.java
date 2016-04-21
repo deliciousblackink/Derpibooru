@@ -19,7 +19,7 @@ import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import derpibooru.derpy.ImageDownload;
+import derpibooru.derpy.data.server.DerpibooruTag;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
@@ -101,8 +101,7 @@ public class ImageDetailedView extends LinearLayout {
 
     private void initializeImageDownload() {
         mImageDownload = new ImageDownload(getContext(),
-                                           mCallbackHandler.getImage().getThumb().getId(),
-                                           mCallbackHandler.getImage().getTags(),
+                                           mCallbackHandler.getImage().getThumb().getId(), getImageTagNames(),
                                            mCallbackHandler.getImage().getDownloadUrl());
         if (!(hasStoragePermissions() && mImageDownload.isDownloaded())) {
             inflateToolbarMenu();
@@ -131,6 +130,14 @@ public class ImageDetailedView extends LinearLayout {
                         return true;
                     }
                 });
+    private String getImageTagNames() {
+        StringBuilder tagListBuilder = new StringBuilder();
+        for (DerpibooruTag tag : mCallbackHandler.getImage().getTags()) {
+            tagListBuilder.append(tag.getName());
+            tagListBuilder.append(", ");
+        }
+        tagListBuilder.delete(tagListBuilder.length() - 3, tagListBuilder.length() - 1); /* remove ', ' */
+        return tagListBuilder.toString();
     }
 
     private boolean hasStoragePermissions() {

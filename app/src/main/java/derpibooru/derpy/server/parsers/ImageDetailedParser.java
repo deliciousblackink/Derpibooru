@@ -1,6 +1,5 @@
 package derpibooru.derpy.server.parsers;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -11,7 +10,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,19 +18,16 @@ import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTag;
-import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.parsers.objects.ImageInteractionsParserObject;
-import derpibooru.derpy.server.parsers.objects.ImageSpoilerParserObject;
 import derpibooru.derpy.server.parsers.objects.UserScriptParserObject;
 import derpibooru.derpy.server.parsers.objects.UserboxParserObject;
 
 public class ImageDetailedParser implements ServerResponseParser<DerpibooruImageDetailed> {
-    private ImageSpoilerParserObject mSpoilers;
-    private ImageInteractionsParserObject mInteractions;
+    private static final Pattern PATTERN_IMAGE_ID = Pattern.compile("^(?:#)([\\d]*)");
+    private static final Pattern PATTERN_WHITESPACE = Pattern.compile("\\s");
+    private static final Pattern PATTERN_TAG_NUMBER_OF_IMAGES = Pattern.compile("(?!\\()([\\d*\\.]+)(?=\\))");
 
-    public ImageDetailedParser(List<DerpibooruTagDetailed> spoileredTags) {
-        mSpoilers = new ImageSpoilerParserObject(spoileredTags);
-    }
+    private ImageInteractionsParserObject mInteractions;
 
     @Override
     public DerpibooruImageDetailed parseResponse(String rawResponse) throws Exception {
@@ -122,11 +117,11 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
         /* alternate hairstyle (7280) +SH
          * ->
          * alternatehairstyle(7280)+SH */
-        String s = renderedTagText.replaceAll("\\s", "");
+        String s = PATTERN_WHITESPACE.matcher(renderedTagText).replaceAll("");
         /* alternatehairstyle(7280)+SH
          * ->
          * 7280 */
-        Matcher m = Pattern.compile("(?!\\()([\\d*\\.]+)(?=\\))").matcher(s);
+        Matcher m = PATTERN_TAG_NUMBER_OF_IMAGES.matcher(s);
         int numberOfImages = 0;
         while (m.find()) {
              /* handle cases like
@@ -156,8 +151,7 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
                 Integer.parseInt(imageContainer.attr("data-comment-count")),
                 "https:" + new JSONObject(imageContainer.attr("data-uris")).getString("thumb"),
                 "https:" + new JSONObject(imageContainer.attr("data-uris")).getString("large"),
-                mSpoilers.getSpoilerUrl(new JSONArray(imageContainer.attr("data-image-tags"))),
-                interactions
+                "", interactions
         );
         return thumb;
     }
@@ -168,7 +162,7 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
 
     private int parseImageId(Document doc) {
         String title = doc.select("title").first().text();
-        Matcher m = Pattern.compile("^(?:#)([\\d]*)").matcher(title);
+        Matcher m = PATTERN_IMAGE_ID.matcher(title);
         /* m.group(0) is '#000000', m.group(1) is '000000' */
         return m.find() ? Integer.parseInt(m.group(1)) : 0;
     }

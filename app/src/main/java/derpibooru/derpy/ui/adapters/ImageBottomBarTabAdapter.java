@@ -5,29 +5,42 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.ui.ImageActivity;
-import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarCommentListTabFragment;
-import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarFavoritesTabFragment;
-import derpibooru.derpy.ui.fragments.tabs.ImageBottomBarInfoTabFragment;
-import derpibooru.derpy.ui.views.ImageTagView;
+import derpibooru.derpy.ui.fragments.imageactivity.ImageActivityMainFragment;
+import derpibooru.derpy.ui.fragments.imageactivity.tabs.ImageBottomBarCommentListTabFragment;
+import derpibooru.derpy.ui.fragments.imageactivity.tabs.ImageBottomBarFavoritesTabFragment;
+import derpibooru.derpy.ui.fragments.imageactivity.tabs.ImageBottomBarInfoTabFragment;
+import derpibooru.derpy.ui.views.imagedetailedview.ImageTagView;
 
-public abstract class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter {
+public class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter {
     private static final int TAB_INFO_POSITION = 0;
     private static final int TAB_FAVES_POSITION = 1;
     private static final int TAB_COMMENTS_POSITION = 2;
 
+    private DerpibooruFilter mUserFilter;
     private DerpibooruImageDetailed mImage;
 
-    public ImageBottomBarTabAdapter(FragmentManager fm, DerpibooruImageDetailed imageDetailed) {
-        super(fm);
-        for (Fragment fragment : fm.getFragments()) {
-            setFragmentCallbackHandler(fragment);
-        }
-        mImage = imageDetailed;
-    }
+    private ImageTagView.OnTagClickListener mTagClickListener;
+    private CommentListAdapter.OnCommentCountChangeListener mCommentCountChangeListener;
 
-    public abstract void onTagClicked(int tagId);
+    public ImageBottomBarTabAdapter(FragmentManager fm,
+                                    DerpibooruFilter userFilter,
+                                    DerpibooruImageDetailed imageDetailed,
+                                    ImageTagView.OnTagClickListener tagClickListener,
+                                    CommentListAdapter.OnCommentCountChangeListener commentCountChangeListener) {
+        super(fm);
+        mUserFilter = userFilter;
+        mImage = imageDetailed;
+        mTagClickListener = tagClickListener;
+        mCommentCountChangeListener = commentCountChangeListener;
+        if (fm.getFragments() != null) {
+            for (Fragment fragment : fm.getFragments()) {
+                setFragmentCallbackHandler(fragment);
+            }
+        }
+    }
 
     @Override
     public int getCount() {
@@ -48,7 +61,7 @@ public abstract class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter
                 break;
             case TAB_COMMENTS_POSITION:
                 fragment = new ImageBottomBarCommentListTabFragment();
-                fragment.setArguments(getImageIdBundle());
+                fragment.setArguments(getCommentsTabBundle());
                 break;
             default:
                 throw new IndexOutOfBoundsException("ImageBottomBarTabAdapter getItem(int): position is out of bounds");
@@ -63,20 +76,20 @@ public abstract class ImageBottomBarTabAdapter extends FragmentStatePagerAdapter
         return bundle;
     }
 
-    private Bundle getImageIdBundle() {
+    private Bundle getCommentsTabBundle() {
         Bundle bundle = new Bundle();
         bundle.putInt(ImageActivity.EXTRAS_IMAGE_ID, mImage.getThumb().getId());
+        bundle.putParcelable(ImageActivityMainFragment.EXTRAS_USER_FILTER, mUserFilter);
         return bundle;
     }
 
     private void setFragmentCallbackHandler(Fragment fragment) {
         if (fragment instanceof ImageBottomBarInfoTabFragment) {
-            ((ImageBottomBarInfoTabFragment) fragment).setOnTagClickListener(new ImageTagView.OnTagClickListener() {
-                @Override
-                public void onTagClicked(int tagId) {
-                    ImageBottomBarTabAdapter.this.onTagClicked(tagId);
-                }
-            });
+            ((ImageBottomBarInfoTabFragment) fragment)
+                    .setOnTagClickListener(mTagClickListener);
+        } else if (fragment instanceof ImageBottomBarCommentListTabFragment) {
+            ((ImageBottomBarCommentListTabFragment) fragment)
+                    .setCommentCountChangeListener(mCommentCountChangeListener);
         }
     }
 

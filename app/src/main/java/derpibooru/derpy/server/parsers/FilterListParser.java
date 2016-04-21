@@ -36,6 +36,7 @@ public class FilterListParser implements ServerResponseParser<List<DerpibooruFil
             JSONObject f = array.getJSONObject(x);
 
             /* TODO: clean-up */
+            List<Integer> hiddenIds = intListFromArray(f.getJSONArray("hidden_tag_ids"));
             List<Integer> spoileredIds = intListFromArray(f.getJSONArray("spoilered_tag_ids"));
             List<String> hidden = Arrays.asList(f.getString("hidden_tags").split(", "));
             if (hidden.get(0).equals("")) {
@@ -50,14 +51,9 @@ public class FilterListParser implements ServerResponseParser<List<DerpibooruFil
              * filters, so getBoolean() does not work */
             boolean system = !f.isNull("system");
 
-            DerpibooruFilter filter = new DerpibooruFilter(f.getInt("id"),
-                                                           f.getString("name"),
-                                                           spoileredIds);
-            filter.setAdditionalInfo(f.getString("description"),
-                                     hidden, spoilered,
-                                     system, f.getInt("user_count"));
-
-            output.add(filter);
+            output.add(new DerpibooruFilter(
+                    f.getInt("id"), f.getString("name"), hiddenIds, spoileredIds,
+                    f.getString("description"), hidden, spoilered, system, f.getInt("user_count")));
         }
         return output;
     }

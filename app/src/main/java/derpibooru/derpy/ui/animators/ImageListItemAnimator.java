@@ -4,7 +4,7 @@ import android.animation.ValueAnimator;
 import android.view.View;
 
 public class ImageListItemAnimator {
-    private static final long ANIMATION_DURATION = 250L;
+    private static final long ANIMATION_DURATION = 180L;
 
     public void clearView(View v) {
         animateViewHeight(v, 0, 0);

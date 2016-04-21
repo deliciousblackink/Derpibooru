@@ -2,7 +2,6 @@ package derpibooru.derpy.ui.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +36,7 @@ public abstract class ImageListAdapter extends RecyclerViewPaginationAdapter<Der
         mUserLoggedIn = isUserLoggedIn;
     }
 
-    public abstract void startImageActivity(DerpibooruImageThumb image);
+    public abstract void startImageActivity(int imageId);
 
     @Override
     public ImageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -53,16 +52,6 @@ public abstract class ImageListAdapter extends RecyclerViewPaginationAdapter<Der
         setInteractionListeners(holder, position);
         holder.buttonComments.setText(String.format("%d", getItems().get(position).getCommentCount()));
         holder.buttonComments.setEnabled(false);
-    }
-
-    /**
-     * Resets items and configures image interactions according to the user authentication state.
-     * @param newItems new items
-     * @param isUserLoggedIn new user interaction state
-     */
-    public void resetItems(List<DerpibooruImageThumb> newItems, boolean isUserLoggedIn) {
-        mUserLoggedIn = isUserLoggedIn;
-        super.resetItems(newItems);
     }
 
     public void replaceItem(final DerpibooruImageThumb target) {
@@ -86,7 +75,7 @@ public abstract class ImageListAdapter extends RecyclerViewPaginationAdapter<Der
             @Override
             public void onClick(View v) {
                 Glide.get(getContext()).clearMemory();
-                startImageActivity(getItems().get(position));
+                startImageActivity(getItems().get(position).getId());
             }
         });
     }

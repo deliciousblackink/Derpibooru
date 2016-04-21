@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.util.Collections;
+import java.util.Map;
+
 import derpibooru.derpy.server.AsynchronousRequest;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.ServerResponseParser;
@@ -27,11 +30,15 @@ public abstract class Provider<T> {
 
     protected abstract String generateUrl();
 
+    protected Map<String, String> getHeaders() {
+        return Collections.emptyMap();
+    }
+
     protected void cacheResponse(T parsedResponse) { }
 
     protected void executeQuery(ServerResponseParser<T> parser) {
         Handler thread = new Handler();
-        thread.post(new AsynchronousRequest<T>(mContext, parser, generateUrl()) {
+        thread.post(new AsynchronousRequest<T>(mContext, parser, generateUrl(), getHeaders()) {
             Handler uiThread = new Handler(Looper.getMainLooper());
 
             @Override

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.List;
 
+import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.server.QueryHandler;
 
@@ -14,8 +15,9 @@ public class RankingImageListProvider extends ImageListProvider {
     private RankingsType mListType;
     private String mTime = ALL_TIME;
 
-    public RankingImageListProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler) {
-        super(context, handler);
+    public RankingImageListProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler,
+                                    DerpibooruFilter imageListFilter) {
+        super(context, handler, imageListFilter);
     }
 
     /**

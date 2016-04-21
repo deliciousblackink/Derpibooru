@@ -43,9 +43,9 @@ public class DerpibooruTagTypeComparator implements Comparator<DerpibooruTag> {
 
     private int compare(DerpibooruTag.TagType a, DerpibooruTag.TagType b) {
         if (mValueSpoilerWarning) {
-               return (a == DerpibooruTag.TagType.ContentSafety) ? GREATER_THAN :
-               ((b == DerpibooruTag.TagType.ContentSafety) ? LESS_THAN
-                                                           : EQUAL);
+            return (a == DerpibooruTag.TagType.ContentSafety) ? GREATER_THAN :
+                   ((b == DerpibooruTag.TagType.ContentSafety) ? LESS_THAN
+                                                               : EQUAL);
         } else {
             return Ints.compare(a.toValue(), b.toValue());
         }

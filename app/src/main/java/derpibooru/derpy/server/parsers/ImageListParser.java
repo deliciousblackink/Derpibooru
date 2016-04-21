@@ -9,15 +9,15 @@ import java.util.List;
 
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
+import derpibooru.derpy.server.parsers.objects.ImageFilterParserObject;
 import derpibooru.derpy.server.parsers.objects.ImageInteractionsParserObject;
-import derpibooru.derpy.server.parsers.objects.ImageSpoilerParserObject;
 
 public class ImageListParser implements ServerResponseParser<List<DerpibooruImageThumb>> {
-    private ImageSpoilerParserObject mSpoilers;
+    private ImageFilterParserObject mSpoilers;
     private ImageInteractionsParserObject mInteractions;
 
     public ImageListParser(List<DerpibooruTagDetailed> spoileredTags) {
-        mSpoilers = new ImageSpoilerParserObject(spoileredTags);
+        mSpoilers = new ImageFilterParserObject(spoileredTags);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
                     img.getInt("faves"), img.getInt("comment_count"),
                     getAbsoluteUrl(img.getJSONObject("representations").getString("thumb")),
                     getAbsoluteUrl(img.getJSONObject("representations").getString("large")),
-                    mSpoilers.getSpoilerUrl(img.getJSONArray("tag_ids")),
+                    mSpoilers.getSpoileredTagImageUrl(img.getJSONArray("tag_ids")),
                     mInteractions.getImageInteractionsForImage(img.getInt("id")));
             out.add(it);
         }

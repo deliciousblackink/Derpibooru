@@ -15,13 +15,15 @@ public class Derpibooru extends Application {
      * An application-wide OkHttpClient that provides connection re-use, a shared response
      * cache, etc.
      *
-     * @see <a href="https://plus.google.com/118239425803358296962/posts/5nzAvPaitHu">OkHttpClient is designed to be treated as a singleton</a> */
+     * @see <a href="https://plus.google.com/118239425803358296962/posts/5nzAvPaitHu">OkHttpClient is designed to be treated as a singleton</a>
+     */
     private OkHttpClient mHttpClient;
     private CookieStorage mCookieStorage;
 
     /**
      * Contains the API key for data manipulation requests. It is retrieved on the
-     * application start and is <b>never</b> kept in the device's persistent storage. */
+     * application start and is <b>never</b> kept in the device's persistent storage.
+     */
     private String mApiKey;
 
     @Override
@@ -48,7 +50,21 @@ public class Derpibooru extends Application {
                     public List<Cookie> loadForRequest(HttpUrl url) {
                         return mCookieStorage.getCookies(url.host());
                     }
-                }).build();
+                })
+                /* OkHttp Request Logging (Debug)
+                 *
+                 * note: the code, if left uncommented, will break release build (HttpLoggingInterceptor is debugCompile in Gradle script)
+                 *       using comments because BuildConfig.DEBUG always returns false (I use AS2.0) and other build type checks are too hacky to go into production */
+                /*
+                .addInterceptor(new okhttp3.logging.HttpLoggingInterceptor(
+                        new okhttp3.logging.HttpLoggingInterceptor.Logger() {
+                    @Override
+                    public void log(String s) {
+                        android.util.Log.e("okhttp request", s);
+                    }
+                }).setLevel(okhttp3.logging.HttpLoggingInterceptor.Level.BASIC))
+                */
+                .build();
     }
 
     /**

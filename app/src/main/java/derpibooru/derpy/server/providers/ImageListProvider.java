@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.List;
 
+import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.QueryHandler;
@@ -12,8 +13,12 @@ import derpibooru.derpy.server.parsers.ImageListParser;
 public class ImageListProvider extends PaginatedListProvider<DerpibooruImageThumb> {
     protected static final int IMAGES_PER_PAGE = 16;
 
-    public ImageListProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler) {
+    private final DerpibooruFilter mFilter;
+
+    public ImageListProvider(Context context, QueryHandler<List<DerpibooruImageThumb>> handler,
+                             DerpibooruFilter imageListFilter) {
         super(context, handler);
+        mFilter = imageListFilter;
     }
 
     @Override
@@ -30,7 +35,7 @@ public class ImageListProvider extends PaginatedListProvider<DerpibooruImageThum
 
     @Override
     public void fetch() {
-        new SpoileredTagsProvider(mContext, new QueryHandler<List<DerpibooruTagDetailed>>() {
+        new TagProvider(mContext, new QueryHandler<List<DerpibooruTagDetailed>>() {
             @Override
             public void onQueryExecuted(List<DerpibooruTagDetailed> spoileredTags) {
                 fetchImages(spoileredTags);
@@ -40,7 +45,7 @@ public class ImageListProvider extends PaginatedListProvider<DerpibooruImageThum
             public void onQueryFailed() {
                 mHandler.onQueryFailed();
             }
-        }).fetch();
+        }).tags(mFilter.getSpoileredTags()).fetch();
     }
 
     private void fetchImages(List<DerpibooruTagDetailed> spoileredTags) {

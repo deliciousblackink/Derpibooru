@@ -16,10 +16,14 @@ import static org.junit.Assert.assertThat;
 public class UserDataParserTest {
     private DerpibooruUser expectedLoggedIn =
             new DerpibooruUser("CurrentUser", "https://derpicdn.net/avatars/currentUserAvatar.png")
-                    .setCurrentFilter(new DerpibooruFilter(100000, "Selected Filter", Arrays.asList(54235, 41161, 42773, 43502, 46981)));
+                    .setCurrentFilter(new DerpibooruFilter(100000, "Selected Filter",
+                                                           Arrays.asList(61060, 89379, 20417, 86723, 94478, 25605, 25724),
+                                                           Arrays.asList(54235, 41161, 42773, 43502, 46981)));
     private DerpibooruUser expectedLoggedOut =
             new DerpibooruUser("", "https://derpicdn.net/assets/no_avatar.svg")
-                    .setCurrentFilter(new DerpibooruFilter(100073, "Some Long Filter Name", Collections.singletonList(61060)));
+                    .setCurrentFilter(new DerpibooruFilter(100073, "Some Long Filter Name",
+                                                           Collections.<Integer>emptyList(),
+                                                           Collections.singletonList(61060)));
 
     private DerpibooruUser parsedLoggedIn;
     private DerpibooruUser parsedLoggedOut;

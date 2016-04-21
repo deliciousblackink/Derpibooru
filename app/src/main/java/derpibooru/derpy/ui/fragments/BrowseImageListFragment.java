@@ -14,7 +14,7 @@ public class BrowseImageListFragment extends ImageListFragment {
                              Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
         super.initializeList(
-                new SearchProvider(getActivity(), super.getNewInstanceOfProviderQueryHandler())
+                new SearchProvider(getActivity(), super.getNewInstanceOfProviderQueryHandler(), getUser().getCurrentFilter())
                         .searching((DerpibooruSearchOptions)
                                            getArguments().getParcelable(BrowseFragment.EXTRAS_SEARCH_OPTIONS)));
         return v;

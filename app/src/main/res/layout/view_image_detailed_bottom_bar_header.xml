@@ -1,0 +1,46 @@
+<merge>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/bottomBarHeaderLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:weightSum="3"
+        android:background="@color/colorPrimary">
+        <!-- info -->
+        <derpibooru.derpy.ui.views.AccentColorIconButton
+            android:id="@+id/buttonInfo"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_toolbar_button"
+            android:textColor="@color/colorTextLight"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:buttonText=""
+            app:buttonIcon="@drawable/ic_info_white_24dp"/>
+        <!-- faves -->
+        <derpibooru.derpy.ui.views.AccentColorIconButton
+            android:id="@+id/buttonFave"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_toolbar_button"
+            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+            android:textColor="@color/colorTextLight"
+            app:buttonText="1400"
+            app:buttonIcon="@drawable/ic_star_white_24dp"/>
+        <!-- comments -->
+        <derpibooru.derpy.ui.views.AccentColorIconButton
+            android:id="@+id/buttonComments"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_toolbar_button"
+            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+            android:textColor="@color/colorTextLight"
+            app:buttonText="1400"
+            app:buttonIcon="@drawable/ic_comment_white_24dp"/>
+    </LinearLayout>
+</merge>

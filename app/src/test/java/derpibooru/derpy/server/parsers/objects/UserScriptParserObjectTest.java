@@ -48,6 +48,13 @@ public class UserScriptParserObjectTest {
     }
 
     @Test
+    public void testHiddenTagIds() throws JSONException {
+        assertThat(loggedInScript.getHiddenTagIds(), is(Arrays.asList(
+                61060, 89379, 20417, 86723, 94478)));
+        assertThat(loggedOutScript.getHiddenTagIds(), is(Collections.<Integer>emptyList()));
+    }
+
+    @Test
     public void testSpoileredTagIds() throws JSONException {
         assertThat(loggedInScript.getSpoileredTagIds(), is(Arrays.asList(
                 41133, 41161, 42773, 114937, 173118, 173119, 173120, 173121, 173122, 173123, 173124)));

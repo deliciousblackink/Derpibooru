@@ -29,6 +29,7 @@ public class UserDataParser implements ServerResponseParser<DerpibooruUser> {
     }
 
     private DerpibooruFilter parseCurrentFilter() throws JSONException {
-        return new DerpibooruFilter(mUserScript.getFilterId(), mUserbox.getFilterName(), mUserScript.getSpoileredTagIds());
+        return new DerpibooruFilter(mUserScript.getFilterId(), mUserbox.getFilterName(),
+                                    mUserScript.getHiddenTagIds(), mUserScript.getSpoileredTagIds());
     }
 }

@@ -4,16 +4,22 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class DerpibooruComment implements Parcelable {
+    private final int mId;
     private final String mAuthor;
     private final String mAuthorAvatarUrl;
     private final String mText;
     private final String mPostedAt;
 
-    public DerpibooruComment(String author, String avatarUrl, String text, String postedAt) {
+    public DerpibooruComment(int id, String author, String avatarUrl, String text, String postedAt) {
+        mId = id;
         mAuthor = author;
         mAuthorAvatarUrl = avatarUrl;
         mText = text;
         mPostedAt = postedAt;
+    }
+
+    public int getId() {
+        return mId;
     }
 
     public String getAuthor() {
@@ -33,6 +39,7 @@ public class DerpibooruComment implements Parcelable {
     }
 
     protected DerpibooruComment(Parcel in) {
+        mId = in.readInt();
         mAuthor = in.readString();
         mAuthorAvatarUrl = in.readString();
         mText = in.readString();
@@ -46,6 +53,7 @@ public class DerpibooruComment implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
         dest.writeString(mAuthor);
         dest.writeString(mAuthorAvatarUrl);
         dest.writeString(mText);

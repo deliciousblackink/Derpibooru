@@ -29,20 +29,50 @@
     public static *** wtf(...);
 }
 
-# Support Library
+# Support Design Library
 -dontwarn android.support.design.**
--keep class android.support.design.widget.** { *; }
--keep interface android.support.design.widget.** { *; }
+-keep class android.support.design.** { *; }
+-keep interface android.support.design.** { *; }
+-keep public class android.support.design.R$* { *; }
+
+# Support Library v7
+-keep class android.support.v7.widget.RoundRectDrawable { *; }
+-keep public class android.support.v7.widget.** { *; }
+-keep public class android.support.v7.internal.widget.** { *; }
+-keep public class android.support.v7.internal.view.menu.** { *; }
+-keep public class * extends android.support.v4.view.ActionProvider {
+    public <init>(android.content.Context);
+}
 
 # Google Guava
 -dontwarn sun.misc.Unsafe
 -dontwarn com.google.common.collect.MinMaxPriorityQueue
--keep class com.google.** # TODO: keep shouldn't really be there
+-keep class com.google.** # TODO: this shouldn't really be there
 -dontwarn com.google.**
 
-# OkHttp
--keep class com.squareup.okhttp.internal.huc.** { *; }
+# Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+    **[] $VALUES;
+    public *;
+}
+
+# Gson (https://github.com/google/gson/blob/master/examples/android-proguard-example/proguard.cfg)
+-keepattributes Signature
+-keepattributes *Annotation*
+-keepattributes EnclosingMethod
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.stream.** { *; }
+-keep class com.google.gson.examples.android.model.** { *; }
+
+# OkHttp (https://github.com/square/okhttp/issues/2230)
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
 -dontwarn okio.** # see https://github.com/square/okio/issues/60 and https://github.com/square/okhttp/issues/964
+
+# Jsoup
+-keeppackagenames org.jsoup.nodes
 
 # Butter Knife
 -dontwarn butterknife.internal.**

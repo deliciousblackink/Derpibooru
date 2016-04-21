@@ -10,13 +10,12 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 
 public abstract class AsynchronousFormRequest<T> extends AsynchronousRequest<T> {
-    private Map<String, String> mForm;
-    private String mHttpMethod;
+    private final Map<String, String> mForm;
+    private final String mHttpMethod;
 
-    protected AsynchronousFormRequest(Context context, @Nullable ServerResponseParser<T> parser,
-                                      String url, Map<String, String> form, Map<String, String> headers,
-                                      int successResponseCode, String httpMethod) {
-        super(context, parser, url, headers, successResponseCode);
+    protected AsynchronousFormRequest(Context context, @Nullable ServerResponseParser<T> parser, String url,
+                                      Map<String, String> form, int successResponseCode, String httpMethod) {
+        super(context, parser, url, successResponseCode);
         mForm = form;
         mHttpMethod = httpMethod;
     }

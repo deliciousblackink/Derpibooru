@@ -34,23 +34,11 @@ public class CommentProvider extends Provider<DerpibooruComment> {
     }
 
     @Override
-    protected Map<String, String> getHeaders() {
-        /* ! important: without the header, the server returns 422. could be a security feature or something, hence
-         * TODO: use a public API method instead of this obscure URI */
-        Map<String, String> headers = new HashMap<>(1);
-        headers.put("x-requested-with", "XMLHttpRequest");
-        return headers;
-    }
-
-    @Override
     protected String generateUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append(DERPIBOORU_DOMAIN);
-        sb.append("images/18/comments/");
-        /* the URI is taken from the actual request the site's script makes; I'm not sure myself why it always
-         * requests the 18th image; apparently, it can be any other one — I've tried — so the number is random */
+        sb.append("comment/");
         sb.append(mCommentId);
-        sb.append(".js");
         return sb.toString();
     }
 

@@ -16,28 +16,23 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public abstract class AsynchronousRequest<T> implements Runnable {
-    private OkHttpClient mHttpClient;
-    private ServerResponseParser<T> mResponseParser;
-    private Map<String, String> mHeaders;
-    private int mSuccessCode;
+    private final OkHttpClient mHttpClient;
+    private final ServerResponseParser<T> mResponseParser;
+    private final int mSuccessCode;
 
     protected String mUrl;
 
-    protected AsynchronousRequest(Context context, @Nullable ServerResponseParser<T> parser,
-                                  String url, Map<String, String> headers) {
+    protected AsynchronousRequest(Context context, @Nullable ServerResponseParser<T> parser, String url) {
         mHttpClient = ((Derpibooru) context.getApplicationContext()).getHttpClient();
         mResponseParser = parser;
         mUrl = url;
-        mHeaders = headers;
         mSuccessCode = 200;
     }
 
-    AsynchronousRequest(Context context, @Nullable ServerResponseParser<T> parser, String url,
-                        Map<String, String> headers, int successResponseCode) {
+    AsynchronousRequest(Context context, @Nullable ServerResponseParser<T> parser, String url, int successResponseCode) {
         mHttpClient = ((Derpibooru) context.getApplicationContext()).getHttpClient();
         mResponseParser = parser;
         mUrl = url;
-        mHeaders = headers;
         mSuccessCode = successResponseCode;
     }
 
@@ -68,12 +63,7 @@ public abstract class AsynchronousRequest<T> implements Runnable {
     }
 
     protected Request generateRequest() {
-        Request.Builder builder =
-                new Request.Builder().url(mUrl);
-        for (Map.Entry<String, String> header : mHeaders.entrySet()) {
-            builder.addHeader(header.getKey(), header.getValue());
-        }
-        return builder.build();
+        return new Request.Builder().url(mUrl).build();
     }
 
     protected T parseResponse(Response response) {

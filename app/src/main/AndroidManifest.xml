@@ -37,7 +37,7 @@
         <!-- used for image sharing -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="derpibooru.derpy.fileprovider"
+            android:authorities="derpibooru.derpy.ui.ImageActivity"
             android:grantUriPermissions="true"
             android:exported="false">
             <meta-data

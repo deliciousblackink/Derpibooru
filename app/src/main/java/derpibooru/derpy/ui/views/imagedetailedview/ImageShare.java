@@ -20,12 +20,11 @@ import java.io.IOException;
 import derpibooru.derpy.R;
 
 /**
- * A wrapper for {@link ShareActionProvider} that creates
- * a share intent for a particular image.
+ * A wrapper for {@link ShareActionProvider} that creates a share intent for the particular image.
  * <p>
- * Since a local file is required for binary data sharing, the class requires an existing image
- * resource to create the intent. It is recommended, therefore, to hide the share button until
- * the resource is available.
+ * Since a local file is required for binary data sharing, the class needs an existing image
+ * resource to create the intent (see {@link #enableSharing(GlideDrawable, int, String)} method for
+ * more information).
  *
  * @author http://stackoverflow.com/a/30172792/1726690
  */
@@ -33,8 +32,8 @@ class ImageShare {
     private static final String IMAGE_SHARE_CACHE_DIR = "shared";
 
     /* note that the filename may be displayed to the user (e.g. in Android's native mail app) */
-    private static final String TEMP_PNG_FILE_NAME = "pony.png";
-    private static final String TEMP_GIF_FILE_NAME = "pony.gif";
+    private static final String SLASH_TEMP_PNG_FILE_NAME = "/pony.png";
+    private static final String SLASH_TEMP_GIF_FILE_NAME = "/pony.gif";
 
     /* Android's native mail app doesn't allow attachments > 5MiB and there's a good reason for that (mobile networks) */
     private static final int GIF_FILE_SIZE_LIMIT_BYTES = 5242880;
@@ -51,7 +50,7 @@ class ImageShare {
 
     /**
      * Enables sharing by setting the intent that contains
-     * the specified image resource to the {@link ShareActionProvider}.
+     * the specified image resource for the {@link ShareActionProvider}.
      *
      * @param imageResource image resource to share
      * @param imageId booru image ID (used to for the accompanying text)
@@ -86,15 +85,14 @@ class ImageShare {
             cachedImage = getCachedGif((GifDrawable) imageResource);
         }
         if (cachedImage != null) {
-            Uri contentUri = FileProvider.getUriForFile(mContext, "derpibooru.derpy.fileprovider", cachedImage);
+            Uri contentUri = FileProvider.getUriForFile(mContext, "derpibooru.derpy.ui.ImageActivity", cachedImage);
             if (contentUri != null) {
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, sharingText);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                shareIntent.setDataAndType(contentUri, mContext.getContentResolver().getType(contentUri));
-                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                return shareIntent;
+                return new Intent()
+                        .setAction(Intent.ACTION_SEND)
+                        .putExtra(Intent.EXTRA_SUBJECT, sharingText)
+                        .putExtra(Intent.EXTRA_STREAM, contentUri)
+                        .setDataAndType(contentUri, mContext.getContentResolver().getType(contentUri))
+                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
         }
         return null;
@@ -107,10 +105,10 @@ class ImageShare {
             if (cacheDir == null) {
                 throw new IOException("cache directory does not exist.");
             }
-            FileOutputStream stream = new FileOutputStream(cacheDir + TEMP_PNG_FILE_NAME);
+            FileOutputStream stream = new FileOutputStream(cacheDir + SLASH_TEMP_PNG_FILE_NAME);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             stream.close();
-            return new File(cacheDir + TEMP_PNG_FILE_NAME);
+            return new File(cacheDir + SLASH_TEMP_PNG_FILE_NAME);
         } catch (IOException e) {
             Log.e("ImageShare", "getCachedBitmap", e);
         }
@@ -127,10 +125,10 @@ class ImageShare {
             if (gifDrawable.getData().length >= GIF_FILE_SIZE_LIMIT_BYTES) {
                 return getCachedBitmap(gifDrawable.getFirstFrame());
             } else {
-                FileOutputStream stream = new FileOutputStream(cacheDir + TEMP_GIF_FILE_NAME);
+                FileOutputStream stream = new FileOutputStream(cacheDir + SLASH_TEMP_GIF_FILE_NAME);
                 stream.write(gifDrawable.getData());
                 stream.close();
-                return new File(cacheDir + TEMP_GIF_FILE_NAME);
+                return new File(cacheDir + SLASH_TEMP_GIF_FILE_NAME);
             }
         } catch (IOException e) {
             Log.e("ImageShare", "getCachedGif", e);

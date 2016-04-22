@@ -6,12 +6,16 @@ import android.net.Uri;
 import android.os.Environment;
 
 import java.io.File;
-import java.util.List;
 
 import derpibooru.derpy.R;
-import derpibooru.derpy.data.server.DerpibooruTag;
 
-public class ImageDownload {
+/**
+ * A UI for an image download implemented with {@link DownloadManager}.
+ * <p>
+ * The files are saved to <strong>"{@link Environment#DIRECTORY_PICTURES}/Derpibooru"</strong> folder, which
+ * allows them to be scanned by the media scanner.
+ */
+class ImageDownload {
     private Context mContext;
     private String mDownloadTitle;
     private String mDownloadDescription;

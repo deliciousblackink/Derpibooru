@@ -175,14 +175,16 @@ public class ImageActivityMainFragment extends Fragment {
                                        boolean isFromMemoryCache, boolean isFirstResource) {
             if (getView() != null) getView().findViewById(R.id.progressImage).setVisibility(View.GONE);
             attachPhotoView(mImageView);
-            if ((imageDetailedView != null)
-                    && (imageDetailedView.getBottomBarExtensionState() != ImageDetailedViewAnimator.BottomBarExtensionState.None)) {
-                mImageView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ((GlideDrawable) imageView.getDrawable()).stop();
-                    }
-                });
+            if (imageDetailedView != null) {
+                imageDetailedView.onImageLoaded(resource);
+                if (imageDetailedView.getBottomBarExtensionState() != ImageDetailedViewAnimator.BottomBarExtensionState.None) {
+                    mImageView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((GlideDrawable) imageView.getDrawable()).stop();
+                        }
+                    });
+                }
             }
             return false;
         }

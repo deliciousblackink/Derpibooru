@@ -8,22 +8,27 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 
 import java.util.EnumSet;
 import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import derpibooru.derpy.data.server.DerpibooruTag;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
+import derpibooru.derpy.data.server.DerpibooruTag;
 import derpibooru.derpy.ui.animators.ImageDetailedViewAnimator;
 import derpibooru.derpy.ui.presenters.ImageInteractionPresenter;
 
@@ -39,6 +44,7 @@ public class ImageDetailedView extends LinearLayout {
     private ImageDetailedViewHandler mCallbackHandler;
 
     private ImageDownload mImageDownload;
+    private ImageShare mImageShare;
 
     private boolean mIsUserLoggedIn;
 
@@ -83,12 +89,20 @@ public class ImageDetailedView extends LinearLayout {
         bottomBar.saveInstanceState(outState);
     }
 
+    public BottomBarExtensionState getBottomBarExtensionState() {
+        return (mAnimator != null) ? mAnimator.getBottomBarExtensionState() : BottomBarExtensionState.None;
+    }
+
     public void onImageDownloadPermissionsGranted() {
         mImageDownload.start();
     }
 
-    public BottomBarExtensionState getBottomBarExtensionState() {
-        return (mAnimator != null) ? mAnimator.getBottomBarExtensionState() : BottomBarExtensionState.None;
+    public void onImageLoaded(@Nullable GlideDrawable glideResource) {
+        if (!mImageShare.enableSharing(
+                glideResource, mCallbackHandler.getImage().getThumb().getId(), getImageTagNames())) {
+            toolbar.getMenu().findItem(R.id.actionShareImage).setVisible(false);
+            mImageShare = null;
+        }
     }
 
     private void initializeAnimator(@Nullable Bundle savedInstanceState) {
@@ -126,10 +140,25 @@ public class ImageDetailedView extends LinearLayout {
                                     }
                                 }
                                 break;
+                            case R.id.actionShareImage:
+                                if ((mImageShare == null) || (!mImageShare.isSharingEnabled())) {
+                                    Toast.makeText(getContext(), R.string.share_image_provider_not_initialized, Toast.LENGTH_SHORT).show();
+                                }
+                                break;
                         }
                         return true;
                     }
                 });
+        ShareActionProvider shareProvider = new ShareActionProvider(getContext()) {
+            @Override
+            public View onCreateActionView() {
+                return null; /* hide default share action icon */
+            }
+        };
+        MenuItemCompat.setActionProvider(toolbar.getMenu().findItem(R.id.actionShareImage), shareProvider);
+        mImageShare = new ImageShare(getContext(), shareProvider);
+    }
+
     private String getImageTagNames() {
         StringBuilder tagListBuilder = new StringBuilder();
         for (DerpibooruTag tag : mCallbackHandler.getImage().getTags()) {

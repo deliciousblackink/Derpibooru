@@ -165,7 +165,7 @@ public class ImageDetailedView extends LinearLayout {
             tagListBuilder.append(tag.getName());
             tagListBuilder.append(", ");
         }
-        tagListBuilder.delete(tagListBuilder.length() - 3, tagListBuilder.length() - 1); /* remove ', ' */
+        tagListBuilder.delete(tagListBuilder.length() - 2, tagListBuilder.length()); /* remove ', ' */
         return tagListBuilder.toString();
     }
 

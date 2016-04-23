@@ -1,25 +1,22 @@
 package derpibooru.derpy.ui.views.imagedetailedview;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 
 import java.util.EnumSet;
 import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import derpibooru.derpy.ImageDownload;
 import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
@@ -38,7 +35,7 @@ public class ImageDetailedView extends LinearLayout {
     private ImageDetailedViewAnimator mAnimator;
     private ImageDetailedViewHandler mCallbackHandler;
 
-    private ImageDownload mImageDownload;
+    private ImageDetailedViewMenu mMenu;
 
     private boolean mIsUserLoggedIn;
 
@@ -67,7 +64,7 @@ public class ImageDetailedView extends LinearLayout {
                              new BottomBarCallbackHandler(), savedInstanceState);
         /* from here on the order of initialization does not matter */
         initializeInteractionPresenter();
-        initializeImageDownload();
+        initializeMenu(mCallbackHandler.getImage(), savedInstanceState);
         /* show the header extension animation after everything's been initialized */
         if (savedInstanceState == null) {
             mAnimator.animate(mAnimator.new HeadersExtensionAnimation());
@@ -79,16 +76,21 @@ public class ImageDetailedView extends LinearLayout {
     }
 
     public void saveInstanceState(Bundle outState) {
+        mMenu.saveInstanceState(outState);
         mAnimator.saveInstanceState(outState);
         bottomBar.saveInstanceState(outState);
     }
 
-    public void onImageDownloadPermissionsGranted() {
-        mImageDownload.start();
-    }
-
     public BottomBarExtensionState getBottomBarExtensionState() {
         return (mAnimator != null) ? mAnimator.getBottomBarExtensionState() : BottomBarExtensionState.None;
+    }
+
+    public void onImageDownloadPermissionsGranted() {
+        mMenu.onImageDownloadPermissionsGranted();
+    }
+
+    public void onImageLoaded(@Nullable GlideDrawable glideResource) {
+        mMenu.onImageLoaded(glideResource);
     }
 
     private void initializeAnimator(@Nullable Bundle savedInstanceState) {
@@ -99,43 +101,14 @@ public class ImageDetailedView extends LinearLayout {
         }
     }
 
-    private void initializeImageDownload() {
-        mImageDownload = new ImageDownload(getContext(),
-                                           mCallbackHandler.getImage().getThumb().getId(),
-                                           mCallbackHandler.getImage().getTags(),
-                                           mCallbackHandler.getImage().getDownloadUrl());
-        if (!(hasStoragePermissions() && mImageDownload.isDownloaded())) {
-            inflateToolbarMenu();
-        } else {
-            mImageDownload = null;
-        }
-    }
-
-    private void inflateToolbarMenu() {
-        toolbar.inflateMenu(R.menu.menu_image_activity_main_fragment);
-        toolbar.setOnMenuItemClickListener(
-                new Toolbar.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.actionDownloadImage:
-                                if (mCallbackHandler != null) {
-                                    if (hasStoragePermissions()) {
-                                        onImageDownloadPermissionsGranted();
-                                    } else {
-                                        mCallbackHandler.requestImageDownloadPermissions();
-                                    }
-                                }
-                                break;
-                        }
-                        return true;
-                    }
-                });
-    }
-
-    private boolean hasStoragePermissions() {
-        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
+    private void initializeMenu(DerpibooruImageDetailed imageInfo, @Nullable Bundle savedInstanceState) {
+        mMenu = new ImageDetailedViewMenu(getContext(), toolbar, imageInfo) {
+            @Override
+            void requestImageDownloadPermissions() {
+                mCallbackHandler.requestImageDownloadPermissions();
+            }
+        };
+        mMenu.initialize(savedInstanceState);
     }
 
     private void initializeInteractionPresenter() {

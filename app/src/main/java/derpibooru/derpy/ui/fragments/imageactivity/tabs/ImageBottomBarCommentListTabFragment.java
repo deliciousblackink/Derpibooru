@@ -30,7 +30,6 @@ import derpibooru.derpy.ui.presenters.PaginatedListPresenter;
 public class ImageBottomBarCommentListTabFragment extends Fragment {
     private PaginatedListPresenter<DerpibooruComment> mCommentListPresenter;
 
-    /* TODO: notify bottom bar when the number of comments changes */
     @Bind(R.id.layoutCommentsRefresh) SwipeRefreshLayout refreshLayout;
     @Bind(R.id.viewComments) RecyclerView recyclerView;
 

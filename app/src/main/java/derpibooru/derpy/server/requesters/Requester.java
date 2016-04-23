@@ -34,7 +34,7 @@ abstract class Requester<T> extends Provider<T> {
     protected void executeQuery(@Nullable ServerResponseParser<T> parser) {
         Handler thread = new Handler();
         thread.post(new AsynchronousFormRequest<T>(mContext, parser, generateUrl(), generateForm(),
-                                                   getHeaders(), getSuccessResponseCode(), getHttpMethod()) {
+                                                   getSuccessResponseCode(), getHttpMethod()) {
             Handler uiThread = new Handler(Looper.getMainLooper());
 
             @Override

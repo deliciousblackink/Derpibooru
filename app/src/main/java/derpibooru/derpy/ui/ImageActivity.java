@@ -15,9 +15,9 @@ import derpibooru.derpy.data.server.DerpibooruUser;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.providers.ImageDetailedProvider;
 import derpibooru.derpy.ui.adapters.ImageActivityFragmentAdapter;
+import derpibooru.derpy.ui.fragments.ImageListFragment;
 import derpibooru.derpy.ui.fragments.imageactivity.ImageActivityMainFragment;
 import derpibooru.derpy.ui.fragments.imageactivity.ImageActivityTagFragment;
-import derpibooru.derpy.ui.fragments.ImageListFragment;
 
 public class ImageActivity extends AppCompatActivity {
     public static final String EXTRAS_TAG_SEARCH_QUERY = "derpibooru.derpy.SearchTagName";

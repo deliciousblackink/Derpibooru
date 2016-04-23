@@ -2,6 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:icon="@drawable/ic_share_white_24dp"
+        android:menuCategory="secondary"
+        app:showAsAction="ifRoom"
+        android:title="@string/menu_share">
+        <menu>
+            <item
+                android:id="@+id/actionShareImage"
+                android:title="@string/menu_share_image"/>
+            <item
+                android:id="@+id/actionShareLink"
+                android:title="@string/menu_share_link"/>
+        </menu>
+    </item>
+    <item
         android:id="@+id/actionDownloadImage"
         android:icon="@drawable/ic_file_download_white_24dp"
         android:menuCategory="secondary"

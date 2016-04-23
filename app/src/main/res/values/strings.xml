@@ -20,9 +20,12 @@
     <!-- detailed image info -->
     <string name="image_info_uploaded">Uploaded by %1$s\non %2$s</string>
     <string name="embedded_image_view_image">View #%1$d</string>
+    <string name="share_image_subject">#%1$d — %2$s — Derpibooru — My Little Pony: Friendship is Magic Imageboard</string>
+    <string name="share_link_text">%1$s — My Little Pony: Friendship is Magic — https://derpibooru.org/%2$d</string>
+    <string name="share_image_provider_not_initialized">Please wait until the image has loaded.</string>
     <!-- downloadmanager -->
-    <string name="download_image_notification_title">#%1$d —%2$s</string>
-    <string name="download_image_notification_description">Downloading an image from Derpibooru…</string>
+    <string name="download_image_notification_title">#%1$d — %2$s</string>
+    <string name="download_image_notification_description">Downloading image from Derpibooru…</string>
     <!-- errors -->
-    <string name="activity_splash_user_loader_request_failed">Couldn’t reach the server. Check your Internet connection and try again</string>
+    <string name="activity_splash_user_loader_request_failed">Yikes! Couldn’t reach the server. Is your Internet connection all right?</string>
 </resources>

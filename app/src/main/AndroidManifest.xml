@@ -34,5 +34,18 @@
             android:label="@string/activity_login"
             android:screenOrientation="portrait">
         </activity>
+        <!-- used for image sharing -->
+        <provider
+            android:name="com.commonsware.cwac.provider.StreamProvider"
+            android:authorities="derpibooru.derpy.ui.ImageActivity"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="com.commonsware.cwac.provider.STREAM_PROVIDER_PATHS"
+                android:resource="@xml/share_path"/>
+            <meta-data
+                android:name="com.commonsware.cwac.provider.USE_LEGACY_CURSOR_WRAPPER"
+                android:value="true"/>
+        </provider>
     </application>
 </manifest>

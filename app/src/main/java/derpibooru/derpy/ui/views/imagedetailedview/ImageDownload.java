@@ -1,4 +1,4 @@
-package derpibooru.derpy;
+package derpibooru.derpy.ui.views.imagedetailedview;
 
 import android.app.DownloadManager;
 import android.content.Context;
@@ -6,45 +6,43 @@ import android.net.Uri;
 import android.os.Environment;
 
 import java.io.File;
-import java.util.List;
 
-import derpibooru.derpy.data.server.DerpibooruTag;
+import derpibooru.derpy.R;
 
-public class ImageDownload {
-    private Context mContext;
-    private String mDownloadTitle;
-    private String mDownloadDescription;
-    private String mDownloadFileParth;
-    private Uri mUri;
+/**
+ * A UI for an image download implemented with {@link DownloadManager}.
+ * <p>
+ * The files are saved to <strong>"{@link Environment#DIRECTORY_PICTURES}/Derpibooru"</strong> folder, which
+ * allows them to be scanned by the media scanner.
+ */
+class ImageDownload {
+    private final Context mContext;
+    private final String mDownloadTitle;
+    private final String mDownloadDescription;
+    private final String mDownloadFilePath;
+    private final Uri mUri;
 
-    public ImageDownload(Context context, int imageId, List<DerpibooruTag> imageTags, String imageUrl) {
+    ImageDownload(Context context, int imageId, String imageTagNames, String imageUrl) {
         mContext = context;
         mUri = Uri.parse(imageUrl);
-        mDownloadTitle = getDownloadTitle(imageId, imageTags);
+        mDownloadTitle = getDownloadTitle(imageId, imageTagNames);
         mDownloadDescription = getDownloadDescription();
-        mDownloadFileParth = getPathToFile(mUri);
+        mDownloadFilePath = getPathToFile(mUri);
     }
 
-    public void start() {
+    void start() {
         Thread thread = new Thread(new DownloaderRunnable());
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
     }
 
-    public boolean isDownloaded() {
+    boolean isDownloaded() {
         String path = getAbsolutePathToFile(mUri);
         return new File(path).exists();
     }
 
-    private String getDownloadTitle(int imageId, List<DerpibooruTag> imageTags) {
-        StringBuilder tagListBuilder = new StringBuilder();
-        for (DerpibooruTag tag : imageTags) {
-            tagListBuilder.append(' ');
-            tagListBuilder.append(tag.getName());
-            tagListBuilder.append(',');
-        }
-        tagListBuilder.deleteCharAt(tagListBuilder.length() - 1); /* remove the ',' */
-        return String.format(mContext.getString(R.string.download_image_notification_title), imageId, tagListBuilder.toString());
+    private String getDownloadTitle(int imageId, String imageTagNames) {
+        return String.format(mContext.getString(R.string.download_image_notification_title), imageId, imageTagNames);
     }
 
     private String getDownloadDescription() {
@@ -76,7 +74,7 @@ public class ImageDownload {
             request.setTitle(mDownloadTitle)
                     .setDescription(mDownloadDescription)
                     .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, mDownloadFileParth)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, mDownloadFilePath)
                     .allowScanningByMediaScanner();
             manager.enqueue(request);
         }

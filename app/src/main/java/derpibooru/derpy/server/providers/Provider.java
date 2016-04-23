@@ -4,9 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.Collections;
-import java.util.Map;
-
 import derpibooru.derpy.server.AsynchronousRequest;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.ServerResponseParser;
@@ -18,8 +15,8 @@ public abstract class Provider<T> {
     protected static final String DERPIBOORU_DOMAIN = "https://trixiebooru.org/";
     protected static final String DERPIBOORU_API_ENDPOINT = "api/v2/";
 
-    protected QueryHandler<T> mHandler;
-    protected Context mContext;
+    protected final QueryHandler<T> mHandler;
+    protected final Context mContext;
 
     protected Provider(Context context, QueryHandler<T> handler) {
         mContext = context;
@@ -30,15 +27,11 @@ public abstract class Provider<T> {
 
     protected abstract String generateUrl();
 
-    protected Map<String, String> getHeaders() {
-        return Collections.emptyMap();
-    }
-
     protected void cacheResponse(T parsedResponse) { }
 
     protected void executeQuery(ServerResponseParser<T> parser) {
         Handler thread = new Handler();
-        thread.post(new AsynchronousRequest<T>(mContext, parser, generateUrl(), getHeaders()) {
+        thread.post(new AsynchronousRequest<T>(mContext, parser, generateUrl()) {
             Handler uiThread = new Handler(Looper.getMainLooper());
 
             @Override

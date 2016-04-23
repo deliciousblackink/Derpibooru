@@ -46,11 +46,8 @@ abstract class ImageDetailedViewMenu implements Toolbar.OnMenuItemClickListener 
     }
 
     void onImageLoaded(@Nullable GlideDrawable glideResource) {
-        if (!mImageShare.enableSharing(
-                glideResource, mImageInfo.getThumb().getId(), getImageTagNames())) {
-            mToolbar.getMenu().findItem(R.id.actionShareImage).setVisible(false);
-            mImageShare = null;
-        }
+        mImageShare.enableSharing(
+                glideResource, mImageInfo.getThumb().getId(), getImageTagNames());
     }
 
     void initialize() {

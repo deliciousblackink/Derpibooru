@@ -55,11 +55,9 @@ class ImageShare {
      * @param imageResource image resource to share
      * @param imageId booru image ID (used to for the accompanying text)
      * @param imageTags names of image tags (used to for the accompanying text)
-     * @return {@code true} if sharing was enabled, {@code false} if an error occurred (see the log)
      */
-    boolean enableSharing(GlideDrawable imageResource, int imageId, String imageTags) {
-        mShareIntent = getShareIntentForImage(imageResource, getSharingText(imageId, imageTags));
-        return (mShareIntent != null);
+    void enableSharing(GlideDrawable imageResource, int imageId, String imageTags) {
+        new Thread(new ShareIntentBuilderRunnable(imageResource, imageId, imageTags)).start();
     }
 
     /**
@@ -77,73 +75,90 @@ class ImageShare {
         return (mShareIntent != null);
     }
 
-    private String getSharingText(int imageId, String imageTags) {
-        return String.format(mContext.getString(R.string.share_image_subject), imageId, imageTags);
-    }
+    private class ShareIntentBuilderRunnable implements Runnable {
+        private final GlideDrawable mImageResource;
+        private final int mImageId;
+        private final String mImageTags;
 
-    @Nullable
-    private Intent getShareIntentForImage(GlideDrawable imageResource, String sharingText) {
-        File cachedImage = null;
-        if (imageResource instanceof GlideBitmapDrawable) {
-            cachedImage = getCachedBitmap(((GlideBitmapDrawable) imageResource).getBitmap());
-        } else if (imageResource instanceof GifDrawable) {
-            cachedImage = getCachedGif((GifDrawable) imageResource);
+        ShareIntentBuilderRunnable(GlideDrawable imageResource, int imageId, String imageTags) {
+            mImageResource = imageResource;
+            mImageId = imageId;
+            mImageTags = imageTags;
         }
-        if (cachedImage != null) {
-            Uri contentUri = FileProvider.getUriForFile(mContext, "derpibooru.derpy.ui.ImageActivity", cachedImage);
-            if (contentUri != null) {
-                return new Intent()
-                        .setAction(Intent.ACTION_SEND)
-                        .putExtra(Intent.EXTRA_SUBJECT, sharingText)
-                        .putExtra(Intent.EXTRA_STREAM, contentUri)
-                        .setDataAndType(contentUri, mContext.getContentResolver().getType(contentUri))
-                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            }
-        }
-        return null;
-    }
 
-    @Nullable
-    private File getCachedBitmap(Bitmap bitmap) {
-        try {
-            File cacheDir = getImageCacheDir();
-            if (cacheDir == null) {
-                throw new IOException("cache directory does not exist.");
-            }
-            FileOutputStream stream = new FileOutputStream(cacheDir + SLASH_TEMP_PNG_FILE_NAME);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            stream.close();
-            return new File(cacheDir + SLASH_TEMP_PNG_FILE_NAME);
-        } catch (IOException e) {
-            Log.e("ImageShare", "getCachedBitmap", e);
+        @Override
+        public void run() {
+            mShareIntent = getShareIntentForImage(getSharingText());
         }
-        return null;
-    }
 
-    @Nullable
-    private File getCachedGif(GifDrawable gifDrawable) {
-        try {
-            File cacheDir = getImageCacheDir();
-            if (cacheDir == null) {
-                throw new IOException("cache directory does not exist.");
+        private String getSharingText() {
+            return String.format(mContext.getString(R.string.share_image_subject), mImageId, mImageTags);
+        }
+
+        @Nullable
+        private Intent getShareIntentForImage(String sharingText) {
+            File cachedImage = null;
+            if (mImageResource instanceof GlideBitmapDrawable) {
+                cachedImage = getCachedBitmap(((GlideBitmapDrawable) mImageResource).getBitmap());
+            } else if (mImageResource instanceof GifDrawable) {
+                cachedImage = getCachedGif((GifDrawable) mImageResource);
             }
-            if (gifDrawable.getData().length >= GIF_FILE_SIZE_LIMIT_BYTES) {
-                return getCachedBitmap(gifDrawable.getFirstFrame());
-            } else {
-                FileOutputStream stream = new FileOutputStream(cacheDir + SLASH_TEMP_GIF_FILE_NAME);
-                stream.write(gifDrawable.getData());
+            if (cachedImage != null) {
+                Uri contentUri = FileProvider.getUriForFile(mContext, "derpibooru.derpy.ui.ImageActivity", cachedImage);
+                if (contentUri != null) {
+                    return new Intent()
+                            .setAction(Intent.ACTION_SEND)
+                            .putExtra(Intent.EXTRA_SUBJECT, sharingText)
+                            .putExtra(Intent.EXTRA_STREAM, contentUri)
+                            .setDataAndType(contentUri, mContext.getContentResolver().getType(contentUri))
+                            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                }
+            }
+            return null;
+        }
+
+        @Nullable
+        private File getCachedBitmap(Bitmap bitmap) {
+            try {
+                File cacheDir = getImageCacheDir();
+                if (cacheDir == null) {
+                    throw new IOException("cache directory does not exist.");
+                }
+                FileOutputStream stream = new FileOutputStream(cacheDir + SLASH_TEMP_PNG_FILE_NAME);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 stream.close();
-                return new File(cacheDir + SLASH_TEMP_GIF_FILE_NAME);
+                return new File(cacheDir + SLASH_TEMP_PNG_FILE_NAME);
+            } catch (IOException e) {
+                Log.e("ImageShare", "getCachedBitmap", e);
             }
-        } catch (IOException e) {
-            Log.e("ImageShare", "getCachedGif", e);
+            return null;
         }
-        return null;
-    }
 
-    @Nullable
-    private File getImageCacheDir() {
-        File cache = new File(mContext.getCacheDir(), IMAGE_SHARE_CACHE_DIR);
-        return (cache.mkdirs() || cache.isDirectory()) ? cache : null;
+        @Nullable
+        private File getCachedGif(GifDrawable gifDrawable) {
+            try {
+                File cacheDir = getImageCacheDir();
+                if (cacheDir == null) {
+                    throw new IOException("cache directory does not exist.");
+                }
+                if (gifDrawable.getData().length >= GIF_FILE_SIZE_LIMIT_BYTES) {
+                    return getCachedBitmap(gifDrawable.getFirstFrame());
+                } else {
+                    FileOutputStream stream = new FileOutputStream(cacheDir + SLASH_TEMP_GIF_FILE_NAME);
+                    stream.write(gifDrawable.getData());
+                    stream.close();
+                    return new File(cacheDir + SLASH_TEMP_GIF_FILE_NAME);
+                }
+            } catch (IOException e) {
+                Log.e("ImageShare", "getCachedGif", e);
+            }
+            return null;
+        }
+
+        @Nullable
+        private File getImageCacheDir() {
+            File cache = new File(mContext.getCacheDir(), IMAGE_SHARE_CACHE_DIR);
+            return (cache.mkdirs() || cache.isDirectory()) ? cache : null;
+        }
     }
 }

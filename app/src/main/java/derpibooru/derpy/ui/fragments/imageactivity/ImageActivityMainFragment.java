@@ -24,8 +24,8 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.ui.animators.ImageDetailedViewAnimator;
-import derpibooru.derpy.ui.views.imagedetailedview.ImageTagView;
 import derpibooru.derpy.ui.views.imagedetailedview.ImageDetailedView;
+import derpibooru.derpy.ui.views.imagedetailedview.ImageTagView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageActivityMainFragment extends Fragment {

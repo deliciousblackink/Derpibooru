@@ -4,9 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.Collections;
-import java.util.Map;
-
 import derpibooru.derpy.server.AsynchronousRequest;
 import derpibooru.derpy.server.QueryHandler;
 import derpibooru.derpy.server.parsers.ServerResponseParser;

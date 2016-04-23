@@ -16,27 +16,27 @@ import derpibooru.derpy.R;
  * allows them to be scanned by the media scanner.
  */
 class ImageDownload {
-    private Context mContext;
-    private String mDownloadTitle;
-    private String mDownloadDescription;
-    private String mDownloadFileParth;
-    private Uri mUri;
+    private final Context mContext;
+    private final String mDownloadTitle;
+    private final String mDownloadDescription;
+    private final String mDownloadFilePath;
+    private final Uri mUri;
 
-    public ImageDownload(Context context, int imageId, String imageTagNames, String imageUrl) {
+    ImageDownload(Context context, int imageId, String imageTagNames, String imageUrl) {
         mContext = context;
         mUri = Uri.parse(imageUrl);
         mDownloadTitle = getDownloadTitle(imageId, imageTagNames);
         mDownloadDescription = getDownloadDescription();
-        mDownloadFileParth = getPathToFile(mUri);
+        mDownloadFilePath = getPathToFile(mUri);
     }
 
-    public void start() {
+    void start() {
         Thread thread = new Thread(new DownloaderRunnable());
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
     }
 
-    public boolean isDownloaded() {
+    boolean isDownloaded() {
         String path = getAbsolutePathToFile(mUri);
         return new File(path).exists();
     }
@@ -74,7 +74,7 @@ class ImageDownload {
             request.setTitle(mDownloadTitle)
                     .setDescription(mDownloadDescription)
                     .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, mDownloadFileParth)
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, mDownloadFilePath)
                     .allowScanningByMediaScanner();
             manager.enqueue(request);
         }

@@ -36,13 +36,16 @@
         </activity>
         <!-- used for image sharing -->
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="com.commonsware.cwac.provider.StreamProvider"
             android:authorities="derpibooru.derpy.ui.ImageActivity"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/share_path" />
+                android:name="com.commonsware.cwac.provider.STREAM_PROVIDER_PATHS"
+                android:resource="@xml/share_path"/>
+            <meta-data
+                android:name="com.commonsware.cwac.provider.USE_LEGACY_CURSOR_WRAPPER"
+                android:value="true"/>
         </provider>
     </application>
 </manifest>

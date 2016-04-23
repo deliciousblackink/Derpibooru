@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.support.v4.content.FileProvider;
+import com.commonsware.cwac.provider.StreamProvider;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 
@@ -29,12 +29,14 @@ import derpibooru.derpy.R;
  * @author http://stackoverflow.com/a/30172792/1726690
  */
 class ImageShare {
-    private static final String IMAGE_SHARE_CACHE_DIR = "shared";
+    private static final String EXTRAS_INTENT_SAVED_STATE = "derpibooru.derpy.ImageShareIntentSaved";
+    private static final String PROVIDER_AUTHORITY = "derpibooru.derpy.ui.ImageActivity";
+    private static final Uri PROVIDER = Uri.parse("content://" + PROVIDER_AUTHORITY);
 
+    private static final String IMAGE_SHARE_CACHE_DIR = "shared";
     /* note that the filename may be displayed to the user (e.g. in Android's native mail app) */
     private static final String SLASH_TEMP_PNG_FILE_NAME = "/pony.png";
     private static final String SLASH_TEMP_GIF_FILE_NAME = "/pony.gif";
-
     /* Android's native mail app doesn't allow attachments > 5MiB and there's a good reason for that (mobile networks) */
     private static final int GIF_FILE_SIZE_LIMIT_BYTES = 5242880;
 
@@ -104,14 +106,14 @@ class ImageShare {
                 cachedImage = getCachedGif((GifDrawable) mImageResource);
             }
             if (cachedImage != null) {
-                Uri contentUri = FileProvider.getUriForFile(mContext, "derpibooru.derpy.ui.ImageActivity", cachedImage);
-                if (contentUri != null) {
+                Uri sharedUri = StreamProvider.getUriForFile("derpibooru.derpy.ui.ImageActivity", cachedImage);
+                if (sharedUri != null) {
                     return new Intent()
                             .setAction(Intent.ACTION_SEND)
                             .putExtra(Intent.EXTRA_SUBJECT, sharingText)
-                            .putExtra(Intent.EXTRA_STREAM, contentUri)
-                            .setDataAndType(contentUri, mContext.getContentResolver().getType(contentUri))
-                            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            .putExtra(Intent.EXTRA_STREAM, sharedUri)
+                            .setDataAndType(sharedUri, mContext.getContentResolver().getType(sharedUri))
+                            .setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
             }
             return null;

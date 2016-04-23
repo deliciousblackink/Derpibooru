@@ -29,7 +29,8 @@ task copyResDirectoryToClasses(type: Copy) {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.guava:guava:19.0'
-    compile 'com.google.code.findbugs:jsr305:3.0.1' /* required for ProGuard (https://github.com/google/guava/wiki/UsingProGuardWithGuava) */
+    /* required for ProGuard (https://github.com/google/guava/wiki/UsingProGuardWithGuava) */
+    compile 'com.google.code.findbugs:jsr305:3.0.1'
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:recyclerview-v7:23.3.0'
@@ -50,6 +51,7 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.robolectric:shadows-support-v4:3.0'
     testCompile 'org.json:json:20140107'
+    compile files('libs/cwac-provider-0.4.0.jar')
 }
 
 idea {

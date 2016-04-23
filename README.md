@@ -26,3 +26,4 @@ The project is distributed under the [revised (3-clause) BSD license](LICENSE).
 * [Butter Knife](https://github.com/JakeWharton/butterknife), an Android view binding library
 * [CircleImageView](https://github.com/hdodenhof/CircleImageView)
 * [PhotoView](https://github.com/chrisbanes/PhotoView)
+* [CWAC-Provider](https://github.com/commonsguy/cwac-provider)

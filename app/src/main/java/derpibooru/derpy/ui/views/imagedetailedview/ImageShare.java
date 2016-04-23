@@ -4,14 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
-import com.commonsware.cwac.provider.StreamProvider;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.commonsware.cwac.provider.StreamProvider;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,6 +26,10 @@ import derpibooru.derpy.R;
  * Since a local file is required for binary data sharing, the class needs an existing image
  * resource to create the intent (see {@link #enableSharing(GlideDrawable, int, String)} method for
  * more information).
+ * <p>
+ * To avoid recreating the intent, which requires (possibly expensive) IO operations to be performed,
+ * call {@link #saveInstanceState(Bundle)} method when applicable and pass the saved instance state bundle
+ * as a constructor argument.
  *
  * @author http://stackoverflow.com/a/30172792/1726690
  */
@@ -45,9 +50,16 @@ class ImageShare {
 
     private Intent mShareIntent;
 
-    ImageShare(Context context, ShareActionProvider provider) {
+    ImageShare(Context context, ShareActionProvider provider, @Nullable Bundle savedInstanceState) {
         mContext = context;
         mProvider = provider;
+        if ((savedInstanceState != null) && (savedInstanceState.containsKey(EXTRAS_INTENT_SAVED_STATE))) {
+            mShareIntent = savedInstanceState.getParcelable(EXTRAS_INTENT_SAVED_STATE);
+        }
+    }
+
+    void saveInstanceState(Bundle outState) {
+        outState.putParcelable(EXTRAS_INTENT_SAVED_STATE, mShareIntent);
     }
 
     /**
@@ -59,7 +71,9 @@ class ImageShare {
      * @param imageTags names of image tags (used to for the accompanying text)
      */
     void enableSharing(GlideDrawable imageResource, int imageId, String imageTags) {
-        new Thread(new ShareIntentBuilderRunnable(imageResource, imageId, imageTags)).start();
+        if (mShareIntent == null) {
+            new Thread(new ShareIntentBuilderRunnable(imageResource, imageId, imageTags)).start();
+        }
     }
 
     /**

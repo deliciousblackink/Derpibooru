@@ -64,7 +64,7 @@ public class ImageDetailedView extends LinearLayout {
                              new BottomBarCallbackHandler(), savedInstanceState);
         /* from here on the order of initialization does not matter */
         initializeInteractionPresenter();
-        initializeMenu(mCallbackHandler.getImage());
+        initializeMenu(mCallbackHandler.getImage(), savedInstanceState);
         /* show the header extension animation after everything's been initialized */
         if (savedInstanceState == null) {
             mAnimator.animate(mAnimator.new HeadersExtensionAnimation());
@@ -76,6 +76,7 @@ public class ImageDetailedView extends LinearLayout {
     }
 
     public void saveInstanceState(Bundle outState) {
+        mMenu.saveInstanceState(outState);
         mAnimator.saveInstanceState(outState);
         bottomBar.saveInstanceState(outState);
     }
@@ -100,14 +101,14 @@ public class ImageDetailedView extends LinearLayout {
         }
     }
 
-    private void initializeMenu(DerpibooruImageDetailed imageInfo) {
+    private void initializeMenu(DerpibooruImageDetailed imageInfo, @Nullable Bundle savedInstanceState) {
         mMenu = new ImageDetailedViewMenu(getContext(), toolbar, imageInfo) {
             @Override
             void requestImageDownloadPermissions() {
                 mCallbackHandler.requestImageDownloadPermissions();
             }
         };
-        mMenu.initialize();
+        mMenu.initialize(savedInstanceState);
     }
 
     private void initializeInteractionPresenter() {

@@ -3,6 +3,7 @@ package derpibooru.derpy.ui.views.imagedetailedview;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -39,6 +40,12 @@ abstract class ImageDetailedViewMenu implements Toolbar.OnMenuItemClickListener 
         mImageInfo = imageInfo;
     }
 
+    void saveInstanceState(Bundle outState) {
+        if (mImageShare != null) {
+            mImageShare.saveInstanceState(outState);
+        }
+    }
+
     abstract void requestImageDownloadPermissions();
 
     void onImageDownloadPermissionsGranted() {
@@ -50,9 +57,10 @@ abstract class ImageDetailedViewMenu implements Toolbar.OnMenuItemClickListener 
                 glideResource, mImageInfo.getThumb().getId(), getImageTagNames());
     }
 
-    void initialize() {
+    void initialize(@Nullable Bundle savedInstanceState) {
         initializeImageDownload();
         inflateToolbarMenu();
+        initializeShareProviders(mToolbar.getMenu(), savedInstanceState);
     }
 
     @Override
@@ -85,7 +93,6 @@ abstract class ImageDetailedViewMenu implements Toolbar.OnMenuItemClickListener 
         if (mImageDownload == null) {
             mToolbar.getMenu().findItem(R.id.actionDownloadImage).setVisible(false);
         }
-        initializeShareProvidersInMenu(mToolbar.getMenu());
     }
 
     private void initializeImageDownload() {
@@ -96,11 +103,11 @@ abstract class ImageDetailedViewMenu implements Toolbar.OnMenuItemClickListener 
         }
     }
 
-    private void initializeShareProvidersInMenu(Menu menu) {
+    private void initializeShareProviders(Menu menu, @Nullable Bundle savedInstanceState) {
         ShareActionProvider shareProvider = getNewInstanceOfShareActionProvider();
 
         MenuItemCompat.setActionProvider(menu.findItem(R.id.actionShareImage), shareProvider);
-        mImageShare = new ImageShare(mContext, shareProvider);
+        mImageShare = new ImageShare(mContext, shareProvider, savedInstanceState);
 
         MenuItemCompat.setActionProvider(menu.findItem(R.id.actionShareLink), shareProvider);
         mImageLinkShare = new ImageLinkShare(mContext, shareProvider);

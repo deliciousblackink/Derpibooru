@@ -98,7 +98,6 @@ public class DerpibooruTag implements Parcelable {
     }
 
     private TagType setTagType() {
-        /* TODO: add spoiler and OC tags */
         if (Pattern.compile("^(artist:)").matcher(mName).find()) {
             return DerpibooruTag.TagType.Artist;
         }

@@ -20,11 +20,12 @@ android {
     }
 }
 
-/* TODO: automate this task */
 task copyResDirectoryToClasses(type: Copy) {
     from "${projectDir}/src/test/resources"
     into "${buildDir}/intermediates/classes/test/debug/resources"
 }
+
+preBuild.dependsOn copyResDirectoryToClasses
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

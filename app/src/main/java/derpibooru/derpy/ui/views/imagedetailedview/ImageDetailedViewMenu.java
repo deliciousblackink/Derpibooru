@@ -31,6 +31,7 @@ abstract class ImageDetailedViewMenu implements Toolbar.OnMenuItemClickListener 
 
     private ImageDownload mImageDownload;
     private ImageShare mImageShare;
+    private ImageLinkShare mImageLinkShare;
 
     ImageDetailedViewMenu(Context context, Toolbar toolbar, DerpibooruImageDetailed imageInfo) {
         mContext = context;
@@ -67,6 +68,9 @@ abstract class ImageDetailedViewMenu implements Toolbar.OnMenuItemClickListener 
                     requestImageDownloadPermissions();
                 }
                 break;
+            case R.id.actionShareLink:
+                mImageLinkShare.resetProviderIntent();
+                break;
             case R.id.actionShareImage:
                 if ((mImageShare == null) || (!mImageShare.isSharingEnabled())) {
                     Toast.makeText(mContext, R.string.share_image_provider_not_initialized, Toast.LENGTH_SHORT).show();
@@ -101,6 +105,9 @@ abstract class ImageDetailedViewMenu implements Toolbar.OnMenuItemClickListener 
         MenuItemCompat.setActionProvider(menu.findItem(R.id.actionShareImage), shareProvider);
         mImageShare = new ImageShare(mContext, shareProvider);
 
+        MenuItemCompat.setActionProvider(menu.findItem(R.id.actionShareLink), shareProvider);
+        mImageLinkShare = new ImageLinkShare(mContext, shareProvider);
+        mImageLinkShare.enableSharing(mImageInfo.getThumb().getId(), mImageInfo.getTags());
     }
 
     private ShareActionProvider getNewInstanceOfShareActionProvider() {

@@ -20,7 +20,8 @@
     <!-- detailed image info -->
     <string name="image_info_uploaded">Uploaded by %1$s\non %2$s</string>
     <string name="embedded_image_view_image">View #%1$d</string>
-    <string name="share_image">#%1$d — %2$s — Derpibooru — My Little Pony: Friendship is Magic Imageboard</string>
+    <string name="share_image_subject">#%1$d — %2$s — Derpibooru — My Little Pony: Friendship is Magic Imageboard</string>
+    <string name="share_link_text">%1$s — My Little Pony: Friendship is Magic — https://derpibooru.org/%2$d</string>
     <string name="share_image_provider_not_initialized">Please wait until the image has loaded.</string>
     <!-- downloadmanager -->
     <string name="download_image_notification_title">#%1$d — %2$s</string>

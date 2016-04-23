@@ -41,9 +41,9 @@ class ImageShare {
     private final Context mContext;
     private final ShareActionProvider mProvider;
 
-    private boolean mIsSharingEnabled;
+    private Intent mShareIntent;
 
-    public ImageShare(Context context, ShareActionProvider provider) {
+    ImageShare(Context context, ShareActionProvider provider) {
         mContext = context;
         mProvider = provider;
     }
@@ -57,23 +57,28 @@ class ImageShare {
      * @param imageTags names of image tags (used to for the accompanying text)
      * @return {@code true} if sharing was enabled, {@code false} if an error occurred (see the log)
      */
-    public boolean enableSharing(GlideDrawable imageResource, int imageId, String imageTags) {
-        Intent shareIntent =
-                getShareIntentForImage(imageResource, getSharingText(imageId, imageTags));
-        if (shareIntent != null) {
-            mProvider.setShareIntent(shareIntent);
-            mIsSharingEnabled = true;
-            return true;
-        }
-        return false;
+    boolean enableSharing(GlideDrawable imageResource, int imageId, String imageTags) {
+        mShareIntent = getShareIntentForImage(imageResource, getSharingText(imageId, imageTags));
+        return (mShareIntent != null);
     }
 
-    public boolean isSharingEnabled() {
-        return mIsSharingEnabled;
+    /**
+     * Sets an appropriate intent for the {@link ShareActionProvider}.
+     * <p>
+     * As far as I can tell, {@link ShareActionProvider#setShareIntent(Intent)} sets an activity-wide
+     * intent. Therefore, if there are multiple share actions, the intent has to reset every time the user
+     * chooses an action.
+     */
+    void resetProviderIntent() {
+        mProvider.setShareIntent(mShareIntent);
+    }
+
+    boolean isSharingEnabled() {
+        return (mShareIntent != null);
     }
 
     private String getSharingText(int imageId, String imageTags) {
-        return String.format(mContext.getString(R.string.share_image), imageId, imageTags);
+        return String.format(mContext.getString(R.string.share_image_subject), imageId, imageTags);
     }
 
     @Nullable

@@ -28,7 +28,6 @@ import derpibooru.derpy.R;
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
-import derpibooru.derpy.data.server.DerpibooruTag;
 import derpibooru.derpy.ui.animators.ImageDetailedViewAnimator;
 import derpibooru.derpy.ui.presenters.ImageInteractionPresenter;
 
@@ -43,8 +42,7 @@ public class ImageDetailedView extends LinearLayout {
     private ImageDetailedViewAnimator mAnimator;
     private ImageDetailedViewHandler mCallbackHandler;
 
-    private ImageDownload mImageDownload;
-    private ImageShare mImageShare;
+    private ImageDetailedViewMenu mMenu;
 
     private boolean mIsUserLoggedIn;
 
@@ -73,7 +71,7 @@ public class ImageDetailedView extends LinearLayout {
                              new BottomBarCallbackHandler(), savedInstanceState);
         /* from here on the order of initialization does not matter */
         initializeInteractionPresenter();
-        initializeImageDownload();
+        initializeMenu(mCallbackHandler.getImage());
         /* show the header extension animation after everything's been initialized */
         if (savedInstanceState == null) {
             mAnimator.animate(mAnimator.new HeadersExtensionAnimation());
@@ -94,15 +92,11 @@ public class ImageDetailedView extends LinearLayout {
     }
 
     public void onImageDownloadPermissionsGranted() {
-        mImageDownload.start();
+        mMenu.onImageDownloadPermissionsGranted();
     }
 
     public void onImageLoaded(@Nullable GlideDrawable glideResource) {
-        if (!mImageShare.enableSharing(
-                glideResource, mCallbackHandler.getImage().getThumb().getId(), getImageTagNames())) {
-            toolbar.getMenu().findItem(R.id.actionShareImage).setVisible(false);
-            mImageShare = null;
-        }
+        mMenu.onImageLoaded(glideResource);
     }
 
     private void initializeAnimator(@Nullable Bundle savedInstanceState) {
@@ -113,65 +107,14 @@ public class ImageDetailedView extends LinearLayout {
         }
     }
 
-    private void initializeImageDownload() {
-        mImageDownload = new ImageDownload(getContext(),
-                                           mCallbackHandler.getImage().getThumb().getId(), getImageTagNames(),
-                                           mCallbackHandler.getImage().getDownloadUrl());
-        if (!(hasStoragePermissions() && mImageDownload.isDownloaded())) {
-            inflateToolbarMenu();
-        } else {
-            mImageDownload = null;
-        }
-    }
-
-    private void inflateToolbarMenu() {
-        toolbar.inflateMenu(R.menu.menu_image_activity_main_fragment);
-        toolbar.setOnMenuItemClickListener(
-                new Toolbar.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.actionDownloadImage:
-                                if (mCallbackHandler != null) {
-                                    if (hasStoragePermissions()) {
-                                        onImageDownloadPermissionsGranted();
-                                    } else {
-                                        mCallbackHandler.requestImageDownloadPermissions();
-                                    }
-                                }
-                                break;
-                            case R.id.actionShareImage:
-                                if ((mImageShare == null) || (!mImageShare.isSharingEnabled())) {
-                                    Toast.makeText(getContext(), R.string.share_image_provider_not_initialized, Toast.LENGTH_SHORT).show();
-                                }
-                                break;
-                        }
-                        return true;
-                    }
-                });
-        ShareActionProvider shareProvider = new ShareActionProvider(getContext()) {
+    private void initializeMenu(DerpibooruImageDetailed imageInfo) {
+        mMenu = new ImageDetailedViewMenu(getContext(), toolbar, imageInfo) {
             @Override
-            public View onCreateActionView() {
-                return null; /* hide default share action icon */
+            void requestImageDownloadPermissions() {
+                mCallbackHandler.requestImageDownloadPermissions();
             }
         };
-        MenuItemCompat.setActionProvider(toolbar.getMenu().findItem(R.id.actionShareImage), shareProvider);
-        mImageShare = new ImageShare(getContext(), shareProvider);
-    }
-
-    private String getImageTagNames() {
-        StringBuilder tagListBuilder = new StringBuilder();
-        for (DerpibooruTag tag : mCallbackHandler.getImage().getTags()) {
-            tagListBuilder.append(tag.getName());
-            tagListBuilder.append(", ");
-        }
-        tagListBuilder.delete(tagListBuilder.length() - 2, tagListBuilder.length()); /* remove ', ' */
-        return tagListBuilder.toString();
-    }
-
-    private boolean hasStoragePermissions() {
-        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED;
+        mMenu.initialize();
     }
 
     private void initializeInteractionPresenter() {

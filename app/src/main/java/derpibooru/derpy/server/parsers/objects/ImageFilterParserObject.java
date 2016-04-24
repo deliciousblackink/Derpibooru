@@ -15,7 +15,9 @@ import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
 public class ImageFilterParserObject {
     @VisibleForTesting
-    public static final String HIDDEN_TAG_IMAGE_RESOURCE_URI = ("android.resource://derpibooru.derpy/" + R.drawable.hidden_tag);
+    public static final String HIDDEN_TAG_IMAGE_RESOURCE_URI
+            = "https://derpicdn.net/img/view/2015/11/8/1019239__safe_solo_princess+celestia_vector_meta_frown_derpibooru_hair+over+one+eye_-dot-svg+available_raised+eyebrow.png";
+    /* pre-Lollipop doesn't support SVG */
 
     private final List<DerpibooruTagDetailed> mSpoileredTags;
     private final List<DerpibooruTagDetailed> mHiddenTags;

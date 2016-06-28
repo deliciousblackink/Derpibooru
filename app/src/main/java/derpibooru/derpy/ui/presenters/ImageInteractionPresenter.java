@@ -24,12 +24,12 @@ public abstract class ImageInteractionPresenter {
     private AccentColorIconButton mUpvoteButton;
     private AccentColorIconButton mDownvoteButton;
 
-    protected ImageInteractionPresenter(int imageIdForInteractions,
+    protected ImageInteractionPresenter(int imageId,
                                         @Nullable AccentColorIconButton scoreButton,
                                         @Nullable AccentColorIconButton faveButton,
                                         @Nullable AccentColorIconButton upvoteButton,
                                         @Nullable AccentColorIconButton downvoteButton) {
-        mId = imageIdForInteractions;
+        mId = imageId;
         mScoreButton = scoreButton;
         mFaveButton = faveButton;
         mUpvoteButton = upvoteButton;

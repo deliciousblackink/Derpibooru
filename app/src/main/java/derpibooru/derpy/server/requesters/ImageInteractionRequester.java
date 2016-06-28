@@ -12,7 +12,7 @@ import derpibooru.derpy.server.parsers.ImageInteractionResultParser;
 public class ImageInteractionRequester extends AuthenticatedApiRequester<DerpibooruImageInteraction> {
     private DerpibooruImageInteraction.InteractionType mType;
     private String mApiKey;
-    private int mInteractionsImageId;
+    private int mImageId;
 
     public ImageInteractionRequester(Context context, QueryHandler<DerpibooruImageInteraction> handler) {
         super(context, handler);
@@ -24,14 +24,14 @@ public class ImageInteractionRequester extends AuthenticatedApiRequester<Derpibo
     }
 
     public ImageInteractionRequester onImage(int imageId) {
-        mInteractionsImageId = imageId;
+        mImageId = imageId;
         return this;
     }
 
     @Override
     protected Map<String, String> generateForm() {
         Map<String, String> form = new HashMap<>(3);
-        form.put("id", Integer.toString(mInteractionsImageId));
+        form.put("id", Integer.toString(mImageId));
         switch (mType) {
             case Fave:
                 form.put("value", "true");

@@ -1,11 +1,8 @@
 package derpibooru.derpy.server.parsers;
 
-import com.google.common.collect.Lists;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
@@ -15,7 +12,6 @@ import derpibooru.derpy.data.server.DerpibooruImageDetailed;
 import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTag;
-import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
@@ -23,7 +19,7 @@ import static org.junit.Assert.assertThat;
 
 public class ImageDetailedParserTest {
     private static final DerpibooruImageThumb thumb =
-            new DerpibooruImageThumb(655777, 607986, 240, 3, 154, 32,
+            new DerpibooruImageThumb(655777, 240, 3, 154, 32,
                                      "https://derpicdn.net/img/2014/6/17/655777/thumb.gif",
                                      "https://derpicdn.net/img/2014/6/17/655777/large.gif", "",
                                      EnumSet.of(DerpibooruImageInteraction.InteractionType.Upvote,

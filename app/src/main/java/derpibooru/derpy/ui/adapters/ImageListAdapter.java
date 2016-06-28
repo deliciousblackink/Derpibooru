@@ -157,7 +157,7 @@ public abstract class ImageListAdapter extends RecyclerViewPaginationAdapter<Der
 
     private void initializeImageInteractions(final ViewHolder target, final int position) {
         target.interactions = new ImageInteractionPresenter(
-                getItems().get(position).getIdForImageInteractions(), target.buttonScore, target.buttonFave, target.buttonUpvote, null) {
+                getItems().get(position).getId(), target.buttonScore, target.buttonFave, target.buttonUpvote, null) {
             @NonNull
             @Override
             protected EnumSet<DerpibooruImageInteraction.InteractionType> getInteractionsSet() {

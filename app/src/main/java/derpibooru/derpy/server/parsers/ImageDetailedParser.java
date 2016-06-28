@@ -23,7 +23,6 @@ import derpibooru.derpy.server.parsers.objects.UserScriptParserObject;
 import derpibooru.derpy.server.parsers.objects.UserboxParserObject;
 
 public class ImageDetailedParser implements ServerResponseParser<DerpibooruImageDetailed> {
-    private static final Pattern PATTERN_IMAGE_ID = Pattern.compile("^(?:#)([\\d]*)");
     private static final Pattern PATTERN_WHITESPACE = Pattern.compile("\\s");
     private static final Pattern PATTERN_TAG_NUMBER_OF_IMAGES = Pattern.compile("(?!\\()([\\d*\\.]+)(?=\\))");
 
@@ -136,15 +135,14 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
     private DerpibooruImageThumb getImage(Document doc) throws JSONException {
         Element imageContainer = getImageContainer(doc);
 
-        int imageIdForInteractions = Integer.parseInt(imageContainer.attr("data-image-id"));
+        int imageId = Integer.parseInt(imageContainer.attr("data-image-id"));
         EnumSet interactions = EnumSet.noneOf(DerpibooruImageInteraction.InteractionType.class);
         if (mInteractions != null) {
-            interactions = mInteractions.getImageInteractionsForImage(imageIdForInteractions);
+            interactions = mInteractions.getImageInteractionsForImage(imageId);
         }
 
         DerpibooruImageThumb thumb = new DerpibooruImageThumb(
-                parseImageId(doc),
-                imageIdForInteractions,
+                imageId,
                 Integer.parseInt(imageContainer.attr("data-upvotes")),
                 Integer.parseInt(imageContainer.attr("data-downvotes")),
                 Integer.parseInt(imageContainer.attr("data-faves")),
@@ -158,12 +156,5 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
 
     private Element getImageContainer(Document doc) {
         return doc.select("div.image-show-container").first();
-    }
-
-    private int parseImageId(Document doc) {
-        String title = doc.select("title").first().text();
-        Matcher m = PATTERN_IMAGE_ID.matcher(title);
-        /* m.group(0) is '#000000', m.group(1) is '000000' */
-        return m.find() ? Integer.parseInt(m.group(1)) : 0;
     }
 }

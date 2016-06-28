@@ -7,7 +7,6 @@ import java.util.EnumSet;
 
 public class DerpibooruImageThumb implements Parcelable {
     private final int mId;
-    private final int mIdUsedForImageInteractions;
     private int mUpvotes;
     private int mDownvotes;
     private int mFaves;
@@ -19,16 +18,15 @@ public class DerpibooruImageThumb implements Parcelable {
     private final EnumSet<DerpibooruImageInteraction.InteractionType> mImageInteractions;
 
     public DerpibooruImageThumb(DerpibooruImageThumb from) {
-        this(from.getId(), from.getIdForImageInteractions(), from.getUpvotes(), from.getDownvotes(),
+        this(from.getId(), from.getUpvotes(), from.getDownvotes(),
              from.getFaves(), from.getCommentCount(), from.getThumbUrl(), from.getLargeImageUrl(),
              from.getSpoilerImageUrl(), from.getImageInteractions());
     }
 
-    public DerpibooruImageThumb(int id, int interactionsId, int upvotes, int downvotes, int faves,
+    public DerpibooruImageThumb(int id, int upvotes, int downvotes, int faves,
                                 int comments, String thumbUrl, String largeUrl, String spoilerImageUrl,
                                 EnumSet<DerpibooruImageInteraction.InteractionType> interactions) {
         mId = id;
-        mIdUsedForImageInteractions = interactionsId;
         mUpvotes = upvotes;
         mDownvotes = downvotes;
         mFaves = faves;
@@ -41,10 +39,6 @@ public class DerpibooruImageThumb implements Parcelable {
 
     public int getId() {
         return mId;
-    }
-
-    public int getIdForImageInteractions() {
-        return mIdUsedForImageInteractions;
     }
 
     public int getScore() {
@@ -109,7 +103,6 @@ public class DerpibooruImageThumb implements Parcelable {
 
     protected DerpibooruImageThumb(Parcel in) {
         mId = in.readInt();
-        mIdUsedForImageInteractions = in.readInt();
         mUpvotes = in.readInt();
         mDownvotes = in.readInt();
         mFaves = in.readInt();
@@ -128,7 +121,6 @@ public class DerpibooruImageThumb implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mId);
-        dest.writeInt(mIdUsedForImageInteractions);
         dest.writeInt(mUpvotes);
         dest.writeInt(mDownvotes);
         dest.writeInt(mFaves);

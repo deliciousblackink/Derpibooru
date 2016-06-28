@@ -21,7 +21,7 @@ import static org.junit.Assert.assertThat;
 
 public class ImageListParserTest {
     private static final DerpibooruImageThumb firstImageThumb =
-            new DerpibooruImageThumb(960596, 960387, 3, 23, 1, 4,
+            new DerpibooruImageThumb(960596, 3, 23, 1, 4,
                                      "https://derpicdn.net/img/2015/8/18/960596/thumb.png",
                                      "https://derpicdn.net/img/2015/8/18/960596/large.png",
                                      "https://derpicdn.net/dummy_spoiler",

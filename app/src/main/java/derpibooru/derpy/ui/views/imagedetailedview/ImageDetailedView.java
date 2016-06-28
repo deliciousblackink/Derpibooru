@@ -112,7 +112,7 @@ public class ImageDetailedView extends LinearLayout {
     }
 
     private void initializeInteractionPresenter() {
-        int id = mCallbackHandler.getImage().getThumb().getIdForImageInteractions();
+        int id = mCallbackHandler.getImage().getThumb().getId();
         ImageInteractionPresenter presenter =
                 new ImageInteractionPresenter(id, topBar.buttonScore, bottomBar.buttonFave,
                                               topBar.buttonUpvote, topBar.buttonDownvote) {

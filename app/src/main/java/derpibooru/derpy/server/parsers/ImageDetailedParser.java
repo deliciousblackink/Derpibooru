@@ -35,7 +35,7 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
         UserboxParserObject box = new UserboxParserObject(doc.select("div.userbox").first().html());
         if (box.isLoggedIn()) {
             UserScriptParserObject script =
-                    new UserScriptParserObject(doc.select("script").get(doc.select("script").size() - 2).html());
+                    new UserScriptParserObject(doc.select("body").select("script").last().html());
             mInteractions = new ImageInteractionsParserObject(script.getInteractions().toString());
         }
 

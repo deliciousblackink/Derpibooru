@@ -45,7 +45,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
         for (int x = 0; x < imgCount; x++) {
             JSONObject img = images.getJSONObject(x);
             DerpibooruImageThumb it = new DerpibooruImageThumb(
-                    img.getInt("id_number"), img.getInt("id"), img.getInt("upvotes"), img.getInt("downvotes"),
+                    img.getInt("id"), img.getInt("upvotes"), img.getInt("downvotes"),
                     img.getInt("faves"), img.getInt("comment_count"),
                     getAbsoluteUrl(img.getJSONObject("representations").getString("thumb")),
                     getAbsoluteUrl(img.getJSONObject("representations").getString("large")),

@@ -18,16 +18,10 @@ public class UserDataParser implements ServerResponseParser<DerpibooruUser> {
     public DerpibooruUser parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
         mUserbox = new UserboxParserObject(doc.select("div.userbox").first().html());
-        mUserScript = new UserScriptParserObject(getUserScript(doc).html());
+        mUserScript = new UserScriptParserObject(doc.select("body").select("script").last().html());
         return new DerpibooruUser(mUserScript.getUsername(), mUserScript.getAvatarUrl())
                 .setCurrentFilter(parseCurrentFilter());
     }
-
-    public Element getUserScript(Document doc) {
-        return mUserbox.isLoggedIn() ? doc.select("script").get(doc.select("script").size() - 2)
-                                     : doc.select("script").last();
-    }
-
     private DerpibooruFilter parseCurrentFilter() throws JSONException {
         return new DerpibooruFilter(mUserScript.getFilterId(), mUserbox.getFilterName(),
                                     mUserScript.getHiddenTagIds(), mUserScript.getSpoileredTagIds());

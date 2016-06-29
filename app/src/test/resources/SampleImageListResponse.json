@@ -1,8 +1,7 @@
 {
     "search":[
         {
-            "id":"960387",
-            "id_number":960596,
+            "id":"960596",
             "created_at":"2015-08-18T22:31:34.194Z",
             "updated_at":"2016-01-14T06:00:09.3859Z",
             "duplicate_reports":[
@@ -50,8 +49,7 @@
             "is_optimized":true
         },
         {
-            "id":"960339",
-            "id_number":960548,
+            "id":"960548",
             "created_at":"2015-08-18T21:12:10.996Z",
             "updated_at":"2016-01-04T01:06:57.4862Z",
             "duplicate_reports":[
@@ -98,8 +96,7 @@
             "is_optimized":true
         },
         {
-            "id":"960271",
-            "id_number":960480,
+            "id":"960480",
             "created_at":"2015-08-18T19:59:55.308Z",
             "updated_at":"2016-02-02T23:45:16.6978Z",
             "duplicate_reports":[
@@ -147,8 +144,7 @@
             "is_optimized":true
         },
         {
-            "id":"956571",
-            "id_number":956780,
+            "id":"956780",
             "created_at":"2015-08-13T09:04:34.506Z",
             "updated_at":"2015-10-28T08:38:30.3081Z",
             "duplicate_reports":[
@@ -199,8 +195,7 @@
             "is_optimized":true
         },
         {
-            "id":"956418",
-            "id_number":956627,
+            "id":"956627",
             "created_at":"2015-08-13T03:32:27.609Z",
             "updated_at":"2015-10-22T14:36:06.2770Z",
             "duplicate_reports":[
@@ -245,8 +240,7 @@
             "is_optimized":true
         },
         {
-            "id":"956242",
-            "id_number":956451,
+            "id":"956451",
             "created_at":"2015-08-12T23:37:49.520Z",
             "updated_at":"2015-10-28T08:38:30.2581Z",
             "duplicate_reports":[
@@ -296,8 +290,7 @@
             "is_optimized":true
         },
         {
-            "id":"956136",
-            "id_number":956344,
+            "id":"956344",
             "created_at":"2015-08-12T21:29:52.789Z",
             "updated_at":"2015-10-22T14:39:05.5390Z",
             "duplicate_reports":[
@@ -346,8 +339,7 @@
             "is_optimized":true
         },
         {
-            "id":"956131",
-            "id_number":956339,
+            "id":"956339",
             "created_at":"2015-08-12T21:19:21.148Z",
             "updated_at":"2015-10-28T08:38:30.2219Z",
             "duplicate_reports":[
@@ -399,8 +391,7 @@
             "is_optimized":true
         },
         {
-            "id":"955637",
-            "id_number":955845,
+            "id":"955845",
             "created_at":"2015-08-12T01:39:59.188Z",
             "updated_at":"2015-12-18T00:43:48.8516Z",
             "duplicate_reports":[
@@ -453,8 +444,7 @@
             "is_optimized":true
         },
         {
-            "id":"955145",
-            "id_number":955353,
+            "id":"955353",
             "created_at":"2015-08-11T08:51:15.211Z",
             "updated_at":"2015-12-03T00:33:29.5258Z",
             "duplicate_reports":[
@@ -509,8 +499,7 @@
             "is_optimized":true
         },
         {
-            "id":"954331",
-            "id_number":954539,
+            "id":"954539",
             "created_at":"2015-08-09T23:09:25.073Z",
             "updated_at":"2016-02-05T19:13:10.7045Z",
             "duplicate_reports":[
@@ -560,8 +549,7 @@
             "is_optimized":true
         },
         {
-            "id":"954126",
-            "id_number":954334,
+            "id":"954334",
             "created_at":"2015-08-09T15:11:35.303Z",
             "updated_at":"2016-01-17T23:20:20.3933Z",
             "duplicate_reports":[
@@ -609,8 +597,7 @@
             "is_optimized":true
         },
         {
-            "id":"953859",
-            "id_number":954067,
+            "id":"954067",
             "created_at":"2015-08-09T04:55:21.295Z",
             "updated_at":"2016-02-02T09:12:12.9733Z",
             "duplicate_reports":[
@@ -662,8 +649,7 @@
             "is_optimized":true
         },
         {
-            "id":"953725",
-            "id_number":953933,
+            "id":"953933",
             "created_at":"2015-08-09T00:05:58.341Z",
             "updated_at":"2016-02-03T04:58:59.5408Z",
             "duplicate_reports":[
@@ -726,8 +712,7 @@
             "is_optimized":true
         },
         {
-            "id":"953702",
-            "id_number":953910,
+            "id":"953910",
             "created_at":"2015-08-08T23:07:04.268Z",
             "updated_at":"2016-01-24T15:27:28.6527Z",
             "duplicate_reports":[
@@ -797,14 +782,14 @@
             "interaction_type":"voted",
             "value":"down",
             "user_id":1,
-            "image_id":960387
+            "image_id":960596
         },
         {
             "id":1234,
             "interaction_type":"faved",
             "value":null,
             "user_id":1,
-            "image_id":960387
+            "image_id":960596
         }
     ]
 }

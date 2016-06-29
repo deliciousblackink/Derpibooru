@@ -37,17 +37,13 @@ public class ImageInteractionsParserObject {
             JSONObject interactionJson = mInteractions.getJSONObject(x);
             DerpibooruImageInteraction.InteractionType interaction =
                     getImageInteractionType(interactionJson);
-            int imageId = getImageIdForInteraction(interactionJson);
+            int imageId = interactionJson.getInt("image_id");
             if (!mInteractionsByImage.containsKey(imageId)) {
                 mInteractionsByImage.put(imageId, EnumSet.of(interaction));
             } else {
                 mInteractionsByImage.get(imageId).add(interaction);
             }
         }
-    }
-
-    private int getImageIdForInteraction(JSONObject interaction) throws JSONException {
-        return interaction.getInt("image_id");
     }
 
     @Nullable

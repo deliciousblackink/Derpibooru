@@ -83,7 +83,7 @@ public class CommentParserIntegrationTest {
     @Test
     public void testExternalGif() throws Exception {
         String resource = getResourceWithExternalGif();
-        String gifSource = Jsoup.parse(resource).select("div.post-text").first().select("img").last().attr("src");
+        String gifSource = Jsoup.parse(resource).select(".communication__body__text").first().select("img").last().attr("src");
         testLinkWithoutFilter(new ExternalGifImageAction(gifSource), resource);
     }
 
@@ -113,7 +113,7 @@ public class CommentParserIntegrationTest {
     private String getResourceWithExternalGif() {
         String source = loader.readTestResourceFile("SampleImageCommentAJAXCallResponse.html");
         Document doc = Jsoup.parse(source);
-        Element postBody = doc.select("div.post-text").first();
+        Element postBody = doc.select(".communication__body__text").first();
         postBody.select("div.image-show-container").first().remove();
         postBody.appendChild(new Element(Tag.valueOf("img"), "").attr("src", expectedImageSource + ".gif"));
         return doc.outerHtml();

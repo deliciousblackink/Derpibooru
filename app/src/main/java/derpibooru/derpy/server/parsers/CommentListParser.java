@@ -20,7 +20,7 @@ public class CommentListParser implements ServerResponseParser<List<DerpibooruCo
     @Override
     public List<DerpibooruComment> parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
-        if (doc.select("div.metabar").first() == null) {
+        if (doc.select("div").first() == null) {
             return new ArrayList<>();
         }
         Elements commentsRaw = doc.select("article");

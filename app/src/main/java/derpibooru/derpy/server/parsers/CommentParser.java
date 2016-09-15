@@ -35,10 +35,10 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     public DerpibooruComment parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
 
-        Element comment = doc.select("div.post-content").first();
-        Element commentOptions = doc.select("div.post-options").first();
+        Element comment = doc.select(".communication").first();
+        Element commentOptions = doc.select(".communication__options").first();
 
-        int id = parseId(doc.select("article").first());
+        int id = parseId(doc.select(".communication").first());
         String author = parseAuthor(comment);
         String avatarUrl = parseAvatarUrl(comment);
         String text = parseCommentBody(comment);
@@ -53,22 +53,22 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
 
     private String parseAuthor(Element commentContent) {
         /* TODO: parse comment author's badges */
-        return commentContent.select(".post-author").first().text().trim();
+        return commentContent.select(".communication__body__sender-name").first().text().trim();
     }
 
     private String parseAvatarUrl(Element commentContent) {
-        return "https:" + commentContent.select("img").first().attr("src");
+        return "https:" + commentContent.select(".image-constrained img").first().attr("src");
     }
 
     private String parseCommentBody(Element commentContent) throws JSONException {
-        Element post = commentContent.select("div.post-text").first();
+        Element post = commentContent.select(".communication__body__text").first();
         post.select("span.spoiler").tagName("spoiler").removeAttr("class");
         processCommentImages(post);
         return post.html();
     }
 
     private String parsePostedAt(Element commentOptions) {
-        Element time = commentOptions.select("div").first().select("time").first();
+        Element time = commentOptions.select("time").first();
         return time.attr("datetime");
     }
 

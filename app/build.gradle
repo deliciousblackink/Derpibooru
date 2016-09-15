@@ -4,13 +4,13 @@ apply plugin: 'idea'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-    compileOptions.incremental = false /* incremental compile breaks ButterKnife */
+    compileOptions.incremental = false /* incremental compilation breaks ButterKnife */
     defaultConfig {
         applicationId "derpibooru.derpy"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 13
-        versionName "1.5.3"
+        versionCode 14
+        versionName "1.5.4"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {

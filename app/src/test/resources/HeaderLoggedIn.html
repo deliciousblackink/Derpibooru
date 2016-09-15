@@ -1,0 +1,43 @@
+<div class="header">
+    <div class="flex-row">
+        <div class="flex-row__right">
+            <a title="Notification" class="header__link" href="/notifications">
+                <i class="fa-embedded--notification"></i>
+                <span class="fa-embedded__text hidden" data-notification-display=""> 0</span>
+            </a>
+            <a title="Messages" class="header__link" href="/messages">
+                <i class="fa-embedded--message"></i>
+                <span class="fa-embedded__text hidden"> 0</span>
+            </a>
+            <a class="header__link hide-mobile" href="/filters">Filters</a>
+            <form class="header__filter-form hide-mobile" id="filter-quick-form" action="/filters/select" accept-charset="UTF-8" method="post">
+                <input name="utf8" type="hidden" value="&#x2713;" />
+                <input type="hidden" name="_method" value="patch" />
+                <input type="hidden" name="authenticity_token" value="{token}" />
+                <select name="id" id="filter-quick-menu">
+                    <optgroup label="Your Filters">
+                        <option value="100074">User-Defined Filter</option>
+                    </optgroup>
+                    <optgroup label="Recent Filters">
+                        <option value="100074">User-Defined Filter</option>
+                        <option selected="selected" value="100073">Some Long Filter Name</option>
+                        <option value="56027">Everything</option>
+                    </optgroup>
+                </select>
+            </form>
+            <form class="header__filter-form hide-mobile hide-limited-desktop" id="spoiler-quick-form" class="hide-mobile-t" action="/pages/select_spoiler_type" accept-charset="UTF-8" method="post">
+                <input name="utf8" type="hidden" value="&#x2713;" />
+                <input type="hidden" name="_method" value="patch" />
+                <input type="hidden" name="authenticity_token" value="{token}" />
+                <select name="id" id="spoiler-quick-menu">
+                    <optgroup label="Spoilers">
+                        <option value="static">static</option>
+                        <option value="click">click</option>
+                        <option selected="selected" value="hover">hover</option>
+                        <option value="off">off</option>
+                    </optgroup>
+                </select>
+            </form>
+        </div>
+    </div>
+</div>

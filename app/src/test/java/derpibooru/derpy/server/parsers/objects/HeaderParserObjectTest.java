@@ -8,17 +8,17 @@ import derpibooru.derpy.TestResourceLoader;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class UserboxParserObjectTest {
-    private UserboxParserObject loggedInBox;
-    private UserboxParserObject loggedOutBox;
+public class HeaderParserObjectTest {
+    private HeaderParserObject loggedInBox;
+    private HeaderParserObject loggedOutBox;
 
     @Before
     public void setUp() {
         TestResourceLoader loader = new TestResourceLoader();
-        String loggedIn = loader.readTestResourceFile("UserboxLoggedIn.html");
-        loggedInBox = new UserboxParserObject(loggedIn);
-        String loggedOut = loader.readTestResourceFile("UserboxLoggedOut.html");
-        loggedOutBox = new UserboxParserObject(loggedOut);
+        String loggedIn = loader.readTestResourceFile("HeaderLoggedIn.html");
+        loggedInBox = new HeaderParserObject(loggedIn);
+        String loggedOut = loader.readTestResourceFile("HeaderLoggedOut.html");
+        loggedOutBox = new HeaderParserObject(loggedOut);
     }
 
     @Test

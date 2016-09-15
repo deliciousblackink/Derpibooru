@@ -7,29 +7,28 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represents a page header ('div.userbox') object. On the website, it is found in the top right corner of
- * a served HTML page and contains basic information about the user.
+ * Represents a page header ('.header') object, containing basic information about authenticated user.
  */
-public class UserboxParserObject {
+public class HeaderParserObject {
     private static final Pattern PATTERN_FILTER_NAME = Pattern.compile("^(?:Filters )(?:\\()(.*)(?:\\))$");
 
-    private Element mUserbox;
+    private Element mHeader;
 
-    public UserboxParserObject(String userboxHtml) {
-        mUserbox = Jsoup.parse(userboxHtml);
+    public HeaderParserObject(String headerHtml) {
+        mHeader = Jsoup.parse(headerHtml);
     }
 
     public boolean isLoggedIn() {
         /* a quick filter switch is only present when the user is logged in */
-        return mUserbox.select("form#filter-quick-form").first() != null;
+        return mHeader.select("form#filter-quick-form").first() != null;
     }
 
     public String getFilterName() {
         if (isLoggedIn()) {
-            return mUserbox.select("form#filter-quick-form").first()
+            return mHeader.select("form#filter-quick-form").first()
                     .select("option[selected]").first().text();
         } else {
-            String filter = mUserbox.select("a.hide-mobile").text();
+            String filter = mHeader.select("a[href=\"/filters\"]").text();
             Matcher m = PATTERN_FILTER_NAME.matcher(filter);
             m.find();
             return m.group(1);

@@ -20,7 +20,7 @@ import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTag;
 import derpibooru.derpy.server.parsers.objects.ImageInteractionsParserObject;
 import derpibooru.derpy.server.parsers.objects.UserScriptParserObject;
-import derpibooru.derpy.server.parsers.objects.UserboxParserObject;
+import derpibooru.derpy.server.parsers.objects.HeaderParserObject;
 
 public class ImageDetailedParser implements ServerResponseParser<DerpibooruImageDetailed> {
     private static final Pattern PATTERN_WHITESPACE = Pattern.compile("\\s");
@@ -32,8 +32,8 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
     public DerpibooruImageDetailed parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
 
-        UserboxParserObject box = new UserboxParserObject(doc.select("div.userbox").first().html());
-        if (box.isLoggedIn()) {
+        HeaderParserObject header = new HeaderParserObject(doc.select(".header").first().html());
+        if (header.isLoggedIn()) {
             UserScriptParserObject script =
                     new UserScriptParserObject(doc.select("body").select("script").last().html());
             mInteractions = new ImageInteractionsParserObject(script.getInteractions().toString());

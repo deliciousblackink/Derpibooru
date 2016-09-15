@@ -16,17 +16,23 @@
 </head>
 <body>
 <div id="container">
-    <div id="header">
-        <div class="userbox">
-            <div class="filter-menu">
-                <a data-notification-display="" href="/notifications">0</a>
-                <a class="hide-desktop-t" href="/profiles/CurrentUser"><i class="fa fa-user"></i></a>
-                <a class="hide-mobile-t" href="/filters">Filters</a>
-                <form id="filter-quick-form" action="/filters/select" accept-charset="UTF-8" method="post">
+    <div class="header">
+        <div class="flex-row">
+            <div class="flex-row__right">
+                <a title="Notification" class="header__link" href="/notifications">
+                    <i class="fa-embedded--notification"></i>
+                    <span class="fa-embedded__text hidden" data-notification-display=""> 0</span>
+                </a>
+                <a title="Messages" class="header__link" href="/messages">
+                    <i class="fa-embedded--message"></i>
+                    <span class="fa-embedded__text hidden"> 0</span>
+                </a>
+                <a class="header__link hide-mobile" href="/filters">Filters</a>
+                <form class="header__filter-form hide-mobile" id="filter-quick-form" action="/filters/select" accept-charset="UTF-8" method="post">
                     <input name="utf8" type="hidden" value="&#x2713;" />
                     <input type="hidden" name="_method" value="patch" />
-                    <input type="hidden" name="authenticity_token" value="{token}"/>
-                    <select name="id" id="filter-quick-menu">
+                    <input type="hidden" name="authenticity_token" value="{token}" />
+                    <select name="id" id="filter-quick-menu" class="input header__input" data-change-submit="#filter-quick-form">
                         <optgroup label="Your Filters">
                             <option selected="selected" value="1">Selected Filter</option>
                         </optgroup>
@@ -37,12 +43,11 @@
                         </optgroup>
                     </select>
                 </form>
-                <form id="spoiler-quick-form" class="hide-mobile-t" action="/pages/select_spoiler_type"
-                      accept-charset="UTF-8" method="post">
+                <form class="header__filter-form hide-mobile hide-limited-desktop" id="spoiler-quick-form" action="/pages/select_spoiler_type" accept-charset="UTF-8" method="post">
                     <input name="utf8" type="hidden" value="&#x2713;" />
                     <input type="hidden" name="_method" value="patch" />
                     <input type="hidden" name="authenticity_token" value="{token}" />
-                    <select name="id" id="spoiler-quick-menu">
+                    <select name="id" id="spoiler-quick-menu" class="input header__input" data-change-submit="#spoiler-quick-form">
                         <optgroup label="Spoilers">
                             <option value="static">static</option>
                             <option value="click">click</option>
@@ -51,6 +56,7 @@
                         </optgroup>
                     </select>
                 </form>
+            </div>
         </div>
     </div>
     </div>
@@ -171,62 +177,44 @@
     </div>
 </div>
 <script>
-        if (!window.jQuery) {
-            document.getElementById('noscript-warning').style.display = 'block';
-        }
-        $('#noscript-warning').hide();
-        try {
-            // Set up tag lists for client-side image spoilering/hiding
-            window.booru.filterID = 100000;
-            window.booru.filterCanEdit = true;
-            window.booru.hiddenTagList = [61060, 89379, 20417, 86723, 94478,
-                25605, 25724
-            ];
-            window.booru.spoileredTagList = [54235, 41161, 42773, 43502, 46981];
-            window.booru.hiddenFilter = window.booru.parseSearch("");
-            window.booru.spoileredFilter = window.booru.parseSearch("");
-            window.booru.ignoredTagList = [];
-            window.booru.watchedTagList = [];
-            window.booru.userID = 1;
-            window.booru.userSlug = "CurrentUser";
-            window.booru.userName = "CurrentUser";
-            window.booru.userAvatar = "//derpicdn.net/avatars/currentUserAvatar.png";
-            window.booru.spoilerType = "hover";
-            window.booru._hidden_tag = "//derpicdn.net/assets/tagblocked-a6790e31ad2d0ec2fdd400aab8ba2eb7177c0489c12525bfda9ef42be933e662.svg";
-            window.booru._interactions = [{
-                "id": 1234,
-                "interaction_type": "voted",
-                "value": "up",
-                "user_id": 100000,
-                "image_id": 655777
-            }, {
-                "id": 1234,
-                "interaction_type": "faved",
-                "value": null,
-                "user_id": 100000,
-                "image_id": 655777
-            }];
-            window.booru.enable_browser_ponies = false;
-            // CDN root
-            window.booru._cdnHost = "//derpicdn.net"
-                // Image root
-            window.booru._imgHost = "//derpicdn.net/img"
-                // Fetch tag metadata and set up filtering
-            window.booru.initializeFilters();
-            // Show buttons on this user's owned objects
-            window.booru.showOwnedObjects();
-            // Mouseover and other events
-            window.booru.images.bindEvents();
-        } catch (e) {
-            // Bubble up to error console for users
-            throw e;
-        }
-    </script>
-<script>
-        // Notification spinup
-        window.booru.notifications.setupLinks();
-        window.booru.notifications.forceNotificationsStale();
-        setInterval(window.booru.notifications.getNotifications, 600000);
+try {
+    window.booru.filterID = 100000;
+    window.booru.filterCanEdit = true;
+    window.booru.hiddenTagList = [61060, 89379, 20417, 86723, 94478,
+        25605, 25724
+    ];
+    window.booru.spoileredTagList = [54235, 41161, 42773, 43502, 46981];
+    window.booru.hiddenFilter = window.booru.parseSearch("");
+    window.booru.spoileredFilter = window.booru.parseSearch("");
+    window.booru.ignoredTagList = [];
+    window.booru.watchedTagList = [];
+    window.booru.userID = 1;
+    window.booru.userSlug = "CurrentUser";
+    window.booru.userName = "CurrentUser";
+    window.booru.userAvatar = "//derpicdn.net/avatars/currentUserAvatar.png";
+    window.booru.spoilerType = "hover";
+    window.booru._hidden_tag = "//derpicdn.net/assets/tagblocked-a6790e31ad2d0ec2fdd400aab8ba2eb7177c0489c12525bfda9ef42be933e662.svg";
+    window.booru._interactions = [{
+        "id": 1234,
+        "interaction_type": "voted",
+        "value": "up",
+        "user_id": 100000,
+        "image_id": 655777
+    }, {
+        "id": 1234,
+        "interaction_type": "faved",
+        "value": null,
+        "user_id": 100000,
+        "image_id": 655777
+    }];
+    // Fetch tag metadata and set up filtering
+    window.booru.initializeFilters();
+    // Mouseover and other events
+    window.booru.imageExpansion.bindImageTarget();
+  } catch(e) {
+    // Bubble up to error console for users
+    throw e;
+  }
 </script>
 </body>
 </html>

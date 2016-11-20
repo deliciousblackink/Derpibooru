@@ -19,7 +19,7 @@ import derpibooru.derpy.data.server.DerpibooruImageInteraction;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
 import derpibooru.derpy.data.server.DerpibooruTag;
 import derpibooru.derpy.server.parsers.objects.ImageInteractionsParserObject;
-import derpibooru.derpy.server.parsers.objects.UserScriptParserObject;
+import derpibooru.derpy.server.parsers.objects.JsDatastoreParserObject;
 import derpibooru.derpy.server.parsers.objects.HeaderParserObject;
 
 public class ImageDetailedParser implements ServerResponseParser<DerpibooruImageDetailed> {
@@ -32,11 +32,10 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
     public DerpibooruImageDetailed parseResponse(String rawResponse) throws Exception {
         Document doc = Jsoup.parse(rawResponse);
 
-        HeaderParserObject header = new HeaderParserObject(doc.select(".header").first().html());
+        HeaderParserObject header = new HeaderParserObject(doc);
         if (header.isLoggedIn()) {
-            UserScriptParserObject script =
-                    new UserScriptParserObject(doc.select("body").select("script").last().html());
-            mInteractions = new ImageInteractionsParserObject(script.getInteractions().toString());
+            JsDatastoreParserObject jsDatastore = new JsDatastoreParserObject(doc);
+            mInteractions = new ImageInteractionsParserObject(jsDatastore.getInteractions().toString());
         }
 
         String imageSourceUrl = parseSourceUrl(doc);

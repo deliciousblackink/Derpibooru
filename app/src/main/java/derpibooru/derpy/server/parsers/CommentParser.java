@@ -57,7 +57,7 @@ public class CommentParser implements ServerResponseParser<DerpibooruComment> {
     }
 
     private String parseAvatarUrl(Element commentContent) {
-        return "https:" + commentContent.select(".image-constrained img").first().attr("src");
+        return UserDataParser.parseAvatarUrlFromImgElement(commentContent.select(".image-constrained img").first());
     }
 
     private String parseCommentBody(Element commentContent) throws JSONException {

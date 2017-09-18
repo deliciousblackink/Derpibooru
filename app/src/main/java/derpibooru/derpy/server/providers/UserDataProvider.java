@@ -20,7 +20,7 @@ public class UserDataProvider extends Provider<DerpibooruUser> {
         /* TODO: there is probably a better url to find user data at */
         StringBuilder sb = new StringBuilder();
         sb.append(DERPIBOORU_DOMAIN);
-        sb.append("about"); /* @/about@ is a static page — slightly better than querying an image list, but the point still stands */
+        sb.append("pages/about"); /* @/about@ is a static page — slightly better than querying an image list, but the point still stands */
         return sb.toString();
     }
 

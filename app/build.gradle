@@ -3,7 +3,7 @@ apply plugin: 'idea'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '25.0.0'
     compileOptions.incremental = false /* incremental compilation breaks ButterKnife */
     defaultConfig {
         applicationId "derpibooru.derpy"

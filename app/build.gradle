@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'idea'
 
 android {
+    signingConfigs {
+    }
     compileSdkVersion 23
     buildToolsVersion '25.0.0'
     compileOptions.incremental = false /* incremental compilation breaks ButterKnife */
@@ -9,8 +11,8 @@ android {
         applicationId "derpibooru.derpy"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 15
-        versionName "1.5.5"
+        versionCode 16
+        versionName '1.5.7'
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -18,6 +20,8 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 
@@ -29,7 +33,7 @@ task copyResDirectoryToClasses(type: Copy) {
 preBuild.dependsOn copyResDirectoryToClasses
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.google.guava:guava:19.0'
     /* required for ProGuard (https://github.com/google/guava/wiki/UsingProGuardWithGuava) */
     compile 'com.google.code.findbugs:jsr305:3.0.1'

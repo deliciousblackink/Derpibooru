@@ -1,6 +1,7 @@
 package derpibooru.derpy.server.providers;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.net.URLEncoder;
 import java.util.List;
@@ -27,21 +28,28 @@ public class SearchProvider extends ImageListProvider {
     protected String generateUrl() {
         try {
             StringBuilder sb = new StringBuilder();
+            String searchString = URLEncoder.encode(mSearchOptions.getSearchQuery(), "UTF-8");
+            if (mSearchOptions.getFilterParams() != null) {
+                // Derpibooru use the search field to indicate the specific user lists
+                searchString += "," + mSearchOptions.getFilterParams();
+            }
+
             sb.append(DERPIBOORU_DOMAIN)
                     .append("search.json?utf8=✓")
-                    .append("&sbq=").append(URLEncoder.encode(mSearchOptions.getSearchQuery(), "UTF-8"))
+                    .append("&sbq=").append(searchString)
                     .append("&sf=").append(sortByParams())
                     .append("&sd=").append(sortDirectionParams())
-                    .append("&faves=").append(filterParams(mSearchOptions.getFavesFilter()))
-                    .append("&upvotes=").append(filterParams(mSearchOptions.getUpvotesFilter()))
-                    .append("&uploads=").append(filterParams(mSearchOptions.getUploadsFilter()))
-                    .append("&watched=").append(filterParams(mSearchOptions.getWatchedTagsFilter()))
-                    .append("&min_score=").append(scoreFilterParams(mSearchOptions.getMinScore()))
-                    .append("&max_score=").append(scoreFilterParams(mSearchOptions.getMaxScore()));
+                    //.append("&faves=").append(filterParams(mSearchOptions.getFavesFilter())) // TODO: remove this non-existent API
+                    //.append("&upvotes=").append(filterParams(mSearchOptions.getUpvotesFilter())) // TODO: remove this non-existent API
+                    //.append("&uploads=").append(filterParams(mSearchOptions.getUploadsFilter())) // TODO: remove this non-existent API
+                    //.append("&watched=").append(filterParams(mSearchOptions.getWatchedTagsFilter())) // TODO: remove this non-existent API
+                    .append("&min_score=").append(scoreFilterParams(mSearchOptions.getMinScore())) // TODO: replace this API with sth newer
+                    .append("&max_score=").append(scoreFilterParams(mSearchOptions.getMaxScore())); // TODO: replace this API with sth newer
             sb.append("&perpage=");
             sb.append(IMAGES_PER_PAGE);
             sb.append("&page=");
             sb.append(super.getCurrentPage());
+            Log.d("auzbuzzard", "url: " + sb.toString());
             return sb.toString();
         } catch (Exception e) {
             return null;
@@ -78,17 +86,17 @@ public class SearchProvider extends ImageListProvider {
         return "";
     }
 
-    private String filterParams(DerpibooruSearchOptions.UserPicksFilter filter) {
-        switch (filter) {
-            case No:
-                return "";
-            case UserPicksOnly:
-                return "only";
-            case NoUserPicks:
-                return "not";
-        }
-        return "";
-    }
+//    private String filterParams(DerpibooruSearchOptions.UserPicksFilter filter) {
+//        switch (filter) {
+//            case No:
+//                return "";
+//            case UserPicksOnly:
+//                return "only";
+//            case NoUserPicks:
+//                return "not";
+//        }
+//        return "";
+//    }
 
     private String scoreFilterParams(Integer option) {
         return (option != null) ? Integer.toString(option) : "";

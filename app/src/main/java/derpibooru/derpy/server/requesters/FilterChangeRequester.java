@@ -1,6 +1,7 @@
 package derpibooru.derpy.server.requesters;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,8 +30,9 @@ public class FilterChangeRequester extends AuthenticatedRequester<Boolean> {
     @Override
     protected String generateUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append(DERPIBOORU_DOMAIN).append("filters/select");
+        sb.append(DERPIBOORU_DOMAIN).append("filters/current");
         sb.append("?id=").append(mNewFilter.getId());
+        Log.d("auzbuzzard", String.format("FilterChangeRequester::generateUrl url: %s", sb.toString()));
         return sb.toString();
     }
 
@@ -49,6 +51,7 @@ public class FilterChangeRequester extends AuthenticatedRequester<Boolean> {
 
     @Override
     protected void onTokenFetched(String token) {
+        Log.d("auzbuzzard", String.format("token: %s", token));
         mAuthenticityToken = token;
         executeQuery(null);
     }

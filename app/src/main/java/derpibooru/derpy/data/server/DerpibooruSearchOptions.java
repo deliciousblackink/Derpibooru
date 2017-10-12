@@ -6,15 +6,18 @@ import android.support.annotation.Nullable;
 
 import com.google.common.base.Objects;
 
+import static derpibooru.derpy.data.server.DerpibooruSearchOptions.UserPicksFilter.No;
+import static derpibooru.derpy.data.server.DerpibooruSearchOptions.UserPicksFilter.UserPicksOnly;
+
 public class DerpibooruSearchOptions implements Parcelable {
     private String mSearchQuery = "*";
 
     private SortBy mSortBy = SortBy.CreatedAt;
     private SortDirection mSortDirection = SortDirection.Descending;
-    private UserPicksFilter mFavesFilter = UserPicksFilter.No;
-    private UserPicksFilter mUpvotesFilter = UserPicksFilter.No;
-    private UserPicksFilter mUploadsFilter = UserPicksFilter.No;
-    private UserPicksFilter mWatchedTagsFilter = UserPicksFilter.No;
+    private UserPicksFilter mFavesFilter = No;
+    private UserPicksFilter mUpvotesFilter = No;
+    private UserPicksFilter mUploadsFilter = No;
+    private UserPicksFilter mWatchedTagsFilter = No;
     private Integer mMinScore;
     private Integer mMaxScore;
 
@@ -80,9 +83,7 @@ public class DerpibooruSearchOptions implements Parcelable {
         return mSortDirection;
     }
 
-    public UserPicksFilter getFavesFilter() {
-        return mFavesFilter;
-    }
+    public UserPicksFilter getFavesFilter() { return mFavesFilter; }
 
     public UserPicksFilter getUpvotesFilter() {
         return mUpvotesFilter;
@@ -94,6 +95,35 @@ public class DerpibooruSearchOptions implements Parcelable {
 
     public UserPicksFilter getWatchedTagsFilter() {
         return mWatchedTagsFilter;
+    }
+
+    /**
+     * Return the search text for any of the user list filters.
+     * Important: the individual filter state must be set first. This assumes only one filter is set.
+     * @return A string that is the search text for the particular filter
+     */
+    public String getFilterParams() {
+        switch (getFavesFilter()) {
+            case No: break;
+            case UserPicksOnly: return UserPicks.Faves.getFilterParams();
+            case NoUserPicks: return "-" + UserPicks.Faves.getFilterParams();
+        }
+        switch (getUpvotesFilter()) {
+            case No: break;
+            case UserPicksOnly: return UserPicks.Upvotes.getFilterParams();
+            case NoUserPicks: return "-" + UserPicks.Upvotes.getFilterParams();
+        }
+        switch (getUploadsFilter()) {
+            case No: break;
+            case UserPicksOnly: return UserPicks.Uploads.getFilterParams();
+            case NoUserPicks: return "-" + UserPicks.Uploads.getFilterParams();
+        }
+        switch (getWatchedTagsFilter()) {
+            case No: break;
+            case UserPicksOnly: return UserPicks.WatchedTags.getFilterParams();
+            case NoUserPicks: return "-" + UserPicks.WatchedTags.getFilterParams();
+        }
+        return null;
     }
 
     @Nullable
@@ -109,31 +139,31 @@ public class DerpibooruSearchOptions implements Parcelable {
     /* i'm not proud of these */
 
     public boolean isDisplayingWatchedTagsOnly() {
-        return ((mWatchedTagsFilter == UserPicksFilter.UserPicksOnly)
-                && (mFavesFilter != UserPicksFilter.UserPicksOnly)
-                && (mUpvotesFilter != UserPicksFilter.UserPicksOnly)
-                && (mUploadsFilter != UserPicksFilter.UserPicksOnly));
+        return ((mWatchedTagsFilter == UserPicksOnly)
+                && (mFavesFilter != UserPicksOnly)
+                && (mUpvotesFilter != UserPicksOnly)
+                && (mUploadsFilter != UserPicksOnly));
     }
 
     public boolean isDisplayingFavesOnly() {
-        return ((mFavesFilter == UserPicksFilter.UserPicksOnly)
-                && (mWatchedTagsFilter != UserPicksFilter.UserPicksOnly)
-                && (mUpvotesFilter != UserPicksFilter.UserPicksOnly)
-                && (mUploadsFilter != UserPicksFilter.UserPicksOnly));
+        return ((mFavesFilter == UserPicksOnly)
+                && (mWatchedTagsFilter != UserPicksOnly)
+                && (mUpvotesFilter != UserPicksOnly)
+                && (mUploadsFilter != UserPicksOnly));
     }
 
     public boolean isDisplayingUpvotesOnly() {
-        return ((mUpvotesFilter == UserPicksFilter.UserPicksOnly)
-                && (mWatchedTagsFilter != UserPicksFilter.UserPicksOnly)
-                && (mFavesFilter != UserPicksFilter.UserPicksOnly)
-                && (mUploadsFilter != UserPicksFilter.UserPicksOnly));
+        return ((mUpvotesFilter == UserPicksOnly)
+                && (mWatchedTagsFilter != UserPicksOnly)
+                && (mFavesFilter != UserPicksOnly)
+                && (mUploadsFilter != UserPicksOnly));
     }
 
     public boolean isDisplayingUploadsOnly() {
-        return ((mUploadsFilter == UserPicksFilter.UserPicksOnly)
-                && (mWatchedTagsFilter != UserPicksFilter.UserPicksOnly)
-                && (mFavesFilter != UserPicksFilter.UserPicksOnly)
-                && (mUpvotesFilter != UserPicksFilter.UserPicksOnly));
+        return ((mUploadsFilter == UserPicksOnly)
+                && (mWatchedTagsFilter != UserPicksOnly)
+                && (mFavesFilter != UserPicksOnly)
+                && (mUpvotesFilter != UserPicksOnly));
     }
 
     @Override
@@ -212,6 +242,42 @@ public class DerpibooruSearchOptions implements Parcelable {
         }
     }
 
+    public enum UserPicks {
+        Faves(0),
+        Upvotes(1),
+        Uploads(2),
+        WatchedTags(3);
+
+        private int mValue;
+
+        UserPicks(int value) { mValue = value; }
+
+        public static UserPicks fromValue(int value) {
+            for (UserPicks type : values()) {
+                if (type.mValue == value) {
+                    return type;
+                }
+            }
+            return Faves;
+        }
+
+        public int toValue() { return mValue; }
+
+        public String getFilterParams() {
+            switch (this) {
+                case Faves:
+                    return "my:faves";
+                case Upvotes:
+                    return "my:upvotes";
+                case Uploads:
+                    return "my:uploads";
+                case WatchedTags:
+                    return "my:watched";
+            }
+            return null;
+        }
+    }
+
     public enum UserPicksFilter {
         No(0),
         UserPicksOnly(1),
@@ -235,6 +301,7 @@ public class DerpibooruSearchOptions implements Parcelable {
         public int toValue() {
             return mValue;
         }
+
     }
 
     protected DerpibooruSearchOptions(Parcel in) {

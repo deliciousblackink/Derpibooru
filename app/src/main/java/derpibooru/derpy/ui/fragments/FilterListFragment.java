@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,6 +128,7 @@ public class FilterListFragment extends NavigationDrawerUserFragment {
     }
 
     private void setCurrentFilter(DerpibooruFilter newFilter) {
+        Log.d("auzbuzzard", String.format("newFilter: %s", newFilter.getName()));
         new FilterChangeRequester(getContext(), new QueryHandler<Boolean>() {
             @Override
             public void onQueryExecuted(Boolean result) {

@@ -1,16 +1,15 @@
 # The Derpibooru Mobile Client for Android
 
-### Important notice
-
-The maintenance of this application has been stopped. No further updates will be released, and tickets opened in the issue tracker are not going to receive any feedback from the developer.
-
-If you’re comfortable with Java and willing to maintain the project, feel free to contact me. I’ll try to offer some help and advice.
+### Current status
+This app was originally created by [deliciousblackink](https://github.com/deliciousblackink/Derpibooru) but has not seen updates for some time. This fork aims to continue maintenance and future development of the project with his approval. 
 
 ### Overview
 
 The application brings convenient (and fast!) access to the booru on mobile devices. Its user interface follows the Material Design [guidelines](https://www.google.com/design/spec/material-design/introduction.html) to create a familiar environment for Android users.
 
-It is available as a side-load [APK](https://github.com/deliciousblackink/Derpibooru/releases).
+The latest side-load APK can be found [here](https://github.com/auzbuzzard/Derpibooru/releases), which contains fix for the launch crash that has been there for some time.
+
+Original releases can be found [here](https://github.com/deliciousblackink/Derpibooru/releases), but can be found on the previous link as well.
 
 ### Requirements
 

@@ -12,7 +12,7 @@ import derpibooru.derpy.server.parsers.ServerResponseParser;
  * Asynchronous performer of safe (nullipotent) HTTP requests.
  */
 public abstract class Provider<T> {
-    protected static final String DERPIBOORU_DOMAIN = "https://trixiebooru.org/";
+    protected static final String DERPIBOORU_DOMAIN = "https://derpibooru.org/";
     protected static final String DERPIBOORU_API_ENDPOINT = "api/v2/";
 
     protected final QueryHandler<T> mHandler;

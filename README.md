@@ -2,9 +2,11 @@
 
 ### Important notice
 
-The maintenance of this application has been stopped. No further updates will be released, and tickets opened in the issue tracker are not going to receive any feedback from the developer.
+I stopped maintaining this application a while ago, and the most up-to-date version available is not compatible with the latest changes to the Derpibooru API.
 
-If you’re comfortable with Java and willing to maintain the project, feel free to contact me. I’ll try to offer some help and advice.
+However, [@auzbuzzard](https://github.com/auzbuzzard) is maintaining a **[fully-functional fork](https://github.com/auzbuzzard/Derpibooru)** that addresses critical issues ([#28](https://github.com/deliciousblackink/Derpibooru/issues/28)) and aims to continue future development. Please note that if you're updating an old version obtained from this repository, you need to uninstall it first before running the latest APK. 
+
+---
 
 ### Overview
 

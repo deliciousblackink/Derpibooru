@@ -75,10 +75,9 @@ public class ImageDetailedParser implements ServerResponseParser<DerpibooruImage
     }
 
     private String parseDescription(Document doc) {
-        Element descr = doc.select("div.image-description").first();
+        Element descr = doc.select("image-description__text").first();
         String imageDescription = "";
         if (descr != null) {
-            descr.select("h3").first().remove();
             imageDescription = descr.html();
         }
         return imageDescription;

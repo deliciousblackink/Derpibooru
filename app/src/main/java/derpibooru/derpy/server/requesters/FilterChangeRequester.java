@@ -21,8 +21,7 @@ public class FilterChangeRequester extends AuthenticatedRequester<Boolean> {
 
     @Override
     protected Map<String, String> generateForm() {
-        Map<String, String> form = new HashMap<>(2);
-        form.put("_method", "patch");
+        Map<String, String> form = new HashMap<>(1);
         form.put("authenticity_token", mAuthenticityToken);
         return form;
     }

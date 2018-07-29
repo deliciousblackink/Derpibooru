@@ -6,7 +6,9 @@ import java.util.List;
 
 import derpibooru.derpy.data.server.DerpibooruFilter;
 import derpibooru.derpy.data.server.DerpibooruImageThumb;
+import derpibooru.derpy.data.server.DerpibooruTagDetailed;
 import derpibooru.derpy.server.QueryHandler;
+import derpibooru.derpy.server.parsers.RankingImageListParser;
 
 public class RankingImageListProvider extends ImageListProvider {
     private static final String ALL_TIME = "520w";
@@ -67,14 +69,7 @@ public class RankingImageListProvider extends ImageListProvider {
     protected String generateUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append(DERPIBOORU_DOMAIN);
-        switch (mListType) {
-            case TopScoring:
-                sb.append("lists/top_scoring.json");
-                break;
-            case MostCommented:
-                sb.append("lists/top_commented.json");
-                break;
-        }
+        sb.append("lists.json");
         sb.append("?last=");
         sb.append(mTime);
         sb.append("&perpage=");
@@ -82,6 +77,11 @@ public class RankingImageListProvider extends ImageListProvider {
         sb.append("&page=");
         sb.append(super.getCurrentPage());
         return sb.toString();
+    }
+
+    @Override
+    public void fetchImages(List<DerpibooruTagDetailed> spoileredTags) {
+        super.executeQuery(new RankingImageListParser(mListType, spoileredTags));
     }
 
     public enum RankingsType {

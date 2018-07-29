@@ -30,7 +30,7 @@ public class ImageListParser implements ServerResponseParser<List<DerpibooruImag
         return imageThumbs;
     }
 
-    private JSONArray getRootArray(JSONObject json) throws JSONException {
+    public JSONArray getRootArray(JSONObject json) throws JSONException {
         if (!json.isNull("images")) {
             return json.getJSONArray("images");
         } else {

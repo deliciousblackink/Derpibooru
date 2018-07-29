@@ -38,14 +38,8 @@ public class FilterListParser implements ServerResponseParser<List<DerpibooruFil
             /* TODO: clean-up */
             List<Integer> hiddenIds = intListFromArray(f.getJSONArray("hidden_tag_ids"));
             List<Integer> spoileredIds = intListFromArray(f.getJSONArray("spoilered_tag_ids"));
-            List<String> hidden = Arrays.asList(f.getString("hidden_tags").split(", "));
-            if (hidden.get(0).equals("")) {
-                hidden = Collections.emptyList();
-            }
-            List<String> spoilered = Arrays.asList(f.getString("spoilered_tags").split(", "));
-            if (spoilered.get(0).equals("")) {
-                spoilered = Collections.emptyList();
-            }
+            List<String> hidden = stringListFromArray(f.getJSONArray("hidden_tags"));
+            List<String> spoilered = stringListFromArray(f.getJSONArray("spoilered_tags"));
 
             /* for some reason, Derpibooru sets "system" to "null" for non-system
              * filters, so getBoolean() does not work */
@@ -62,6 +56,14 @@ public class FilterListParser implements ServerResponseParser<List<DerpibooruFil
         List<Integer> out = new ArrayList<>();
         for (int y = 0; y < array.length(); y++) {
             out.add(array.getInt(y));
+        }
+        return out;
+    }
+
+    private List<String> stringListFromArray(JSONArray array) throws JSONException {
+        List<String> out = new ArrayList<>();
+        for (int y = 0; y < array.length(); y++) {
+            out.add(array.getString(y));
         }
         return out;
     }

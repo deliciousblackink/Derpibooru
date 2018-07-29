@@ -48,7 +48,7 @@ public class ImageListProvider extends PaginatedListProvider<DerpibooruImageThum
         }).tags(mFilter.getSpoileredTags()).fetch();
     }
 
-    private void fetchImages(List<DerpibooruTagDetailed> spoileredTags) {
+    public void fetchImages(List<DerpibooruTagDetailed> spoileredTags) {
         super.executeQuery(new ImageListParser(spoileredTags));
     }
 }

@@ -3,6 +3,9 @@
 ### Current status
 This app was originally created by [deliciousblackink](https://github.com/deliciousblackink/Derpibooru) but has not seen updates for some time. This fork aims to continue maintenance and future development of the project with his approval. 
 
+### Issue tracking
+You can put a message [here](https://github.com/auzbuzzard/Derpiboo/issues/1).
+
 ### Overview
 
 The application brings convenient (and fast!) access to the booru on mobile devices. Its user interface follows the Material Design [guidelines](https://www.google.com/design/spec/material-design/introduction.html) to create a familiar environment for Android users.
